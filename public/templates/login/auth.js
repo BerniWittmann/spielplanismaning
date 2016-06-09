@@ -54,14 +54,6 @@ angular
 				$window.localStorage.removeItem('spielplan-ismaning-token');
 				$state.go('spi.home');
 			};
-			
-			registerInitialUser();
-
-			function registerInitialUser() {
-				return $http.post('/register/defaultuser', {}).then(function (res) {
-					Logger.log("Default User erstellt");
-				});
-			}
 
 			return auth;
 }]);

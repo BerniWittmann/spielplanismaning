@@ -567,23 +567,6 @@ router.post('/register', function (req, res, next) {
 	});
 });
 
-router.post('/register/defaultuser', function (req, res, next) {
-
-	var user = new User();
-
-	user.username = 'default';
-
-	user.setPassword('ismaning1928');
-
-	user.save(function (err) {
-		if (!err) {
-			return res.json({
-				token: user.generateJWT()
-			})
-		}
-	});
-});
-
 router.post('/login', function (req, res, next) {
 	if (!req.body.username || !req.body.password) {
 		return res.status(400).json({
