@@ -64,8 +64,8 @@ router.delete('/teams/:team', function (req, res) {
 
 router.post('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res, next) {
 	var team = new Team(req.body);
-	team.jugend = req.jugend;
-	team.gruppe = req.gruppe;
+	team.jugend = req.jugend._id;
+	team.gruppe = req.gruppe._id;
 
 	team.save(function (err, team) {
 		if (err) {
@@ -168,7 +168,7 @@ router.get('/jugenden/:jugend/gruppen', function (req, res, next) {
 
 router.post('/jugenden/:jugend/gruppen', function (req, res, next) {
 	var gruppe = new Gruppe(req.body);
-	gruppe.jugend = req.jugend;
+	gruppe.jugend = req.jugend._id;
 	var query = Jugend.findById(gruppe.jugend);
 
 	query.exec(function (err, jugend) {

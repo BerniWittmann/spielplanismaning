@@ -78,7 +78,7 @@ angular
 							if (!_.isUndefined(teamA)) {
 								addLastTeam(teamA);
 								Logger.log('Spielerstellung Nr. ' + i + ': TeamA gewählt: ' + teamA.name);
-
+	
 								var teamB = getPossibleGegner(gruppe, teamA);
 								if (!_.isUndefined(teamB)) {
 									addLastTeam(teamB);
@@ -140,7 +140,9 @@ angular
 					}
 				}
 
-				return $q.all(promises).then(pushSpiele);
+				return $q.all(promises).then(pushSpiele, function (err) {
+					console.log(err);
+				});
 
 				function pushSpiele() {
 					Logger.log('Alle Spiele gespeichert');

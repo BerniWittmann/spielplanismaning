@@ -54,7 +54,7 @@
 				})
 				team.create(vm.team).then(function (res) {
 					spielplan.createSpielplan();
-					getTeamsByGruppe();
+					vm.teams.push(res.data);
 					vm.team = {};
 				});
 			}
@@ -67,7 +67,9 @@
 			, deleteTeam: function (teamid) {
 				team.delete(teamid).then(function (res) {
 					spielplan.createSpielplan();
-					getTeamsByGruppe();
+					vm.teams = _.remove(vm.teams, function (n) {
+						return !_.isEqual(n._id, teamid);
+					});
 				});
 			}
 		});
