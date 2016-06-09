@@ -128,3 +128,7 @@ body {
 .valign {
 	vertical-align: middle !important;
 }
+
+width-100 {
+	width: 100%;
+}
