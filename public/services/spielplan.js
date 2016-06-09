@@ -26,7 +26,7 @@ angular
 					spielplan.spielzeit = data.spielzeit;
 					spielplan.pausenzeit = data.pausenzeit;
 					zeit = spielplan.startzeit;
-				}else {
+				} else {
 					spielplan.startzeit = "09:00";
 					spielplan.spielzeit = 8;
 					spielplan.pausenzeit = 2;
@@ -78,7 +78,7 @@ angular
 							if (!_.isUndefined(teamA)) {
 								addLastTeam(teamA);
 								Logger.log('Spielerstellung Nr. ' + i + ': TeamA gewählt: ' + teamA.name);
-	
+
 								var teamB = getPossibleGegner(gruppe, teamA);
 								if (!_.isUndefined(teamB)) {
 									addLastTeam(teamB);
@@ -137,6 +137,44 @@ angular
 							lastPlayingTeams = geradeSpielendeTeams
 							geradeSpielendeTeams = [];
 						}
+					}
+				}
+
+				if (_.last(spielplan.spiele).platz == 1) {
+					for (var j = 0; j < 2; j++) {
+						Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
+						var leeresSpiel = {
+							nummer: i
+							, platz: calcPlatz()
+							, uhrzeit: calcZeit()
+						}
+						promises.push($http.post('spiele', leeresSpiel));
+						spielplan.spiele.push(leeresSpiel);
+						i++;
+						spieleGesamt++;
+						spielplan.progress++;
+						spielplan.maxProgress++;
+						if (i > 1 && (i - 1) % 3 == 0) {
+							lastPlayingTeams = geradeSpielendeTeams
+							geradeSpielendeTeams = [];
+						}
+					}
+				} else if (_.last(spielplan.spiele).platz == 2) {
+					Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
+					var leeresSpiel = {
+						nummer: i
+						, platz: calcPlatz()
+						, uhrzeit: calcZeit()
+					}
+					promises.push($http.post('spiele', leeresSpiel));
+					spielplan.spiele.push(leeresSpiel);
+					i++;
+					spieleGesamt++;
+					spielplan.progress++;
+					spielplan.maxProgress++;
+					if (i > 1 && (i - 1) % 3 == 0) {
+						lastPlayingTeams = geradeSpielendeTeams
+						geradeSpielendeTeams = [];
 					}
 				}
 

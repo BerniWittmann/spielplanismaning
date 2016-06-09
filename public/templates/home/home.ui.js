@@ -33,6 +33,9 @@
 
 			if (n >= 0) {
 				var aktuellesSpielIndex;
+				while(n<allespiele.length && _.isUndefined(spiele[n].jugend)) {
+					n++;
+				}
 				if (spiele[n].platz == 3) {
 					aktuellesSpielIndex = n - 2;
 				} else if (spiele[n].platz == 2) {
