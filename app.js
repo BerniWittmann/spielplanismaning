@@ -9,6 +9,7 @@ var app = express();
 
 app.set('env', 'development');
 
+app.set('SECRET', process.env.SECRET);
 app.set('MONGODB_URI', process.env.MONGODB_URI);
 
 var mongoose = require('mongoose');
