@@ -124,3 +124,7 @@ body {
 .brand-image:hover .brand-image-hover {
 	display: block !important;
 }
+
+.valign {
+	vertical-align: middle !important;
+}

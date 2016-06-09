@@ -10,7 +10,7 @@
 			<table ng-table="vm.tableParams" class="table table-condensed table-striped table-hover" data-show-filter="true">
 				<tr ng-repeat="team in $data" data-ng-click="vm.gotoTeam(team)" class="text-center">
 					<td data-title="'Name'" data-sortable="'name'" class="text-left" data-filter="{name: 'text'}">{{team.name}}</td>
-					<td data-title="'Jugend'" data-ng-click="vm.gotoJugend(team.jugend); $event.stopPropagation();" data-sortable="'jugendName'" data-group="'jugendName'" data-filter="{jugendName: 'text'}"><spi-jugend-label jugend="team.jugend"></spi-jugend-label></td>
+					<td data-title="'Jugend'" data-ng-click="vm.gotoJugend(team.jugend); $event.stopPropagation();" data-sortable="'jugendName'" data-group="'jugendName'" data-filter="{jugendName: 'text'}" class="valign"><spi-jugend-label jugend="team.jugend"></spi-jugend-label></td>
 					<td data-title="'Gruppe'" data-ng-click="vm.gotoGruppe(team.gruppe); $event.stopPropagation();" data-sortable="'gruppenName'" data-filter="{gruppenName: 'text'}">{{team.gruppenName}}</td>
 					<td data-title="'Tore'" data-sortable="'tore'" data-filter="{tore: 'number'}">{{team.tore}}</td>
 					<td data-title="'GTore'" data-sortable="'gtore'" data-filter="{gtore: 'number'}">{{team.gtore}}</td>
