@@ -9,15 +9,13 @@ var app = express();
 
 app.set('env', 'development');
 
-app.set('SECRET', process.env.SECRET);
 app.set('MONGODB_URI', process.env.MONGODB_URI);
-console.log(app.get('MONGODB_URI'));
 
 var mongoose = require('mongoose');
 var passport = require('passport');
 
 // connect MongoDB
-mongoose.connect('mongodb://heroku_dfxcd8mn:c4jursvke7aml4pqp3j8f1qh5e@ds031751.mlab.com:31751/heroku_dfxcd8mn', function(err,db){
+mongoose.connect(app.get('MONGODB_URI'), function(err,db){
     if (!err){
         console.log('Connected to mLab');
     } else{
