@@ -46,14 +46,14 @@ describe('tabs', function() {
       };
       elm = $compile([
         '<uib-tabset class="hello" data-pizza="pepperoni" active="active">',
-        '  <uib-tab index="1" heading="First Tab {{first}}" classes="{{firstClass}}" select="selectFirst($event)" deselect="deselectFirst($event)">',
+        '  <uib-tab index="1" heading="First Tab {{first}}" classes="{{firstClass}}" select="selectFirst($event)" deselect="deselectFirst($event, $selectedIndex)">',
         '    first content is {{first}}',
         '  </uib-tab>',
-        '  <uib-tab index="2" classes="{{secondClass}}" select="selectSecond($event)" deselect="deselectSecond($event)">',
+        '  <uib-tab index="2" classes="{{secondClass}}" select="selectSecond($event)" deselect="deselectSecond($event, $selectedIndex)">',
         '    <uib-tab-heading><b>Second</b> Tab {{second}}</uib-tab-heading>',
         '    second content is {{second}}',
         '  </uib-tab>',
-        '  <uib-tab index="3" classes="{{thirdClass}}" deselect="deselectThird($event)">',
+        '  <uib-tab index="3" classes="{{thirdClass}}" deselect="deselectThird($event, $selectedIndex)">',
         '    <uib-tab-heading><b>Second</b> Tab {{third}}</uib-tab-heading>',
         '    third content is {{third}}',
         '  </uib-tab>',
@@ -118,12 +118,15 @@ describe('tabs', function() {
       titles().eq(1).find('> a').click();
       expect(scope.deselectFirst).toHaveBeenCalled();
       expect(scope.deselectFirst.calls.argsFor(0)[0].target).toBe(titles().eq(1).find('> a')[0]);
+      expect(scope.deselectFirst.calls.argsFor(0)[1]).toBe(1);
       titles().eq(0).find('> a').click();
       expect(scope.deselectSecond).toHaveBeenCalled();
       expect(scope.deselectSecond.calls.argsFor(0)[0].target).toBe(titles().eq(0).find('> a')[0]);
+      expect(scope.deselectSecond.calls.argsFor(0)[1]).toBe(0);
       titles().eq(1).find('> a').click();
       expect(scope.deselectFirst.calls.count()).toBe(2);
       expect(scope.deselectFirst.calls.argsFor(1)[0].target).toBe(titles().eq(1).find('> a')[0]);
+      expect(scope.deselectFirst.calls.argsFor(1)[1]).toBe(1);
     });
 
     it('should prevent tab deselection when $event.preventDefault() is called', function() {
@@ -220,6 +223,41 @@ describe('tabs', function() {
       expect(titles().eq(0)).not.toHaveClass('active');
       expect(titles().eq(1)).toHaveClass('active');
       expect(elm.controller('uibTabset').active).toBe(1);
+    });
+  });
+
+  describe('index as strings', function() {
+    beforeEach(inject(function($compile, $rootScope) {
+      scope = $rootScope.$new();
+      scope.first = 'one';
+      scope.second = 'two';
+      scope.active = 'two';
+      elm = $compile([
+        '<uib-tabset active="active">',
+        '  <uib-tab index="first" heading="First Tab">',
+        '    first content',
+        '  </uib-tab>',
+        '  <uib-tab index="second" heading="Second Tab">',
+        '    second content',
+        '  </uib-tab>',
+        '</uib-tabset>'
+      ].join('\n'))(scope);
+      scope.$apply();
+      return elm;
+    }));
+
+    it('should set second tab active', function() {
+      expect(titles().eq(0)).not.toHaveClass('active');
+      expect(titles().eq(1)).toHaveClass('active');
+      expect(elm.controller('uibTabset').active).toBe('two');
+    });
+
+    it('should change active on click', function() {
+      expect(titles().eq(0)).not.toHaveClass('active');
+      titles().eq(0).find('> a').click();
+      expect(titles().eq(0)).toHaveClass('active');
+      expect(titles().eq(1)).not.toHaveClass('active');
+      expect(elm.controller('uibTabset').active).toBe('one');
     });
   });
 
