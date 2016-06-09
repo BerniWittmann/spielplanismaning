@@ -557,13 +557,11 @@ router.post('/register', function (req, res, next) {
 			return next(err);
 		}
 
-		User.find({
-			username: 'default'
-		}).remove().exec(function (err, data) {
-			return res.json({
-				token: user.generateJWT()
-			});
+
+		return res.json({
+			token: user.generateJWT()
 		});
+
 	});
 });
 

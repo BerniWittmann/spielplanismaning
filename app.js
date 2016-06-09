@@ -9,6 +9,10 @@ var app = express();
 
 app.set('env', 'development');
 
+app.set('SECRET', process.env.SECRET);
+app.set('MONGODB_URI', process.env.MONGODB_URI);
+console.log(app.get('MONGODB_URI'));
+
 var mongoose = require('mongoose');
 var passport = require('passport');
 
@@ -36,8 +40,7 @@ var users = require('./routes/users');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/assets/img/hoelle_sued_logo_klein.png'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
