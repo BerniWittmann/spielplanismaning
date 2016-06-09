@@ -104,3 +104,23 @@ body {
 #page {
 	padding-bottom: 40px;
 }
+
+.brand-image {
+	margin-top: -6px;
+}
+
+.brand-image-normal {
+	display: block !important;
+}
+
+.brand-image-hover {
+	display: none !important;
+}
+
+.brand-image:hover .brand-image-normal {
+	display: none !important;
+}
+
+.brand-image:hover .brand-image-hover {
+	display: block !important;
+}
