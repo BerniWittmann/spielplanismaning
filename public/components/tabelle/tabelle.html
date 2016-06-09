@@ -1,0 +1,27 @@
+<div class="table-responsive" data-ng-if="vm.teams.length!==0">
+	<table class="table table-condensed table-striped table-hover">
+		<thead>
+			<tr class="text-center text-bold">
+				<td>Platz</td>
+				<td>Name</td>
+				<td>Tore</td>
+				<td>GTore</td>
+				<td>Tordiff.</td>
+				<td>P+</td>
+				<td>P-</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="team in vm.teams" data-ui-sref="spi.tgj.team({teamid: team._id})" class="text-center" data-ng-class="{'highlightTeam': team._id === vm.highlightedTeam._id}">
+				<td>{{$index + 1}}</td>
+				<td data-ng-click="vm.gotoTeam(team)">{{team.name}}</td>
+				<td>{{team.tore}}</td>
+				<td>{{team.gtore}}</td>
+				<td>{{team.tore - team.gtore}}</td>
+				<td>{{team.punkte}}</td>
+				<td>{{team.gpunkte}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="alert alert-info" data-ng-if="vm.teams.length===0">Keine Teams gefunden</div>

@@ -1,0 +1,21 @@
+<div class="row">
+	<div class="col-md-12 page-header">
+		<h3>{{vm.team.name}}
+			<small><span><spi-jugend-label jugend="vm.team.jugend"></spi-jugend-label></span>  <span class="padding-left-15">{{vm.team.gruppe.name}}</span></small>
+		</h3>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<h4>Spiele</h4>
+		<spi-spiele-tabelle data-spiele="vm.spiele"></spi-spiele-tabelle>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<h4>Aktuelle Tabelle</h4>
+		<spi-tabelle data-teams="vm.teams" data-highlighted-team="vm.team"></spi-tabelle>
+	</div>
+</div>

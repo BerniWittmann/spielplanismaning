@@ -1,0 +1,20 @@
+{{#if (not (or routeTo action))}}
+<a href="{{src}}" class="card-link {{class}}" alt="{{alt}}" target="{{target}}">
+  {{yield}}
+  {{title}}
+</a>
+{{/if}}
+
+{{#if routeTo}}
+  {{#link-to routeTo class='card-link' alt="{{alt}}"}}
+    {{yield}}
+    {{title}}
+  {{/link-to}}
+{{/if}}
+
+{{#if action}}
+  <span class="card-link" onclick={{action 'onClick'}}>
+    {{yield}}
+    {{title}}
+  </span>
+{{/if}}

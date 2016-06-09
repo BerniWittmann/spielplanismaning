@@ -1,0 +1,31 @@
+<div class="table-responsive" data-ng-if="vm.spiele.length!==0">
+	<table class="table table-condensed table-striped table-hover">
+		<thead>
+			<tr class="text-center text-bold">
+				<td>Uhrzeit</td>
+				<td>Platz</td>
+				<td>Jugend</td>
+				<td>Gruppe</td>
+				<td>Heim</td>
+				<td>Gast</td>
+				<td>Spielstand</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="spiel in vm.spiele" data-ng-click="vm.gotoSpiel(spiel)" class="text-center">
+				<td>{{spiel.uhrzeit}}</td>
+				<td>{{spiel.platz}}</td>
+				<td data-ng-click="vm.gotoJugend(spiel.jugend); $event.stopPropagation();">
+					<spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
+				</td>
+				<td data-ng-click="vm.gotoGruppe(spiel.gruppe); $event.stopPropagation();">{{spiel.gruppe.name}}</td>
+				<td data-ng-click="vm.gotoTeam(spiel.teamA); $event.stopPropagation();">{{spiel.teamA.name}}</td>
+				<td data-ng-click="vm.gotoTeam(spiel.teamB); $event.stopPropagation();">{{spiel.teamB.name}}</td>
+				<td>
+					<div data-ng-if="spiel.jugend && spiel.beendet">{{spiel.toreA}} : {{spiel.toreB}}</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="alert alert-info" data-ng-if="vm.spiele.length===0">Keine Spiele gefunden</div>

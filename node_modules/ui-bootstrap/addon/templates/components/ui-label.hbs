@@ -1,0 +1,7 @@
+<span class="label label-{{_mood}}{{_size}} {{if isPill 'label-pill'}}{{if clickable ' bs-clickable'}}" onclick={{action 'onClick'}}>
+  {{#if hasBlock}}
+    {{yield}}
+  {{else}}
+    {{title}}
+  {{/if}}
+</span>

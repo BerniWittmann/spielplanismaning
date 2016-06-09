@@ -1,0 +1,30 @@
+<div class="modal-header">
+	<h3 class="modal-title">{{vm.gruppe.name}} bearbeiten</h3>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12">
+			<table>
+				<tr data-ng-repeat="team in vm.teams">
+					<td> <a data-ui-sref="spi.tgj.team({teamid: team._id})">{{team.name}}</a></td> 
+					<td class="padding-left-15" data-ng-click="vm.deleteTeam(team._id)"><i class="icon-hover fa fa-remove"></i></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<form ng-submit="vm.addTeam()" style="margin-top:30px;">
+				<h5>Team zur Gruppe hinzufügen</h5>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Team-Name" ng-model="vm.team.name"></input>
+				</div>
+				<button type="submit" class="btn btn-primary">anlegen</button>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="vm.abbrechen()">Schließen</button>
+</div>

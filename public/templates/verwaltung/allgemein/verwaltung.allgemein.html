@@ -1,0 +1,51 @@
+<div class="row">
+	<div class="col-md-12 page-header">
+		<h3>Verwaltung Allgemein</h3>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<form name="spielzeitForm" ng-submit="vm.saveSpielzeit()">
+			<div class="row">
+				<div class="form-group col-md-4">
+					<div class="control-label center-block text-center special-padding-right" style="width: inherit;">Startzeit</div>
+					<uib-timepicker class="center-block" style="width: inherit;" ng-model="vm.startzeit" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
+				</div>
+				<div class="form-group col-md-4">
+					<div class="control-label center-block text-center" style="width: inherit;">Spielzeit</div>
+					<div class="center-block width-60">
+						<a ng-click="vm.increment('spielzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+						<input type="number" class="form-control width-60 text-center" min="1" ng-model="vm.spielzeit"></input>
+						<a ng-click="vm.decrement('spielzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
+					</div>
+				</div>
+				<div class="form-group col-md-4">
+					<div class="control-label center-block text-center" style="width: inherit;">Pausenzeit</div>
+					<div class="center-block width-60">
+						<a ng-click="vm.increment('pausenzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+						<input type="number" class="form-control width-60 text-center" min="1" ng-model="vm.pausenzeit"></input>
+						<a ng-click="vm.decrement('pausenzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="btn btn-primary center-block">Speichern</button>
+		</form>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<form ng-submit="vm.register()" style="margin-top:30px;">
+			<h3>User anlegen</h3>
+
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Username" ng-model="vm.user.username"></input>
+			</div>
+			<div class="form-group">
+				<input type="password" class="form-control" placeholder="Passwort" ng-model="vm.user.password"></input>
+			</div>
+			<button type="submit" class="btn btn-primary">anlegen</button>
+		</form>
+	</div>
+</div>

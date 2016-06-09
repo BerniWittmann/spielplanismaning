@@ -1,0 +1,46 @@
+<div class="row">
+	<div class="col-md-12 page-header">
+		<h3>Spiel #{{vm.spiel.nummer}}
+		<small><span><spi-jugend-label jugend="vm.spiel.jugend"></spi-jugend-label></span>  <span class="padding-left-15">{{vm.spiel.gruppe.name}}</span></small>
+		</h3>
+	</div>
+</div>
+
+<div class="row text-center">
+	<div class="col-md-12">
+		<h2>{{vm.spiel.uhrzeit}} Uhr</h2>
+		<h4>Platz {{vm.spiel.platz}}</h4>
+	</div>
+</div>
+
+<div class="row text-center">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-5">
+				<h4>Heim</h4>
+			</div>
+
+			<div class="col-md-5 col-md-offset-2">
+				<h4>Gast</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5">
+				<h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)">{{vm.spiel.teamA.name}}</h3>
+			</div>
+			<div class="col-md-2">
+				<h1 data-ng-if="vm.spiel.beendet"><span class="score">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</span></h1>
+			</div>
+			<div class="col-md-5">
+				<h3 data-ng-click="vm.gotoTeam(vm.spiel.teamB)">{{vm.spiel.teamB.name}}</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-ng-if="vm.spiel.beendet" class="row text-center">
+	<div class="col-md-12">
+		<h5 data-ng-if="vm.spiel.unentschieden">Unentschieden</h5>
+		<h5 data-ng-if="!vm.spiel.unentschieden" data-ng-click="vm.gotoTeam(vm.spiel.gewinner)">{{vm.spiel.gewinner.name}} hat gewonnen</h5>
+	</div>
+</div>

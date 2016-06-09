@@ -1,0 +1,21 @@
+<td class="text-center">{{vm.spiel.nummer}}</td>
+<td class="text-center">{{vm.spiel.uhrzeit}}</td>
+<td class="text-center">{{vm.spiel.platz}}</td>
+<td data-ng-click="vm.gotoJugend(vm.spiel.jugend); $event.stopPropagation();">
+	<spi-jugend-label data-jugend="vm.spiel.jugend"></spi-jugend-label>
+</td>
+<td data-ng-click="vm.gotoGruppe(vm.spiel.gruppe); $event.stopPropagation();">{{vm.spiel.gruppe.name}}</td>
+<td data-ng-click="vm.gotoTeam(vm.spiel.teamA); $event.stopPropagation();">{{vm.spiel.teamA.name}}</td>
+<td data-ng-click="vm.gotoTeam(vm.spiel.teamB); $event.stopPropagation();">{{vm.spiel.teamB.name}}</td>
+<td class="text-center">
+	<div data-ng-if="vm.spiel.jugend">
+		<div data-ng-if="vm.isLoggedIn">
+			<input type="number" min="0" ng-model="vm.spiel.toreA" ng-model-options="{ debounce: 500 }" class="spielplannumberinput" data-ng-click="$event.stopPropagation();">
+			<span> : </span>
+			<input type="number" min="0" ng-model="vm.spiel.toreB" ng-model-options="{ debounce: 500 }" class="spielplannumberinput" data-ng-click="$event.stopPropagation();">
+		</div>
+		<div data-ng-if="!vm.isLoggedIn && vm.spiel.beendet">
+			{{vm.spiel.toreA}} : {{vm.spiel.toreB}}
+		</div>
+	</div>
+</td>
