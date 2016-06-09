@@ -13,9 +13,9 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 
 // connect MongoDB
-mongoose.connect('mongodb://heroku_pzq5pm65:pvcgkoo99ktbaiigb8r8q5jp4q@ds011734.mlab.com:11734/heroku_pzq5pm65', function(err,db){
+mongoose.connect('mongodb://heroku_dfxcd8mn:c4jursvke7aml4pqp3j8f1qh5e@ds031751.mlab.com:31751/heroku_dfxcd8mn', function(err,db){
     if (!err){
-        console.log('Connected to /heroku_pzq5pm65!');
+        console.log('Connected to mLab');
     } else{
         console.log(err); //failed to connect
     }
