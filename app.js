@@ -13,12 +13,11 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 
 // connect MongoDB
-mongoose.connect('mongodb://heroku_pzq5pm65:mlab!qwEU92Jp@ds011734.mlab.com:11734/heroku_pzq5pm65', function(err,db){
-	console.log('Test');
+mongoose.connect('mongodb://heroku_pzq5pm65:pvcgkoo99ktbaiigb8r8q5jp4q@ds011734.mlab.com:11734/heroku_pzq5pm65', function(err,db){
     if (!err){
         console.log('Connected to /heroku_pzq5pm65!');
     } else{
-        console.dir(err); //failed to connect
+        console.log(err); //failed to connect
     }
 });
 
