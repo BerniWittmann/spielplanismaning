@@ -1,0 +1,17 @@
+@media print {
+	header,
+	footer {
+		display: none;
+	}
+	.label {
+		border: none !important;
+		font-weight: normal;
+	}
+	input {
+		border: none;
+		outline: none;
+		background-color: transparent;
+		font-family: inherit;
+		font-size: inherit;
+	}
+}
