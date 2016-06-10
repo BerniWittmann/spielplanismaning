@@ -49,6 +49,7 @@
 				o.gruppenName = o.gruppe.name;
 				o.tordiff = o.tore - o.gtore;
 			});
+			vm.teams = _.sortBy(vm.teams, ['jugendName', 'gruppenName', 'name']);
 			_.extend(vm, {
 				tableParams: new NgTableParams({
 					count: 10
