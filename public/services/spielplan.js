@@ -177,7 +177,8 @@ angular
 						geradeSpielendeTeams = [];
 					}
 				}
-
+				
+				spielplan.maxProgress++;
 				return $q.all(promises).then(pushSpiele, function (err) {
 					console.log(err);
 				});

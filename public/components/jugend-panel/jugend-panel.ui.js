@@ -68,7 +68,7 @@
 
 		function getGruppen() {
 			gruppe.getByJugend(vm.jugend._id).then(function (res) {
-				vm.gruppen = res;
+				vm.gruppen = _.sortBy(res, 'name');
 				vm.loading = false;
 			})
 		}

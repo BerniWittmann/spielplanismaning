@@ -42,7 +42,7 @@
 			vm.prog = spielplan.progress;
 			vm.progMax = spielplan.maxProgress;
 			if (vm.prog > 0 && vm.progMax > 0) {
-				vm.progDisplay = Math.round(vm.prog / vm.progMax);
+				vm.progDisplay = Math.floor(vm.prog / vm.progMax);
 				if (vm.progDisplay == 1) {
 					vm.progDisplay = "100%";
 				} else {

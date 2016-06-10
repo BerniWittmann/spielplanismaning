@@ -26,7 +26,7 @@
 							return gewaehlteGruppe;
 						}
 					}
-					, size: 'sm'
+					, size: 'md'
 				});
 		}
 	}
@@ -87,7 +87,7 @@
 
 		function getTeamsByGruppe() {
 			team.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
-				vm.teams = res;
+				vm.teams = _.sortBy(res, 'name');
 				vm.loading = false;
 			})
 		}

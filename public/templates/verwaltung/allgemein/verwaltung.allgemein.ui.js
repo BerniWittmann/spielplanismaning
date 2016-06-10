@@ -39,13 +39,11 @@
 			, spielzeit: 8
 			, pausenzeit: 2
 			, saveSpielzeit: function () {
-				if ($scope.spielzeitForm.$valid) {
-					spielplan.saveZeiten({
-						startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
-						, spielzeit: vm.spielzeit
-						, pausenzeit: vm.pausenzeit
-					});
-				}
+				spielplan.saveZeiten({
+					startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
+					, spielzeit: vm.spielzeit
+					, pausenzeit: vm.pausenzeit
+				});
 
 			}
 			, increment: function (name) {
