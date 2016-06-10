@@ -3,7 +3,7 @@
 
 	angular
 		.module('spi.verwaltung.gruppe-edit-modal.ui', [
-      		'spi.team', 'spi.gruppe', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan'
+      		'spi.team', 'spi.gruppe', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.verwaltung.team-edit-modal.ui'
         ])
 		.service('GruppeEditierenDialog', GruppeEditierenDialog)
 		.controller('GruppeEditierenController', GruppeEditierenController);
@@ -26,7 +26,8 @@
 							return gewaehlteGruppe;
 						}
 					}
-				, });
+					, size: 'sm'
+				});
 		}
 	}
 
@@ -37,6 +38,7 @@
 		, gruppe
 		, gewGruppe
 		, spielplan
+		, TeamEditierenDialog
 	) {
 		var vm = this;
 		vm.loading = true;
@@ -76,6 +78,9 @@
 					});
 					vm.loading = false;
 				});
+			}
+			, editTeam: function (gewTeam) {
+				TeamEditierenDialog.open(gewTeam);
 			}
 		});
 		getTeamsByGruppe();

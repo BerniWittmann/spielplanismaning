@@ -21,7 +21,7 @@
 				<input type="text" class="form-control" placeholder="Name" ng-model="vm.jugend.name" required></input>
 			</div>
 			<div class="form-group">
-				<select class="form-control" placeholder="Farbe" ng-model="vm.jugend.color">
+				<select class="form-control" placeholder="Farbe" ng-model="vm.jugend.color" required>
 					<option value="" selected>Farbe wählen...</option>
 					<option data-ng-repeat="farbe in vm.farben" value="{{farbe.wert}}">{{farbe.name}}</option>
 				</select>

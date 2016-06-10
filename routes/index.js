@@ -147,6 +147,18 @@ router.put('/teams/resetErgebnisse', function (req, res, next) {
 	});
 });
 
+router.put('/teams/:team', function (req, res) {
+	var team = req.team;
+	team.name = req.body.name;
+	team.save(function (err, team) {
+		if (err) {
+			throw err;
+		}
+
+		res.json(team);
+	});
+});
+
 /* Gruppen */
 
 router.get('/jugenden/:jugend/gruppen', function (req, res, next) {

@@ -41,6 +41,13 @@ angular
 					return res;
 				});
 			}
+			
+			team.updateName = function (team, name) {
+				team.name = name;
+				return $http.put('/teams/' + team._id, team).then(function (res) {
+					return res;
+				});
+			}
 
 			return team;
 }]);
