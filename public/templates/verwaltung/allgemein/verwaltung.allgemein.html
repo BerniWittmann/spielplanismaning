@@ -44,9 +44,9 @@
 </div>
 
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-2 col-md-offset-5">
 		<form ng-submit="vm.register()" style="margin-top:30px;">
-			<h3>User anlegen</h3>
+			<h3 class="text-center">User anlegen</h3>
 
 			<div class="form-group">
 				<input type="text" class="form-control" placeholder="Username" ng-model="vm.user.username"></input>
@@ -54,7 +54,7 @@
 			<div class="form-group">
 				<input type="password" class="form-control" placeholder="Passwort" ng-model="vm.user.password"></input>
 			</div>
-			<button type="submit" class="btn btn-primary">anlegen</button>
+			<button type="submit" class="btn btn-primary center-block">anlegen</button>
 		</form>
 	</div>
 </div>

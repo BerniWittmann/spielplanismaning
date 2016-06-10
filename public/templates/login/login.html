@@ -1,11 +1,11 @@
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-2 col-md-offset-5">
 		<div ng-show="vm.error" class="alert alert-danger">
 			<span>{{ vm.error.message }}</span>
 		</div>
 
-		<form ng-submit="vm.login()" style="margin-top:30px;">
-			<h3>Log In</h3>
+		<form ng-submit="vm.login()" style="margin-top:80px;">
+			<h3 class="width-100 text-center">Log In</h3>
 
 			<div class="form-group">
 				<input type="text" class="form-control" placeholder="Username" ng-model="vm.user.username"></input>
@@ -13,7 +13,7 @@
 			<div class="form-group">
 				<input type="password" class="form-control" placeholder="Passwort" ng-model="vm.user.password"></input>
 			</div>
-			<button type="submit" class="btn btn-primary">Log In</button>
+			<button type="submit" class="btn btn-primary center-block">Log In</button>
 		</form>
 	</div>
 </div>
