@@ -17,6 +17,7 @@
 
 	function GruppenPanelController(auth, gruppe) {
 		var vm = this;
+		vm.loading = true;
 
 		_.extend(vm, {
 			teams: []
@@ -29,6 +30,7 @@
 			gruppe.get(vm.gruppe._id).then(function (res) {
 				vm.gruppe = res;
 				vm.teams = res.teams;
+				vm.loading = false;
 			})
 		}
 	}

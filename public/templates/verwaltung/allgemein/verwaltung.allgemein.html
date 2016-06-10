@@ -4,7 +4,9 @@
 	</div>
 </div>
 
-<div class="row">
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
 	<div class="col-md-12">
 		<form name="spielzeitForm" ng-submit="vm.saveSpielzeit()">
 			<div class="row">

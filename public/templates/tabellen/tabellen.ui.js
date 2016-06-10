@@ -21,6 +21,7 @@
 
 	function TabellenController(gruppe, jugend, $stateParams) {
 		var vm = this;
+		vm.loading = true;
 		vm.gesamt = 0;
 
 		jugend.getAll().then(function (res) {
@@ -37,6 +38,7 @@
 					});
 				}
 			});
+			vm.loading = false;
 		});
 	}
 })();

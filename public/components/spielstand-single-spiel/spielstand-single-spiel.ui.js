@@ -69,7 +69,7 @@
 		function saveSpiel() {
 			if (!_.isUndefined(vm.spiel.toreA) && !_.isUndefined(vm.spiel.toreB) && !_.isNull(vm.spiel.toreA) && !_.isNull(vm.spiel.toreB) && (!_.isEqual(altToreA, vm.spiel.toreA) || !_.isEqual(altToreB, vm.spiel.toreB))) {
 				spiel.updateTore(vm.spiel).then(function (res) {
-					Logger.log(res);
+					//Logger.log(res);
 				});
 
 			}

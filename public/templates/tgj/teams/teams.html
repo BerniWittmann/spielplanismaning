@@ -4,7 +4,9 @@
 	</div>
 </div>
 
-<div class="row">
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
 	<div class="col-md-12">
 		<div class="table-responsive">
 			<table ng-table="vm.tableParams" class="table table-condensed table-striped table-hover" data-show-filter="true">

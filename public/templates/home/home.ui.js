@@ -34,7 +34,7 @@
 
 			if (n >= 0) {
 				var aktuellesSpielIndex;
-				while(n<allespiele.length && _.isUndefined(spiele[n].jugend)) {
+				while (n < allespiele.length && _.isUndefined(spiele[n].jugend)) {
 					n++;
 				}
 				if (spiele[n].platz == 3) {
@@ -51,8 +51,8 @@
 				vm.aktuelleSpiele = [];
 				vm.neachsteSpiele = [];
 			}
-			setTimeout()
 			vm.loading = false;
+
 		});
 	}
 })();

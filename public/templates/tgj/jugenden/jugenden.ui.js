@@ -21,6 +21,7 @@
 
 	function JugendenController($state, jugend) {
 		var vm = this;
+		vm.loading = true;
 
 		_.extend(vm, {
 			jugenden: []
@@ -28,6 +29,7 @@
 
 		jugend.getAll().then(function (response) {
 			vm.jugenden = response.data;
+			vm.loading = false;
 		});
 	}
 })();

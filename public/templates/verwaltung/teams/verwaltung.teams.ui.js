@@ -21,6 +21,7 @@
 
 	function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan) {
 		var vm = this;
+		vm.loading = true;
 
 		_.extend(vm, {
 			jugend: {}
@@ -93,6 +94,7 @@
 		function getAll() {
 			jugend.getAll().then(function (response) {
 				vm.jugenden = response.data;
+				vm.loading = false;
 			});
 		}
 

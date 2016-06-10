@@ -1,6 +1,7 @@
 <spi-panel data-ng-if="vm.gruppe._id">
 	<spi-panel-titel><a data-ui-sref="spi.tgj.gruppe({gruppeid: vm.gruppe._id})">{{vm.gruppe.name}}</a> <spi-jugend-label jugend="vm.gruppe.jugend"></spi-jugend-label></spi-panel-titel>
-	<div class="row">
+	<spi-loader loading="vm.loading"></spi-loader>
+	<div class="row" data-ng-if="!vm.loading">
 		<div class="col-md-12">
 			<table>
 				<tr data-ng-repeat="team in vm.teams">

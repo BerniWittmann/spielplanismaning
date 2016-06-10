@@ -39,6 +39,7 @@
 		, spielplan
 	) {
 		var vm = this;
+		vm.loading = true;
 
 		_.extend(vm, {
 			gruppe: gewGruppe
@@ -48,6 +49,7 @@
 			}
 			, team: {}
 			, addTeam: function () {
+				vm.loading = true;
 				_.extend(vm.team, {
 					gruppe: vm.gruppe._id
 					, jugend: vm.gruppe.jugend._id
@@ -56,6 +58,7 @@
 					spielplan.createSpielplan();
 					vm.teams.push(res.data);
 					vm.team = {};
+					vm.loading = false;
 				});
 			}
 			, gotoTeam: function (teamid) {
@@ -65,11 +68,13 @@
 				$uibModalInstance.dismiss('cancel');
 			}
 			, deleteTeam: function (teamid) {
+				vm.loading = true;
 				team.delete(teamid).then(function (res) {
 					spielplan.createSpielplan();
 					vm.teams = _.remove(vm.teams, function (n) {
 						return !_.isEqual(n._id, teamid);
 					});
+					vm.loading = false;
 				});
 			}
 		});
@@ -78,6 +83,7 @@
 		function getTeamsByGruppe() {
 			team.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
 				vm.teams = res;
+				vm.loading = false;
 			})
 		}
 

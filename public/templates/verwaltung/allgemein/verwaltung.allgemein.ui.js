@@ -21,6 +21,7 @@
 
 	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope) {
 		var vm = this;
+		vm.loading = true;
 		var d = new Date();
 		d.setHours(9);
 		d.setMinutes(0);
@@ -76,6 +77,7 @@
 				vm.spielzeit = response.data.spielzeit;
 				vm.pausenzeit = response.data.pausenzeit;
 			}
+			vm.loading = false;
 		});
 	}
 })();

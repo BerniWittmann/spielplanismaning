@@ -6,14 +6,16 @@
 	</div>
 </div>
 
-<div class="row">
+<spi-loader loading="loading"></spi-loader>
+
+<div class="row" data-ng-if="!loading">
 	<div class="col-md-12">
 		<h4>Spiele</h4>
 		<spi-spiele-tabelle data-spiele="vm.spiele" data-highlighted-team="vm.team"></spi-spiele-tabelle>
 	</div>
 </div>
 
-<div class="row">
+<div class="row" data-ng-if="!loading">
 	<div class="col-md-12">
 		<h4>Aktuelle Tabelle</h4>
 		<spi-tabelle data-teams="vm.teams" data-highlighted-team="vm.team"></spi-tabelle>

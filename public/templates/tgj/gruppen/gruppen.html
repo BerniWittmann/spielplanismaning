@@ -4,8 +4,9 @@
 	</div>
 </div>
 
-<div class="row">
-	<spi-loader loading="vm.loading"></spi-loader>
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
 	<div class="col-md-3" data-ng-repeat="gruppe in vm.gruppen">
 		<spi-gruppen-panel data-gruppe="gruppe"></spi-gruppen-panel>
 	</div>

@@ -21,6 +21,7 @@
 
 	function TeamsController($state, team, NgTableParams) {
 		var vm = this;
+		vm.loading = true;
 
 		_.extend(vm, {
 			teams: []
@@ -56,6 +57,7 @@
 					, data: vm.teams
 				})
 			});
+			vm.loading = false;
 		});
 	}
 })();
