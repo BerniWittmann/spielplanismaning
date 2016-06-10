@@ -4,18 +4,18 @@
 	</div>
 </div>
 
-<div class="row">
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
 	<div class="col-md-12">
 		<h4>Aktuelle Spiele</h4>
-		<spi-loader loading="vm.loading"></spi-loader>
 		<spi-spiele-tabelle spiele="vm.aktuelleSpiele"></spi-spiele-tabelle>
 	</div>
 </div>
 
-<div class="row">
+<div class="row" data-ng-if="!vm.loading">
 	<div class="col-md-12">
 		<h4>Nächste Spiele</h4>
-		<spi-loader loading="vm.loading"></spi-loader>
 		<spi-spiele-tabelle spiele="vm.neachsteSpiele"></spi-spiele-tabelle>
 	</div>
 </div>

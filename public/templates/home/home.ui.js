@@ -51,6 +51,7 @@
 				vm.aktuelleSpiele = [];
 				vm.neachsteSpiele = [];
 			}
+			setTimeout()
 			vm.loading = false;
 		});
 	}
