@@ -188,9 +188,6 @@ angular
 						spielplan.spiele = spiele;
 					});
 
-					if (checkFinalSpiele()) {
-						createFinalSpiele();
-					}
 					spielplan.progress = spielplan.maxProgress;
 					spielplanerstellungRunning = false;
 				}
@@ -315,15 +312,6 @@ angular
 			var max = (gruppe.teams.length * (gruppe.teams.length - 1) / 2);
 			var result = getSpieleByGruppe(gruppe).length;
 			return result < max;
-		}
-
-		function checkFinalSpiele() {
-			//TODO 
-			return true;
-		}
-
-		function createFinalSpiele() {
-			//TODO
 		}
 
 		window.onbeforeunload = function () {

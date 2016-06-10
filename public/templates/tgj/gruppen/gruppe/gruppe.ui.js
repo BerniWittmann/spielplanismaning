@@ -25,7 +25,7 @@
 		gruppe.get($stateParams.gruppeid).then(function (response) {
 			vm.gruppe = response;
 			spiel.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
-				vm.spiele = res;
+				vm.spiele = _.sortBy(res, ['nummer']);
 			})
 		});
 		

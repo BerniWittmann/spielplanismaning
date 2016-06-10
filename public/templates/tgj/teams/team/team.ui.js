@@ -31,7 +31,7 @@
 		});
 
 		spiel.getByTeam($stateParams.teamid).then(function (response) {
-			vm.spiele = response;
+			vm.spiele = _.sortBy(response, ['nummer']);
 		});
 	}
 })();

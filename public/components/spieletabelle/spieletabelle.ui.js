@@ -13,7 +13,7 @@
 			, controllerAs: 'vm'
 		});
 
-	function SpieleTabellenController($state) {
+	function SpieleTabellenController($state, $scope) {
 		var vm = this;
 
 		_.extend(vm, {

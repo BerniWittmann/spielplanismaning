@@ -27,7 +27,7 @@
 		});
 
 		spiel.getByJugend($stateParams.jugendid).then(function (response) {
-			vm.spiele = response;
+			vm.spiele = _.sortBy(response, ['nummer']);
 		});
 	}
 })();
