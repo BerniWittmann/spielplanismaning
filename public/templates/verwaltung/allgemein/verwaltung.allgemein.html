@@ -11,21 +11,30 @@
 				<div class="form-group col-md-4">
 					<div class="control-label center-block text-center special-padding-right" style="width: inherit;">Startzeit</div>
 					<uib-timepicker class="center-block" style="width: inherit;" ng-model="vm.startzeit" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
+					<div class="alert alert-danger col-md-8 col-md-offset-2" data-ng-if="spielzeitForm.$error.time">
+						Ungültige Eingabe
+					</div>
 				</div>
 				<div class="form-group col-md-4">
 					<div class="control-label center-block text-center" style="width: inherit;">Spielzeit</div>
 					<div class="center-block width-60">
 						<a ng-click="vm.increment('spielzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
-						<input type="number" class="form-control width-60 text-center" min="1" ng-model="vm.spielzeit"></input>
+						<input name="spielzeit" type="number" class="form-control width-60 text-center" min="1" ng-model="vm.spielzeit" required ng-class="{'has-error': !spielzeitForm.spielzeit.$valid}"></input>
 						<a ng-click="vm.decrement('spielzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
+					</div>
+					<div class="alert alert-danger col-md-8 col-md-offset-2" data-ng-if="!spielzeitForm.spielzeit.$valid">
+						Ungültige Eingabe
 					</div>
 				</div>
 				<div class="form-group col-md-4">
 					<div class="control-label center-block text-center" style="width: inherit;">Pausenzeit</div>
 					<div class="center-block width-60">
 						<a ng-click="vm.increment('pausenzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
-						<input type="number" class="form-control width-60 text-center" min="1" ng-model="vm.pausenzeit"></input>
+						<input name="pausenzeit" type="number" class="form-control width-60 text-center" min="1" ng-model="vm.pausenzeit" required ng-class="{'has-error': !spielzeitForm.pausenzeit.$valid}"></input>
 						<a ng-click="vm.decrement('pausenzeit')" class="btn btn-link center-block" style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
+					</div>
+					<div class="alert alert-danger col-md-8 col-md-offset-2" data-ng-if="!spielzeitForm.pausenzeit.$valid">
+						Ungültige Eingabe
 					</div>
 				</div>
 			</div>

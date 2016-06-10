@@ -19,7 +19,7 @@
 
 	}
 
-	function VerwaltungAllgemeinController(auth, $state, spielplan) {
+	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope) {
 		var vm = this;
 		var d = new Date();
 		d.setHours(9);
@@ -38,11 +38,14 @@
 			, spielzeit: 8
 			, pausenzeit: 2
 			, saveSpielzeit: function () {
-				spielplan.saveZeiten({
-					startzeit: moment(vm.startzeit.toISOString()).format('HH:mm'),
-					spielzeit: vm.spielzeit,
-					pausenzeit: vm.pausenzeit
-				});
+				if ($scope.spielzeitForm.$valid) {
+					spielplan.saveZeiten({
+						startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
+						, spielzeit: vm.spielzeit
+						, pausenzeit: vm.pausenzeit
+					});
+				}
+
 			}
 			, increment: function (name) {
 				if (_.isEqual(name, 'spielzeit')) {
@@ -67,8 +70,8 @@
 		spielplan.getZeiten().then(function (response) {
 			if (!_.isUndefined(response.data) && !_.isNull(response.data)) {
 				var d = new Date();
-				d.setHours(parseInt(response.data.startzeit.substring(0,2)));
-				d.setMinutes(parseInt(response.data.startzeit.substring(3,5)));
+				d.setHours(parseInt(response.data.startzeit.substring(0, 2)));
+				d.setMinutes(parseInt(response.data.startzeit.substring(3, 5)));
 				vm.startzeit = d;
 				vm.spielzeit = response.data.spielzeit;
 				vm.pausenzeit = response.data.pausenzeit;
