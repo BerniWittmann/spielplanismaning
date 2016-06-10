@@ -2,15 +2,15 @@
 	'use strict';
 
 	angular
-		.module('spi.spielstand.singlespiel.ui', [
+		.module('spi.spielplan.singlespiel.ui', [
             'spi.auth', 'spi.spiel'
         ])
-		.controller('SpielstandSingleSpielController', SpielstandSingleSpielController)
+		.controller('SpielplanSingleSpielController', SpielplanSingleSpielController)
 		.directive('spiSingleSpiel', function () {
 			return {
-				templateUrl: 'components/spielstand-single-spiel/spielstand-single-spiel.html'
+				templateUrl: 'components/spielplan-single-spiel/spielplan-single-spiel.html'
 				, restrict: 'A'
-				, controller: 'SpielstandSingleSpielController'
+				, controller: 'SpielplanSingleSpielController'
 				, controllerAs: 'vm'
 				, scope: {
 					'spiSingleSpiel': '='
@@ -18,7 +18,7 @@
 			}
 		});
 
-	function SpielstandSingleSpielController($scope, $state, auth, spiel, Logger) {
+	function SpielplanSingleSpielController($scope, $state, auth, spiel, Logger) {
 		var vm = this;
 
 		_.extend(vm, {
