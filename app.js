@@ -27,7 +27,7 @@ require('./models/Jugenden');
 require('./models/Spiele');
 require('./models/Spielplan');
 require('./models/Teams');
-require('./models/Users')(process.env.SECRET);
+require('./models/Users')((process.env.SECRET || 'SECRET'));
 require('./config/passport');
 
 var routes = require('./routes/index');
