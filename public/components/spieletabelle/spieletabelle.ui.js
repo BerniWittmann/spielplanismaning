@@ -7,7 +7,8 @@
 		.component('spiSpieleTabelle', {
 			templateUrl: 'components/spieletabelle/spieletabelle.html'
 			, bindings: {
-				spiele: '='
+				spiele: '=',
+				highlightedTeam: '<'
 			}
 			, controller: 'SpieleTabellenController'
 			, controllerAs: 'vm'

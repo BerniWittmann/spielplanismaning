@@ -19,8 +19,8 @@
 					<spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
 				</td>
 				<td data-ng-click="vm.gotoGruppe(spiel.gruppe); $event.stopPropagation();">{{spiel.gruppe.name}}</td>
-				<td data-ng-click="vm.gotoTeam(spiel.teamA); $event.stopPropagation();">{{spiel.teamA.name}}</td>
-				<td data-ng-click="vm.gotoTeam(spiel.teamB); $event.stopPropagation();">{{spiel.teamB.name}}</td>
+				<td data-ng-click="vm.gotoTeam(spiel.teamA); $event.stopPropagation();" data-ng-class="{'highlightTeamName': spiel.teamA._id === vm.highlightedTeam._id}">{{spiel.teamA.name}}</td>
+				<td data-ng-click="vm.gotoTeam(spiel.teamB); $event.stopPropagation();" data-ng-class="{'highlightTeamName': spiel.teamB._id === vm.highlightedTeam._id}">{{spiel.teamB.name}}</td>
 				<td>
 					<div data-ng-if="spiel.jugend && spiel.beendet">{{spiel.toreA}} : {{spiel.toreB}}</div>
 				</td>
