@@ -6,7 +6,7 @@
 
 <div class="row">
 	<div class="col-md-12">
-		<table class="table table-condensed table-striped table-hover">
+		<table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading">
 			<thead>
 				<tr>
 					<th class="text-center">Nr</th>
@@ -23,5 +23,6 @@
 				<tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'platz3': spiel.platz=='3'}" spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
 			</tbody>
 		</table>
+		<spi-loader loading="vm.loading"></spi-loader>
 	</div>
 </div>

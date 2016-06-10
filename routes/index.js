@@ -29,7 +29,7 @@ router.get('/teams', function (req, res, next) {
 
 	query.populate('gruppe').populate('jugend').exec(function (err, teams) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(teams);
@@ -40,20 +40,20 @@ router.delete('/teams/:team', function (req, res) {
 	req.team.jugend.teams.splice(req.team.jugend.teams.indexOf(req.team), 1);
 	req.team.jugend.save(function (err, jugend) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		req.team.gruppe.teams.splice(req.team.gruppe.teams.indexOf(req.team), 1);
 		req.team.gruppe.save(function (err, gruppe) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			Team.remove({
 				"_id": req.team
 			}, function (err) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 
 				res.json("success");
@@ -69,19 +69,19 @@ router.post('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res, next)
 
 	team.save(function (err, team) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		req.gruppe.teams.push(team);
 		req.gruppe.save(function (err, gruppe) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			req.jugend.teams.push(team);
 			req.jugend.save(function (err, jugend) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 
 				res.json(team);
@@ -95,7 +95,7 @@ router.param('team', function (req, res, next, id) {
 
 	query.populate('jugend').populate('gruppe').exec(function (err, team) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		if (!team) {
 			return next(new Error('can\'t find Team'));
@@ -118,7 +118,7 @@ router.get('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res, next) 
 
 	query.populate('jugend').populate('gruppe').exec(function (err, team) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		if (!team) {
 			return next(new Error('can\'t find Team'));
@@ -132,14 +132,14 @@ router.put('/teams/resetErgebnisse', function (req, res, next) {
 	var query = Team.find({});
 	query.exec(function (err, teams) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		for (var i = 0; i < teams.length; i++) {
 			var team = teams[i];
 			team.resetErgebnis(function (err, team) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 			})
 		}
@@ -156,7 +156,7 @@ router.get('/jugenden/:jugend/gruppen', function (req, res, next) {
 
 	query.populate('jugend').populate('teams').exec(function (err, gruppe) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		if (!gruppe) {
 			return next(new Error('can\'t find Gruppe'));
@@ -179,13 +179,13 @@ router.post('/jugenden/:jugend/gruppen', function (req, res, next) {
 		} else {
 			gruppe.save(function (err, gruppe) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 
 				req.jugend.gruppen.push(gruppe);
 				req.jugend.save(function (err, jugend) {
 					if (err) {
-						return next(err);
+						throw err;
 					}
 
 					res.json(gruppe);
@@ -201,7 +201,7 @@ router.param('gruppe', function (req, res, next, id) {
 
 	query.populate('jugend').populate('teams').exec(function (err, gruppe) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		if (!gruppe) {
 			return next(new Error('can\'t find Gruppe'));
@@ -220,21 +220,21 @@ router.delete('/gruppen/:gruppe', function (req, res) {
 	var jugend = req.gruppe.jugend;
 	jugend.removeGruppe(req.gruppe, function (err, jugend) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		Team.remove({
 			"gruppe": req.gruppe
 		}, function (err) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			Gruppe.remove({
 				"_id": req.gruppe
 			}, function (err) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 
 				res.json("success");
@@ -247,7 +247,7 @@ router.get('/gruppen', function (req, res) {
 	var query = Gruppe.find();
 	query.populate('jugend').populate('teams').exec(function (err, gruppen) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(gruppen);
@@ -264,7 +264,7 @@ router.get('/jugenden', function (req, res, next) {
 		}
 	}).exec(function (err, jugenden) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		var options = {
@@ -273,7 +273,7 @@ router.get('/jugenden', function (req, res, next) {
 		};
 		Jugend.populate(jugenden, options, function (err, jugenden) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			res.json(jugenden);
@@ -286,7 +286,7 @@ router.post('/jugenden', function (req, res, next) {
 
 	jugend.save(function (err, jugend) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		var gruppe = new Gruppe({
 			name: "Gruppe A"
@@ -295,14 +295,14 @@ router.post('/jugenden', function (req, res, next) {
 
 		gruppe.save(function (err, gruppe) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			jugend.gruppen.push(gruppe._id);
 
 			jugend.save(function (err, jugend) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 
 				res.json(jugend);
@@ -324,7 +324,7 @@ router.param('jugend', function (req, res, next, id) {
 			, model: 'Team'
 		}, function (err, jugend) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 			req.jugend = jugend;
 			return next();
@@ -341,21 +341,21 @@ router.delete('/jugenden/:jugend', function (req, res) {
 		"jugend": req.jugend
 	}, function (err) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		Gruppe.remove({
 			"jugend": req.jugend
 		}, function (err) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			Jugend.remove({
 				"_id": req.jugend
 			}, function (err) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 				res.json(req.jugend);
 			});
@@ -378,7 +378,7 @@ router.get('/spiele', function (req, res, next) {
 	var query = Spiel.find();
 	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(spiele);
@@ -392,7 +392,7 @@ router.post('/spiele', function (req, res, next) {
 
 	spiel.save(function (err, spiel) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(spiel);
@@ -406,7 +406,7 @@ router.get('/jugenden/:jugend/gruppen/:gruppe/spiele', function (req, res, next)
 	});
 	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(spiele);
@@ -419,7 +419,7 @@ router.get('/jugenden/:jugend/spiele', function (req, res, next) {
 	});
 	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(spiele);
@@ -434,7 +434,7 @@ router.get('/teams/:team/spiele', function (req, res, next) {
 	}]);
 	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json(spiele);
@@ -446,7 +446,7 @@ router.param('spiel', function (req, res, next, id) {
 
 	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').populate('gewinner').exec(function (err, spiel) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		if (!spiel) {
 			return next(new Error('can\'t find Spiel'));
@@ -466,7 +466,7 @@ router.delete('/spiele/:spiel', function (req, res) {
 		"_id": req.spiel
 	}, function (err) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json('success');
@@ -481,19 +481,19 @@ router.put('/spiele/:spiel/tore', function (req, res) {
 	var spiel = req.spiel;
 	spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		//Set Ergebnis Team A
 		spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (err, teamA) {
 			if (err) {
-				return next(err);
+				throw err;
 			}
 
 			//Set Ergebnis Team B
 			spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err, teamB) {
 				if (err) {
-					return next(err);
+					throw err;
 				}
 
 			});
@@ -507,7 +507,7 @@ router.put('/spiele/:spiel/tore', function (req, res) {
 router.delete('/spiele', function (req, res) {
 	Spiel.remove({}, function (err) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		res.json('success');
@@ -520,7 +520,7 @@ router.get('/spielplan', function (req, res, next) {
 	var query = Spielplan.findOne({});
 	query.exec(function (err, spielplan) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 		res.json(spielplan);
 	});
@@ -554,7 +554,7 @@ router.post('/register', function (req, res, next) {
 
 	user.save(function (err) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 
@@ -574,7 +574,7 @@ router.post('/login', function (req, res, next) {
 
 	passport.authenticate('local', function (err, user, info) {
 		if (err) {
-			return next(err);
+			throw err;
 		}
 
 		if (user) {

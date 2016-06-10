@@ -21,6 +21,7 @@
 
 	function GruppenController($state, gruppe, NgTableParams) {
 		var vm = this;
+		vm.loading = true;
 
 		_.extend(vm, {
 			gruppen: [], 
@@ -34,14 +35,7 @@
 			_.forEach(vm.teams, function (o) {
 				o.jugendName = o.jugend.name;
 			});
-			_.extend(vm, {
-				tableParams: new NgTableParams({
-					count: 10
-				}, {
-					counts: [],
-					data: vm.gruppen
-				})
-			});
+			vm.loading = false;
 		});
 	}
 })();

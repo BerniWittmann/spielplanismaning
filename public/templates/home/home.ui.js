@@ -22,6 +22,7 @@
 	function HomeController(spiel) {
 		var vm = this;
 
+		vm.loading = true;
 		spiel.getAll().then(function (res) {
 			var allespiele = _.sortBy(res.data, ['nummer']);
 			var spiele = [];
@@ -50,6 +51,7 @@
 				vm.aktuelleSpiele = [];
 				vm.neachsteSpiele = [];
 			}
+			vm.loading = false;
 		});
 	}
 })();

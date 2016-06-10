@@ -19,8 +19,9 @@
 
 	}
 
-	function SpielplanController($state, spiel) {
+	function SpielplanController($state, $scope, spiel) {
 		var vm = this;
+		vm.loading = true;
 		vm.spiele = [];
 
 		_.extend(vm, {
@@ -35,6 +36,7 @@
 
 		spiel.getAll().then(function (res) {
 			vm.spiele = _.sortBy(res.data, ['nummer']);
+			vm.loading = false;
 		});
 	}
 })();
