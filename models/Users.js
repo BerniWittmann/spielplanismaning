@@ -2,7 +2,6 @@ module.exports = function (secret) {
 	var mongoose = require('mongoose');
 	var crypto = require('crypto');
 	var jwt = require('jsonwebtoken');
-	console.log('#######' + secret + '######');
 
 	var UserSchema = new mongoose.Schema({
 		username: {
@@ -25,7 +24,7 @@ module.exports = function (secret) {
 			_id: this._id
 			, username: this.username
 			, exp: parseInt(exp.getTime() / 1000)
-		, }, 'SECRET');
+		, }, secret);
 	};
 
 	UserSchema.methods.setPassword = function (password) {
