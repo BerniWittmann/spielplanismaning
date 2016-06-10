@@ -11,8 +11,8 @@
 		<form name="spielzeitForm" ng-submit="vm.saveSpielzeit()">
 			<div class="row">
 				<div class="form-group col-md-4">
-					<div class="control-label center-block text-center special-padding-right" style="width: inherit;">Startzeit</div>
-					<uib-timepicker class="center-block" style="width: inherit;" ng-model="vm.startzeit" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
+					<div class="control-label center-block text-center special-padding" style="width: 100%">Startzeit</div>
+					<uib-timepicker class="center-block" style="width: 105px;" ng-model="vm.startzeit" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
 					<div class="alert alert-danger col-md-8 col-md-offset-2" data-ng-if="spielzeitForm.$error.time">
 						Ungültige Eingabe
 					</div>

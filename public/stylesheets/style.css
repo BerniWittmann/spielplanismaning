@@ -41,8 +41,9 @@ a:hover {
 	font-weight: 600;
 }
 
-.special-padding-right {
+.special-padding {
 	padding-right: 23.77px;
+	padding-left: 23.77px;
 }
 
 .width-60 {
