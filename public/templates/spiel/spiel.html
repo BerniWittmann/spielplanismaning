@@ -6,14 +6,16 @@
 	</div>
 </div>
 
-<div class="row text-center">
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row text-center" data-ng-if="!vm.loading">
 	<div class="col-md-12">
 		<h2>{{vm.spiel.uhrzeit}} Uhr</h2>
 		<h4>Platz {{vm.spiel.platz}}</h4>
 	</div>
 </div>
 
-<div class="row text-center">
+<div class="row text-center" data-ng-if="!vm.loading">
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-5">
@@ -38,7 +40,7 @@
 	</div>
 </div>
 
-<div data-ng-if="vm.spiel.beendet" class="row text-center">
+<div data-ng-if="!vm.loading && vm.spiel.beendet" class="row text-center">
 	<div class="col-md-12">
 		<h5 data-ng-if="vm.spiel.unentschieden">Unentschieden</h5>
 		<h5 data-ng-if="!vm.spiel.unentschieden" data-ng-click="vm.gotoTeam(vm.spiel.gewinner)">{{vm.spiel.gewinner.name}} hat gewonnen</h5>

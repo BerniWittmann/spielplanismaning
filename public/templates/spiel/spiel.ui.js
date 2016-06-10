@@ -21,9 +21,11 @@
 
 	function SpielController($stateParams, $state, spiel) {
 		var vm = this;
+		vm.loading = true;
 
 		spiel.get($stateParams.spielid).then(function (response) {
 			vm.spiel = response;
+			vm.loading = false;
 		});
 
 		_.extend(vm, {
