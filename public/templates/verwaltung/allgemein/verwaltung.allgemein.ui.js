@@ -80,7 +80,7 @@
 		});
 		
 		function send() {
-			$http.post('http://spielplanismaning.herokuapp.com/messages', {
+			$http.post('https://spielplanismaning.herokuapp.com/messages', {
 				from: 'test@spielplanismaning.herokuapp.com',
 				to: 'wittmann_b@web.de',
 				subject: 'Test',
