@@ -8,9 +8,9 @@ var bodyParser = require('body-parser');
 var app = express();
 
 app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
-if(app.get('ENVIRONMENT') == 'PROD') {
+if (app.get('ENVIRONMENT') == 'PROD') {
 	app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://heroku_dfxcd8mn:c4jursvke7aml4pqp3j8f1qh5e@ds031751.mlab.com:31751/heroku_dfxcd8mn'));
-}else if(app.get('ENVIRONMENT') == 'DEV') {
+} else if (app.get('ENVIRONMENT') == 'DEV') {
 	app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 }
 
@@ -54,6 +54,19 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use('/', routes);
 app.use('/users', users);
+
+var sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'app51990899@heroku.com'), (process.env.SENDGRID_PASSWORD ||  'eannrw3q2784'));
+sendgrid.send({
+	to: 'wittmann_b@web.de'
+	, from: 'other@example.com'
+	, subject: 'Hello World'
+	, text: 'My first email through SendGrid.'
+}, function (err, json) {
+	if (err) {
+		return console.error(err);
+	}
+	console.log(json);
+});
 
 
 app.set('port', (process.env.PORT || 8000));
