@@ -19,7 +19,7 @@
 
 	}
 
-	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope, $http) {
+	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope) {
 		var vm = this;
 		vm.loading = true;
 		var d = new Date();
@@ -64,7 +64,6 @@
 					}
 				}
 			}
-			, send: send
 		});
 
 		spielplan.getZeiten().then(function (response) {
@@ -79,17 +78,5 @@
 			vm.loading = false;
 		});
 		
-		function send() {
-			$http.post('https://spielplanismaning.herokuapp.com/messages', {
-				from: 'test@spielplanismaning.herokuapp.com',
-				to: 'wittmann_b@web.de',
-				subject: 'Test',
-				text: 'Email ist angekommen'
-			}).error(function (err) {
-				console.log(err);
-			}).then(function (res) {
-				console.log(res);
-			});
-		}
 	}
 })();
