@@ -29,6 +29,10 @@ a:hover {
 	margin-top: 25px;
 }
 
+.main-loader {
+	margin-top: 20%;
+}
+
 .icon-hover {
 	color: grey;
 }
