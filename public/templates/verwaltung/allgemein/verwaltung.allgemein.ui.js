@@ -39,10 +39,13 @@
 			, spielzeit: 8
 			, pausenzeit: 2
 			, saveSpielzeit: function () {
+				vm.loading = true;
 				spielplan.saveZeiten({
 					startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
 					, spielzeit: vm.spielzeit
 					, pausenzeit: vm.pausenzeit
+				}).then(function (res) {
+					vm.loading = false;
 				});
 			}
 			, increment: function (name) {
@@ -77,22 +80,22 @@
 			}
 			vm.loading = false;
 		});
-		
+
 		var emailBlank = {
-			to: 'wittmann_b@web.de',
-			subject: '',
-			text: '',
-			html: ''
+			to: 'wittmann_b@web.de'
+			, subject: ''
+			, text: ''
+			, html: ''
 		}
 		vm.email = {};
 		_.extend(vm.email, emailBlank);
-		
+
 		function send() {
 			email.send(vm.email).then(function (res) {
 				console.log(res);
 				vm.email = emailBlank;
 			});
 		}
-		
+
 	}
 })();

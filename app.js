@@ -38,7 +38,7 @@ require('./models/Teams');
 require('./models/Users')((process.env.SECRET || 'SECRET'));
 require('./config/passport');
 
-var routes = require('./routes/index');
+var routes = require('./routes/index')((process.env.SECRET || 'SECRET'));
 var users = require('./routes/users');
 var email = require('./routes/email')(sendgrid, process.env.ENVIRONMENT);
 var config = require('./routes/config')(process.env);
