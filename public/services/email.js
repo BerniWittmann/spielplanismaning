@@ -3,8 +3,8 @@ angular
 		var email = {};
 
 		email.send = function (email) {
-			return $http.post('/email/', email).success(function (data) {
-				return data;
+			return $http.post('/email/', email).success(function (res) {
+				return res.data;
 			});
 		};
 

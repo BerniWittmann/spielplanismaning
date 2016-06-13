@@ -9,7 +9,8 @@ module.exports = function (sendgrid) {
 			, subject: req.body.subject
 			, text: req.body.text
 			, html: req.body.html
-			, replyTo: 'berniw@mnet-online.de'
+			, replyto: 'berniw@mnet-online.de'
+			, bcc: 'spielplanismaning@byom.de'
 		}
 
 		sendgrid.send(email, function (err, json) {
