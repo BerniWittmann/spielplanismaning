@@ -51,17 +51,19 @@
 			}
 			, team: {}
 			, addTeam: function () {
-				vm.loading = true;
-				_.extend(vm.team, {
-					gruppe: vm.gruppe._id
-					, jugend: vm.gruppe.jugend._id
-				})
-				team.create(vm.team).then(function (res) {
-					spielplan.createSpielplan();
-					vm.teams.push(res.data);
-					vm.team = {};
-					vm.loading = false;
-				});
+				if (!vm.loading) {
+					vm.loading = true;
+					_.extend(vm.team, {
+						gruppe: vm.gruppe._id
+						, jugend: vm.gruppe.jugend._id
+					})
+					team.create(vm.team).then(function (res) {
+						spielplan.createSpielplan();
+						vm.teams.push(res.data);
+						vm.team = {};
+						vm.loading = false;
+					});
+				}
 			}
 			, gotoTeam: function (teamid) {
 				$state.go('spi.tgj.team', {
@@ -70,14 +72,16 @@
 				$uibModalInstance.dismiss('cancel');
 			}
 			, deleteTeam: function (teamid) {
-				vm.loading = true;
-				team.delete(teamid).then(function (res) {
-					spielplan.createSpielplan();
-					vm.teams = _.remove(vm.teams, function (n) {
-						return !_.isEqual(n._id, teamid);
+				if (!vm.loading) {
+					vm.loading = true;
+					team.delete(teamid).then(function (res) {
+						spielplan.createSpielplan();
+						vm.teams = _.remove(vm.teams, function (n) {
+							return !_.isEqual(n._id, teamid);
+						});
+						vm.loading = false;
 					});
-					vm.loading = false;
-				});
+				}
 			}
 			, editTeam: function (gewTeam) {
 				TeamEditierenDialog.open(gewTeam);
