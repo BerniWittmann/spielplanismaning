@@ -44,7 +44,6 @@
 					, spielzeit: vm.spielzeit
 					, pausenzeit: vm.pausenzeit
 				});
-
 			}
 			, increment: function (name) {
 				if (_.isEqual(name, 'spielzeit')) {

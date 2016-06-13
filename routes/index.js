@@ -4,6 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 var jwt = require('express-jwt');
 var async = require("async");
+var moment = require('moment');
 
 var Gruppe = mongoose.model('Gruppe');
 var Jugend = mongoose.model('Jugend');
@@ -554,7 +555,28 @@ router.put('/spielplan/zeiten', function (req, res, next) {
 		if (err) return res.send(500, {
 			error: err
 		});
-		return res.send("succesfully saved");
+
+		Spiel.find().exec(function (err, spiele) {
+			if (err) {
+				return err;
+			}
+
+			spiele = spiele.sort(compareNumbers);
+			async.eachSeries(spiele, function (singlespiel, asyncdone) {
+				var zeit = moment(req.body.startzeit, 'HH:mm').add(Math.floor((singlespiel.nummer - 1) / 3) * (req.body.spielzeit + req.body.pausenzeit), 'm');
+				singlespiel.uhrzeit = zeit.format('HH:mm');
+				singlespiel.save(asyncdone);
+			}, function (err) {
+				if (err) return console.log(err);
+
+				res.json('Spielplan erstellt');
+
+			});
+
+			function compareNumbers(a, b) {
+				return a.nummer - b.nummer;
+			}
+		});
 	});
 });
 

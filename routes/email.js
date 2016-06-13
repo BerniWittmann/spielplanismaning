@@ -1,4 +1,4 @@
-module.exports = function (sendgrid) {
+module.exports = function (sendgrid, env) {
 	var express = require('express');
 	var router = express.Router();
 
@@ -13,13 +13,16 @@ module.exports = function (sendgrid) {
 			, bcc: 'spielplanismaning@byom.de'
 		}
 
-		sendgrid.send(email, function (err, json) {
-			if (err) {
-				return console.error(err);
-			}
-			res.json('Email sendt');
-		});
-
+		if (env == 'PROD') {
+			sendgrid.send(email, function (err, json) {
+				if (err) {
+					return console.error(err);
+				}
+				res.json('Email sendt');
+			});
+		} else {
+			res.json(email);
+		}
 	});
 
 	return router;

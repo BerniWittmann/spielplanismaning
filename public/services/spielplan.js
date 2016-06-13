@@ -42,7 +42,6 @@ angular
 					Authorization: 'Bearer ' + auth.getToken()
 				}
 			}).success(function (data) {
-				spielplan.createSpielplan();
 				return data;
 			});
 		};

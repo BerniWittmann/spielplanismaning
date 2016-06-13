@@ -40,7 +40,7 @@ require('./config/passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var email = require('./routes/email')(sendgrid);
+var email = require('./routes/email')(sendgrid, process.env.ENVIRONMENT);
 var config = require('./routes/config')(process.env);
 
 // view engine setup
