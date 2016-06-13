@@ -60,3 +60,25 @@
 		</form>
 	</div>
 </div>
+
+<div class="row">
+	<div class="col-md-4 col-md-offset-4">
+		<form ng-submit="vm.send()" style="margin-top:30px;">
+			<h3 class="text-center">Email versenden</h3>
+
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Email" ng-model="vm.email.to"></input>
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Betreff" ng-model="vm.email.subject"></input>
+			</div>
+			<div class="form-group">
+				<textarea class="form-control" placeholder="Text" ng-model="vm.email.text"></textarea>
+			</div>
+			<div class="form-group">
+				<textarea class="form-control" placeholder="HTML" ng-model="vm.email.html"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary center-block">Senden</button>
+		</form>
+	</div>
+</div>

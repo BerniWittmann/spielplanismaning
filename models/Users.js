@@ -39,5 +39,8 @@ module.exports = function (secret) {
 		return this.hash === hash;
 	};
 
+	var deepPopulate = require('mongoose-deep-populate')(mongoose);
+	UserSchema.plugin(deepPopulate, {});
+
 	mongoose.model('User', UserSchema);
 }

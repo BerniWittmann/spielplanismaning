@@ -24,4 +24,7 @@ JugendSchema.methods.removeGruppe = function (gruppe, cb) {
 	this.save(cb);
 }
 
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+JugendSchema.plugin(deepPopulate, {});
+
 mongoose.model('Jugend', JugendSchema);

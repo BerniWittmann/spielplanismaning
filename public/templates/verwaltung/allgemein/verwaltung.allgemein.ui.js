@@ -3,7 +3,7 @@
 
 	angular
 		.module('spi.verwaltung.allgemein.ui', [
-		'spi.auth', 'ui.router', 'spi.spielplan'
+		'spi.auth', 'ui.router', 'spi.spielplan', 'spi.email'
         ])
 		.config(states)
 		.controller('VerwaltungAllgemeinController', VerwaltungAllgemeinController);
@@ -19,7 +19,7 @@
 
 	}
 
-	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope) {
+	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope, email) {
 		var vm = this;
 		vm.loading = true;
 		var d = new Date();
@@ -64,6 +64,7 @@
 					}
 				}
 			}
+			, send: send
 		});
 
 		spielplan.getZeiten().then(function (response) {
@@ -77,6 +78,22 @@
 			}
 			vm.loading = false;
 		});
+		
+		var emailBlank = {
+			to: 'wittmann_b@web.de',
+			subject: '',
+			text: '',
+			html: ''
+		}
+		vm.email = {};
+		_.extend(vm.email, emailBlank);
+		
+		function send() {
+			email.send(vm.email).then(function (res) {
+				console.log(res);
+				vm.email = emailBlank;
+			});
+		}
 		
 	}
 })();

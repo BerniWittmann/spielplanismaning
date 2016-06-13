@@ -18,6 +18,7 @@ if (app.get('ENVIRONMENT') == 'PROD') {
 var mongoose = require('mongoose');
 var passport = require('passport');
 
+
 // connect MongoDB
 mongoose.connect(app.get('MONGODB_URI'), function (err, db) {
 	if (!err) {
@@ -26,6 +27,8 @@ mongoose.connect(app.get('MONGODB_URI'), function (err, db) {
 		console.log(err); //failed to connect
 	}
 });
+
+var sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'app51990899@heroku.com'), (process.env.SENDGRID_PASSWORD ||  'eannrw3q2784'));
 
 require('./models/Gruppen');
 require('./models/Jugenden');
@@ -37,6 +40,7 @@ require('./config/passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var email = require('./routes/email')(sendgrid);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -54,19 +58,8 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/email', email);
 
-var sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'app51990899@heroku.com'), (process.env.SENDGRID_PASSWORD ||  'eannrw3q2784'));
-sendgrid.send({
-	to: 'wittmann_b@web.de'
-	, from: 'other@example.com'
-	, subject: 'Hello World'
-	, text: 'My first email through SendGrid.'
-}, function (err, json) {
-	if (err) {
-		return console.error(err);
-	}
-	console.log(json);
-});
 
 
 app.set('port', (process.env.PORT || 8000));

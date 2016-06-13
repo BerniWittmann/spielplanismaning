@@ -135,4 +135,7 @@ SpielSchema.methods.setPunkteB = function (punkteB, cb) {
 	this.save(cb);
 }
 
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+SpielSchema.plugin(deepPopulate, {});
+
 mongoose.model('Spiel', SpielSchema);

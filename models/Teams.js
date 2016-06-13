@@ -50,4 +50,7 @@ TeamSchema.methods.changeName = function (name, cb) {
 	this.save(cb);
 }
 
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+TeamSchema.plugin(deepPopulate, {});
+
 mongoose.model('Team', TeamSchema);

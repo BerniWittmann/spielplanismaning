@@ -13,4 +13,7 @@ var SpielPlanSchema = new mongoose.Schema({
 	]
 });
 
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+SpielPlanSchema.plugin(deepPopulate, {});
+
 mongoose.model('Spielplan', SpielPlanSchema);

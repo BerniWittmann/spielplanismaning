@@ -269,27 +269,12 @@ router.get('/gruppen', function (req, res) {
 
 router.get('/jugenden', function (req, res, next) {
 	var query = Jugend.find();
-	query.populate('teams').populate({
-		path: 'gruppen'
-		, populate: {
-			path: 'teams'
-		}
-	}).exec(function (err, jugenden) {
+	query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
 		if (err) {
 			throw err;
 		}
 
-		var options = {
-			path: 'gruppen.teams'
-			, model: 'Team'
-		};
-		Jugend.populate(jugenden, options, function (err, jugenden) {
-			if (err) {
-				throw err;
-			}
-
-			res.json(jugenden);
-		})
+		res.json(jugenden);
 	});
 });
 
