@@ -23,40 +23,46 @@
 		_.extend(vm, {
 			gruppe: {}
 			, addGruppe: function () {
-				vm.loading = true;
-				vm.error = undefined;
-				gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {
-					vm.error = error;
-					vm.loading = false;
-				}).then(function (res) {
-					spielplan.createSpielplan();
-					getGruppen();
-					vm.gruppe = {};
-					vm.showMinZahlGruppen = false;
-					vm.loading = false;
-				});
-			}
-			, deleteGruppe: function (id) {
-				vm.loading = true;
-				vm.error = undefined;
-				if (vm.gruppen.length > 1) {
-					gruppe.delete(id).then(function (res) {
+				if (!vm.loading) {
+					vm.loading = true;
+					vm.error = undefined;
+					gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {
+						vm.error = error;
+						vm.loading = false;
+					}).then(function (res) {
 						spielplan.createSpielplan();
 						getGruppen();
+						vm.gruppe = {};
+						vm.showMinZahlGruppen = false;
 						vm.loading = false;
 					});
-				} else {
-					vm.loading = false;
-					vm.showMinZahlGruppen = true;
+				}
+			}
+			, deleteGruppe: function (id) {
+				if (!vm.loading) {
+					vm.loading = true;
+					vm.error = undefined;
+					if (vm.gruppen.length > 1) {
+						gruppe.delete(id).then(function (res) {
+							spielplan.createSpielplan();
+							getGruppen();
+							vm.loading = false;
+						});
+					} else {
+						vm.loading = false;
+						vm.showMinZahlGruppen = true;
+					}
 				}
 			}
 			, deleteJugend: function (id) {
-				vm.loading = true;
-				jugend.delete(id).then(function (res) {
-					vm.loading = false;
-					spielplan.createSpielplan();
-				});
-				vm.jugend = {};
+				if (!vm.loading) {
+					vm.loading = true;
+					jugend.delete(id).then(function (res) {
+						vm.loading = false;
+						spielplan.createSpielplan();
+					});
+					vm.jugend = {};
+				}
 			}
 			, editGruppe: function (gewaehlteGruppe) {
 				GruppeEditierenDialog.open(gewaehlteGruppe);
