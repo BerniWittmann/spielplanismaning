@@ -28,7 +28,7 @@ router.get('/', function (req, res) {
 router.get('/teams', function (req, res, next) {
 	var query = Team.find();
 
-	query.populate('gruppe').populate('jugend').exec(function (err, teams) {
+	query.deepPopulate('gruppe jugend').exec(function (err, teams) {
 		if (err) {
 			throw err;
 		}
@@ -72,29 +72,40 @@ router.post('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res, next)
 		if (err) {
 			throw err;
 		}
-
-		req.gruppe.teams.push(team);
-		req.gruppe.save(function (err, gruppe) {
+		Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
 			if (err) {
 				throw err;
 			}
-
-			req.jugend.teams.push(team);
-			req.jugend.save(function (err, jugend) {
+			gruppe.pushTeams(team, function (err, gruppe) {
 				if (err) {
 					throw err;
 				}
 
-				res.json(team);
-			})
+				Jugend.findById(team.jugend).exec(function (err, jugend) {
+					if (err) {
+						throw err;
+					}
+
+					jugend.pushTeams(team, function (err, jugend) {
+						if (err) {
+							throw err;
+						}
+
+						res.json(team);
+					})
+				});
+
+
+			});
 		});
+
 	});
 });
 
 router.param('team', function (req, res, next, id) {
 	var query = Team.findById(id);
 
-	query.populate('jugend').populate('gruppe').exec(function (err, team) {
+	query.deepPopulate('jugend gruppe').exec(function (err, team) {
 		if (err) {
 			throw err;
 		}
@@ -117,7 +128,7 @@ router.get('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res, next) 
 		, "jugend": req.jugend
 	});
 
-	query.populate('jugend').populate('gruppe').exec(function (err, team) {
+	query.deepPopulate('jugend gruppe').exec(function (err, team) {
 		if (err) {
 			throw err;
 		}
@@ -167,7 +178,7 @@ router.get('/jugenden/:jugend/gruppen', function (req, res, next) {
 		"jugend": req.jugend
 	});
 
-	query.populate('jugend').populate('teams').exec(function (err, gruppe) {
+	query.deepPopulate('jugend teams').exec(function (err, gruppe) {
 		if (err) {
 			throw err;
 		}
@@ -195,8 +206,7 @@ router.post('/jugenden/:jugend/gruppen', function (req, res, next) {
 					throw err;
 				}
 
-				req.jugend.gruppen.push(gruppe);
-				req.jugend.save(function (err, jugend) {
+				jugend.pushGruppe(gruppe, function (err, jugend) {
 					if (err) {
 						throw err;
 					}
@@ -212,7 +222,7 @@ router.post('/jugenden/:jugend/gruppen', function (req, res, next) {
 router.param('gruppe', function (req, res, next, id) {
 	var query = Gruppe.findById(id);
 
-	query.populate('jugend').populate('teams').exec(function (err, gruppe) {
+	query.deepPopulate('jugend teams').exec(function (err, gruppe) {
 		if (err) {
 			throw err;
 		}
@@ -258,7 +268,7 @@ router.delete('/gruppen/:gruppe', function (req, res) {
 
 router.get('/gruppen', function (req, res) {
 	var query = Gruppe.find();
-	query.populate('jugend').populate('teams').exec(function (err, gruppen) {
+	query.deepPopulate('jugend teams').exec(function (err, gruppen) {
 		if (err) {
 			throw err;
 		}
@@ -312,7 +322,7 @@ router.post('/jugenden', function (req, res, next) {
 router.param('jugend', function (req, res, next, id) {
 	var query = Jugend.findById(id);
 
-	query.populate('teams').populate('gruppen').exec(function (err, jugend) {
+	query.deepPopulate('teams gruppen').exec(function (err, jugend) {
 		if (!jugend) {
 			return next(new Error('can\'t find Jugend'));
 		}
@@ -374,7 +384,7 @@ router.get('/jugenden/:jugend/tore', function (req, res) {
 
 router.get('/spiele', function (req, res, next) {
 	var query = Spiel.find();
-	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
+	query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
 		if (err) {
 			throw err;
 		}
@@ -415,7 +425,7 @@ router.get('/jugenden/:jugend/gruppen/:gruppe/spiele', function (req, res, next)
 		jugend: req.jugend
 		, gruppe: req.gruppe
 	});
-	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
+	query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
 		if (err) {
 			throw err;
 		}
@@ -428,7 +438,7 @@ router.get('/jugenden/:jugend/spiele', function (req, res, next) {
 	var query = Spiel.find({
 		jugend: req.jugend
 	});
-	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
+	query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
 		if (err) {
 			throw err;
 		}
@@ -443,7 +453,7 @@ router.get('/teams/:team/spiele', function (req, res, next) {
 	}, {
 		teamB: req.team
 	}]);
-	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').exec(function (err, spiele) {
+	query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
 		if (err) {
 			throw err;
 		}
@@ -455,7 +465,7 @@ router.get('/teams/:team/spiele', function (req, res, next) {
 router.param('spiel', function (req, res, next, id) {
 	var query = Spiel.findById(id);
 
-	query.populate('gruppe').populate('jugend').populate('teamA').populate('teamB').populate('gewinner').exec(function (err, spiel) {
+	query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiel) {
 		if (err) {
 			throw err;
 		}

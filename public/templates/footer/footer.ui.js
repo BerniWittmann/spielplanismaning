@@ -16,8 +16,15 @@
 		};
 	}
 
-	function FooterController($state) {
+	function FooterController($state, $http) {
 		var vm = this;
-		
+		vm.version = '';
+
+		$http.get('/config/version').then(function (res) {
+			vm.version = res.data;
+		});
+
 	}
+
+
 })();

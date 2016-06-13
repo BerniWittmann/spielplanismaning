@@ -9,10 +9,10 @@ var GruppenSchema = new mongoose.Schema({
 	, jugend: {type: Schema.ObjectId, ref: 'Jugend'}
 });
 
-GruppenSchema.methods.addTeam = function (cb, team) {
+GruppenSchema.methods.pushTeams = function(team, cb) {
 	this.teams.push(team);
 	this.save(cb);
-};
+}
 
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 GruppenSchema.plugin(deepPopulate, {});

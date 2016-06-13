@@ -3,11 +3,7 @@
 
 	angular
 		.module('spi.login.ui', [
-		'spi.auth'
-
-
-				
-			, 'ui.router'
+		'spi.auth', 'ui.router'
         ])
 		.config(states)
 		.controller('LoginController', LoginController);
@@ -19,13 +15,16 @@
 				, templateUrl: 'templates/login/login.html'
 				, controller: LoginController
 				, controllerAs: 'vm'
+				, resolve: {
+					lockdown: getLockdown
+				}
 			});
 
 	}
 
-	function LoginController(auth, $state) {
+	function LoginController(auth, $state, lockdown) {
 		var vm = this;
-
+		vm.lockdown = lockdown;
 		vm.user = {};
 		vm.register = function () {
 			vm.user.username = vm.user.username.toLowerCase();
@@ -43,5 +42,11 @@
 				$state.go('spi.home');
 			});
 		};
+	}
+
+	function getLockdown($http) {
+		return $http.get('/config/lockdownmode').then(function (res) {
+			return res.data == true;
+		});
 	}
 })();

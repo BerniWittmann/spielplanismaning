@@ -14,13 +14,18 @@ var JugendSchema = new mongoose.Schema({
 	, color: String
 });
 
-JugendSchema.methods.addGruppe = function (cb, Gruppe) {
+JugendSchema.methods.pushGruppe = function (Gruppe, cb) {
 	this.gruppen.push(Gruppe);
 	this.save(cb);
 };
 
 JugendSchema.methods.removeGruppe = function (gruppe, cb) {
 	this.gruppen.splice(this.gruppen.indexOf(gruppe), 1);
+	this.save(cb);
+}
+
+JugendSchema.methods.pushTeams = function (team, cb) {
+	this.teams.push(team);
 	this.save(cb);
 }
 

@@ -6,6 +6,7 @@
             'spi.auth', 'spi.logger', 'spi.home.ui', 'spi.login.ui', 'spi.tgj.ui', 'spi.navigation.ui', 'spi.team', 'spi.verwaltung.ui', 'ui.router', 'spi.tabellen.ui', 'spi.login.ui', 'spi.spielplan.ui', 'spi.jugenden.jugendlabel.ui', 'spi.spiel.ui', 'spi.tabelle.ui', 'spi.footer.ui', 'spi.loader.ui', 'spi.email'
         ])
 		.config(states)
+		.controller('AppController', AppController)
 		.run(run);
 
 	function states($urlRouterProvider, $stateProvider) {
@@ -16,6 +17,10 @@
 				url: ''
 				, template: '<ui-view></ui-view>'
 				, abstract: true
+				, resolve: {
+					lockdownmode: getLockdown
+				}
+				, controller: AppController
 			});
 	}
 
@@ -27,6 +32,39 @@
 
 		$rootScope.$on('$stateChangeSuccess', function () {
 			$rootScope.loading = false;
+		});
+	}
+
+	function AppController($q, auth, $state, $timeout, lockdownmode, $rootScope) {
+		checkLockdown($q, auth, $state, $timeout, lockdownmode, undefined, $rootScope);
+		$rootScope.$on('$stateChangeStart', function (event, toState) {
+			checkLockdown($q, auth, $state, $timeout, lockdownmode, toState, $rootScope);
+		});
+	}
+
+	function checkLockdown($q, auth, $state, $timeout, lockdownmode, toState, $rootScope) {
+		if (lockdownmode) {
+			if (_.isUndefined(toState)) {
+				toState = {
+					name: 'InitialState'
+				};
+			}
+			if (_.isEqual(toState.name, 'spi.login') || auth.isLoggedIn()) {
+				return $q.when();
+			} else {
+				$timeout(function () {
+					$state.go('spi.login');
+				})
+				$rootScope.loading = false;
+
+				return $q.reject();
+			}
+		}
+	}
+
+	function getLockdown($http) {
+		return $http.get('/config/lockdownmode').then(function (res) {
+			return res.data == true;
 		});
 	}
 })();
