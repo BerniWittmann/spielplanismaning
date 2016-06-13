@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var jwt = require('express-jwt');
+var async = require("async");
 
 var Gruppe = mongoose.model('Gruppe');
 var Jugend = mongoose.model('Jugend');
@@ -393,6 +394,19 @@ router.post('/spiele', function (req, res, next) {
 		}
 
 		res.json(spiel);
+	});
+});
+
+router.post('/allespiele', function (req, res) {
+	var spiele = req.body;
+	async.eachSeries(spiele, function (singlespiel, asyncdone) {
+		var spiel = new Spiel(singlespiel);
+		spiel.jugend = singlespiel.jugend;
+		spiel.gruppe = singlespiel.gruppe;
+		spiel.save(asyncdone);
+	}, function (err) {
+		if (err) return console.log(err);
+		res.json('Spielplan erstellt');
 	});
 });
 

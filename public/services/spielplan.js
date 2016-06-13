@@ -64,8 +64,6 @@ angular
 				i = 1;
 				platz = 3; //Bei 3 anfangen macht calcPlatz einfacher
 
-				var defer = $q.defer();
-				var promises = [];
 				var leerdurchgelaufeneGruppen = 0;
 
 				while (i <= spieleGesamt) {
@@ -100,7 +98,6 @@ angular
 										, teamB: teamB._id
 									};
 
-									promises.push($http.post('/spiele', neuesSpiel));
 									spielplan.spiele.push(neuesSpiel);
 									Logger.log('Spielplanerstellung: Spiel Nr.' + i + ' für Gruppe ' + gruppe.name + ' erstellt.');
 									i++;
@@ -127,7 +124,6 @@ angular
 							, platz: calcPlatz()
 							, uhrzeit: calcZeit()
 						}
-						promises.push($http.post('spiele', leeresSpiel));
 						spielplan.spiele.push(leeresSpiel);
 						i++;
 						spieleGesamt++;
@@ -148,7 +144,6 @@ angular
 							, platz: calcPlatz()
 							, uhrzeit: calcZeit()
 						}
-						promises.push($http.post('spiele', leeresSpiel));
 						spielplan.spiele.push(leeresSpiel);
 						i++;
 						spieleGesamt++;
@@ -166,7 +161,6 @@ angular
 						, platz: calcPlatz()
 						, uhrzeit: calcZeit()
 					}
-					promises.push($http.post('spiele', leeresSpiel));
 					spielplan.spiele.push(leeresSpiel);
 					i++;
 					spieleGesamt++;
@@ -179,7 +173,7 @@ angular
 				}
 				
 				spielplan.maxProgress++;
-				return $q.all(promises).then(pushSpiele, function (err) {
+				$http.post('/allespiele', spielplan.spiele).then(pushSpiele, function (err) {
 					console.log(err);
 				});
 
