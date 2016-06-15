@@ -19,7 +19,7 @@
 
 	}
 
-	function TeamController(team, $stateParams, spiel, $scope) {
+	function TeamController(team, $stateParams, spiel, $scope, TeamAbonnierenDialog) {
 		var vm = this;
 		var loadingCompleted = 0;
 		$scope.loading = true;
@@ -46,5 +46,9 @@
 				$scope.loading = false;
 			}
 		})
+		
+		vm.abonnieren = function () {
+			TeamAbonnierenDialog.open(vm.team);
+		}
 	}
 })();

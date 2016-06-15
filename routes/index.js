@@ -1,4 +1,4 @@
-module.exports = function (secret) {
+module.exports = function (secret, sendgrid, env, url) {
 	var mongoose = require('mongoose');
 	var express = require('express');
 	var router = express.Router();
@@ -13,6 +13,8 @@ module.exports = function (secret) {
 	var Spielplan = mongoose.model('Spielplan');
 	var Team = mongoose.model('Team');
 	var User = mongoose.model('User');
+	var Subscriber = mongoose.model('Subscriber');
+	var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
 
 	var auth = jwt({
 		secret: secret
@@ -513,17 +515,51 @@ module.exports = function (secret) {
 					throw err;
 				}
 
+
 				//Set Ergebnis Team B
 				spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err, teamB) {
 					if (err) {
 						throw err;
 					}
 
+
+					async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+						Subscriber.getByTeam(team._id).then(function (mails) {
+							var emails = [];
+							mails.forEach(function (mail) {
+								emails.push(mail.email);
+							});
+							Spiel.findOne({
+								nummer: spiel.nummer + 6
+							}).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
+								if (err) {
+									return console.log(err)
+								};
+								if (nextspiel) {
+									if (!nextspiel.beendet && (nextspiel.teamA._id + '' == team._id + '' || nextspiel.teamB._id + '' == team._id + '')) {
+
+										MailGenerator.sendSpielReminder(team, nextspiel, emails, function (err, res) {
+											if (err) {
+												console.log(err);
+											}
+											MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
+										});
+									} else {
+										MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
+									}
+								} else {
+									MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
+								}
+
+							});
+
+						});
+					}, function (err) {
+						if (err) return console.log(err);
+						res.json(err);
+					});
 				});
-			})
-
-			res.json(spiel);
-
+			});
 		});
 	});
 

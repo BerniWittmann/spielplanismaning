@@ -8,6 +8,15 @@ angular
 			});
 		};
 
+		email.addSubscriber = function (abonnent) {
+			return $http.post('/email/subscriber', abonnent).error(function (err) {
+				return err;
+			}).success(function (res) {
+				console.log(res);
+				return res.data;
+			});
+		}
+
 
 		return email;
 }]);

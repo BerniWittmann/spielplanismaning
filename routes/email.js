@@ -1,6 +1,8 @@
 module.exports = function (sendgrid, env) {
 	var express = require('express');
 	var router = express.Router();
+	var mongoose = require('mongoose');
+	var Subscriber = mongoose.model('Subscriber');
 
 	router.post('/', function (req, res) {
 		var email = {
@@ -23,6 +25,17 @@ module.exports = function (sendgrid, env) {
 		} else {
 			res.json(email);
 		}
+	});
+	
+	router.post('/subscriber', function (req, res) {
+		var subscriber = new Subscriber(req.body);
+		subscriber.save(function (err, sub) {
+			if(err) {
+				return err;
+			}
+			
+			res.json(sub);
+		});
 	});
 
 	return router;
