@@ -32,6 +32,7 @@ module.exports = function (sendgrid, env, url) {
 
 			mail.addSubstitution(':spielausgang', spielausgang);
 			mail.addSubstitution(':spiellink', url + '#/spiel/' + spiel._id);
+			mail.addSubstitution(':unsubscribelink', url + '#/teams/' + team._id + '/deabonnieren');
 			mail.setFilters({
 				'templates': {
 					'settings': {
@@ -70,6 +71,7 @@ module.exports = function (sendgrid, env, url) {
 			mail.addSubstitution(':teambname', teambname);
 
 			mail.addSubstitution(':spiellink', url + '#/spiel/' + spiel._id);
+			mail.addSubstitution(':unsubscribelink', url + '#/teams/' + team._id + '/deabonnieren');
 			mail.setFilters({
 				'templates': {
 					'settings': {
