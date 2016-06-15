@@ -19,16 +19,20 @@
 
 	}
 
-	function TeamController(team, $stateParams, spiel, $scope, TeamAbonnierenDialog) {
+	function TeamController(team, $stateParams, spiel, $scope, TeamAbonnierenDialog, email) {
 		var vm = this;
 		var loadingCompleted = 0;
 		$scope.loading = true;
 
 		team.get($stateParams.teamid).then(function (response) {
 			vm.team = response;
+			vm.bereitsAbonniert = email.checkSubscription({
+				team: vm.team._id
+			});
 			loadingCompleted++;
 			team.getByGruppe(vm.team.gruppe._id, vm.team.jugend._id).then(function (res) {
 				vm.teams = res;
+
 				loadingCompleted++;
 			});
 
@@ -38,7 +42,7 @@
 			vm.spiele = _.sortBy(response, ['nummer']);
 			loadingCompleted++;
 		});
-		
+
 		$scope.$watch(function () {
 			return loadingCompleted;
 		}, function () {
@@ -46,9 +50,14 @@
 				$scope.loading = false;
 			}
 		})
-		
+
 		vm.abonnieren = function () {
-			TeamAbonnierenDialog.open(vm.team);
+			return TeamAbonnierenDialog.open(vm.team).closed.then(function (result) {
+				vm.bereitsAbonniert = email.checkSubscription({
+					team: vm.team._id
+				});
+			});
 		}
+
 	}
 })();

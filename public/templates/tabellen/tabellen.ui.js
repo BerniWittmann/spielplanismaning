@@ -26,7 +26,6 @@
 
 		jugend.getAll().then(function (res) {
 			vm.jugenden = res.data;
-			console.log(vm.jugenden);
 			_.forEach(vm.jugenden, function (jgd) {
 				if (!_.isUndefined(jgd) && !_.isNull(jgd)) {
 					jugend.getTore(jgd._id).then(function (res) {

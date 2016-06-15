@@ -37,6 +37,16 @@ module.exports = function (sendgrid, env) {
 			res.json(sub);
 		});
 	});
+	
+	router.delete('/subscriber', function (req, res) {
+		Subscriber.find(req.body).remove().exec(function (err, sub) {
+			if(err) {
+				return err;
+			}
+			
+			res.json(sub);
+		});
+	});
 
 	return router;
 }

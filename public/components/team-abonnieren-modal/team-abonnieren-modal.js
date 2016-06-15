@@ -45,6 +45,7 @@
 		};
 		vm.message = emptymessage;
 
+
 		_.extend(vm, {
 			team: gewTeam
 			, save: save
@@ -57,12 +58,14 @@
 			}
 			, addAbonnent: function (form) {
 				vm.submitted = true;
-				if (form.$valid) {
+				if (form.$valid && !vm.bereitsabonniert) {
 					email.addSubscriber(vm.abonnent).then(function (res) {
 						vm.message = {
 							type: 'success'
 							, text: vm.team.name + ' wurde abonniert.'
 						};
+						vm.abonnent.email = '';
+						setTimeout(save, 3000);
 					}, function (err) {
 						vm.message = {
 							type: 'error'
@@ -75,13 +78,40 @@
 			}
 			, resetFormValidation: function () {
 				vm.submitted = false;
+				vm.bereitsabonniert = false;
 				vm.message = emptymessage;
+				if (vm.abonnent.email && email.checkSubscription(vm.abonnent)) {
+					vm.message = {
+						type: 'info'
+						, text: vm.team.name + ' ist bereits abonniert!'
+					}
+					vm.bereitsabonniert = true;
+				}
 			}
 		});
+
+		vm.bereitsabonniert = false;
+		if (email.checkSubscription({
+				team: vm.team._id
+			})) {
+			vm.message = {
+					type: 'info'
+					, text: vm.team.name + ' ist bereits abonniert!'
+				}
+				, vm.abonnent.email = _.head(email.getSubscriptionByTeam({
+					team: vm.team._id
+				})).email;
+			vm.bereitsabonniert = true;
+		}
 		vm.loading = false;
 
 		function save() {
 			$uibModalInstance.close();
+		}
+			
+		vm.gotoAbmelden = function () {
+			$uibModalInstance.close();
+			$state.go('spi.team-deabonnieren', {teamid: vm.team._id});
 		}
 	}
 })();

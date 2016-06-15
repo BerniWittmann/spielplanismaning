@@ -2,9 +2,10 @@
 	<div class="col-md-12 page-header">
 		<h3>{{vm.team.name}}
 			<small><span><spi-jugend-label jugend="vm.team.jugend"></spi-jugend-label></span>  <span class="padding-left-15">{{vm.team.gruppe.name}}</span></small>
-			<button class="pull-right btn btn-primary btn-sm valign" data-ng-click="vm.abonnieren()">
+			<button class="pull-right btn btn-primary btn-sm valign" data-ng-class="{'disabled': vm.bereitsAbonniert}" data-ng-click="vm.abonnieren()">
 				<i class="fa fa-rss"></i>
-				<span class="hidden-xs"> Team abonnieren</span>
+				<span class="hidden-xs" data-ng-if="!vm.bereitsAbonniert"> Team abonnieren</span>
+				<span class="hidden-xs" data-ng-if="vm.bereitsAbonniert"> Team abonniert</span>
 			</button>
 
 		</h3>

@@ -12,11 +12,12 @@
 				<div class="form-group">
 					<input type="email" class="form-control" data-ng-change="vm.resetFormValidation()" placeholder="Email" name="email" ng-model="vm.abonnent.email" required></input>
 				</div>
-				<button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary">Abonnieren</button>
+				<button data-ng-disabled="vm.loading || vm.bereitsabonniert" type="submit" class="btn btn-primary">Abonnieren</button>
 			</form>
 		</div>
 	</div>
 </div>
 <div class="modal-footer">
+	<a class="pull-left"data-ng-click="vm.gotoAbmelden()">News abbestellen</a>
 	<button class="btn btn-primary" type="button" ng-click="vm.abbrechen()">Schließen</button>
 </div>

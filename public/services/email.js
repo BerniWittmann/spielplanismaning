@@ -1,5 +1,6 @@
 angular
-	.module('spi.email', []).factory('email', ['$http', function ($http) {
+	.module('spi.email', []).factory('email', ['$http', '$window', function ($http, $window) {
+		var TOKENNAME = 'spielplan-ismaning-subscriptions'
 		var email = {};
 
 		email.send = function (email) {
@@ -12,11 +13,51 @@ angular
 			return $http.post('/email/subscriber', abonnent).error(function (err) {
 				return err;
 			}).success(function (res) {
-				console.log(res);
+				email.addSubscriptionToken(abonnent);
 				return res.data;
 			});
 		}
 
+		email.addSubscriptionToken = function (sub) {
+			if (!email.checkSubscription(sub)) {
+				var token = getSubscriptionToken();
+				token.push(sub);
+				$window.localStorage[TOKENNAME] = JSON.stringify(token);
+			}
+		};
+
+		function getSubscriptionToken() {
+			if ($window.localStorage[TOKENNAME]) {
+				return (JSON.parse($window.localStorage[TOKENNAME]) || []);
+			}
+			return [];
+		}
+
+		email.getSubscriptionByTeam = function (o) {
+			return _.filter(getSubscriptionToken(), {
+				'team': o.team
+			});
+		}
+
+		email.checkSubscription = function (sub) {
+			var result = false;
+			_.forEach(getSubscriptionToken(), function (s) {
+				if (_.isEqual(s.team, sub.team) && (_.isUndefined(sub.email) || _.isEqual(s.email, sub.email))) {
+					result = true;
+				}
+			});
+			return result;
+		}
+
+		email.removeSubscription = function (sub) {
+			return $http.delete('/email/subscriber', sub).error(function (err) {
+				console.log(err);
+				return err;
+			}).then(function (res) {
+				$window.localStorage[TOKENNAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
+				return res.data;
+			})
+		}
 
 		return email;
 }]);
