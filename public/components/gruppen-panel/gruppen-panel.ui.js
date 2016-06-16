@@ -21,7 +21,7 @@
 
 		_.extend(vm, {
 			teams: []
-			, isLoggedIn: auth.isLoggedIn()
+			, isLoggedIn: auth.canAccess(1)
 		});
 		
 		getGruppe();

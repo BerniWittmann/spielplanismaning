@@ -2,6 +2,10 @@ angular
 	.module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger'
 
 
+
+
+
+
 		
 		, function ($http, $state, $window, Logger) {
 			var auth = {};
@@ -19,7 +23,6 @@ angular
 
 				if (token) {
 					var payload = JSON.parse($window.atob(token.split('.')[1]));
-
 					if (payload.exp > Date.now() / 1000) {
 						Logger.enableLogging();
 						return true;
@@ -33,7 +36,6 @@ angular
 				if (auth.isLoggedIn()) {
 					var token = auth.getToken();
 					var payload = JSON.parse($window.atob(token.split('.')[1]));
-
 					return payload.username;
 				}
 			};
@@ -55,5 +57,20 @@ angular
 				$state.go('spi.home');
 			};
 
+			auth.canAccess = function (permission) {
+				var token = auth.getToken();
+
+				if (token) {
+					var payload = JSON.parse($window.atob(token.split('.')[1]));
+					if (payload.exp > Date.now() / 1000) {
+						if (_.isUndefined(permission)) {
+							return true;
+						};
+						return permission <= payload.role.rank;
+					}
+				}
+				return false;
+			}
+
 			return auth;
-}]);
+	}]);

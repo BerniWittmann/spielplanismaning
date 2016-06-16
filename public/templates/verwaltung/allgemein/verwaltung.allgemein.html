@@ -56,6 +56,13 @@
 			<div class="form-group">
 				<input type="password" class="form-control" placeholder="Passwort" ng-model="vm.user.password"></input>
 			</div>
+			<div class="form-group">
+				<select class="form-control" ng-model="vm.user.role" required>
+					 <option value="" disabled selected>Rolle wählen</option>
+					<option value="Admin">Admin</option>
+					<option value="Bearbeiter">Bearbeiter</option>
+				</select>
+			</div>
 			<button type="submit" class="btn btn-primary center-block">anlegen</button>
 		</form>
 	</div>

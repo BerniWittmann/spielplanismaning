@@ -31,7 +31,7 @@
 					</ul>
 				</li>
 				<li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"><i class="fa fa-table"></i> Tabellen</a></li>
-				<li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.isLoggedIn()" class="dropdown">
+				<li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.canAccess()" class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i> Verwaltung <span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a data-ui-sref="spi.verwaltung.allgemein">Allgemein</a></li>

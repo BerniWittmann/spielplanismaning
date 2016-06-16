@@ -80,7 +80,7 @@
 		}
 
 		function canEdit() {
-			return auth.isLoggedIn() && $state.includes('spi.verwaltung');
+			return auth.canAccess(1) && $state.includes('spi.verwaltung');
 		}
 	}
 

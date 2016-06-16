@@ -22,7 +22,7 @@
 	}
 
 	function authenticate($q, auth, $state, $timeout) {
-		if (auth.isLoggedIn()) {
+		if (auth.canAccess(1)) {
 			return $q.when();
 		} else {
 			$timeout(function () {

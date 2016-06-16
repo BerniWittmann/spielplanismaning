@@ -22,7 +22,7 @@
 		var vm = this;
 
 		_.extend(vm, {
-			isLoggedIn: auth.isLoggedIn()
+			isLoggedIn: auth.canAccess(0)
 			, spiel: $scope.spiSingleSpiel
 		});
 
