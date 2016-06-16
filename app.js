@@ -9,7 +9,7 @@ var app = express();
 
 app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
 if (app.get('ENVIRONMENT') == 'PROD') {
-	app.set('MONGODB_URI', process.env.MONGODB_URI;
+	app.set('MONGODB_URI', process.env.MONGODB_URI);
 } else if (app.get('ENVIRONMENT') == 'DEV') {
 	app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 }
