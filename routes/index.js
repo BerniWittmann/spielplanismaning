@@ -550,40 +550,67 @@ module.exports = function (secret, sendgrid, env, url) {
 						throw err;
 					}
 
-					async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
-						Subscriber.getByTeam(team._id).then(function (mails) {
-							var emails = [];
-							mails.forEach(function (mail) {
-								emails.push(mail.email);
-							});
-							Spiel.findOne({
-								nummer: spiel.nummer + 6
-							}).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
-								if (err) {
-									return console.log(err)
-								};
-								if (nextspiel) {
-									if (!nextspiel.beendet && (nextspiel.teamA._id + '' == team._id + '' || nextspiel.teamB._id + '' == team._id + '')) {
-
-										MailGenerator.sendSpielReminder(team, nextspiel, emails, function (err, res) {
-											if (err) {
-												console.log(err);
+					function sendNextSpielUpdates(currentNummer, cb) {
+						Spiel.findOne({
+							nummer: spiel.nummer + 6
+						}).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
+							if (err) {
+								return console.log(err)
+							};
+							if (nextspiel) {
+								if (!nextspiel.beendet) {
+									async.eachSeries([nextspiel.teamA, nextspiel.teamB], function (team, asyncdone) {
+										Subscriber.getByTeam(team._id).then(function (mails) {
+											var emails = [];
+											mails.forEach(function (mail) {
+												emails.push(mail.email);
+											});
+											if (emails.length > 0) {
+												MailGenerator.sendSpielReminder(team, nextspiel, emails, asyncdone);
+											} else {
+												return asyncdone(null, {});
 											}
-											MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
 										});
-									} else {
-										MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
-									}
+									}, function (err) {
+										if (err) {
+											console.log(err);
+										}
+										return cb(null, {});
+									});
 								} else {
+									return cb(null, {});
+								}
+							} else {
+								return cb(null, {});
+							}
+
+						});
+					};
+
+
+					return sendNextSpielUpdates(spiel.nummer, function (err, o) {
+						if (err) {
+							return console.log(err);
+						}
+
+						async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+							Subscriber.getByTeam(team._id).then(function (mails) {
+								var emails = [];
+								mails.forEach(function (mail) {
+									emails.push(mail.email);
+								});
+								if (emails.length > 0) {
 									MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
+								} else {
+									return asyncdone(null, {});
 								}
 
 							});
-
+						}, function (err) {
+							if (err) return console.log(err);
+							res.json(err);
 						});
-					}, function (err) {
-						if (err) return console.log(err);
-						res.json(err);
+
 					});
 				});
 			});

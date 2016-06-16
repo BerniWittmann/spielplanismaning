@@ -59,7 +59,7 @@ module.exports = function (sendgrid, env, url) {
 			mail.setHtml('<p>Spiel-Erinnerung: ' + team.name + '</p>');
 			mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-			mail.addSubstitution(':teamname', team.name);
+			mail.addSubstitution('-teamname-', team.name);
 			var teambname;
 			if (team._id == spiel.teamA._id) {
 				teambname = spiel.teamB.name;
