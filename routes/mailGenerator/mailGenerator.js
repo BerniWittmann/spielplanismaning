@@ -21,8 +21,7 @@ module.exports = function (sendgrid, env, url) {
 			mail.setSubject('Ergebnis-Update: ' + team.name + ' hat ' + spielausgang);
 			mail.setText('Ergebnis-Update: ' + team.name + ' hat ' + spielausgang);
 			mail.setHtml('<p>Ergebnis-Update: ' + team.name + ' hat ' + spielausgang + '</p>');
-			mail.replyto = 'berniw@mnet-online.de';
-			mail.addBcc('spielplanismaning@byom.de');
+			mail.replyto = 'kinderbeach.ismaning@mail.com';
 
 			mail.addSubstitution(':teamname', team.name);
 			mail.addSubstitution(':teamaname', spiel.teamA.name);
@@ -58,8 +57,7 @@ module.exports = function (sendgrid, env, url) {
 			mail.setSubject('Spiel-Erinnerung: ' + team.name);
 			mail.setText('Spiel-Erinnerung: ' + team.name);
 			mail.setHtml('<p>Spiel-Erinnerung: ' + team.name + '</p>');
-			mail.replyto = 'berniw@mnet-online.de';
-			mail.addBcc('spielplanismaning@byom.de');
+			mail.replyto = 'kinderbeach.ismaning@mail.com';
 
 			mail.addSubstitution(':teamname', team.name);
 			var teambname;
@@ -99,8 +97,7 @@ module.exports = function (sendgrid, env, url) {
 			mail.setSubject(subject);
 			mail.setText(body);
 			mail.setHtml(body);
-			mail.replyto = 'berniw@mnet-online.de';
-			mail.addBcc('spielplanismaning@byom.de');
+			mail.replyto = 'kinderbeach.ismaning@mail.com';
 
 			mail.addSubstitution(':teamname', 'Kinderbeachturnier Ismaning');
 			mail.addSubstitution(':subject', subject);
@@ -123,9 +120,9 @@ module.exports = function (sendgrid, env, url) {
 	};
 
 	function sendMail(mail, cb) {
-		if (env == 'DEV') {
-			mail.setTos(['wittmann_b@web.de']);
-			mail.setSmtpapiTos(['wittmann_b@web.de']);
+		if (env != 'DEV') {
+			mail.setTos(['kinderbeach.ismaning@mail.com']);
+			mail.setSmtpapiTos(['kinderbeach.ismaning@mail.com']);
 		}
 		sendgrid.send(mail, cb);
 	}

@@ -89,10 +89,17 @@
 		_.extend(vm.email, emailBlank);
 
 		function send() {
-			email.send(vm.email).then(function (res) {
-				console.log(res);
+			email.send(vm.email).error(function (err) {
+				vm.err = err;
+			}).then(function (res) {
+				vm.message = 'Emails versendet'
 				vm.email = emailBlank;
 			});
+		}
+		
+		vm.resetForm = function () {
+			vm.message = undefined;
+			vm.err = undefined;
 		}
 
 	}
