@@ -13,6 +13,7 @@
 			<input type="number" min="0" ng-model="vm.spiel.toreA" ng-model-options="{ debounce: 500 }" class="spielplannumberinput" data-ng-click="$event.stopPropagation();">
 			<span> : </span>
 			<input type="number" min="0" ng-model="vm.spiel.toreB" ng-model-options="{ debounce: 500 }" class="spielplannumberinput" data-ng-click="$event.stopPropagation();">
+			<span data-ng-if="vm.canDelete" class="padding-left-15" data-ng-click="vm.deleteSpiel(); $event.stopPropagation();"><i class="icon-hover fa fa-remove"></i></span>
 		</div>
 		<div data-ng-if="!vm.isLoggedIn && vm.spiel.beendet">
 			{{vm.spiel.toreA}} : {{vm.spiel.toreB}}

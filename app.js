@@ -9,7 +9,7 @@ var app = express();
 
 app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
 if (app.get('ENVIRONMENT') == 'PROD') {
-	app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://heroku_dfxcd8mn:c4jursvke7aml4pqp3j8f1qh5e@ds031751.mlab.com:31751/heroku_dfxcd8mn'));
+	app.set('MONGODB_URI', process.env.MONGODB_URI;
 } else if (app.get('ENVIRONMENT') == 'DEV') {
 	app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 }
@@ -28,7 +28,7 @@ mongoose.connect(app.get('MONGODB_URI'), function (err, db) {
 	}
 });
 
-var sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'app51990899@heroku.com'), (process.env.SENDGRID_PASSWORD ||  'eannrw3q2784'));
+var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
 require('./models/Gruppen');
 require('./models/Jugenden');

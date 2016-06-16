@@ -89,6 +89,27 @@ SpielSchema.methods.setTore = function (toreA, toreB, cb) {
 	});
 }
 
+SpielSchema.methods.reset = function (cb) {
+	this.setToreA(0, function (err, spiel) {
+		if (err) {
+			throw err;
+		}
+
+		spiel.setToreB(0, function (err, spiel) {
+			if (err) {
+				throw err;
+			}
+			spiel.resetPunkte(function (err, spiel) {
+				if (err) {
+					throw err;
+				}
+
+				spiel.save(cb);
+			});
+		});
+	});
+}
+
 SpielSchema.methods.setToreA = function (toreA, cb) {
 	this.set('toreA', toreA);
 	this.save(cb);
@@ -116,10 +137,29 @@ SpielSchema.methods.setPunkte = function (punkteA, punkteB, cb) {
 			} else if (spiel.punkteA == 0 && spiel.punkteB == 2) {
 				spiel.unentschieden = false;
 				spiel.gewinner = spiel.teamB;
-			} else {
+			} else if (spiel.punkteA == 1 && spiel.punkteB == 1) {
 				spiel.unentschieden = true;
 			}
 			spiel.beendet = true;
+			spiel.save(cb);
+		});
+	});
+};
+
+SpielSchema.methods.resetPunkte = function (cb) {
+	this.setPunkteA(0, function (err, spiel) {
+		if (err) {
+			throw err;
+		}
+
+		spiel.setPunkteB(0, function (err, spiel) {
+			if (err) {
+				throw err;
+			}
+
+			spiel.unentschieden = false;
+			spiel.gewinner = undefined;
+			spiel.beendet = false;
 			spiel.save(cb);
 		});
 	});

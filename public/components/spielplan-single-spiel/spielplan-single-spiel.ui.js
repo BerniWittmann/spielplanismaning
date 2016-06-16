@@ -23,8 +23,10 @@
 
 		_.extend(vm, {
 			isLoggedIn: auth.canAccess(0)
+			, canDelete: auth.canAccess(1)
 			, spiel: $scope.spiSingleSpiel
 		});
+		_.extend(vm.spiel, {zurückgesetzt: 0});
 
 		_.extend(vm, {
 			gotoTeam: function (team) {
@@ -53,6 +55,16 @@
 					platznummer: platznummer
 				});
 			}
+			, deleteSpiel: function () {
+				spiel.resetSpiel(vm.spiel).then(function (res) {
+					vm.spiel = res.data;
+					_.extend(vm.spiel, {
+						zurückgesetzt: 2
+						, toreA: undefined
+						, toreB: undefined
+					});
+				})
+			}
 		});
 
 		if (!vm.spiel.beendet && vm.spiel.toreA == 0 && vm.spiel.toreB == 0) {
@@ -64,11 +76,17 @@
 		var altToreB = vm.spiel.toreB;
 
 		$scope.$watch('vm.spiel.toreA', function () {
-			saveSpiel();
+			if (vm.spiel.zurückgesetzt <= 0) {
+				saveSpiel();
+			}
+			vm.spiel.zurückgesetzt--;
 		});
 
 		$scope.$watch('vm.spiel.toreB', function () {
-			saveSpiel();
+			if (vm.spiel.zurückgesetzt <= 0) {
+				saveSpiel();
+			}
+			vm.spiel.zurückgesetzt--;
 		})
 
 		function saveSpiel() {

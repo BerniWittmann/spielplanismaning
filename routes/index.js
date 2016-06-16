@@ -498,6 +498,34 @@ module.exports = function (secret, sendgrid, env, url) {
 		});
 	});
 
+	router.delete('/spiele/:spiel/tore', function (req, res) {
+		var toreAOld = req.spiel.toreA;
+		var toreBOld = req.spiel.toreB;
+		var punkteAOld = req.spiel.punkteA;
+		var punkteBOld = req.spiel.punkteB;
+		var spiel = req.spiel;
+		spiel.reset(function (err, spiel) {
+			if (err) {
+				throw err;
+			}
+
+			//Set Ergebnis Team A
+			spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err, teamA) {
+				if (err) {
+					throw err;
+				}
+
+				//Set Ergebnis Team B
+				spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err, teamB) {
+					if (err) {
+						throw err;
+					}
+
+					res.json(spiel);
+				});
+			});
+		});
+	});
 	router.put('/spiele/:spiel/tore', function (req, res) {
 		var toreAOld = req.spiel.toreA;
 		var toreBOld = req.spiel.toreB;
@@ -521,7 +549,6 @@ module.exports = function (secret, sendgrid, env, url) {
 					if (err) {
 						throw err;
 					}
-
 
 					async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
 						Subscriber.getByTeam(team._id).then(function (mails) {

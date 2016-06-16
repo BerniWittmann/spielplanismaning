@@ -43,6 +43,8 @@ module.exports = function (sendgrid, env, url) {
 			});
 
 			sendMail(mail, cb);
+		} else {
+			return cb(null, {});
 		}
 	};
 
@@ -82,6 +84,8 @@ module.exports = function (sendgrid, env, url) {
 			});
 
 			sendMail(mail, cb);
+		} else {
+			return cb(null, {});
 		}
 	};
 
