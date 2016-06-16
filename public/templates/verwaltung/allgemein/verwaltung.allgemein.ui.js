@@ -82,10 +82,8 @@
 		});
 
 		var emailBlank = {
-			to: 'wittmann_b@web.de'
-			, subject: ''
+			subject: ''
 			, text: ''
-			, html: ''
 		}
 		vm.email = {};
 		_.extend(vm.email, emailBlank);

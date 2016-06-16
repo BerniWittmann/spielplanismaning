@@ -1,49 +1,49 @@
-module.exports = function (sendgrid, env) {
+module.exports = function (sendgrid, env, url) {
 	var express = require('express');
 	var router = express.Router();
 	var mongoose = require('mongoose');
 	var Subscriber = mongoose.model('Subscriber');
+	var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
 
 	router.post('/', function (req, res) {
-		var email = {
-			to: req.body.to
-			, from: 'mail@spielplanismaning.herokuapp.com'
-			, subject: req.body.subject
-			, text: req.body.text
-			, html: req.body.html
-			, replyto: 'berniw@mnet-online.de'
-			, bcc: 'spielplanismaning@byom.de'
-		}
-
-		if (env == 'PROD') {
-			sendgrid.send(email, function (err, json) {
-				if (err) {
-					return console.error(err);
-				}
-				res.json('Email sendt');
+		Subscriber.find().exec(function (err, subs) {
+			var emails = [];
+			subs.forEach(function (sub) {
+				emails.push(sub.email);
 			});
-		} else {
-			res.json(email);
-		}
+
+			function onlyUnique(value, index, self) {
+				return self.indexOf(value) === index;
+			}
+			var emails = emails.filter( onlyUnique );
+
+			MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err, result) {
+				if (err) {
+					return console.log(err);
+				}
+
+				res.json(result);
+			});
+		});
 	});
-	
+
 	router.post('/subscriber', function (req, res) {
 		var subscriber = new Subscriber(req.body);
 		subscriber.save(function (err, sub) {
-			if(err) {
+			if (err) {
 				return err;
 			}
-			
+
 			res.json(sub);
 		});
 	});
-	
+
 	router.delete('/subscriber', function (req, res) {
 		Subscriber.find(req.body).remove().exec(function (err, sub) {
-			if(err) {
+			if (err) {
 				return err;
 			}
-			
+
 			res.json(sub);
 		});
 	});

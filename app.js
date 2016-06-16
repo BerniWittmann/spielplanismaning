@@ -41,7 +41,7 @@ require('./config/passport');
 
 var routes = require('./routes/index')((process.env.SECRET || 'SECRET'), sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
 var users = require('./routes/users');
-var email = require('./routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'));
+var email = require('./routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
 var config = require('./routes/config')(process.env);
 
 // view engine setup

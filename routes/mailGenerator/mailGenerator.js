@@ -88,16 +88,46 @@ module.exports = function (sendgrid, env, url) {
 			return cb(null, {});
 		}
 	};
+	
+	mailGenerator.sendDefaultMail = function (emails, subject, body, cb) {
+		if (emails.length > 0) {
+			var mail = new sendgrid.Email();
+			mail.setTos(emails);
+			mail.setSmtpapiTos(emails);
+			mail.setFrom('mail@spielplanismaning.herokuapp.com');
+			mail.setFromName('Kinderbeachturnier Ismaning');
+			mail.setSubject(subject);
+			mail.setText(body);
+			mail.setHtml(body);
+			mail.replyto = 'berniw@mnet-online.de';
+			mail.addBcc('spielplanismaning@byom.de');
+
+			mail.addSubstitution(':teamname', 'Kinderbeachturnier Ismaning');
+			mail.addSubstitution(':subject', subject);
+			mail.addSubstitution(':body', body);
+
+			mail.addSubstitution(':unsubscribelink', url + '#/home');
+			mail.setFilters({
+				'templates': {
+					'settings': {
+						'enable': 1
+						, 'template_id': '1e4a9e27-027c-46c3-9991-2b999bfd62b5'
+					}
+				}
+			});
+
+			sendMail(mail, cb);
+		} else {
+			return cb(null, {});
+		}
+	};
 
 	function sendMail(mail, cb) {
-		if (env == 'PROD') {
-			sendgrid.send(mail, cb);
-		} else {
+		if (env == 'DEV') {
 			mail.setTos(['wittmann_b@web.de']);
 			mail.setSmtpapiTos(['wittmann_b@web.de']);
-			console.log('Mail Sendt');
-			sendgrid.send(mail, cb);
 		}
+		sendgrid.send(mail, cb);
 	}
 
 	return mailGenerator;
