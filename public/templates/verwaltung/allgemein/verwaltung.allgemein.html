@@ -75,10 +75,10 @@
 			<div class="alert alert-danger" data-ng-if="vm.err">{{vm.err}}</div>
 			<div class="alert alert-success" data-ng-if="vm.message">{{vm.message}}</div>
 			<div class="form-group">
-				<input type="text" class="form-control" placeholder="Betreff" ng-model="vm.email.subject"></input>
+				<input type="text" class="form-control" placeholder="Betreff" ng-model="vm.email.subject" required></input>
 			</div>
 			<div class="form-group">
-				<textarea class="form-control" placeholder="Text" ng-model="vm.email.text"></textarea>
+				<textarea class="form-control" placeholder="Text" ng-model="vm.email.text" required></textarea>
 			</div>
 			<button type="submit" class="btn btn-primary center-block">Senden</button>
 		</form>

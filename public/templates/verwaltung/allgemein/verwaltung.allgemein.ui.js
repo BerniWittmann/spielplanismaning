@@ -19,7 +19,7 @@
 
 	}
 
-	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope, email) {
+	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope, email, BestaetigenDialog) {
 		var vm = this;
 		vm.loading = true;
 		var d = new Date();
@@ -66,7 +66,11 @@
 					}
 				}
 			}
-			, send: send
+			, send: function (formName) {
+				if (!_.isEqual(vm.email, emailBlank)) {
+					return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
+				}
+			}
 		});
 
 		spielplan.getZeiten().then(function (response) {
@@ -88,6 +92,7 @@
 		vm.email = {};
 		_.extend(vm.email, emailBlank);
 
+
 		function send() {
 			email.send(vm.email).error(function (err) {
 				vm.err = err;
@@ -96,7 +101,7 @@
 				vm.email = emailBlank;
 			});
 		}
-		
+
 		vm.resetForm = function () {
 			vm.message = undefined;
 			vm.err = undefined;

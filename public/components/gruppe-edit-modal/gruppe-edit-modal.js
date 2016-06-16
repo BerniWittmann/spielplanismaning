@@ -39,6 +39,7 @@
 		, gewGruppe
 		, spielplan
 		, TeamEditierenDialog
+		, BestaetigenDialog
 	) {
 		var vm = this;
 		vm.loading = true;
@@ -85,6 +86,9 @@
 			}
 			, editTeam: function (gewTeam) {
 				TeamEditierenDialog.open(gewTeam);
+			}
+			, askDeleteTeam: function (team) {
+				return BestaetigenDialog.open('Team ' + team.name + ' wirklich löschen?', vm.deleteTeam, team._id);
 			}
 		});
 		getTeamsByGruppe();

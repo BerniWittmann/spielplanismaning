@@ -18,7 +18,7 @@
 			}
 		});
 
-	function SpielplanSingleSpielController($scope, $state, auth, spiel, Logger) {
+	function SpielplanSingleSpielController($scope, $state, auth, spiel, Logger, BestaetigenDialog) {
 		var vm = this;
 
 		_.extend(vm, {
@@ -56,7 +56,8 @@
 				});
 			}
 			, deleteSpiel: function () {
-				spiel.resetSpiel(vm.spiel).then(function (res) {
+				console.log('called');
+				return spiel.resetSpiel(vm.spiel).then(function (res) {
 					vm.spiel = res.data;
 					_.extend(vm.spiel, {
 						zurückgesetzt: 2
@@ -64,6 +65,9 @@
 						, toreB: undefined
 					});
 				})
+			}
+			, askDelete: function () {
+				return BestaetigenDialog.open('Wirklich dieses Ergebnis löschen?', vm.deleteSpiel);
 			}
 		});
 

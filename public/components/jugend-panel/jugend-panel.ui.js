@@ -15,7 +15,7 @@
 			, controllerAs: 'vm'
 		});
 
-	function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state) {
+	function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, BestaetigenDialog) {
 		var vm = this;
 		vm.loading = true;
 		vm.error = undefined;
@@ -68,6 +68,12 @@
 				GruppeEditierenDialog.open(gewaehlteGruppe);
 			}
 			, canEdit: canEdit()
+			, askDeleteJugend: function (jugend) {
+				return BestaetigenDialog.open('Jugend ' + jugend.name + ' wirklich löschen?', vm.deleteJugend, jugend._id)
+			}
+			, askDeleteGruppe: function (gruppe) {
+				return BestaetigenDialog.open('Gruppe ' + gruppe.name + ' wirklich löschen?', vm.deleteGruppe, gruppe._id)
+			}
 		})
 
 		getGruppen();
