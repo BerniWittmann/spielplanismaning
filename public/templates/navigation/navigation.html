@@ -20,19 +20,19 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="spi-navbar">
 			<ul class="nav navbar-nav">
-				<li data-ng-class="{active: vm.isAktiv('spi.home')}"><a data-ui-sref="spi.home"><i class="fa fa-home"></i> Home</a></li>
-				<li data-ng-class="{active: vm.isAktiv('spi.spielplan')}"><a data-ui-sref="spi.spielplan"><i class="fa fa-calendar-o"></i> Spielplan</a></li>
+				<li data-ng-class="{active: vm.isAktiv('spi.home')}" ><a data-ui-sref="spi.home"><i class="fa fa-home"></i><span class="hidden-sm"> Home</span></a></li>
+				<li data-ng-class="{active: vm.isAktiv('spi.spielplan')}"><a data-ui-sref="spi.spielplan"><i class="fa fa-calendar-o"></i><span class="hidden-sm"> Spielplan</span></a></li>
 				<li data-ng-class="{active: vm.isAktiv('spi.tgj')}" class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Teams, Gruppen & Jugenden <span class="caret"></span></a>
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Jugenden</span><span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a data-ui-sref="spi.tgj.teams">Teams</a></li>
 						<li><a data-ui-sref="spi.tgj.gruppen">Gruppen</a></li>
 						<li><a data-ui-sref="spi.tgj.jugenden">Jugenden</a></li>
 					</ul>
 				</li>
-				<li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"><i class="fa fa-table"></i> Tabellen</a></li>
+				<li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"><i class="fa fa-table"></i><span class="hidden-sm"> Tabellen</span></a></li>
 				<li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.canAccess()" class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i> Verwaltung <span class="caret"></span></a>
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a data-ui-sref="spi.verwaltung.allgemein">Allgemein</a></li>
 						<li><a data-ui-sref="spi.verwaltung.teams">Teams, Gruppen & Jugenden</a></li>
