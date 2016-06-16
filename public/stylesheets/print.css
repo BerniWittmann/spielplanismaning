@@ -17,6 +17,11 @@
 	.platz3 > td {
 		border-bottom: 2px solid #605f5f !important;
 	}
-	
-	.page-break	{ display: block; page-break-before: always; }
+	#spielplan >thead >tr > th {
+		border-bottom: 2px solid #605f5f !important;
+	}
+	.page-break {
+		display: block;
+		page-break-before: always;
+	}
 }
