@@ -48,6 +48,11 @@
 					});
 				}
 			}
+			, gotoPlatz: function (platznummer) {
+				$state.go('spi.platz', {
+					platznummer: platznummer
+				});
+			}
 		});
 
 		if (!vm.spiel.beendet && vm.spiel.toreA == 0 && vm.spiel.toreB == 0) {

@@ -1,0 +1,16 @@
+<div class="row">
+	<div class="col-md-12 page-header">
+		<h3>Platz {{vm.platz}}
+		</h3>
+
+	</div>
+</div>
+
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
+	<div class="col-md-12">
+		<h4>Spiele</h4>
+		<spi-spiele-tabelle data-spiele="vm.spiele"></spi-spiele-tabelle>
+	</div>
+</div>

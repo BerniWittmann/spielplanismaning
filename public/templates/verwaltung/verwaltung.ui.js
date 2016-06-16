@@ -3,7 +3,7 @@
 
 	angular
 		.module('spi.verwaltung.ui', [
-		'spi.auth', 'spi.verwaltung.allgemein.ui', 'spi.verwaltung.teams.ui'
+		'spi.auth', 'spi.verwaltung.allgemein.ui', 'spi.verwaltung.teams.ui', 'spi.verwaltung.spiele-druck.ui'
 			
 			, 'ui.router'
         ])

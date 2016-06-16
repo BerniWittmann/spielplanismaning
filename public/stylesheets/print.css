@@ -14,4 +14,9 @@
 		font-family: inherit;
 		font-size: inherit;
 	}
+	.platz3 > td {
+		border-bottom: 2px solid #605f5f !important;
+	}
+	
+	.page-break	{ display: block; page-break-before: always; }
 }

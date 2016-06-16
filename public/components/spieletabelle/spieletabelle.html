@@ -14,7 +14,7 @@
 		<tbody>
 			<tr ng-repeat="spiel in vm.spiele" data-ng-click="vm.gotoSpiel(spiel)" class="text-center">
 				<td>{{spiel.uhrzeit}}</td>
-				<td>{{spiel.platz}}</td>
+				<td data-ng-click="vm.gotoPlatz(spiel.platz); $event.stopPropagation();">{{spiel.platz}}</td>
 				<td data-ng-click="vm.gotoJugend(spiel.jugend); $event.stopPropagation();" class="valign">
 					<spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
 				</td>

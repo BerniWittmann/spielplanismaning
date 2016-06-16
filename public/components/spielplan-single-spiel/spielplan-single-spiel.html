@@ -1,6 +1,6 @@
 <td class="text-center">{{vm.spiel.nummer}}</td>
 <td class="text-center">{{vm.spiel.uhrzeit}}</td>
-<td class="text-center">{{vm.spiel.platz}}</td>
+<td data-ng-click="vm.gotoPlatz(vm.spiel.platz); $event.stopPropagation();" class="text-center">{{vm.spiel.platz}}</td>
 <td data-ng-click="vm.gotoJugend(vm.spiel.jugend); $event.stopPropagation();" class="valign">
 	<spi-jugend-label data-jugend="vm.spiel.jugend"></spi-jugend-label>
 </td>

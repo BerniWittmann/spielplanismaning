@@ -40,6 +40,11 @@
 					});
 				}
 			}
+			, gotoPlatz: function (platznummer) {
+				$state.go('spi.platz', {
+						platznummer: platznummer+''
+					});
+			}
 		});
 	}
 })();
