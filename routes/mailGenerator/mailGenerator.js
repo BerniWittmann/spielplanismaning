@@ -23,15 +23,15 @@ module.exports = function (sendgrid, env, url) {
 			mail.setHtml('<p>Ergebnis-Update: ' + team.name + ' hat ' + spielausgang + '</p>');
 			mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-			mail.addSubstitution(':teamname', team.name);
-			mail.addSubstitution(':teamaname', spiel.teamA.name);
-			mail.addSubstitution(':toreA', spiel.toreA);
-			mail.addSubstitution(':toreB', spiel.toreB);
-			mail.addSubstitution(':teambname', spiel.teamB.name);
+			mail.addSubstitution('-teamname-', team.name);
+			mail.addSubstitution('-teamaname-', spiel.teamA.name);
+			mail.addSubstitution('-toreA-', spiel.toreA);
+			mail.addSubstitution('-toreB-', spiel.toreB);
+			mail.addSubstitution('-teambname-', spiel.teamB.name);
 
-			mail.addSubstitution(':spielausgang', spielausgang);
-			mail.addSubstitution(':spiellink', url + '#/spiel/' + spiel._id);
-			mail.addSubstitution(':unsubscribelink', url + '#/teams/' + team._id + '/deabonnieren');
+			mail.addSubstitution('-spielausgang-', spielausgang);
+			mail.addSubstitution('-spiellink-', url + '#/spiel/' + spiel._id);
+			mail.addSubstitution('-unsubscribelink-', url + '#/teams/' + team._id + '/deabonnieren');
 			mail.setFilters({
 				'templates': {
 					'settings': {
@@ -66,12 +66,12 @@ module.exports = function (sendgrid, env, url) {
 			} else  {
 				teambname = spiel.teamA.name;
 			}
-			mail.addSubstitution(':platz', spiel.platz);
-			mail.addSubstitution(':uhrzeit', spiel.uhrzeit);
-			mail.addSubstitution(':teambname', teambname);
+			mail.addSubstitution('-platz-', spiel.platz);
+			mail.addSubstitution('-uhrzeit-', spiel.uhrzeit);
+			mail.addSubstitution('-teambname-', teambname);
 
-			mail.addSubstitution(':spiellink', url + '#/spiel/' + spiel._id);
-			mail.addSubstitution(':unsubscribelink', url + '#/teams/' + team._id + '/deabonnieren');
+			mail.addSubstitution('-spiellink-', url + '#/spiel/' + spiel._id);
+			mail.addSubstitution('-unsubscribelink-', url + '#/teams/' + team._id + '/deabonnieren');
 			mail.setFilters({
 				'templates': {
 					'settings': {
@@ -99,11 +99,11 @@ module.exports = function (sendgrid, env, url) {
 			mail.setHtml(body);
 			mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-			mail.addSubstitution(':teamname', 'Kinderbeachturnier Ismaning');
-			mail.addSubstitution(':subject', subject);
-			mail.addSubstitution(':body', body);
+			mail.addSubstitution('-teamname-', 'Kinderbeachturnier Ismaning');
+			mail.addSubstitution('-subject-', subject);
+			mail.addSubstitution('-body-', body);
 
-			mail.addSubstitution(':unsubscribelink', url + '#/home');
+			mail.addSubstitution('-unsubscribelink-', url + '#/home');
 			mail.setFilters({
 				'templates': {
 					'settings': {
