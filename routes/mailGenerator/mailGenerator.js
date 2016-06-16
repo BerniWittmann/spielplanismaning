@@ -120,7 +120,7 @@ module.exports = function (sendgrid, env, url) {
 	};
 
 	function sendMail(mail, cb) {
-		if (env != 'DEV') {
+		if (env == 'DEV') {
 			mail.setTos(['kinderbeach.ismaning@mail.com']);
 			mail.setSmtpapiTos(['kinderbeach.ismaning@mail.com']);
 		}
