@@ -67,7 +67,7 @@
 				})
 			}
 			, askDelete: function () {
-				return BestaetigenDialog.open('Wirklich dieses Ergebnis löschen?', vm.deleteSpiel);
+				return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
 			}
 		});
 
