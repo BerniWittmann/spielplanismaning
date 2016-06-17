@@ -1,4 +1,4 @@
-module.exports = function (sendgrid, env, url) {
+module.exports = function (sendgrid, env, url, disableMails) {
 	var mailGenerator = {};
 
 	mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
@@ -86,7 +86,7 @@ module.exports = function (sendgrid, env, url) {
 			return cb(null, {});
 		}
 	};
-	
+
 	mailGenerator.sendDefaultMail = function (emails, subject, body, cb) {
 		if (emails.length > 0) {
 			var mail = new sendgrid.Email();
@@ -120,11 +120,15 @@ module.exports = function (sendgrid, env, url) {
 	};
 
 	function sendMail(mail, cb) {
-		if (env == 'DEV') {
-			mail.setTos(['kinderbeach.ismaning@mail.com']);
-			mail.setSmtpapiTos(['kinderbeach.ismaning@mail.com']);
+		if (disableMails != 'true') {
+			if (env == 'DEV') {
+				mail.setTos(['kinderbeach.ismaning@mail.com']);
+				mail.setSmtpapiTos(['kinderbeach.ismaning@mail.com']);
+			}
+			sendgrid.send(mail, cb);
+		}else {
+			return cb(null, {});
 		}
-		sendgrid.send(mail, cb);
 	}
 
 	return mailGenerator;

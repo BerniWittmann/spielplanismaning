@@ -1,4 +1,4 @@
-module.exports = function (secret, sendgrid, env, url) {
+module.exports = function (secret, sendgrid, env, url, disableMails) {
 	var mongoose = require('mongoose');
 	var express = require('express');
 	var router = express.Router();
@@ -14,7 +14,7 @@ module.exports = function (secret, sendgrid, env, url) {
 	var Team = mongoose.model('Team');
 	var User = mongoose.model('User');
 	var Subscriber = mongoose.model('Subscriber');
-	var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
+	var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
 	var auth = jwt({
 		secret: secret
@@ -587,31 +587,37 @@ module.exports = function (secret, sendgrid, env, url) {
 						});
 					};
 
+					if (disableMails != 'true') {
+						return sendNextSpielUpdates(spiel.nummer, function (err, o) {
+							if (err) {
+								return console.log(err);
+							}
 
-					return sendNextSpielUpdates(spiel.nummer, function (err, o) {
-						if (err) {
-							return console.log(err);
-						}
+							async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+								Subscriber.getByTeam(team._id).then(function (mails) {
+									var emails = [];
+									mails.forEach(function (mail) {
+										emails.push(mail.email);
+									});
+									if (emails.length > 0) {
+										MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
+									} else {
+										return asyncdone(null, {});
+									}
 
-						async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
-							Subscriber.getByTeam(team._id).then(function (mails) {
-								var emails = [];
-								mails.forEach(function (mail) {
-									emails.push(mail.email);
 								});
-								if (emails.length > 0) {
-									MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
-								} else {
-									return asyncdone(null, {});
-								}
-
+							}, function (err) {
+								if (err) return console.log(err);
+								res.json({
+									message: 'Emails sent'
+								});
 							});
-						}, function (err) {
-							if (err) return console.log(err);
-							res.json(err);
 						});
-
-					});
+					} else {
+						res.json({
+							message: 'Emails prohibited'
+						});
+					}
 				});
 			});
 		});
