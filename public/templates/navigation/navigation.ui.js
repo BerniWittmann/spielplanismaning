@@ -23,7 +23,7 @@
 
 		_.extend(vm, {
 			isLoggedIn: auth.isLoggedIn
-			, canAccess: function() {return auth.canAccess(1)}
+			, canAccess: function(i) {return auth.canAccess(i)}
 			, currentUser: auth.currentUser
 			, logOut: auth.logOut
 			, isAktiv: function (name) {

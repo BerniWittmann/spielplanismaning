@@ -15,8 +15,22 @@
 				, templateUrl: 'templates/verwaltung/allgemein/verwaltung.allgemein.html'
 				, controller: VerwaltungAllgemeinController
 				, controllerAs: 'vm'
+				, resolve: {
+					authenticate: authenticate
+				}
 			});
+	}
+	
+	function authenticate($q, auth, $state, $timeout) {
+		if (auth.canAccess(1)) {
+			return $q.when();
+		} else {
+			$timeout(function () {
+				$state.go('spi.login');
+			})
 
+			return $q.reject();
+		}
 	}
 
 	function VerwaltungAllgemeinController(auth, $state, spielplan, $scope, email, BestaetigenDialog) {

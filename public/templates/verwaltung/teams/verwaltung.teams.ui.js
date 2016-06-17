@@ -15,8 +15,23 @@
 				, templateUrl: 'templates/verwaltung/teams/verwaltung.teams.html'
 				, controller: VerwaltungTeamsController
 				, controllerAs: 'vm'
+				, resolve: {
+					authenticate: authenticate
+				}
 			});
 
+	}
+
+	function authenticate($q, auth, $state, $timeout) {
+		if (auth.canAccess(1)) {
+			return $q.when();
+		} else {
+			$timeout(function () {
+				$state.go('spi.login');
+			})
+
+			return $q.reject();
+		}
 	}
 
 	function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan) {
@@ -39,11 +54,13 @@
 					, wert: 'gruen'
 				}
 
+
 				
 				, {
 					name: 'Gelb'
 					, wert: 'gelb'
 				}
+
 
 				
 				, {
@@ -51,11 +68,13 @@
 					, wert: 'rot'
 				}
 
+
 				
 				, {
 					name: 'Blau'
 					, wert: 'blau'
 				}
+
 
 				
 				, {
@@ -63,11 +82,13 @@
 					, wert: 'orange'
 				}
 
+
 				
 				, {
 					name: 'Lila'
 					, wert: 'lila'
 				}
+
 
 				
 				, {
@@ -75,11 +96,13 @@
 					, wert: 'hellblau'
 				}
 
+
 				
 				, {
 					name: 'Hellgrün'
 					, wert: 'hellgruen'
 				}
+
 
 				
 				, {

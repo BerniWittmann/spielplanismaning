@@ -15,8 +15,23 @@
 				, templateUrl: 'templates/verwaltung/alle-spiele-druck/alle-spiele-druck.html'
 				, controller: SpieleDruckController
 				, controllerAs: 'vm'
+				, resolve: {
+					authenticate: authenticate
+				}
 			});
 
+	}
+
+	function authenticate($q, auth, $state, $timeout) {
+		if (auth.canAccess(0)) {
+			return $q.when();
+		} else {
+			$timeout(function () {
+				$state.go('spi.login');
+			})
+
+			return $q.reject();
+		}
 	}
 
 	function SpieleDruckController($state, $scope, spiel) {
@@ -31,8 +46,8 @@
 						teamid: gewaehltesteam._id
 					});
 				}
-			},
-			gotoGruppe: function (gewaehltegruppe) {
+			}
+			, gotoGruppe: function (gewaehltegruppe) {
 				if (gewaehltegruppe) {
 					$state.go('spi.tgj.gruppe', {
 						gruppeid: gewaehltegruppe._id

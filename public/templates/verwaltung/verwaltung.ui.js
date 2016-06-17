@@ -15,21 +15,6 @@
 				url: '/verwaltung'
 				, abstract: true
 				, template: '<ui-view></ui-view>'
-				, resolve: {
-					authenticate: authenticate
-				}
 			});
-	}
-
-	function authenticate($q, auth, $state, $timeout) {
-		if (auth.canAccess(1)) {
-			return $q.when();
-		} else {
-			$timeout(function () {
-				$state.go('spi.login');
-			})
-
-			return $q.reject();
-		}
 	}
 })();
