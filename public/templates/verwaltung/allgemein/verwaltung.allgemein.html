@@ -49,9 +49,10 @@
 	<div class="col-md-2 col-md-offset-5">
 		<form ng-submit="vm.register()" style="margin-top:30px;">
 			<h3 class="text-center">User anlegen</h3>
-
+			<div class="alert alert-success" data-ng-if="vm.registerMsg">{{vm.registerMsg}}</div>
+			<div class="alert alert-danger" data-ng-if="vm.registerErr">{{vm.registerErr}}</div>
 			<div class="form-group">
-				<input type="text" class="form-control" placeholder="Username" ng-model="vm.user.username" required></input>
+				<input type="text" class="form-control" placeholder="Username" ng-model="vm.user.username" data-ng-change="vm.resetRegisterForm()" required></input>
 			</div>
 			<div class="form-group">
 				<input type="password" class="form-control" placeholder="Passwort" ng-model="vm.user.password" required></input>

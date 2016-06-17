@@ -41,8 +41,10 @@ angular
 			};
 
 			auth.register = function (user) {
-				return $http.post('/register', user).success(function (data) {
-					auth.saveToken(data.token);
+				return $http.post('/register', user).error(function (err) {
+					return err;	
+				}).success(function (data) {
+					return data;
 				});
 			};
 

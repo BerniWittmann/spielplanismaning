@@ -20,7 +20,7 @@
 				}
 			});
 	}
-	
+
 	function authenticate($q, auth, $state, $timeout) {
 		if (auth.canAccess(1)) {
 			return $q.when();
@@ -44,9 +44,14 @@
 			user: {}
 			, register: function () {
 				auth.register(vm.user).error(function (error) {
-					vm.error = error;
+					if (error.code == 11000) {
+						vm.registerErr = 'Dieser Username existiert bereits';
+					} else {
+						vm.registerErr = error;
+					}
 				}).then(function () {
-					$state.go('spi.home');
+					vm.registerMsg = vm.user.username + ' wurde registriert.';
+					vm.user = {};
 				});
 			}
 			, startzeit: d
@@ -120,7 +125,7 @@
 			vm.message = undefined;
 			vm.err = undefined;
 		}
-		
+
 		vm.delete = function () {
 			auth.deleteUser(vm.username).error(function (err) {
 				console.log(err);
@@ -130,10 +135,15 @@
 				vm.delMsg = 'User gelöscht!';
 			});
 		}
-		
+
 		vm.resetDeleteForm = function () {
 			vm.delErr = undefined;
 			vm.delMsg = undefined;
+		}
+
+		vm.resetRegisterForm = function () {
+			vm.registerErr = undefined;
+			vm.registerMsg = undefined;
 		}
 
 	}

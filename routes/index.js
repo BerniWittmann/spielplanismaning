@@ -690,7 +690,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
 		user.username = req.body.username;
 		if (!user.setRole(req.body.role)) {
-			return res.status(500).json({
+			return res.status(400).json({
 				message: 'Unbekannte Rolle'
 			});
 		}
@@ -699,13 +699,11 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
 		user.save(function (err) {
 			if (err) {
-				throw err;
+				return res.status(500).json(err);
 			}
 
 
-			return res.json({
-				token: user.generateJWT()
-			});
+			return res.json({message: 'success'});
 
 		});
 	});
