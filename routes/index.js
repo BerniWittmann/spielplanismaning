@@ -732,5 +732,23 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 		})(req, res, next);
 	});
 
+	router.put('/delete-user', function (req, res) {
+		console.log(req.body.username);
+		User.find({
+			username: req.body.username
+		}).remove().exec(function (err, user) {
+			if (err) {
+				console.log(err);
+				return res.status(500).json(err);
+			}
+			if (user.result.n > 0) {
+				return res.json(user);
+			} else {
+				return res.status(404).json('Konnte keinen User mit Namen ' + req.body.username + ' finden.');
+			}
+
+		});
+	});
+
 	return router;
 }

@@ -58,12 +58,26 @@
 			</div>
 			<div class="form-group">
 				<select class="form-control" ng-model="vm.user.role" required>
-					 <option value="" disabled selected>Rolle wählen</option>
+					<option value="" disabled selected>Rolle wählen</option>
 					<option value="Admin">Admin</option>
 					<option value="Bearbeiter">Bearbeiter</option>
 				</select>
 			</div>
 			<button type="submit" class="btn btn-primary center-block">anlegen</button>
+		</form>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-2 col-md-offset-5">
+		<form ng-submit="vm.delete()" style="margin-top:30px;">
+			<h3 class="text-center">User löschen</h3>
+			<div class="alert alert-danger" data-ng-if="vm.delErr">{{vm.delErr}}</div>
+			<div class="alert alert-success" data-ng-if="vm.delMsg">{{vm.delMsg}}</div>
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Username" ng-model="vm.username" data-ng-change="vm.resetDeleteForm()" required></input>
+			</div>
+			<button type="submit" class="btn btn-primary center-block">Löschen</button>
 		</form>
 	</div>
 </div>

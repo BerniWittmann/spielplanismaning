@@ -120,6 +120,21 @@
 			vm.message = undefined;
 			vm.err = undefined;
 		}
+		
+		vm.delete = function () {
+			auth.deleteUser(vm.username).error(function (err) {
+				console.log(err);
+				vm.delErr = err;
+			}).then(function (res) {
+				vm.username = undefined;
+				vm.delMsg = 'User gelöscht!';
+			});
+		}
+		
+		vm.resetDeleteForm = function () {
+			vm.delErr = undefined;
+			vm.delMsg = undefined;
+		}
 
 	}
 })();

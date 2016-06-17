@@ -51,6 +51,19 @@ angular
 					auth.saveToken(data.token);
 				});
 			};
+			
+			auth.deleteUser = function(username) {
+				if(auth.canAccess(1)) {
+					return $http.put('/delete-user', {username: username}).error(function (err) {
+						console.log(err);
+						return err;
+					}).success(function (data) {
+						return data;
+					})
+				}else{
+					return new Error('No Permission');
+				}
+			}
 
 			auth.logOut = function () {
 				$window.localStorage.removeItem('spielplan-ismaning-token');
