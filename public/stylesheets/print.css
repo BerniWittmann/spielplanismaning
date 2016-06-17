@@ -24,4 +24,21 @@
 		display: block;
 		page-break-before: always;
 	}
+	.alle-spiele-divider {
+		border-top: 1px solid #605f5f;
+	}
+	.box {
+		border: 1px solid #605f5f;
+		width: 50px;
+		height: 50px;
+		display: inline-block;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.valign {
+		height: 50px;
+		display: inline-block;
+		line-height: 50px;
+		vertical-align: top !important;
+	}
 }
