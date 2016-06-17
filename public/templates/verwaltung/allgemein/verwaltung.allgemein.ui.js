@@ -127,8 +127,10 @@
 		}
 
 		vm.delete = function () {
+			if(auth.currentUser() == vm.username) {
+				return vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';	
+			};
 			auth.deleteUser(vm.username).error(function (err) {
-				console.log(err);
 				vm.delErr = err;
 			}).then(function (res) {
 				vm.username = undefined;

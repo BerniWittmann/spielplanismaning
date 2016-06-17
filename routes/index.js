@@ -731,7 +731,9 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 	});
 
 	router.put('/delete-user', function (req, res) {
-		console.log(req.body.username);
+		if(req.body.username == 'berni') {
+			return res.status(500).json('Dieser User kann nicht gelöscht werden!');
+		}
 		User.find({
 			username: req.body.username
 		}).remove().exec(function (err, user) {
