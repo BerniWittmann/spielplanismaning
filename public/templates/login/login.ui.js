@@ -42,6 +42,9 @@
 				$state.go('spi.home');
 			});
 		};
+		vm.resetErr = function() {
+			vm.error = undefined;
+		}
 	}
 
 	function getLockdown($http) {
