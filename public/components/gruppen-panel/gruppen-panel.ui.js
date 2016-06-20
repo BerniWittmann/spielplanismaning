@@ -29,7 +29,7 @@
 		function getGruppe() {
 			gruppe.get(vm.gruppe._id).then(function (res) {
 				vm.gruppe = res;
-				vm.teams = res.teams;
+				vm.teams = _.sortBy(res.teams, 'name');
 				vm.loading = false;
 			})
 		}
