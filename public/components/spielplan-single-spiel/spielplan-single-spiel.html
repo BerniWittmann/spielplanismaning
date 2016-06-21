@@ -14,7 +14,7 @@
 			<input type="number" min="0" ng-model="vm.spiel.toreA" ng-model-options="{ debounce: 500 }" class="spielplannumberinput" data-ng-click="$event.stopPropagation();">
 			<span> : </span>
 			<input type="number" min="0" ng-model="vm.spiel.toreB" ng-model-options="{ debounce: 500 }" class="spielplannumberinput" data-ng-click="$event.stopPropagation();">
-			<span data-ng-if="vm.canDelete" class="padding-left-15 hidden-print" data-ng-click="vm.askDelete(); $event.stopPropagation();"><i class="icon-hover fa fa-remove" uib-tooltip="Ergebnis zurücksetzen"></i></span>
+			<span data-ng-if="vm.canDelete" class="padding-left-15 hidden-print" data-ng-click="vm.askDelete(); $event.stopPropagation();" uib-tooltip="Ergebnis zurücksetzen"><i class="icon-hover fa fa-remove"></i></span>
 		</div>
 		<div data-ng-if="!vm.isLoggedIn && vm.spiel.beendet">
 			{{vm.spiel.toreA}} : {{vm.spiel.toreB}}
