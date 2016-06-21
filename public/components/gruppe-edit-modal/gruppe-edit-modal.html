@@ -8,8 +8,8 @@
 			<table>
 				<tr data-ng-repeat="team in vm.teams">
 					<td> <a data-ui-sref="spi.tgj.team({teamid: team._id})">{{team.name}}</a></td> 
-					<td class="padding-left-15" data-ng-click="vm.askDeleteTeam(team)"><i class="icon-hover fa fa-remove" uib-tooltip="Team löschen"></i></td>
-					<td class="padding-left-5" data-ng-click="vm.editTeam(team)"><i class="icon-hover fa fa-pencil" uib-tooltip="Team bearbeiten"></i></td>
+					<td class="padding-left-15" data-ng-click="vm.askDeleteTeam(team)" uib-tooltip="Team löschen" tooltip-append-to-body="true"><i class="icon-hover fa fa-remove"></i></td>
+					<td class="padding-left-5" data-ng-click="vm.editTeam(team)" uib-tooltip="Team bearbeiten" tooltip-append-to-body="true"><i class="icon-hover fa fa-pencil"></i></td>
 				</tr>
 			</table>
 		</div>
