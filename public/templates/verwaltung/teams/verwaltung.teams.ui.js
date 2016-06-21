@@ -3,7 +3,7 @@
 
 	angular
 		.module('spi.verwaltung.teams.ui', [
-		'spi.auth', 'ui.router', 'spi.gruppe', 'spi.jugend', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.spielplan'
+		'spi.auth', 'ui.router', 'spi.gruppe', 'spi.jugend', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.spielplan', 'spi.spielplan.ausnahmen.ui'
         ])
 		.config(states)
 		.controller('VerwaltungTeamsController', VerwaltungTeamsController);
@@ -34,7 +34,7 @@
 		}
 	}
 
-	function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan) {
+	function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team) {
 		var vm = this;
 		vm.loading = true;
 
@@ -45,6 +45,7 @@
 					spielplan.createSpielplan();
 					vm.jugend = {};
 					getAll();
+					$scope.$apply();
 				});
 			}
 			, isLoggedIn: auth.canAccess(1)
@@ -55,11 +56,13 @@
 				}
 
 
+
 				
 				, {
 					name: 'Gelb'
 					, wert: 'gelb'
 				}
+
 
 
 				
@@ -69,11 +72,13 @@
 				}
 
 
+
 				
 				, {
 					name: 'Blau'
 					, wert: 'blau'
 				}
+
 
 
 				
@@ -83,11 +88,13 @@
 				}
 
 
+
 				
 				, {
 					name: 'Lila'
 					, wert: 'lila'
 				}
+
 
 
 				
@@ -97,11 +104,13 @@
 				}
 
 
+
 				
 				, {
 					name: 'Hellgrün'
 					, wert: 'hellgruen'
 				}
+
 
 
 				
@@ -117,7 +126,10 @@
 		function getAll() {
 			jugend.getAll().then(function (response) {
 				vm.jugenden = response.data;
-				vm.loading = false;
+				team.getAll().then(function (res) {
+					vm.teams = res.data;
+					vm.loading = false;
+				});
 			});
 		}
 

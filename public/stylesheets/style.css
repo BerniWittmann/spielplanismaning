@@ -29,6 +29,10 @@ a:hover {
 	margin-top: 25px;
 }
 
+.padding-bottom-15 {
+	padding-bottom: 15px;
+}
+
 .main-loader {
 	margin-top: 20%;
 }
@@ -138,7 +142,7 @@ body {
 	vertical-align: middle !important;
 }
 
-width-100 {
+.width-100 {
 	width: 100%;
 }
 

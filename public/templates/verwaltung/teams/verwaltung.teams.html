@@ -34,3 +34,9 @@
 		</form>
 	</div>
 </div>
+
+<div class="row" data-ng-if="!vm.loading">
+	<div class="col-md-10 col-md-offset-1">
+		<spi-spielplan-ausnahmen data-teams="vm.teams"></spi-spielplan-ausnahmen>
+	</div>
+</div>
