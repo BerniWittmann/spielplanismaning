@@ -13,7 +13,7 @@
 			, controllerAs: 'vm'
 		});
 
-	function SpielplanAusnahmenController($scope) {
+	function SpielplanAusnahmenController($scope, $http, $timeout) {
 		var vm = this;
 		var singleAusnahme = {
 			team1: undefined
@@ -29,6 +29,19 @@
 			var o = {};
 			_.extend(o, singleAusnahme);
 			vm.ausnahmen.push(o);
+		}
+
+		getAusnahmen();
+
+		function getAusnahmen() {
+			return $http.get('/spielplan/ausnahmen').then(function (res) {
+				$timeout(function () {
+					$scope.$apply(function () {
+						vm.ausnahmen = res.data;
+					});
+				}, 0, false);
+				return res.data;
+			});
 		}
 	}
 })();

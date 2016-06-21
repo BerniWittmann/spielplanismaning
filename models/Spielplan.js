@@ -29,13 +29,8 @@ var SpielPlanSchema = new mongoose.Schema({
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 SpielPlanSchema.plugin(deepPopulate, {});
 
-SpielPlanSchema.methods.addAusnahme = function (ausnahme, cb) {
-	this.ausnahmen.add(ausnahme);
-	this.save(cb);
-};
-
-SpielPlanSchema.methods.removeAusnahme = function (ausnahme, cb) {
-	this.ausnahmen.splice(this.ausnahmen.indexOf(ausnahme), 1);
+SpielPlanSchema.methods.setAusnahmen = function (ausnahmen, cb) {
+	this.ausnahmen = ausnahmen;
 	this.save(cb);
 };
 

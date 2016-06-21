@@ -673,6 +673,33 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 		});
 	});
 
+	router.put('/spielplan/ausnahmen', function (req, res) {
+		Spielplan.findOne({}).exec(function (err, spielplan) {
+			if (err) {
+				throw err;
+			}
+			
+			spielplan.setAusnahmen(req.body, function (err, spielplan) {
+				if (err) {
+					throw err;
+				}
+
+				res.json(spielplan.ausnahmen);
+			});
+		});
+	});
+
+	router.get('/spielplan/ausnahmen', function (req, res) {
+		Spielplan.findOne({}).deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
+			if (err) {
+				throw err;
+			}
+
+			console.log(spielplan);
+			res.json(spielplan.ausnahmen);
+		});
+	});
+
 	/* Users */
 
 	router.post('/register', function (req, res, next) {
@@ -699,7 +726,9 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 			}
 
 
-			return res.json({message: 'success'});
+			return res.json({
+				message: 'success'
+			});
 
 		});
 	});
@@ -727,7 +756,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 	});
 
 	router.put('/delete-user', function (req, res) {
-		if(req.body.username == 'berni') {
+		if (req.body.username == 'berni') {
 			return res.status(500).json('Dieser User kann nicht gelöscht werden!');
 		}
 		User.find({

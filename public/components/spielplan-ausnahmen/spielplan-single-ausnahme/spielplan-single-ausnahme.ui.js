@@ -15,7 +15,7 @@
 			, controllerAs: 'vm'
 		});
 
-	function SpielplanAusnahmeController($scope, BestaetigenDialog, $timeout) {
+	function SpielplanAusnahmeController($scope, BestaetigenDialog, $timeout, $http) {
 		var vm = this;
 
 		_.extend(vm, {
@@ -24,10 +24,27 @@
 			}
 			, teams2: vm.teams
 			, updateTeams2: updateTeams2
+			, saveAusnahme: saveAusnahme
 		});
+
+		$timeout(function () {
+			$scope.$apply(function () {
+				if (!_.isUndefined(vm.ausnahme.team1) && !_.isNull(vm.ausnahme.team1)) {
+					vm.ausnahme.team1 = _.find(vm.teams, function (o) {
+						return _.isEqual(o._id, vm.ausnahme.team1._id);
+					});
+				}
+				if (!_.isUndefined(vm.ausnahme.team2) && !_.isNull(vm.ausnahme.team2)) {
+					vm.ausnahme.team2 = _.find(vm.teams, function (o) {
+						return _.isEqual(o._id, vm.ausnahme.team2._id);
+					});
+				}
+			});
+		}, 0, false);
 
 		function deleteAusnahme() {
 			vm.ausnahmen = _.pull(vm.ausnahmen, vm.ausnahme);
+			saveAusnahme();
 			vm.ausnahme = undefined;
 		}
 
@@ -40,6 +57,14 @@
 						vm.teams2 = getTeams2();
 					});
 				}, 0, false);
+			}
+		}
+
+		function saveAusnahme() {
+			if (!_.isUndefined(vm.ausnahme.team1) && !_.isUndefined(vm.ausnahme.team2) && !_.isNull(vm.ausnahme.team1) && !_.isNull(vm.ausnahme.team2)) {
+				return $http.put('/spielplan/ausnahmen', vm.ausnahmen).error(function (err) {
+					console.log(err);
+				});
 			}
 		}
 
