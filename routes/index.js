@@ -608,15 +608,11 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 								});
 							}, function (err) {
 								if (err) return console.log(err);
-								res.json({
-									message: 'Emails sent'
-								});
+								res.json(spiel);
 							});
 						});
 					} else {
-						res.json({
-							message: 'Emails prohibited'
-						});
+						res.json(spiel);
 					}
 				});
 			});
