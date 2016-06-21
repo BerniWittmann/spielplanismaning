@@ -16,17 +16,72 @@
 					'spiSingleSpiel': '='
 				}
 			}
+		})
+		.directive("focusOn", function ($timeout) {
+			return {
+				restrict: "A"
+				, link: function (scope, element, attrs) {
+					scope.$on(attrs.focusOn, function (e) {
+						$timeout((function () {
+							element[0].focus();
+						}), 10);
+					});
+				}
+			};
+		})
+		.directive('ngEnter', function () {
+			return function (scope, element, attrs) {
+				element.bind("keydown keypress", function (event) {
+					if (event.which === 13) {
+						scope.$apply(function () {
+							scope.$eval(attrs.ngEnter);
+						});
+
+						event.preventDefault();
+					}
+				});
+			};
 		});
 
-	function SpielplanSingleSpielController($scope, $state, auth, spiel, Logger, BestaetigenDialog) {
+	function SpielplanSingleSpielController($scope, $state, auth, spiel, Logger, BestaetigenDialog, $timeout) {
 		var vm = this;
 
 		_.extend(vm, {
-			isLoggedIn: auth.canAccess(0)
+			canEdit: auth.canAccess(0)
 			, canDelete: auth.canAccess(1)
 			, spiel: $scope.spiSingleSpiel
+			, isEditing: false
+			, edit: function () {
+				if (vm.canEdit) {
+					vm.isEditing = true;
+					$timeout(function () {
+						$scope.$broadcast("focusTextInput");
+					}, 0);
+				}
+			}
+			, abort: function () {
+				vm.spiel.toreA = altToreA;
+				vm.spiel.toreB = altToreB;
+				vm.isEditing = false;
+			}
+			, save: saveSpiel
+			, deleteSpiel: function () {
+				return spiel.resetSpiel(vm.spiel).then(function (res) {
+					vm.spiel = res.data;
+					_.extend(vm.spiel, {
+						zurückgesetzt: 2
+						, toreA: undefined
+						, toreB: undefined
+					});
+					altToreA = undefined;
+					altToreB = undefined;
+					vm.isEditing = false;
+				})
+			}
+			, askDelete: function () {
+				return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
+			}
 		});
-		_.extend(vm.spiel, {zurückgesetzt: 0});
 
 		_.extend(vm, {
 			gotoTeam: function (team) {
@@ -55,20 +110,6 @@
 					platznummer: platznummer
 				});
 			}
-			, deleteSpiel: function () {
-				console.log('called');
-				return spiel.resetSpiel(vm.spiel).then(function (res) {
-					vm.spiel = res.data;
-					_.extend(vm.spiel, {
-						zurückgesetzt: 2
-						, toreA: undefined
-						, toreB: undefined
-					});
-				})
-			}
-			, askDelete: function () {
-				return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
-			}
 		});
 
 		if (!vm.spiel.beendet && vm.spiel.toreA == 0 && vm.spiel.toreB == 0) {
@@ -79,26 +120,15 @@
 		var altToreA = vm.spiel.toreA;
 		var altToreB = vm.spiel.toreB;
 
-		$scope.$watch('vm.spiel.toreA', function () {
-			if (vm.spiel.zurückgesetzt <= 0) {
-				saveSpiel();
-			}
-			vm.spiel.zurückgesetzt--;
-		});
-
-		$scope.$watch('vm.spiel.toreB', function () {
-			if (vm.spiel.zurückgesetzt <= 0) {
-				saveSpiel();
-			}
-			vm.spiel.zurückgesetzt--;
-		})
-
 		function saveSpiel() {
 			if (!_.isUndefined(vm.spiel.toreA) && !_.isUndefined(vm.spiel.toreB) && !_.isNull(vm.spiel.toreA) && !_.isNull(vm.spiel.toreB) && (!_.isEqual(altToreA, vm.spiel.toreA) || !_.isEqual(altToreB, vm.spiel.toreB))) {
 				spiel.updateTore(vm.spiel).then(function (res) {
 					//Logger.log(res);
+					altToreA = res.data.toreA;
+					altToreB = res.data.toreB;
+					vm.spiel = res.data;
+					vm.isEditing = false;
 				});
-
 			}
 		}
 	}
