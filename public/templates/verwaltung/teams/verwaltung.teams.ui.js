@@ -34,7 +34,7 @@
 		}
 	}
 
-	function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team) {
+	function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team, $timeout) {
 		var vm = this;
 		vm.loading = true;
 
@@ -45,7 +45,9 @@
 					spielplan.createSpielplan();
 					vm.jugend = {};
 					getAll();
-					$scope.$apply();
+					$timeout(function () {
+						$scope.$apply();
+					}, 0, false);
 				});
 			}
 			, isLoggedIn: auth.canAccess(1)
@@ -57,11 +59,13 @@
 
 
 
+
 				
 				, {
 					name: 'Gelb'
 					, wert: 'gelb'
 				}
+
 
 
 
@@ -73,11 +77,13 @@
 
 
 
+
 				
 				, {
 					name: 'Blau'
 					, wert: 'blau'
 				}
+
 
 
 
@@ -89,11 +95,13 @@
 
 
 
+
 				
 				, {
 					name: 'Lila'
 					, wert: 'lila'
 				}
+
 
 
 
@@ -105,11 +113,13 @@
 
 
 
+
 				
 				, {
 					name: 'Hellgrün'
 					, wert: 'hellgruen'
 				}
+
 
 
 

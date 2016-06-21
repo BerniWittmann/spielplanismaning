@@ -25,11 +25,13 @@ angular
 					spielplan.startzeit = moment(data.startzeit, 'HH:mm');
 					spielplan.spielzeit = data.spielzeit;
 					spielplan.pausenzeit = data.pausenzeit;
+					spielplan.ausnahmen = data.ausnahmen;
 					zeit = spielplan.startzeit;
 				} else {
 					spielplan.startzeit = "09:00";
 					spielplan.spielzeit = 8;
 					spielplan.pausenzeit = 2;
+					spielplan.ausnahmen = [];
 				}
 
 				return spielplan.data;
@@ -54,6 +56,7 @@ angular
 			spielplan.spiele = [];
 			team.resetErgebnisse();
 			return gruppe.getAll().then(function (gruppen) {
+				console.log(spielplan.ausnahmen);
 				spieleGesamt = calcSpieleGesamt(gruppen.data);
 				Logger.log('Spielplanerstellung: Anzahl Spiele: ' + spieleGesamt);
 				spielplan.maxProgress = spieleGesamt + 1;
@@ -202,7 +205,7 @@ angular
 			var teams = [];
 			_.extend(teams, gruppe.teams);
 			_.pullAllBy(teams, geradeSpielendeTeams, '_id');
-
+			
 			var moeglTeams = [];
 			_.extend(moeglTeams, teams);
 

@@ -633,7 +633,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
 	router.get('/spielplan', function (req, res, next) {
 		var query = Spielplan.findOne({});
-		query.exec(function (err, spielplan) {
+		query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
 			if (err) {
 				throw err;
 			}
@@ -695,7 +695,6 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 				throw err;
 			}
 
-			console.log(spielplan);
 			res.json(spielplan.ausnahmen);
 		});
 	});

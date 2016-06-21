@@ -69,7 +69,7 @@
 		}
 
 		function getTeams2() {
-			if (_.isUndefined(vm.ausnahme.team1) || _.isNull(vm.ausnahme.team2)) {
+			if (_.isUndefined(vm.ausnahme.team1) || _.isNull(vm.ausnahme.team1)) {
 				return vm.teams;
 			}
 			return _.filter(vm.teams, function (o) {
