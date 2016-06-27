@@ -1,23 +1,29 @@
 <div class="modal-header">
-	<h3 class="modal-title"><i class="fa fa-rss"></i> {{vm.team.name}} Abonnieren</h3>
+    <h3 class="modal-title"><i class="fa fa-rss"></i> {{vm.team.name}} Abonnieren</h3>
 </div>
 <div class="modal-body">
-	<spi-loader loading="vm.loading"></spi-loader>
-	<div class="row">
-		<div class="col-md-12">
-			<form name="emailForm" ng-submit="vm.addAbonnent(emailForm)">
-				<div class="alert alert-{{vm.message.type}}" data-ng-if="vm.message.text.length > 0" data-ng-bind="vm.message.text"></div>
-				<h5>Erhalte Email-Benachrichtungen zu Spielen, Ergebnissen, usw. für {{vm.team.name}}</h5>
-				<div class="alert alert-danger" data-ng-if="vm.submitted && emailForm.email.$error.email">Ungültige Email Adresse</div>
-				<div class="form-group">
-					<input type="email" class="form-control" data-ng-change="vm.resetFormValidation()" placeholder="Email" name="email" ng-model="vm.abonnent.email" required></input>
-				</div>
-				<button data-ng-disabled="vm.loading || vm.bereitsabonniert" type="submit" class="btn btn-primary">Abonnieren</button>
-			</form>
-		</div>
-	</div>
+    <spi-loader loading="vm.loading"></spi-loader>
+    <div class="row">
+        <div class="col-md-12">
+            <form name="emailForm" ng-submit="vm.addAbonnent(emailForm)">
+                <div class="alert alert-{{vm.message.type}}" data-ng-if="vm.message.text.length > 0"
+                     data-ng-bind="vm.message.text"></div>
+                <h5>Erhalte Email-Benachrichtungen zu Spielen, Ergebnissen, usw. für {{vm.team.name}}</h5>
+                <div class="alert alert-danger" data-ng-if="vm.submitted && emailForm.email.$error.email">Ungültige
+                    Email Adresse
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" data-ng-change="vm.resetFormValidation()"
+                           placeholder="Email" name="email" ng-model="vm.abonnent.email" required></input>
+                </div>
+                <button data-ng-disabled="vm.loading || vm.bereitsabonniert" type="submit" class="btn btn-primary">
+                    Abonnieren
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
-	<a class="pull-left"data-ng-click="vm.gotoAbmelden()">News abbestellen</a>
-	<button class="btn btn-primary" type="button" ng-click="vm.abbrechen()">Schließen</button>
+    <a class="pull-left" data-ng-click="vm.gotoAbmelden()">News abbestellen</a>
+    <button class="btn btn-primary" type="button" ng-click="vm.abbrechen()">Schließen</button>
 </div>

@@ -1,56 +1,61 @@
 <div class="row">
-	<div class=" col-md-12 page-header">
-		<h3>Tabellen</h3>
-	</div>
+    <div class=" col-md-12 page-header">
+        <h3>Tabellen</h3>
+    </div>
 </div>
 
 <spi-loader loading="vm.loading"></spi-loader>
 
 <div class="row" data-ng-repeat="jugend in vm.jugenden" data-ng-if="!vm.loading">
-	<div class="page-break"></div>
-	<div class="col-md-12">
-		<div class="row">
-			<div class="col-md-12">
-				<h4><spi-jugend-label jugend="jugend"></spi-jugend-label></h4>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12 col-md-{{12/jugend.gruppen.length}}" data-ng-repeat="gruppe in jugend.gruppen">
-				<h5>{{gruppe.name}}</h5>
-				<spi-tabelle data-teams="gruppe.teams"></spi-tabelle>
-			</div>
-		</div>
-	</div>
+    <div class="page-break"></div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>
+                    <spi-jugend-label jugend="jugend"></spi-jugend-label>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-md-{{12/jugend.gruppen.length}}" data-ng-repeat="gruppe in jugend.gruppen">
+                <h5>{{gruppe.name}}</h5>
+                <spi-tabelle data-teams="gruppe.teams"></spi-tabelle>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
-	<br>
+    <br>
 </div>
 
 <div class="row" data-ng-if="!vm.loading">
-	<div class="col-md-4 col-md-offset-4">
-		<div class="page-break"></div>
-		<div class="alert alert-info" data-ng-if="vm.jugenden.length===0">Keine Jugenden gefunden</div>
-		<div class="table-responsive" data-ng-if="vm.jugenden.length!==0">
-			<h3 class="width-100 text-center">Tore - Gesamtstatistik</h3>
-			<table class="table table-condensed table-striped table-hover">
-				<thead>
-					<tr class="text-center text-bold">
-						<td>Jugend</td>
-						<td>Tore</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="jugend in vm.jugenden" data-ui-sref="spi.tgj.jugend({jugendid: jugend._id})" class="text-center">
-						<td class="valign"><spi-jugend-label jugend="jugend"></spi-jugend-label></td>
-						<td>{{jugend.tore}}</td>
-					</tr>
-					<tr class="text-center highlightTeam">
-						<td>Gesamt</td>
-						<td>{{vm.gesamt}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="page-break"></div>
+        <div class="alert alert-info" data-ng-if="vm.jugenden.length===0">Keine Jugenden gefunden</div>
+        <div class="table-responsive" data-ng-if="vm.jugenden.length!==0">
+            <h3 class="width-100 text-center">Tore - Gesamtstatistik</h3>
+            <table class="table table-condensed table-striped table-hover">
+                <thead>
+                <tr class="text-center text-bold">
+                    <td>Jugend</td>
+                    <td>Tore</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="jugend in vm.jugenden" data-ui-sref="spi.tgj.jugend({jugendid: jugend._id})"
+                    class="text-center">
+                    <td class="valign">
+                        <spi-jugend-label jugend="jugend"></spi-jugend-label>
+                    </td>
+                    <td>{{jugend.tore}}</td>
+                </tr>
+                <tr class="text-center highlightTeam">
+                    <td>Gesamt</td>
+                    <td>{{vm.gesamt}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

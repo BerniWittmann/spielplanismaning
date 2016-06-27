@@ -9,23 +9,21 @@ var app = express();
 
 app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
 if (app.get('ENVIRONMENT') == 'PROD') {
-	app.set('MONGODB_URI', process.env.MONGODB_URI);
+    app.set('MONGODB_URI', process.env.MONGODB_URI);
 } else if (app.get('ENVIRONMENT') == 'DEV') {
-	app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
+    app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 }
-
 
 var mongoose = require('mongoose');
 var passport = require('passport');
 
-
 // connect MongoDB
 mongoose.connect(app.get('MONGODB_URI'), function (err, db) {
-	if (!err) {
-		console.log('Connected to Database on ' + app.get('MONGODB_URI'));
-	} else {
-		console.log(err); //failed to connect
-	}
+    if (!err) {
+        console.log('Connected to Database on ' + app.get('MONGODB_URI'));
+    } else {
+        console.log(err); //failed to connect
+    }
 });
 
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
@@ -51,7 +49,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-	extended: false
+    extended: false
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -63,19 +61,17 @@ app.use('/users', users);
 app.use('/email', email);
 app.use('/config', config);
 
-
-
 app.set('port', (process.env.PORT || 8000));
 
 app.listen(app.get('port'), function () {
-	console.log('Node app is running on port', app.get('port'));
+    console.log('Node app is running on port', app.get('port'));
 });
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-	var err = new Error('Not Found');
-	err.status = 404;
-	next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -83,26 +79,23 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('ENVIRONMENT') === 'DEV') {
-	app.use(function (err, req, res, next) {
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message
-			, error: err
-		});
-	});
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message
+            , error: err
+        });
+    });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
-	res.status(err.status || 500);
-	res.render('error', {
-		message: err.message
-		, error: {}
-	});
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message
+        , error: {}
+    });
 });
-
-
-
 
 module.exports = app;

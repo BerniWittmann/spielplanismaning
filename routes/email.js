@@ -1,52 +1,53 @@
 module.exports = function (sendgrid, env, url) {
-	var express = require('express');
-	var router = express.Router();
-	var mongoose = require('mongoose');
-	var Subscriber = mongoose.model('Subscriber');
-	var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
+    var express = require('express');
+    var router = express.Router();
+    var mongoose = require('mongoose');
+    var Subscriber = mongoose.model('Subscriber');
+    var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
 
-	router.post('/', function (req, res) {
-		Subscriber.find().exec(function (err, subs) {
-			var emails = [];
-			subs.forEach(function (sub) {
-				emails.push(sub.email);
-			});
+    router.post('/', function (req, res) {
+        Subscriber.find().exec(function (err, subs) {
+            var emails = [];
+            subs.forEach(function (sub) {
+                emails.push(sub.email);
+            });
 
-			function onlyUnique(value, index, self) {
-				return self.indexOf(value) === index;
-			}
-			var emails = emails.filter( onlyUnique );
+            function onlyUnique(value, index, self) {
+                return self.indexOf(value) === index;
+            }
 
-			MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err, result) {
-				if (err) {
-					return console.log(err);
-				}
+            var emails = emails.filter(onlyUnique);
 
-				res.json(result);
-			});
-		});
-	});
+            MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err, result) {
+                if (err) {
+                    return console.log(err);
+                }
 
-	router.post('/subscriber', function (req, res) {
-		var subscriber = new Subscriber(req.body);
-		subscriber.save(function (err, sub) {
-			if (err) {
-				return err;
-			}
+                res.json(result);
+            });
+        });
+    });
 
-			res.json(sub);
-		});
-	});
+    router.post('/subscriber', function (req, res) {
+        var subscriber = new Subscriber(req.body);
+        subscriber.save(function (err, sub) {
+            if (err) {
+                return err;
+            }
 
-	router.delete('/subscriber', function (req, res) {
-		Subscriber.find(req.body).remove().exec(function (err, sub) {
-			if (err) {
-				return err;
-			}
+            res.json(sub);
+        });
+    });
 
-			res.json(sub);
-		});
-	});
+    router.delete('/subscriber', function (req, res) {
+        Subscriber.find(req.body).remove().exec(function (err, sub) {
+            if (err) {
+                return err;
+            }
 
-	return router;
+            res.json(sub);
+        });
+    });
+
+    return router;
 }

@@ -1,61 +1,56 @@
 (function () {
-	'use strict';
+    'use strict';
 
-	angular
-		.module('spi.verwaltung.team-edit-modal.ui', [
-      		'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal'
+    angular
+        .module('spi.verwaltung.team-edit-modal.ui', [
+            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal'
         ])
-		.service('TeamEditierenDialog', TeamEditierenDialog)
-		.controller('TeamEditierenController', TeamEditierenController);
+        .service('TeamEditierenDialog', TeamEditierenDialog)
+        .controller('TeamEditierenController', TeamEditierenController);
 
-	function TeamEditierenDialog(
-		$uibModal
-	) {
-		return {
-			open: open
-		};
+    function TeamEditierenDialog($uibModal) {
+        return {
+            open: open
+        };
 
-		function open(gewaehltesTeam) {
-			return $uibModal
-				.open({
-					templateUrl: 'components/team-edit-modal/team-edit-modal.html'
-					, controller: 'TeamEditierenController'
-					, controllerAs: 'vm'
-					, resolve: {
-						gewTeam: function () {
-							return gewaehltesTeam;
-						}
-					}
-					, size: 'sm'
-				});
-		}
-	}
+        function open(gewaehltesTeam) {
+            return $uibModal
+                .open({
+                    templateUrl: 'components/team-edit-modal/team-edit-modal.html'
+                    , controller: 'TeamEditierenController'
+                    , controllerAs: 'vm'
+                    , resolve: {
+                        gewTeam: function () {
+                            return gewaehltesTeam;
+                        }
+                    }
+                    , size: 'sm'
+                });
+        }
+    }
 
-	function TeamEditierenController(
-		$state
-		, $uibModalInstance
-		, team
-		, gewTeam
-	) {
-		var vm = this;
+    function TeamEditierenController($state
+        , $uibModalInstance
+        , team
+        , gewTeam) {
+        var vm = this;
 
-		_.extend(vm, {
-			team: gewTeam
-			, save: save
-			, abbrechen: function () {
-				$uibModalInstance.dismiss('cancel');
-			}
-		});
+        _.extend(vm, {
+            team: gewTeam
+            , save: save
+            , abbrechen: function () {
+                $uibModalInstance.dismiss('cancel');
+            }
+        });
 
-		vm.name = vm.team.name;
+        vm.name = vm.team.name;
 
-
-		function save() {
-			vm.loading = true;
-			team.updateName(vm.team, vm.name).then(function (res) {
-				vm.loading = false;
-				$uibModalInstance.close(res);
-			});
-		}
-	}
+        function save() {
+            vm.loading = true;
+            team.updateName(vm.team, vm.name).then(function (res) {
+                vm.loading = false;
+                $uibModalInstance.close(res);
+            });
+        }
+    }
 })();

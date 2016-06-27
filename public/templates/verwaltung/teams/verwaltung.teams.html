@@ -1,36 +1,36 @@
 <div class="row">
-	<div class="col-md-12 page-header">
-		<h3>Verwaltung Teams, Gruppen & Jugenden</h3>
-	</div>
+    <div class="col-md-12 page-header">
+        <h3>Verwaltung Teams, Gruppen & Jugenden</h3>
+    </div>
 </div>
 
 <spi-loader loading="vm.loading"></spi-loader>
 
 <div class="row" data-ng-if="!vm.loading">
-	<div class="col-md-3" data-ng-repeat="jugend in vm.jugenden">
-		<spi-jugend-panel data-jugend="jugend"></spi-jugend-panel>
-	</div>
+    <div class="col-md-3" data-ng-repeat="jugend in vm.jugenden">
+        <spi-jugend-panel data-jugend="jugend"></spi-jugend-panel>
+    </div>
 </div>
 
 <div data-ng-if="vm.isLoggedIn" class="row">
-	<div class="col-md-4 col-md-offset-4">
-		<form ng-submit="vm.addJugend()" style="margin-top:30px;">
-			<h4 class="width-100 text-center">Jugend hinzufügen</h4>
+    <div class="col-md-4 col-md-offset-4">
+        <form ng-submit="vm.addJugend()" style="margin-top:30px;">
+            <h4 class="width-100 text-center">Jugend hinzufügen</h4>
 
-			<div class="form-group">
-				<input type="text" class="form-control" placeholder="Name" ng-model="vm.jugend.name" required></input>
-			</div>
-			<div class="form-group">
-				<select class="form-control" placeholder="Farbe" ng-model="vm.jugend.color" required>
-					<option value="" selected>Farbe wählen...</option>
-					<option data-ng-repeat="farbe in vm.farben" value="{{farbe.wert}}">{{farbe.name}}</option>
-				</select>
-			</div>
-			<div class="text-center" data-ng-if="vm.jugend.name">Vorschau:
-				<spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
-			</div>
-			<button type="submit" class="btn btn-primary center-block margin-top-25">anlegen</button>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Name" ng-model="vm.jugend.name" required></input>
+            </div>
+            <div class="form-group">
+                <select class="form-control" placeholder="Farbe" ng-model="vm.jugend.color" required>
+                    <option value="" selected>Farbe wählen...</option>
+                    <option data-ng-repeat="farbe in vm.farben" value="{{farbe.wert}}">{{farbe.name}}</option>
+                </select>
+            </div>
+            <div class="text-center" data-ng-if="vm.jugend.name">Vorschau:
+                <spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
+            </div>
+            <button type="submit" class="btn btn-primary center-block margin-top-25">anlegen</button>
 
-		</form>
-	</div>
+        </form>
+    </div>
 </div>

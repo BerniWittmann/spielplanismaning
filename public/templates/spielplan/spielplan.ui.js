@@ -1,42 +1,42 @@
 (function () {
-	'use strict';
+    'use strict';
 
-	angular
-		.module('spi.spielplan.ui', [
+    angular
+        .module('spi.spielplan.ui', [
             'ui.router', 'spi.spiel', 'spi.spielplan.singlespiel.ui'
         ])
-		.config(states)
-		.controller('SpielplanController', SpielplanController);
+        .config(states)
+        .controller('SpielplanController', SpielplanController);
 
-	function states($stateProvider) {
-		$stateProvider
-			.state('spi.spielplan', {
-				url: '/spielplan'
-				, templateUrl: 'templates/spielplan/spielplan.html'
-				, controller: SpielplanController
-				, controllerAs: 'vm'
-			});
+    function states($stateProvider) {
+        $stateProvider
+            .state('spi.spielplan', {
+                url: '/spielplan'
+                , templateUrl: 'templates/spielplan/spielplan.html'
+                , controller: SpielplanController
+                , controllerAs: 'vm'
+            });
 
-	}
+    }
 
-	function SpielplanController($state, $scope, spiel) {
-		var vm = this;
-		vm.loading = true;
-		vm.spiele = [];
+    function SpielplanController($state, $scope, spiel) {
+        var vm = this;
+        vm.loading = true;
+        vm.spiele = [];
 
-		_.extend(vm, {
-			gotoSpiel: function (gewaehltesspiel) {
-				if (gewaehltesspiel.jugend) {
-					$state.go('spi.spiel', {
-						spielid: gewaehltesspiel._id
-					});
-				}
-			}
-		})
+        _.extend(vm, {
+            gotoSpiel: function (gewaehltesspiel) {
+                if (gewaehltesspiel.jugend) {
+                    $state.go('spi.spiel', {
+                        spielid: gewaehltesspiel._id
+                    });
+                }
+            }
+        })
 
-		spiel.getAll().then(function (res) {
-			vm.spiele = _.sortBy(res.data, ['nummer']);
-			vm.loading = false;
-		});
-	}
+        spiel.getAll().then(function (res) {
+            vm.spiele = _.sortBy(res.data, ['nummer']);
+            vm.loading = false;
+        });
+    }
 })();

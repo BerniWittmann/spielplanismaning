@@ -1,64 +1,81 @@
 <nav class="navbar navbar-default navbar-static-top">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#spi-navbar" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#spi-navbar"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
 				<span class="pull-left brand-image">
-				<img class="brand-image-normal" alt="" src="/assets/img/hoelle_sued_logo_klein.png" width="32px" height="32px">
-				<img class="brand-image-hover" alt="" src="/assets/img/hoelle_sued_logo_klein_gelb.png" width="32px" height="32px">
+				<img class="brand-image-normal" alt="" src="/assets/img/hoelle_sued_logo_klein.png" width="32px"
+                     height="32px">
+				<img class="brand-image-hover" alt="" src="/assets/img/hoelle_sued_logo_klein_gelb.png" width="32px"
+                     height="32px">
 				</span>
-				<span> Spielplan</span>
-			</a>
-		</div>
+                <span> Spielplan</span>
+            </a>
+        </div>
 
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="spi-navbar">
-			<ul class="nav navbar-nav">
-				<li data-ng-class="{active: vm.isAktiv('spi.home')}" ><a data-ui-sref="spi.home"><i class="fa fa-home"></i><span class="hidden-sm"> Home</span></a></li>
-				<li data-ng-class="{active: vm.isAktiv('spi.spielplan')}"><a data-ui-sref="spi.spielplan"><i class="fa fa-calendar-o"></i><span class="hidden-sm"> Spielplan</span></a></li>
-				<li data-ng-class="{active: vm.isAktiv('spi.tgj')}" class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Jugenden</span><span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a data-ui-sref="spi.tgj.teams">Teams</a></li>
-						<li><a data-ui-sref="spi.tgj.gruppen">Gruppen</a></li>
-						<li><a data-ui-sref="spi.tgj.jugenden">Jugenden</a></li>
-					</ul>
-				</li>
-				<li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"><i class="fa fa-table"></i><span class="hidden-sm"> Tabellen</span></a></li>
-				<li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.canAccess(0)" class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.allgemein">Allgemein</a></li>
-						<li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.teams">Teams, Gruppen & Jugenden</a></li>
-						<li data-ng-if="vm.canAccess(0)"><a data-ui-sref="spi.verwaltung.spiele-druck">Spiele Drucken</a></li>
-					</ul>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<li data-ng-if="vm.isLoggedIn()">
-					<p class="navbar-text"><span class="hidden-lg hidden-md padding-left-15"></span><i class="fa fa-user"></i> <span class="hidden-sm hidden-md" data-ng-bind="vm.currentUser()"></span></p>
-				</li>
-				<li data-ng-if="!vm.isLoggedIn()"><a data-ui-sref="spi.login">Login</a></li>
-				<li data-ng-if="vm.isLoggedIn()"><a data-ng-click="vm.logOut()">Logout</a></li>
-			</ul>
-		</div>
-		<!-- /.navbar-collapse -->
-	</div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="spi-navbar">
+            <ul class="nav navbar-nav">
+                <li data-ng-class="{active: vm.isAktiv('spi.home')}"><a data-ui-sref="spi.home"><i
+                        class="fa fa-home"></i><span class="hidden-sm"> Home</span></a></li>
+                <li data-ng-class="{active: vm.isAktiv('spi.spielplan')}"><a data-ui-sref="spi.spielplan"><i
+                        class="fa fa-calendar-o"></i><span class="hidden-sm"> Spielplan</span></a></li>
+                <li data-ng-class="{active: vm.isAktiv('spi.tgj')}" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Jugenden</span><span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a data-ui-sref="spi.tgj.teams">Teams</a></li>
+                        <li><a data-ui-sref="spi.tgj.gruppen">Gruppen</a></li>
+                        <li><a data-ui-sref="spi.tgj.jugenden">Jugenden</a></li>
+                    </ul>
+                </li>
+                <li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"><i
+                        class="fa fa-table"></i><span class="hidden-sm"> Tabellen</span></a></li>
+                <li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.canAccess(0)"
+                    class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.allgemein">Allgemein</a></li>
+                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.teams">Teams, Gruppen &
+                            Jugenden</a></li>
+                        <li data-ng-if="vm.canAccess(0)"><a data-ui-sref="spi.verwaltung.spiele-druck">Spiele
+                            Drucken</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li data-ng-if="vm.isLoggedIn()">
+                    <p class="navbar-text"><span class="hidden-lg hidden-md padding-left-15"></span><i
+                            class="fa fa-user"></i> <span class="hidden-sm hidden-md"
+                                                          data-ng-bind="vm.currentUser()"></span></p>
+                </li>
+                <li data-ng-if="!vm.isLoggedIn()"><a data-ui-sref="spi.login">Login</a></li>
+                <li data-ng-if="vm.isLoggedIn()"><a data-ng-click="vm.logOut()">Logout</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
 </nav>
 
 <div class="row">
-	<div class="col-md-10 col-md-offset-1" data-ng-if="vm.isLoggedIn() && vm.prog > 0 && vm.progMax > 0">
-		<div class="alert alert-{{vm.type}} alert-dismissible" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<span data-ng-bind-html="vm.message"></span>
-			<br><br>
-			<uib-progressbar max="vm.progMax" value="vm.prog"><span style="color:white; white-space:nowrap;">Spielplanerstellung: {{vm.progDisplay}}</span></uib-progressbar>
-		</div>
-	</div>
+    <div class="col-md-10 col-md-offset-1" data-ng-if="vm.isLoggedIn() && vm.prog > 0 && vm.progMax > 0">
+        <div class="alert alert-{{vm.type}} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <span data-ng-bind-html="vm.message"></span>
+            <br><br>
+            <uib-progressbar max="vm.progMax" value="vm.prog"><span style="color:white; white-space:nowrap;">Spielplanerstellung: {{vm.progDisplay}}</span>
+            </uib-progressbar>
+        </div>
+    </div>
 </div>

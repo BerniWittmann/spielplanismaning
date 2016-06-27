@@ -1,23 +1,27 @@
 <div class="row">
-	<div class=" col-md-12 page-header">
-		<h3>{{vm.gruppe.name}} <small><spi-jugend-label jugend="vm.gruppe.jugend"></spi-jugend-label></small></h3>
-	</div>
+    <div class=" col-md-12 page-header">
+        <h3>{{vm.gruppe.name}}
+            <small>
+                <spi-jugend-label jugend="vm.gruppe.jugend"></spi-jugend-label>
+            </small>
+        </h3>
+    </div>
 </div>
 
 <spi-loader loading="vm.loading"></spi-loader>
 
 <div class="row" data-ng-if="!vm.loading">
-	<div class="col-md-12">
-		<h4>Spiele</h4>
-		<spi-spiele-tabelle data-spiele="vm.spiele"></spi-spiele-tabelle>
-	</div>
+    <div class="col-md-12">
+        <h4>Spiele</h4>
+        <spi-spiele-tabelle data-spiele="vm.spiele"></spi-spiele-tabelle>
+    </div>
 </div>
 
 <br>
 
 <div class="row" data-ng-if="!vm.loading">
-	<div class="col-md-12">
-		<h4>Aktuelle Tabelle</h4>
-		<spi-tabelle data-teams="vm.gruppe.teams"></spi-tabelle>
-	</div>
+    <div class="col-md-12">
+        <h4>Aktuelle Tabelle</h4>
+        <spi-tabelle data-teams="vm.gruppe.teams"></spi-tabelle>
+    </div>
 </div>
