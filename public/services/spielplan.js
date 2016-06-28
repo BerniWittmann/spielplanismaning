@@ -1,6 +1,7 @@
 angular
     .module('spi.spielplan', ['spi.auth', 'spi.spiel', 'spi.gruppe', 'spi.team']).factory('spielplan', ['$http', '$q', 'auth', 'spiel', 'gruppe', 'team', 'Logger', function ($http, $q, auth, spiel, gruppe, team, Logger) {
 
+    var ENDPOINT_URL = '/spielplan';
     var spielplan = {
         startzeit: undefined
         , spielzeit: undefined
@@ -21,7 +22,7 @@ angular
     var spielplanerstellungRunning = false;
 
     spielplan.getZeiten = function () {
-        return $http.get('/spielplan').success(function (data) {
+        return $http.get(ENDPOINT_URL).success(function (data) {
             if (!_.isUndefined(data) && !_.isNull(data)) {
                 spielplan.startzeit = moment(data.startzeit, 'HH:mm');
                 spielplan.spielzeit = data.spielzeit;
@@ -38,7 +39,7 @@ angular
     };
 
     spielplan.saveZeiten = function (zeiten) {
-        return $http.put('/spielplan/zeiten', zeiten, {
+        return $http.put(ENDPOINT_URL + '/zeiten', zeiten, {
             headers: {
                 Authorization: 'Bearer ' + auth.getToken()
             }
@@ -173,7 +174,7 @@ angular
             }
 
             spielplan.maxProgress++;
-            $http.post('/allespiele', spielplan.spiele).then(pushSpiele, function (err) {
+            $http.post('/spiele/alle', spielplan.spiele).then(pushSpiele, function (err) {
                 console.log(err);
             });
 

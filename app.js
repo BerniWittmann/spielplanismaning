@@ -37,11 +37,6 @@ require('./models/Subscriber');
 require('./models/Users')((process.env.SECRET || 'SECRET'));
 require('./config/passport');
 
-var routes = require('./routes/index')((process.env.SECRET || 'SECRET'), sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
-var users = require('./routes/users');
-var email = require('./routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
-var config = require('./routes/config')(process.env);
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -59,16 +54,33 @@ app.use(passport.initialize());
 //noinspection JSCheckFunctionSignatures
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/email', email);
-app.use('/config', config);
-
 app.set('port', (process.env.PORT || 8000));
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
-});
+})
+;
+/* Routes */
+
+var routes = require('./routes/index')((process.env.SECRET || 'SECRET'), sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+var users = require('./routes/users')();
+var email = require('./routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
+var config = require('./routes/config')(process.env);
+var teams = require('./routes/teams.js')();
+var gruppen = require('./routes/gruppen.js')();
+var jugenden = require('./routes/jugenden.js')();
+var spiele = require('./routes/spiele.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+var spielplan = require('./routes/spielplan.js')();
+
+app.use('/users', users);
+app.use('/email', email);
+app.use('/config', config);
+app.use('/teams', teams);
+app.use('/gruppen', gruppen);
+app.use('/jugenden', jugenden);
+app.use('/spiele', spiele);
+app.use('/spielplan', spielplan);
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

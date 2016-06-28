@@ -1,6 +1,7 @@
 module.exports = function (sendgrid, env, url) {
     var express = require('express');
     var router = express.Router();
+
     var mongoose = require('mongoose');
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
@@ -41,7 +42,7 @@ module.exports = function (sendgrid, env, url) {
     });
 
     router.delete('/subscriber', function (req, res) {
-        Subscriber.find(req.body).remove().exec(function (err, sub) {
+        Subscriber.find({email: req.param('email'), team: req.param('team')}).remove().exec(function (err, sub) {
             if (err) {
                 return err;
             }

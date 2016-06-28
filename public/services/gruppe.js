@@ -5,32 +5,34 @@ angular
         gruppen: []
     };
 
+    var ENDPOINT_URL = '/gruppen';
+
     gruppe.getAll = function () {
-        return $http.get('/gruppen').success(function (data) {
+        return $http.get(ENDPOINT_URL).success(function (data) {
             return data;
         });
     };
 
     gruppe.create = function (jugendId, newgruppe) {
-        return $http.post('/jugenden/' + jugendId + '/gruppen', newgruppe).success(function (data) {
+        return $http.post(ENDPOINT_URL + '?jugend=' + jugendId, newgruppe).success(function (data) {
             return data;
         });
     };
 
     gruppe.get = function (id) {
-        return $http.get('/gruppen/' + id).then(function (res) {
+        return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
             return res.data;
         });
     };
 
     gruppe.getByJugend = function (jugendid) {
-        return $http.get('/jugenden/' + jugendid + '/gruppen').then(function (res) {
+        return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
             return res.data;
         });
     };
 
     gruppe.delete = function (id) {
-        return $http.delete('/gruppen/' + id).then(function (res) {
+        return $http.delete(ENDPOINT_URL + '?id=' + id).then(function (res) {
             return res;
         })
     };
