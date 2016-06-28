@@ -18,7 +18,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 
 // connect MongoDB
-mongoose.connect(app.get('MONGODB_URI'), function (err, db) {
+mongoose.connect(app.get('MONGODB_URI'), function (err) {
     if (!err) {
         console.log('Connected to Database on ' + app.get('MONGODB_URI'));
     } else {
@@ -48,12 +48,15 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
+//noinspection JSUnresolvedFunction
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//noinspection JSUnresolvedFunction
 app.use(passport.initialize());
+//noinspection JSCheckFunctionSignatures
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use('/', routes);
@@ -79,7 +82,7 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('ENVIRONMENT') === 'DEV') {
-    app.use(function (err, req, res, next) {
+    app.use(function (err, req, res) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message
@@ -90,7 +93,7 @@ if (app.get('ENVIRONMENT') === 'DEV') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message
