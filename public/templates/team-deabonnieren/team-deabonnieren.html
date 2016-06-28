@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="row" data-ng-if="!vm.loading && (!vm.abgemeldet && !vm.abgebrochen)">
-            <div class="col-md-12" text-center>
+            <div class="col-md-12 text-center">
                 <form name="unsubscribeForm" data-ng-submit="vm.abbestellen()">
                     <div class="row">
                         <div class="col-md-12">
@@ -40,7 +40,7 @@
                         <div class="col-md-4 col-md-offset-4">
                             <div class="form-group">
                                 <input type="email" class="form-control" placeholder="Email hier eintippen" name="email"
-                                       ng-model="vm.sub.email" required></input>
+                                       data-ng-model="vm.sub.email" required>
                             </div>
                         </div>
                     </div>

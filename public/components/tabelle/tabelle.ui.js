@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.tabelle.ui', ['spi.gruppe'])
+        .module('spi.tabelle.ui', [])
         .controller('TabelleController', TabelleController)
         .component('spiTabelle', {
             templateUrl: 'components/tabelle/tabelle.html'
@@ -14,7 +14,7 @@
             , controllerAs: 'vm'
         });
 
-    function TabelleController($state, gruppe) {
+    function TabelleController($state) {
         var vm = this;
 
         vm.$onChanges = function (changeObj) {
@@ -29,7 +29,7 @@
                     teamid: team._id
                 });
             }
-        })
+        });
 
         function compare(a, b) {
             var result = a.punkte - b.punkte;

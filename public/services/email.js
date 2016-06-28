@@ -1,6 +1,6 @@
 angular
     .module('spi.email', []).factory('email', ['$http', '$window', function ($http, $window) {
-    var TOKENNAME = 'spielplan-ismaning-subscriptions'
+    var TOKENNAME = 'spielplan-ismaning-subscriptions';
     var email = {};
 
     email.send = function (email) {
@@ -16,7 +16,7 @@ angular
             email.addSubscriptionToken(abonnent);
             return res.data;
         });
-    }
+    };
 
     email.addSubscriptionToken = function (sub) {
         if (!email.checkSubscription(sub)) {
@@ -37,7 +37,7 @@ angular
         return _.filter(getSubscriptionToken(), {
             'team': o.team
         });
-    }
+    };
 
     email.checkSubscription = function (sub) {
         var result = false;
@@ -47,7 +47,7 @@ angular
             }
         });
         return result;
-    }
+    };
 
     email.removeSubscription = function (sub) {
         return $http.delete('/email/subscriber', sub).error(function (err) {
@@ -57,7 +57,7 @@ angular
             $window.localStorage[TOKENNAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
             return res.data;
         })
-    }
+    };
 
     return email;
 }]);

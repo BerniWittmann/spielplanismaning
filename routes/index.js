@@ -16,11 +16,6 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
-    var auth = jwt({
-        secret: secret
-        , userProperty: 'payload'
-    });
-
     /* GET home page. */
     router.get('/', function (req, res) {
         res.render('index');
@@ -28,7 +23,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
     /* Teams */
 
-    router.get('/teams', function (req, res, next) {
+    router.get('/teams', function (req, res) {
         var query = Team.find();
 
         query.deepPopulate('gruppe jugend').exec(function (err, teams) {
@@ -42,13 +37,13 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
     router.delete('/teams/:team', function (req, res) {
         req.team.jugend.teams.splice(req.team.jugend.teams.indexOf(req.team), 1);
-        req.team.jugend.save(function (err, jugend) {
+        req.team.jugend.save(function (err) {
             if (err) {
                 throw err;
             }
 
             req.team.gruppe.teams.splice(req.team.gruppe.teams.indexOf(req.team), 1);
-            req.team.gruppe.save(function (err, gruppe) {
+            req.team.gruppe.save(function (err) {
                 if (err) {
                     throw err;
                 }
@@ -64,9 +59,9 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                 });
             });
         });
-    })
+    });
 
-    router.post('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res, next) {
+    router.post('/jugenden/:jugend/gruppen/:gruppe/teams', function (req, res) {
         var team = new Team(req.body);
         team.jugend = req.jugend._id;
         team.gruppe = req.gruppe._id;
@@ -79,7 +74,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                 if (err) {
                     throw err;
                 }
-                gruppe.pushTeams(team, function (err, gruppe) {
+                gruppe.pushTeams(team, function (err) {
                     if (err) {
                         throw err;
                     }
@@ -89,7 +84,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                             throw err;
                         }
 
-                        jugend.pushTeams(team, function (err, jugend) {
+                        jugend.pushTeams(team, function (err) {
                             if (err) {
                                 throw err;
                             }
@@ -142,7 +137,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.put('/teams/resetErgebnisse', function (req, res, next) {
+    router.put('/teams/resetErgebnisse', function (req, res) {
         var query = Team.find({});
         query.exec(function (err, teams) {
             if (err) {
@@ -151,7 +146,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
             for (var i = 0; i < teams.length; i++) {
                 var team = teams[i];
-                team.resetErgebnis(function (err, team) {
+                team.resetErgebnis(function (err) {
                     if (err) {
                         throw err;
                     }
@@ -192,7 +187,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.post('/jugenden/:jugend/gruppen', function (req, res, next) {
+    router.post('/jugenden/:jugend/gruppen', function (req, res) {
         var gruppe = new Gruppe(req.body);
         gruppe.jugend = req.jugend._id;
         var query = Jugend.findById(gruppe.jugend);
@@ -208,7 +203,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                         throw err;
                     }
 
-                    jugend.pushGruppe(gruppe, function (err, jugend) {
+                    jugend.pushGruppe(gruppe, function (err) {
                         if (err) {
                             throw err;
                         }
@@ -243,7 +238,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
     router.delete('/gruppen/:gruppe', function (req, res) {
         var jugend = req.gruppe.jugend;
-        jugend.removeGruppe(req.gruppe, function (err, jugend) {
+        jugend.removeGruppe(req.gruppe, function (err) {
             if (err) {
                 throw err;
             }
@@ -280,7 +275,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
     });
     /* Jugenden */
 
-    router.get('/jugenden', function (req, res, next) {
+    router.get('/jugenden', function (req, res) {
         var query = Jugend.find();
         query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
             if (err) {
@@ -291,7 +286,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.post('/jugenden', function (req, res, next) {
+    router.post('/jugenden', function (req, res) {
         var jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
@@ -384,7 +379,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
     /* Spiele */
 
-    router.get('/spiele', function (req, res, next) {
+    router.get('/spiele', function (req, res) {
         var query = Spiel.find();
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
             if (err) {
@@ -395,7 +390,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.post('/spiele', function (req, res, next) {
+    router.post('/spiele', function (req, res) {
         var spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
         spiel.gruppe = req.body.gruppe;
@@ -422,7 +417,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.get('/jugenden/:jugend/gruppen/:gruppe/spiele', function (req, res, next) {
+    router.get('/jugenden/:jugend/gruppen/:gruppe/spiele', function (req, res) {
         var query = Spiel.find({
             jugend: req.jugend
             , gruppe: req.gruppe
@@ -436,7 +431,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.get('/jugenden/:jugend/spiele', function (req, res, next) {
+    router.get('/jugenden/:jugend/spiele', function (req, res) {
         var query = Spiel.find({
             jugend: req.jugend
         });
@@ -449,7 +444,8 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.get('/teams/:team/spiele', function (req, res, next) {
+    router.get('/teams/:team/spiele', function (req, res) {
+        //noinspection JSUnresolvedFunction
         var query = Spiel.find({}).or([{
             teamA: req.team
         }, {
@@ -508,13 +504,13 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
             }
 
             //Set Ergebnis Team A
-            spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err, teamA) {
+            spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
                 if (err) {
                     throw err;
                 }
 
                 //Set Ergebnis Team B
-                spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err, teamB) {
+                spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err) {
                     if (err) {
                         throw err;
                     }
@@ -547,14 +543,13 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                         throw err;
                     }
 
-                    function sendNextSpielUpdates(currentNummer, cb) {
+                    function sendNextSpielUpdates(cb) {
                         Spiel.findOne({
                             nummer: spiel.nummer + 6
                         }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
                             if (err) {
                                 return console.log(err)
                             }
-                            ;
                             if (nextspiel) {
                                 if (!nextspiel.beendet) {
                                     async.eachSeries([nextspiel.teamA, nextspiel.teamB], function (team, asyncdone) {
@@ -564,6 +559,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                                                 emails.push(mail.email);
                                             });
                                             if (emails.length > 0) {
+                                                //noinspection JSUnresolvedFunction
                                                 MailGenerator.sendSpielReminder(team, nextspiel, emails, asyncdone);
                                             } else {
                                                 return asyncdone(null, {});
@@ -583,10 +579,9 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                             }
 
                         });
-                    };
-
+                    }
                     if (disableMails != 'true') {
-                        return sendNextSpielUpdates(spiel.nummer, function (err, o) {
+                        return sendNextSpielUpdates(function (err) {
                             if (err) {
                                 return console.log(err);
                             }
@@ -598,6 +593,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
                                         emails.push(mail.email);
                                     });
                                     if (emails.length > 0) {
+                                        //noinspection JSUnresolvedFunction
                                         MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
                                     } else {
                                         return asyncdone(null, {});
@@ -629,7 +625,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
     /* Spielplan */
 
-    router.get('/spielplan', function (req, res, next) {
+    router.get('/spielplan', function (req, res) {
         var query = Spielplan.findOne({});
         query.exec(function (err, spielplan) {
             if (err) {
@@ -639,10 +635,10 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
         });
     });
 
-    router.put('/spielplan/zeiten', function (req, res, next) {
+    router.put('/spielplan/zeiten', function (req, res) {
         Spielplan.findOneAndUpdate({}, req.body, {
             upsert: true
-        }, function (err, doc) {
+        }, function (err) {
             if (err) return res.send(500, {
                 error: err
             });
@@ -673,7 +669,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
 
     /* Users */
 
-    router.post('/register', function (req, res, next) {
+    router.post('/register', function (req, res) {
         if (!req.body.username || !req.body.password) {
             return res.status(400).json({
                 message: 'Bitte alle Felder ausfüllen'
@@ -689,7 +685,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
             });
         }
 
-        user.setPassword(req.body.password)
+        user.setPassword(req.body.password);
 
         user.save(function (err) {
             if (err) {
@@ -708,6 +704,7 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
             });
         }
 
+        //noinspection JSUnresolvedFunction
         passport.authenticate('local', function (err, user, info) {
             if (err) {
                 throw err;
@@ -744,4 +741,4 @@ module.exports = function (secret, sendgrid, env, url, disableMails) {
     });
 
     return router;
-}
+};

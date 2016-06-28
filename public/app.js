@@ -24,7 +24,7 @@
             });
     }
 
-    function run($state, $rootScope) {
+    function run($rootScope) {
         $rootScope.$on('$stateChangeStart', function () {
             $rootScope.loading = true;
         });
@@ -53,7 +53,7 @@
             } else {
                 $timeout(function () {
                     $state.go('spi.login');
-                })
+                });
                 $rootScope.loading = false;
 
                 return $q.reject();

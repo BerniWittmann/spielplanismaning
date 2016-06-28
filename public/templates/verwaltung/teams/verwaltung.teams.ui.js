@@ -28,20 +28,21 @@
         } else {
             $timeout(function () {
                 $state.go('spi.login');
-            })
+            });
 
             return $q.reject();
         }
     }
 
-    function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan) {
+    function VerwaltungTeamsController(auth, jugend, spielplan) {
         var vm = this;
         vm.loading = true;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             jugend: {}
             , addJugend: function () {
-                jugend.create(vm.jugend).then(function (res) {
+                jugend.create(vm.jugend).then(function () {
                     spielplan.createSpielplan();
                     vm.jugend = {};
                     getAll();

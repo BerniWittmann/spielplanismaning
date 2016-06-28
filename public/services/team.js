@@ -1,5 +1,5 @@
 angular
-    .module('spi.team', ['spi.auth']).factory('team', ['$http', 'auth', function ($http, auth) {
+    .module('spi.team', ['spi.auth']).factory('team', ['$http', 'auth', function ($http) {
 
     var team = {
         teams: []
@@ -28,26 +28,26 @@ angular
         return $http.get('/jugenden/' + jugendid + '/gruppen/' + gruppenid + '/teams').then(function (res) {
             return res.data;
         })
-    }
+    };
 
     team.delete = function (teamid) {
         return $http.delete('/teams/' + teamid).then(function (res) {
             return res;
         });
-    }
+    };
 
     team.resetErgebnisse = function () {
         return $http.put('/teams/resetErgebnisse').then(function (res) {
             return res;
         });
-    }
+    };
 
     team.updateName = function (team, name) {
         team.name = name;
         return $http.put('/teams/' + team._id, team).then(function (res) {
             return res;
         });
-    }
+    };
 
     return team;
 }]);

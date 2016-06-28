@@ -14,9 +14,10 @@
             , controllerAs: 'vm'
         });
 
-    function SpieleTabellenController($state, $scope) {
+    function SpieleTabellenController($state) {
         var vm = this;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {

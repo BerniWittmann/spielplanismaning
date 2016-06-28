@@ -19,7 +19,7 @@
 
     }
 
-    function JugendenController($state, jugend) {
+    function JugendenController(jugend) {
         var vm = this;
         vm.loading = true;
 

@@ -132,4 +132,4 @@ module.exports = function (sendgrid, env, url, disableMails) {
     }
 
     return mailGenerator;
-}
+};

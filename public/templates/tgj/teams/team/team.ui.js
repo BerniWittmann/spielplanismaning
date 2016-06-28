@@ -49,10 +49,10 @@
             if (loadingCompleted >= 3) {
                 $scope.loading = false;
             }
-        })
+        });
 
         vm.abonnieren = function () {
-            return TeamAbonnierenDialog.open(vm.team).closed.then(function (result) {
+            return TeamAbonnierenDialog.open(vm.team).closed.then(function () {
                 vm.bereitsAbonniert = email.checkSubscription({
                     team: vm.team._id
                 });

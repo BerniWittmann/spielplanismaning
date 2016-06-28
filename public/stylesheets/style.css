@@ -1,12 +1,12 @@
 @font-face {
     font-family: "DIGITAL";
-    src: url("/stylesheets/fonts/digital.ttf");
+    src: url("/fonts/digital.ttf");
 }
 
 ul {
     list-style-type: none;
     -webkit-margin-before: 0;
-    -webkit-padding-start: 0px;
+    -webkit-padding-start: 0;
 }
 
 a:hover {
@@ -46,8 +46,8 @@ a:hover {
 }
 
 .special-padding {
-    padding-right: 23.77px;
-    padding-left: 23.77px;
+    padding-right: 24px;
+    padding-left: 24px;
 }
 
 .width-60 {
@@ -98,9 +98,7 @@ input[type=number]::-webkit-outer-spin-button {
     bottom: 0;
     width: 100%;
     height: 40px;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 10px 20px;
     background-color: aliceblue;
     text-align: center;
 }
@@ -138,7 +136,7 @@ body {
     vertical-align: middle !important;
 }
 
-width-100 {
+.width-100 {
     width: 100%;
 }
 

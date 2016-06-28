@@ -14,8 +14,6 @@
         });
 
     function LoaderController() {
-        var vm = this;
-
     }
 
 })();

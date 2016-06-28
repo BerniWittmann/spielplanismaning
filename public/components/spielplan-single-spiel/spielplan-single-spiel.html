@@ -11,20 +11,21 @@
 <td class="text-center">
     <div data-ng-if="vm.spiel.jugend">
         <div data-ng-if="vm.isEditing && vm.canEdit">
-            <input type="number" min="0" ng-model="vm.spiel.toreA" class="spielplannumberinput"
-                   data-ng-click="$event.stopPropagation();" focus-on="focusTextInput" ng-enter="vm.save()">
+            <input type="number" min="0" data-ng-model="vm.spiel.toreA" class="spielplannumberinput"
+                   data-ng-click="$event.stopPropagation();" data-focus-on="focusTextInput" data-ng-enter="vm.save()"
+                   title="toreA">
             <span> : </span>
-            <input type="number" min="0" ng-model="vm.spiel.toreB" class="spielplannumberinput"
-                   data-ng-click="$event.stopPropagation();" ng-enter="vm.save()">
+            <input type="number" min="0" data-ng-model="vm.spiel.toreB" class="spielplannumberinput"
+                   data-ng-click="$event.stopPropagation();" data-ng-enter="vm.save()" title="toreB">
 			<span class="pull-right">
 				<span class="hidden-print" data-ng-click="vm.save(); $event.stopPropagation();"
-                      uib-tooltip="Ergebnis speichern" tooltip-placement="top-right"><i
+                      data-uib-tooltip="Ergebnis speichern" data-tooltip-placement="top-right"><i
                         class="icon-hover fa fa-check"></i></span>
 				<span data-ng-if="vm.canDelete" class="hidden-print"
-                      data-ng-click="vm.askDelete(); $event.stopPropagation();" uib-tooltip="Ergebnis zurücksetzen"
-                      tooltip-placement="top-right"><i class="icon-hover fa fa-trash"></i></span>
+                      data-ng-click="vm.askDelete(); $event.stopPropagation();" data-uib-tooltip="Ergebnis zurücksetzen"
+                      data-tooltip-placement="top-right"><i class="icon-hover fa fa-trash"></i></span>
 				<span class="hidden-print" data-ng-click="vm.abort(); $event.stopPropagation();"
-                      uib-tooltip="Editieren abbrechen" tooltip-placement="top-right"><i
+                      data-uib-tooltip="Editieren abbrechen" data-tooltip-placement="top-right"><i
                         class="icon-hover fa fa-remove"></i></span>
 			</span>
         </div>
@@ -33,7 +34,7 @@
             <span data-ng-if="!vm.spiel.beendet">   :   </span>
 			<span class="pull-right" style="padding-left:33px;" data-ng-if="vm.canEdit">
 			<span class="hidden-print" data-ng-click="vm.edit(); $event.stopPropagation();"
-                  uib-tooltip="Ergebnis bearbeiten" tooltip-placement="top-right"><i
+                  data-uib-tooltip="Ergebnis bearbeiten" data-tooltip-placement="top-right"><i
                     class="icon-hover fa fa-pencil"></i></span>
 			</span>
         </div>

@@ -23,6 +23,7 @@
         var vm = this;
         vm.loading = true;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             teams: []
             , gotoTeam: function (team) {

@@ -28,7 +28,7 @@
             vm.sub = {
                 team: vm.team._id
                 , email: ''
-            }
+            };
             if (email.getSubscriptionByTeam({team: vm.team._id}).length == 1) {
                 vm.sub.email = _.head(email.getSubscriptionByTeam({team: vm.team._id})).email;
             }
@@ -40,11 +40,11 @@
             vm.abgemeldet = false;
             vm.abgebrochen = true;
             redirect();
-        }
+        };
 
         vm.abbestellen = function () {
             if (email.checkSubscription(vm.sub)) {
-                email.removeSubscription(vm.sub).then(function (res) {
+                email.removeSubscription(vm.sub).then(function () {
                     vm.message = undefined;
                     vm.abgebrochen = false;
                     vm.abgemeldet = true;
@@ -57,7 +57,7 @@
             } else {
                 vm.message = vm.sub.email + ' kann nicht abgemeldet werden. Vielleicht ist diese Email bereits abgemeldet';
             }
-        }
+        };
 
         function redirect() {
             $timeout(function () {

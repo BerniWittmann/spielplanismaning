@@ -4,7 +4,7 @@
     angular
         .module('spi.bestaetigen-modal.ui', [
             'ui.bootstrap', 'ui.bootstrap.modal'
-            ,])
+        ])
         .service('BestaetigenDialog', BestaetigenDialog)
         .controller('BestaetigenController', BestaetigenController);
 
@@ -14,6 +14,7 @@
         };
 
         function open(message, fction, parameters) {
+            //noinspection JSUnusedGlobalSymbols
             return $uibModal
                 .open({
                     templateUrl: 'components/bestaetigen-modal/bestaetigen-modal.html'

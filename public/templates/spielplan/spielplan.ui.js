@@ -19,11 +19,12 @@
 
     }
 
-    function SpielplanController($state, $scope, spiel) {
+    function SpielplanController($state, spiel) {
         var vm = this;
         vm.loading = true;
         vm.spiele = [];
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
@@ -32,7 +33,7 @@
                     });
                 }
             }
-        })
+        });
 
         spiel.getAll().then(function (res) {
             vm.spiele = _.sortBy(res.data, ['nummer']);

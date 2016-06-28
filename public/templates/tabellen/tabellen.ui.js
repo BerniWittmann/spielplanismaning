@@ -3,7 +3,7 @@
 
     angular
         .module('spi.tabellen.ui', [
-            'spi.auth', 'spi.gruppe', 'spi.jugend', 'ui.router', 'spi.tabelle.ui'
+            'spi.auth', 'spi.jugend', 'ui.router', 'spi.tabelle.ui'
         ])
         .config(states)
         .controller('TabellenController', TabellenController);
@@ -19,7 +19,7 @@
 
     }
 
-    function TabellenController(gruppe, jugend, $stateParams) {
+    function TabellenController(jugend) {
         var vm = this;
         vm.loading = true;
         vm.gesamt = 0;

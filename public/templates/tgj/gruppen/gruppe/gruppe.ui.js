@@ -19,7 +19,7 @@
 
     }
 
-    function GruppeController(gruppe, team, $stateParams, spiel) {
+    function GruppeController(gruppe, $stateParams, spiel) {
         var vm = this;
         vm.loading = true;
 

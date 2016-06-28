@@ -16,8 +16,9 @@ module.exports = function (sendgrid, env, url) {
                 return self.indexOf(value) === index;
             }
 
-            var emails = emails.filter(onlyUnique);
+            emails = emails.filter(onlyUnique);
 
+            //noinspection JSUnresolvedFunction
             MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err, result) {
                 if (err) {
                     return console.log(err);
@@ -50,4 +51,4 @@ module.exports = function (sendgrid, env, url) {
     });
 
     return router;
-}
+};

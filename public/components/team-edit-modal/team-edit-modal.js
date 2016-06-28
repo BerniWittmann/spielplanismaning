@@ -29,10 +29,11 @@
         }
     }
 
-    function TeamEditierenController($state
-        , $uibModalInstance
+    function TeamEditierenController(
+        $uibModalInstance
         , team
-        , gewTeam) {
+        , gewTeam
+    ) {
         var vm = this;
 
         _.extend(vm, {

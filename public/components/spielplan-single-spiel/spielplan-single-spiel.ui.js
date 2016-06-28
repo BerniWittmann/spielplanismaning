@@ -18,10 +18,12 @@
             }
         })
         .directive("focusOn", function ($timeout) {
+            //noinspection JSUnusedGlobalSymbols
             return {
                 restrict: "A"
                 , link: function (scope, element, attrs) {
-                    scope.$on(attrs.focusOn, function (e) {
+                    //noinspection JSUnresolvedVariable
+                    scope.$on(attrs.focusOn, function () {
                         $timeout((function () {
                             element[0].focus();
                         }), 10);
@@ -34,6 +36,7 @@
                 element.bind("keydown keypress", function (event) {
                     if (event.which === 13) {
                         scope.$apply(function () {
+                            //noinspection JSUnresolvedVariable
                             scope.$eval(attrs.ngEnter);
                         });
 
@@ -43,9 +46,10 @@
             };
         });
 
-    function SpielplanSingleSpielController($scope, $state, auth, spiel, Logger, BestaetigenDialog, $timeout) {
+    function SpielplanSingleSpielController($scope, $state, auth, spiel, BestaetigenDialog, $timeout) {
         var vm = this;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             canEdit: auth.canAccess(0)
             , canDelete: auth.canAccess(1)
@@ -69,8 +73,7 @@
                 return spiel.resetSpiel(vm.spiel).then(function (res) {
                     vm.spiel = res.data;
                     _.extend(vm.spiel, {
-                        zurückgesetzt: 2
-                        , toreA: undefined
+                        toreA: undefined
                         , toreB: undefined
                     });
                     altToreA = undefined;
@@ -83,6 +86,7 @@
             }
         });
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gotoTeam: function (team) {
                 if (team) {

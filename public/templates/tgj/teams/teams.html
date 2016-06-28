@@ -9,9 +9,9 @@
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table ng-table="vm.tableParams" class="table table-condensed table-striped table-hover"
+            <table data-ng-table="vm.tableParams" class="table table-condensed table-striped table-hover"
                    data-show-filter="true">
-                <tr ng-repeat="team in $data" data-ng-click="vm.gotoTeam(team)" class="text-center">
+                <tr data-ng-repeat="team in $data" data-ng-click="vm.gotoTeam(team)" class="text-center">
                     <td data-title="'Name'" data-sortable="'name'" class="text-left" data-filter="{name: 'text'}">
                         {{team.name}}
                     </td>

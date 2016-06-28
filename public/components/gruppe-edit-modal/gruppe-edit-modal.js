@@ -1,9 +1,10 @@
+var _ = require("lodash");
 (function () {
     'use strict';
 
     angular
         .module('spi.verwaltung.gruppe-edit-modal.ui', [
-            'spi.team', 'spi.gruppe', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.verwaltung.team-edit-modal.ui'
+            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.verwaltung.team-edit-modal.ui'
         ])
         .service('GruppeEditierenDialog', GruppeEditierenDialog)
         .controller('GruppeEditierenController', GruppeEditierenController);
@@ -14,6 +15,7 @@
         };
 
         function open(gewaehlteGruppe) {
+            //noinspection JSUnusedGlobalSymbols
             return $uibModal
                 .open({
                     templateUrl: 'components/gruppe-edit-modal/gruppe-edit-modal.html'
@@ -32,7 +34,6 @@
     function GruppeEditierenController($state
         , $uibModalInstance
         , team
-        , gruppe
         , gewGruppe
         , spielplan
         , TeamEditierenDialog
@@ -40,6 +41,7 @@
         var vm = this;
         vm.loading = true;
 
+        //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
         _.extend(vm, {
             gruppe: gewGruppe
             , save: save
@@ -53,7 +55,7 @@
                     _.extend(vm.team, {
                         gruppe: vm.gruppe._id
                         , jugend: vm.gruppe.jugend._id
-                    })
+                    });
                     team.create(vm.team).then(function (res) {
                         spielplan.createSpielplan();
                         vm.teams.push(res.data);
@@ -71,7 +73,7 @@
             , deleteTeam: function (teamid) {
                 if (!vm.loading) {
                     vm.loading = true;
-                    team.delete(teamid).then(function (res) {
+                    team.delete(teamid).then(function () {
                         spielplan.createSpielplan();
                         vm.teams = _.remove(vm.teams, function (n) {
                             return !_.isEqual(n._id, teamid);

@@ -16,6 +16,5 @@
         });
 
     function PanelController() {
-        var vm = this;
     }
 })();

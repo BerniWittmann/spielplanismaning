@@ -1,5 +1,5 @@
 angular
-    .module('spi.jugend', ['spi.auth']).factory('jugend', ['$http', 'auth', function ($http, auth) {
+    .module('spi.jugend', ['spi.auth']).factory('jugend', ['$http', 'auth', function ($http) {
 
     var jugend = {
         jugenden: []
@@ -28,25 +28,25 @@ angular
         return $http.delete('/jugenden/' + id).then(function (res) {
             return res;
         })
-    }
+    };
 
     jugend.update = function (jugendId, jugend) {
-        return $http.put('/jugenden/' + jugendId).then(function (res) {
+        return $http.put('/jugenden/' + jugendId, jugend).then(function (res) {
             return res.data;
         })
-    }
+    };
 
     jugend.addGruppe = function (jugendId, gruppenId) {
         var jugend = jugend.get(jugendId);
         jugend.gruppen.push(gruppenId);
         jugend.update(jugendId, jugend);
-    }
+    };
 
     jugend.getTore = function (id) {
         return $http.get('/jugenden/' + id + '/tore').then(function (res) {
             return res;
         });
-    }
+    };
 
     return jugend;
 }]);

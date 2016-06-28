@@ -8,7 +8,7 @@
 
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
-        <form name="spielzeitForm" ng-submit="vm.saveSpielzeit()">
+        <form name="spielzeitForm" data-ng-submit="vm.saveSpielzeit()">
             <div class="row">
                 <div class="form-group col-md-4">
                     <div class="control-label center-block text-center special-padding" style="width: 100%">Startzeit
@@ -22,13 +22,13 @@
                 <div class="form-group col-md-4">
                     <div class="control-label center-block text-center" style="width: inherit;">Spielzeit</div>
                     <div class="center-block width-60">
-                        <a ng-click="vm.increment('spielzeit')" class="btn btn-link center-block"
-                           style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                        <a data-ng-click="vm.increment('spielzeit')" class="btn btn-link center-block"
+                           style="height: 25px; width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
                         <input name="spielzeit" type="number" class="form-control width-60 text-center" min="1"
-                               ng-model="vm.spielzeit" required
-                               ng-class="{'has-error': !spielzeitForm.spielzeit.$valid}"></input>
-                        <a ng-click="vm.decrement('spielzeit')" class="btn btn-link center-block"
-                           style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                               data-ng-model="vm.spielzeit" required
+                               data-ng-class="{'has-error': !spielzeitForm.spielzeit.$valid}" title="spielzeit">
+                        <a data-ng-click="vm.decrement('spielzeit')" class="btn btn-link center-block"
+                           style="height: 25px; width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
                     </div>
                     <div class="alert alert-danger col-md-8 col-md-offset-2"
                          data-ng-if="!spielzeitForm.spielzeit.$valid">
@@ -38,13 +38,13 @@
                 <div class="form-group col-md-4">
                     <div class="control-label center-block text-center" style="width: inherit;">Pausenzeit</div>
                     <div class="center-block width-60">
-                        <a ng-click="vm.increment('pausenzeit')" class="btn btn-link center-block"
-                           style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                        <a data-ng-click="vm.increment('pausenzeit')" class="btn btn-link center-block"
+                           style="height: 25px; width: 50px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
                         <input name="pausenzeit" type="number" class="form-control width-60 text-center" min="1"
-                               ng-model="vm.pausenzeit" required
-                               ng-class="{'has-error': !spielzeitForm.pausenzeit.$valid}"></input>
-                        <a ng-click="vm.decrement('pausenzeit')" class="btn btn-link center-block"
-                           style="height: 25px, width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                               data-ng-model="vm.pausenzeit" required
+                               data-ng-class="{'has-error': !spielzeitForm.pausenzeit.$valid}" title="pausenzeit">
+                        <a data-ng-click="vm.decrement('pausenzeit')" class="btn btn-link center-block"
+                           style="height: 25px; width: 50px;"><span class="glyphicon glyphicon-chevron-down"></span></a>
                     </div>
                     <div class="alert alert-danger col-md-8 col-md-offset-2"
                          data-ng-if="!spielzeitForm.pausenzeit.$valid">
@@ -59,20 +59,20 @@
 
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <form ng-submit="vm.register()" style="margin-top:30px;">
+        <form data-ng-submit="vm.register()" style="margin-top:30px;">
             <h3 class="text-center">User anlegen</h3>
             <div class="alert alert-success" data-ng-if="vm.registerMsg">{{vm.registerMsg}}</div>
             <div class="alert alert-danger" data-ng-if="vm.registerErr">{{vm.registerErr}}</div>
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Username" ng-model="vm.user.username"
-                       data-ng-change="vm.resetRegisterForm()" required></input>
+                <input type="text" class="form-control" placeholder="Username" data-ng-model="vm.user.username"
+                       data-ng-change="vm.resetRegisterForm()" required>
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Passwort" ng-model="vm.user.password"
-                       required></input>
+                <input type="password" class="form-control" placeholder="Passwort" data-ng-model="vm.user.password"
+                       required>
             </div>
             <div class="form-group">
-                <select class="form-control" ng-model="vm.user.role" required>
+                <select class="form-control" data-ng-model="vm.user.role" required title="rolle">
                     <option value="" disabled selected>Rolle wählen</option>
                     <option value="Admin">Admin</option>
                     <option value="Bearbeiter">Bearbeiter</option>
@@ -85,13 +85,13 @@
 
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <form ng-submit="vm.delete()" style="margin-top:30px;">
+        <form data-ng-submit="vm.delete()" style="margin-top:30px;">
             <h3 class="text-center">User löschen</h3>
             <div class="alert alert-danger" data-ng-if="vm.delErr">{{vm.delErr}}</div>
             <div class="alert alert-success" data-ng-if="vm.delMsg">{{vm.delMsg}}</div>
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Username" ng-model="vm.username"
-                       data-ng-change="vm.resetDeleteForm()" required></input>
+                <input type="text" class="form-control" placeholder="Username" data-ng-model="vm.username"
+                       data-ng-change="vm.resetDeleteForm()" required>
             </div>
             <button type="submit" class="btn btn-primary center-block">Löschen</button>
         </form>
@@ -100,16 +100,16 @@
 
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <form ng-submit="vm.send()" style="margin-top:30px;">
+        <form data-ng-submit="vm.send()" style="margin-top:30px;">
             <h3 class="text-center">Email an alle Abonnenten versenden</h3>
             <div class="alert alert-danger" data-ng-if="vm.err">{{vm.err}}</div>
             <div class="alert alert-success" data-ng-if="vm.message">{{vm.message}}</div>
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Betreff" ng-model="vm.email.subject"
-                       required></input>
+                <input type="text" class="form-control" placeholder="Betreff" data-ng-model="vm.email.subject"
+                       required>
             </div>
             <div class="form-group">
-                <textarea class="form-control" placeholder="Text" ng-model="vm.email.text" required></textarea>
+                <textarea class="form-control" placeholder="Text" data-ng-model="vm.email.text" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary center-block">Senden</button>
         </form>

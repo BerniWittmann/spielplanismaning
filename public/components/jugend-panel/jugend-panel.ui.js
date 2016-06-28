@@ -20,6 +20,7 @@
         vm.loading = true;
         vm.error = undefined;
 
+        //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
         _.extend(vm, {
             gruppe: {}
             , addGruppe: function () {
@@ -29,7 +30,7 @@
                     gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {
                         vm.error = error;
                         vm.loading = false;
-                    }).then(function (res) {
+                    }).then(function () {
                         spielplan.createSpielplan();
                         getGruppen();
                         vm.gruppe = {};
@@ -43,7 +44,7 @@
                     vm.loading = true;
                     vm.error = undefined;
                     if (vm.gruppen.length > 1) {
-                        gruppe.delete(id).then(function (res) {
+                        gruppe.delete(id).then(function () {
                             spielplan.createSpielplan();
                             getGruppen();
                             vm.loading = false;
@@ -57,7 +58,7 @@
             , deleteJugend: function (id) {
                 if (!vm.loading) {
                     vm.loading = true;
-                    jugend.delete(id).then(function (res) {
+                    jugend.delete(id).then(function () {
                         vm.loading = false;
                         spielplan.createSpielplan();
                     });
@@ -74,7 +75,7 @@
             , askDeleteGruppe: function (gruppe) {
                 return BestaetigenDialog.open('Gruppe ' + gruppe.name + ' wirklich löschen?', vm.deleteGruppe, gruppe._id)
             }
-        })
+        });
 
         getGruppen();
 

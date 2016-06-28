@@ -21,7 +21,7 @@
             </thead>
             <tbody>
             <tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'platz3': spiel.platz=='3'}"
-                spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
+                data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
             </tbody>
         </table>
         <spi-loader loading="vm.loading"></spi-loader>

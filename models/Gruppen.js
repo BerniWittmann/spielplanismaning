@@ -9,8 +9,9 @@ var GruppenSchema = new mongoose.Schema({
 
 GruppenSchema.methods.pushTeams = function (team, cb) {
     this.teams.push(team);
+    //noinspection JSUnresolvedFunction
     this.save(cb);
-}
+};
 
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 GruppenSchema.plugin(deepPopulate, {});

@@ -87,7 +87,7 @@ SpielSchema.methods.setTore = function (toreA, toreB, cb) {
             }
         });
     });
-}
+};
 
 SpielSchema.methods.reset = function (cb) {
     this.setToreA(0, function (err, spiel) {
@@ -108,17 +108,21 @@ SpielSchema.methods.reset = function (cb) {
             });
         });
     });
-}
+};
 
 SpielSchema.methods.setToreA = function (toreA, cb) {
+    //noinspection JSUnresolvedFunction
     this.set('toreA', toreA);
+    //noinspection JSUnresolvedFunction
     this.save(cb);
-}
+};
 
 SpielSchema.methods.setToreB = function (toreB, cb) {
+    //noinspection JSUnresolvedFunction
     this.set('toreB', toreB);
+    //noinspection JSUnresolvedFunction
     this.save(cb);
-}
+};
 
 SpielSchema.methods.setPunkte = function (punkteA, punkteB, cb) {
     this.setPunkteA(punkteA, function (err, spiel) {
@@ -166,14 +170,18 @@ SpielSchema.methods.resetPunkte = function (cb) {
 };
 
 SpielSchema.methods.setPunkteA = function (punkteA, cb) {
+    //noinspection JSUnresolvedFunction
     this.set('punkteA', punkteA);
+    //noinspection JSUnresolvedFunction
     this.save(cb);
-}
+};
 
 SpielSchema.methods.setPunkteB = function (punkteB, cb) {
+    //noinspection JSUnresolvedFunction
     this.set('punkteB', punkteB);
+    //noinspection JSUnresolvedFunction
     this.save(cb);
-}
+};
 
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 SpielSchema.plugin(deepPopulate, {});

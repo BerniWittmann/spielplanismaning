@@ -1,5 +1,5 @@
 angular
-    .module('spi.gruppe', ['spi.auth']).factory('gruppe', ['$http', 'auth', function ($http, auth) {
+    .module('spi.gruppe', ['spi.auth']).factory('gruppe', ['$http', 'auth', function ($http) {
 
     var gruppe = {
         gruppen: []
@@ -27,13 +27,13 @@ angular
         return $http.get('/jugenden/' + jugendid + '/gruppen').then(function (res) {
             return res.data;
         });
-    }
+    };
 
     gruppe.delete = function (id) {
         return $http.delete('/gruppen/' + id).then(function (res) {
             return res;
         })
-    }
+    };
 
     return gruppe;
 }]);

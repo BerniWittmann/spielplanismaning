@@ -27,19 +27,20 @@
         } else {
             $timeout(function () {
                 $state.go('spi.login');
-            })
+            });
 
             return $q.reject();
         }
     }
 
-    function VerwaltungAllgemeinController(auth, $state, spielplan, $scope, email, BestaetigenDialog) {
+    function VerwaltungAllgemeinController(auth, spielplan, email, BestaetigenDialog) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
         d.setHours(9);
         d.setMinutes(0);
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             user: {}
             , register: function () {
@@ -63,7 +64,7 @@
                     startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
                     , spielzeit: vm.spielzeit
                     , pausenzeit: vm.pausenzeit
-                }).then(function (res) {
+                }).then(function () {
                     vm.loading = false;
                 });
             }
@@ -85,7 +86,7 @@
                     }
                 }
             }
-            , send: function (formName) {
+            , send: function () {
                 if (!_.isEqual(vm.email, emailBlank)) {
                     return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
                 }
@@ -107,15 +108,15 @@
         var emailBlank = {
             subject: ''
             , text: ''
-        }
+        };
         vm.email = {};
         _.extend(vm.email, emailBlank);
 
         function send() {
             email.send(vm.email).error(function (err) {
                 vm.err = err;
-            }).then(function (res) {
-                vm.message = 'Emails versendet'
+            }).then(function () {
+                vm.message = 'Emails versendet';
                 vm.email = emailBlank;
             });
         }
@@ -123,30 +124,29 @@
         vm.resetForm = function () {
             vm.message = undefined;
             vm.err = undefined;
-        }
+        };
 
         vm.delete = function () {
             if (auth.currentUser() == vm.username) {
                 return vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
             }
-            ;
             auth.deleteUser(vm.username).error(function (err) {
                 vm.delErr = err;
-            }).then(function (res) {
+            }).then(function () {
                 vm.username = undefined;
                 vm.delMsg = 'User gelöscht!';
             });
-        }
+        };
 
         vm.resetDeleteForm = function () {
             vm.delErr = undefined;
             vm.delMsg = undefined;
-        }
+        };
 
         vm.resetRegisterForm = function () {
             vm.registerErr = undefined;
             vm.registerMsg = undefined;
-        }
+        };
 
     }
 })();

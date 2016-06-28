@@ -23,8 +23,9 @@
         var vm = this;
         vm.loading = true;
         vm.spiele = [];
-        vm.platz = $stateParams.platznummer
+        vm.platz = $stateParams.platznummer;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
@@ -33,7 +34,7 @@
                     });
                 }
             }
-        })
+        });
 
         spiel.getAll().then(function (res) {
             vm.spiele = _.sortBy(_.filter(res.data, {platz: parseInt(vm.platz)}), ['nummer']);

@@ -34,13 +34,12 @@ module.exports = function (secret) {
             , username: this.username
             , role: this.role
             , exp: parseInt(exp.getTime() / 1000)
-            ,
         }, secret);
     };
 
     UserSchema.methods.setPassword = function (password) {
         this.salt = crypto.randomBytes(16).toString('hex');
-
+        //noinspection JSUnresolvedVariable
         this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
     };
 
@@ -51,7 +50,7 @@ module.exports = function (secret) {
         } else {
             return false;
         }
-    }
+    };
 
     UserSchema.methods.validPassword = function (password) {
         var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
@@ -63,4 +62,4 @@ module.exports = function (secret) {
     UserSchema.plugin(deepPopulate, {});
 
     mongoose.model('User', UserSchema);
-}
+};

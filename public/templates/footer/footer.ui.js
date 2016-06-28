@@ -16,7 +16,7 @@
         };
     }
 
-    function FooterController($state, $http) {
+    function FooterController($http) {
         var vm = this;
         vm.version = '';
 

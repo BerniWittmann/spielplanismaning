@@ -65,13 +65,13 @@ angular
             Logger.log(res);
             return res;
         });
-    }
+    };
 
     spiel.resetSpiel = function (spiel) {
         return $http.delete('/spiele/' + spiel._id + '/tore').then(function (res) {
             return res;
         });
-    }
+    };
 
     return spiel;
 }]);

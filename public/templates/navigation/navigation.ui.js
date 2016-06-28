@@ -21,6 +21,7 @@
     function NavigationController($state, $scope, auth, spielplan) {
         var vm = this;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             isLoggedIn: auth.isLoggedIn
             , canAccess: function (i) {
@@ -31,7 +32,7 @@
             , isAktiv: function (name) {
                 return $state.includes(name);
             }
-        })
+        });
 
         vm.prog = spielplan.progress;
         vm.progMax = spielplan.maxProgress;
@@ -49,7 +50,7 @@
                 console.log(vm.progDisplay);
 
                 if (_.isEqual(vm.prog, vm.progMax)) {
-                    vm.message = "Spielplan wurde erfolgreich erstellt."
+                    vm.message = "Spielplan wurde erfolgreich erstellt.";
                     vm.type = "success";
                     setTimeout(function () {
                         vm.prog = 0;

@@ -5,10 +5,10 @@
     <spi-loader loading="vm.loading"></spi-loader>
     <div class="row">
         <div class="col-md-12">
-            <form ng-submit="vm.save()" style="margin-top:30px;">
+            <form data-ng-submit="vm.save()" style="margin-top:30px;">
                 <h5>Team-Name ändern</h5>
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Team-Name" ng-model="vm.name" required></input>
+                    <input type="text" class="form-control" placeholder="Team-Name" data-ng-model="vm.name" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Speichern</button>
             </form>
@@ -16,5 +16,5 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="vm.abbrechen()">Schließen</button>
+    <button class="btn btn-primary" type="button" data-ng-click="vm.abbrechen()">Schließen</button>
 </div>

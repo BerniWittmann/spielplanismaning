@@ -41,6 +41,7 @@
         };
         vm.message = emptymessage;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             team: gewTeam
             , save: save
@@ -54,7 +55,7 @@
             , addAbonnent: function (form) {
                 vm.submitted = true;
                 if (form.$valid && !vm.bereitsabonniert) {
-                    email.addSubscriber(vm.abonnent).then(function (res) {
+                    email.addSubscriber(vm.abonnent).then(function () {
                         vm.message = {
                             type: 'success'
                             , text: vm.team.name + ' wurde abonniert.'
@@ -79,7 +80,7 @@
                     vm.message = {
                         type: 'info'
                         , text: vm.team.name + ' ist bereits abonniert!'
-                    }
+                    };
                     vm.bereitsabonniert = true;
                 }
             }
@@ -92,8 +93,8 @@
             vm.message = {
                 type: 'info'
                 , text: vm.team.name + ' ist bereits abonniert!'
-            }
-                , vm.abonnent.email = _.head(email.getSubscriptionByTeam({
+            };
+            vm.abonnent.email = _.head(email.getSubscriptionByTeam({
                 team: vm.team._id
             })).email;
             vm.bereitsabonniert = true;

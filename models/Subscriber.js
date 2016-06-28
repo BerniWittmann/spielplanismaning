@@ -13,9 +13,10 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 SubscriberSchema.plugin(deepPopulate, {});
 
 SubscriberSchema.statics.getByTeam = function search(teamid, cb) {
+    //noinspection JSUnresolvedFunction
     return this.find({
         'team': teamid
     }).exec(cb);
-}
+};
 
 mongoose.model('Subscriber', SubscriberSchema);

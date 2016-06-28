@@ -8,7 +8,7 @@ angular
 
     auth.getToken = function () {
         return $window.localStorage['spielplan-ismaning-token'];
-    }
+    };
 
     auth.isLoggedIn = function () {
         var token = auth.getToken();
@@ -58,7 +58,7 @@ angular
         } else {
             return new Error('No Permission');
         }
-    }
+    };
 
     auth.logOut = function () {
         $window.localStorage.removeItem('spielplan-ismaning-token');
@@ -74,12 +74,11 @@ angular
                 if (_.isUndefined(permission)) {
                     return true;
                 }
-                ;
                 return permission <= payload.role.rank;
             }
         }
         return false;
-    }
+    };
 
     return auth;
 }]);

@@ -14,7 +14,7 @@ angular
     var i;
     var spieleGesamt;
     var platz;
-    var plätze = 3;
+    var plaetze = 3;
     var zeit;
 
     var spielplanerstellungRunning = false;
@@ -59,7 +59,7 @@ angular
             spielplan.maxProgress = spieleGesamt + 1;
 
             lastPlayingTeams = [];
-            geradeSpielendeTeams = [];
+            var geradeSpielendeTeams = [];
             i = 1;
             platz = 3; //Bei 3 anfangen macht calcPlatz einfacher
 
@@ -68,7 +68,7 @@ angular
             while (i <= spieleGesamt) {
                 leerdurchgelaufeneGruppen = 0;
                 _.forEach(gruppen.data, function (gruppe) {
-                    if (checkSpieleFürGruppeÜbrig(gruppe)) {
+                    if (checkSpieleFuerGruppeUebrig(gruppe)) {
                         Logger.log('Spielerstellung Nr. ' + i + ': gestartet');
 
                         var teamA = getTeamWithoutLast(gruppe);
@@ -102,7 +102,7 @@ angular
                                 i++;
                                 spielplan.progress++;
                                 if (i > 1 && (i - 1) % 3 == 0) {
-                                    lastPlayingTeams = geradeSpielendeTeams
+                                    lastPlayingTeams = geradeSpielendeTeams;
                                     geradeSpielendeTeams = [];
                                 }
                             } else {
@@ -118,18 +118,18 @@ angular
                 if (leerdurchgelaufeneGruppen == gruppen.data.length) {
                     //Leeres Spiel
                     Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    var leeresSpiel = {
+                    leeresSpiel = {
                         nummer: i
                         , platz: calcPlatz()
                         , uhrzeit: calcZeit()
-                    }
+                    };
                     spielplan.spiele.push(leeresSpiel);
                     i++;
                     spieleGesamt++;
                     spielplan.progress++;
                     spielplan.maxProgress++;
                     if (i > 1 && (i - 1) % 3 == 0) {
-                        lastPlayingTeams = geradeSpielendeTeams
+                        lastPlayingTeams = geradeSpielendeTeams;
                         geradeSpielendeTeams = [];
                     }
                 }
@@ -138,18 +138,18 @@ angular
             if (_.last(spielplan.spiele).platz == 1) {
                 for (var j = 0; j < 2; j++) {
                     Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    var leeresSpiel = {
+                    leeresSpiel = {
                         nummer: i
                         , platz: calcPlatz()
                         , uhrzeit: calcZeit()
-                    }
+                    };
                     spielplan.spiele.push(leeresSpiel);
                     i++;
                     spieleGesamt++;
                     spielplan.progress++;
                     spielplan.maxProgress++;
                     if (i > 1 && (i - 1) % 3 == 0) {
-                        lastPlayingTeams = geradeSpielendeTeams
+                        lastPlayingTeams = geradeSpielendeTeams;
                         geradeSpielendeTeams = [];
                     }
                 }
@@ -159,14 +159,14 @@ angular
                     nummer: i
                     , platz: calcPlatz()
                     , uhrzeit: calcZeit()
-                }
+                };
                 spielplan.spiele.push(leeresSpiel);
                 i++;
                 spieleGesamt++;
                 spielplan.progress++;
                 spielplan.maxProgress++;
                 if (i > 1 && (i - 1) % 3 == 0) {
-                    lastPlayingTeams = geradeSpielendeTeams
+                    lastPlayingTeams = geradeSpielendeTeams;
                     geradeSpielendeTeams = [];
                 }
             }
@@ -186,14 +186,14 @@ angular
                 spielplanerstellungRunning = false;
             }
         });
-    }
+    };
 
     function calcSpieleGesamt(gruppen) {
-        var sum = 0
+        var sum = 0;
         _.forEach(gruppen, function (gruppe) {
             var n = gruppe.teams.length;
             sum += (n * (n - 1)) / 2;
-        })
+        });
 
         return sum;
     }
@@ -223,9 +223,9 @@ angular
             return undefined;
         }
         var team = _.head(teams);
-        spieleTeam = getSpieleByTeam(team);
+        var spieleTeam = getSpieleByTeam(team);
         _.forEach(teams, function (t) {
-            spieleT = getSpieleByTeam(t);
+            var spieleT = getSpieleByTeam(t);
 
             if (spieleT.length < spieleTeam.length) {
                 team = t;
@@ -260,14 +260,14 @@ angular
         });
         _.pullAllBy(alle, bereitsgespielt, '_id');
 
-        var möglicheGegner = [];
-        _.extend(möglicheGegner, alle);
+        var moeglicheGegner = [];
+        _.extend(moeglicheGegner, alle);
 
-        _.pullAllBy(möglicheGegner, lastPlayingTeams, '_id');
-        if (möglicheGegner.length == 0) {
-            möglicheGegner = alle;
+        _.pullAllBy(moeglicheGegner, lastPlayingTeams, '_id');
+        if (moeglicheGegner.length == 0) {
+            moeglicheGegner = alle;
         }
-        return chooseTeam(möglicheGegner);
+        return chooseTeam(moeglicheGegner);
     }
 
     function addLastTeam(team) {
@@ -284,7 +284,7 @@ angular
 
     function calcPlatz() {
         platz++;
-        if (platz > plätze) {
+        if (platz > plaetze) {
             platz = 1;
         }
         return platz;
@@ -302,7 +302,7 @@ angular
         })
     }
 
-    function checkSpieleFürGruppeÜbrig(gruppe) {
+    function checkSpieleFuerGruppeUebrig(gruppe) {
         var max = (gruppe.teams.length * (gruppe.teams.length - 1) / 2);
         var result = getSpieleByGruppe(gruppe).length;
         return result < max;
@@ -312,7 +312,7 @@ angular
         if (spielplanerstellungRunning) {
             return "Achtung! Spielplan wird gerade erstellt! Es verbleiben noch " + Math.round(spielplan.progress / spielplan.maxProgress) + "%. Bitte schließen Sie die Seite noch nicht!";
         }
-    }
+    };
 
     return spielplan;
 }]);

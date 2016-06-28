@@ -19,10 +19,11 @@
 
     }
 
-    function GruppenController($state, gruppe, NgTableParams) {
+    function GruppenController($state, gruppe) {
         var vm = this;
         vm.loading = true;
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gruppen: [],
             gotoGruppe: function (gruppe) {

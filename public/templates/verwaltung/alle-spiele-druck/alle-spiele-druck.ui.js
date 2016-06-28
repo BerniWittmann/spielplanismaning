@@ -28,17 +28,18 @@
         } else {
             $timeout(function () {
                 $state.go('spi.login');
-            })
+            });
 
             return $q.reject();
         }
     }
 
-    function SpieleDruckController($state, $scope, spiel) {
+    function SpieleDruckController($state, spiel) {
         var vm = this;
         vm.loading = true;
         vm.spiele = [];
 
+        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gotoTeam: function (gewaehltesteam) {
                 if (gewaehltesteam) {
@@ -54,7 +55,7 @@
                     });
                 }
             }
-        })
+        });
 
         spiel.getAll().then(function (res) {
             vm.spiele = _.sortBy(res.data, ['platz', 'nummer']);
