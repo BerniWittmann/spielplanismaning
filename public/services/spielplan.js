@@ -16,6 +16,7 @@ angular
     var platz;
     var plaetze = 3;
     var zeit;
+    var geradeSpielendeTeams = [];
 
     var spielplanerstellungRunning = false;
 
@@ -59,7 +60,7 @@ angular
             spielplan.maxProgress = spieleGesamt + 1;
 
             lastPlayingTeams = [];
-            var geradeSpielendeTeams = [];
+            geradeSpielendeTeams = [];
             i = 1;
             platz = 3; //Bei 3 anfangen macht calcPlatz einfacher
 
