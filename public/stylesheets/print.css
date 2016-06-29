@@ -27,7 +27,7 @@
 
     .page-break {
         display: block;
-        page-break-before: always;
+        page-break-after: always;
     }
 
     .alle-spiele-divider {
