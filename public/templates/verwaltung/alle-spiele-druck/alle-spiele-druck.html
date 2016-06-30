@@ -6,7 +6,7 @@
 <p class="hidden-print">Diese Seite dient dazu, alle Spiele für die Kampfgerichte auszudrucken</p>
 <spi-loader loading="vm.loading"></spi-loader>
 <div data-ng-if="!vm.loading">
-    <div data-ng-repeat="spiel in vm.spiele">
+    <div data-ng-repeat="spiel in vm.spiele track by $index">
         <div class="row">
             <div class="col-xs-12">
                 <div class="row text-center">
@@ -116,6 +116,6 @@
                 </div>
             </div>
         </div>
-        <div class="page-break"></div>
+        <div data-ng-if="$index < vm.spiele.length - 1" class="page-break"></div>
     </div>
 </div>
