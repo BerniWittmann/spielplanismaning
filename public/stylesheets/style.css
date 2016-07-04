@@ -1,6 +1,7 @@
 @font-face {
     font-family: "DIGITAL";
-    src: url("/fonts/digital.ttf");
+    /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
+    src: url("/stylesheets/fonts/digital.ttf");
 }
 
 ul {
