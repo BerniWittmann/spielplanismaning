@@ -14,13 +14,13 @@
                 <td data-title="'Email'" data-sortable="'email'" class="text-center" data-filter="{email: 'text'}">
                     <a href="mailto:{{sub.email}}">{{sub.email}}</a>
                 </td>
+                <td data-title="'Team'" data-ng-click="vm.gotoTeam(sub.team); $event.stopPropagation();"
+                    data-sortable="'teamName'" data-filter="{teamName: 'text'}">{{sub.teamName}}
+                </td>
                 <td data-title="'Jugend'" data-ng-click="vm.gotoJugend(sub.team.jugend); $event.stopPropagation();"
                     data-sortable="'jugendName'" data-group="'jugendName'" data-filter="{jugendName: 'text'}"
                     class="valign">
                     <spi-jugend-label jugend="sub.team.jugend"></spi-jugend-label>
-                </td>
-                <td data-title="'Team'" data-ng-click="vm.gotoTeam(sub.team); $event.stopPropagation();"
-                    data-sortable="'teamName'" data-filter="{teamName: 'text'}">{{sub.teamName}}
                 </td>
             </tr>
         </table>
