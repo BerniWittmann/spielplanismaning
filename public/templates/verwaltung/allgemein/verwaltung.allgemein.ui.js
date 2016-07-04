@@ -86,11 +86,6 @@
                     }
                 }
             }
-            , send: function () {
-                if (!_.isEqual(vm.email, emailBlank)) {
-                    return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
-                }
-            }
         });
 
         spielplan.getZeiten().then(function (response) {
@@ -104,27 +99,6 @@
             }
             vm.loading = false;
         });
-
-        var emailBlank = {
-            subject: ''
-            , text: ''
-        };
-        vm.email = {};
-        _.extend(vm.email, emailBlank);
-
-        function send() {
-            email.send(vm.email).error(function (err) {
-                vm.err = err;
-            }).then(function () {
-                vm.message = 'Emails versendet';
-                vm.email = emailBlank;
-            });
-        }
-
-        vm.resetForm = function () {
-            vm.message = undefined;
-            vm.err = undefined;
-        };
 
         vm.delete = function () {
             if (auth.currentUser() == vm.username) {

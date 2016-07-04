@@ -50,5 +50,16 @@ module.exports = function (sendgrid, env, url) {
         });
     });
 
+    router.get('/subscriber', function (req, res) {
+        var query = Subscriber.find();
+        query.deepPopulate('team team.jugend').exec(function (err, subs) {
+            if(err) {
+                throw err;
+            }
+
+            res.json(subs);
+        });
+    });
+
     return router;
 };
