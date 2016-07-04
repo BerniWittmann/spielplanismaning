@@ -26,6 +26,14 @@ angular
         }
     };
 
+    email.getSubscribers = function () {
+        return $http.get('/email/subscriber').error(function (err) {
+            return err;
+        }).success(function (res) {
+            return res.data;
+        });
+    };
+
     function getSubscriptionToken() {
         if ($window.localStorage[TOKENNAME]) {
             return (JSON.parse($window.localStorage[TOKENNAME]) || []);
