@@ -5,6 +5,11 @@
 </div>
 
 <spi-loader loading="vm.loading"></spi-loader>
+<div class="row" data-ng-if="vm.spielplanError">
+	<div class="col-md-12">
+		<p class="alert alert-danger">{{vm.spielplanError}}</p>
+	</div>
+</div>
 
 <div class="row" data-ng-if="!vm.loading">
 	<div class="col-md-3" data-ng-repeat="jugend in vm.jugenden">

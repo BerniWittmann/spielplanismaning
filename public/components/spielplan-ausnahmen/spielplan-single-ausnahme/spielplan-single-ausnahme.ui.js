@@ -15,7 +15,7 @@
 			, controllerAs: 'vm'
 		});
 
-	function SpielplanAusnahmeController($scope, BestaetigenDialog, $timeout, $http) {
+	function SpielplanAusnahmeController($scope, BestaetigenDialog, $timeout, $http, spielplan) {
 		var vm = this;
 
 		_.extend(vm, {
@@ -64,6 +64,8 @@
 			if (!_.isUndefined(vm.ausnahme.team1) && !_.isUndefined(vm.ausnahme.team2) && !_.isNull(vm.ausnahme.team1) && !_.isNull(vm.ausnahme.team2)) {
 				return $http.put('/spielplan/ausnahmen', vm.ausnahmen).error(function (err) {
 					console.log(err);
+				}).then(function (res) {
+					spielplan.createSpielplan();
 				});
 			}
 		}
