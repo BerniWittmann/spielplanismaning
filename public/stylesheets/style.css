@@ -1,6 +1,10 @@
 @font-face {
     font-family: "DIGITAL";
+<<<<<<< HEAD
     /*noinspection CssUnknownTarget*/
+=======
+    /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
+>>>>>>> master
     src: url("/stylesheets/fonts/digital.ttf");
 }
 

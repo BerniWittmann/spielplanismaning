@@ -97,21 +97,3 @@
         </form>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-md-4 col-md-offset-4">
-        <form data-ng-submit="vm.send()" style="margin-top:30px;">
-            <h3 class="text-center">Email an alle Abonnenten versenden</h3>
-            <div class="alert alert-danger" data-ng-if="vm.err">{{vm.err}}</div>
-            <div class="alert alert-success" data-ng-if="vm.message">{{vm.message}}</div>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Betreff" data-ng-model="vm.email.subject"
-                       required>
-            </div>
-            <div class="form-group">
-                <textarea class="form-control" placeholder="Text" data-ng-model="vm.email.text" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary center-block">Senden</button>
-        </form>
-    </div>
-</div>
