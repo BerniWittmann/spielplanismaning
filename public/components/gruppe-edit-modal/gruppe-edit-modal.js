@@ -30,13 +30,9 @@
         }
     }
 
-    function GruppeEditierenController($state
-        , $uibModalInstance
-        , team
-        , gewGruppe
-        , spielplan
-        , TeamEditierenDialog
-        , BestaetigenDialog) {
+    function GruppeEditierenController(
+        $state, $uibModalInstance, team, gewGruppe, spielplan, TeamEditierenDialog, BestaetigenDialog
+    ) {
         var vm = this;
         vm.loading = true;
 
@@ -55,11 +51,12 @@
                         gruppe: vm.gruppe._id
                         , jugend: vm.gruppe.jugend._id
                     });
-                    team.create(vm.team).then(function (res) {
+                    return team.create(vm.team).then(function (res) {
                         spielplan.createSpielplan();
                         vm.teams.push(res.data);
                         vm.team = {};
                         vm.loading = false;
+                        return vm.teams;
                     });
                 }
             }
@@ -87,14 +84,16 @@
             , askDeleteTeam: function (team) {
                 return BestaetigenDialog.open('Team ' + team.name + ' wirklich löschen?', vm.deleteTeam, team._id);
             }
+            , getTeamsByGruppe: getTeamsByGruppe
         });
         getTeamsByGruppe();
 
         function getTeamsByGruppe() {
-            team.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
+            return team.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
                 vm.teams = _.sortBy(res, 'name');
                 vm.loading = false;
-            })
+                return vm.teams;
+            });
         }
 
         function save() {

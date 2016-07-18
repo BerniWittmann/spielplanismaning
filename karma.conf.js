@@ -21,7 +21,7 @@ module.exports = function (config) {
             //include spec files
             'test/**/*.spec.js',
             //include src files
-            '{components,templates}/**/*.js',
+            '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
             '{components,templates}/**/*.html.ext'
         ],
