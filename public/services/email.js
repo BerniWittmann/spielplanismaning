@@ -1,16 +1,17 @@
 angular
     .module('spi.email', []).factory('email', ['$http', '$window', function ($http, $window) {
     var TOKENNAME = 'spielplan-ismaning-subscriptions';
+    var ENDPOINT_URL = '/email';
     var email = {};
 
     email.send = function (email) {
-        return $http.post('/email/', email).success(function (res) {
+        return $http.post(ENDPOINT_URL, email).success(function (res) {
             return res.data;
         });
     };
 
     email.addSubscriber = function (abonnent) {
-        return $http.post('/email/subscriber', abonnent).error(function (err) {
+        return $http.post(ENDPOINT_URL + '/subscriber', abonnent).error(function (err) {
             return err;
         }).success(function (res) {
             email.addSubscriptionToken(abonnent);
@@ -58,7 +59,7 @@ angular
     };
 
     email.removeSubscription = function (sub) {
-        return $http.delete('/email/subscriber', sub).error(function (err) {
+        return $http.delete(ENDPOINT_URL + '/subscriber?email=' + sub.email + '&team=' + sub.team).error(function (err) {
             console.log(err);
             return err;
         }).then(function (res) {

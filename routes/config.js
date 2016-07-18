@@ -7,6 +7,7 @@ module.exports = function (env) {
     });
 
     router.get('/lockdownmode', function (req, res) {
+        //noinspection JSUnresolvedVariable
         res.json((env.LOCKDOWNMODE || 'false') == 'true');
     });
 

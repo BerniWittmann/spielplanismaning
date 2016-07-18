@@ -1,6 +1,7 @@
 angular
     .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function ($http, $state, $window, Logger) {
     var auth = {};
+    var ENDPOINT_URL = '/users';
 
     auth.saveToken = function (token) {
         $window.localStorage['spielplan-ismaning-token'] = token;
@@ -33,7 +34,7 @@ angular
     };
 
     auth.register = function (user) {
-        return $http.post('/register', user).error(function (err) {
+        return $http.post(ENDPOINT_URL + '/register', user).error(function (err) {
             return err;
         }).success(function (data) {
             return data;
@@ -41,14 +42,14 @@ angular
     };
 
     auth.logIn = function (user) {
-        return $http.post('/login', user).success(function (data) {
+        return $http.post(ENDPOINT_URL + '/login', user).success(function (data) {
             auth.saveToken(data.token);
         });
     };
 
     auth.deleteUser = function (username) {
         if (auth.canAccess(1)) {
-            return $http.put('/delete-user', {
+            return $http.put(ENDPOINT_URL + '/delete', {
                 username: username
             }).error(function (err) {
                 return err;

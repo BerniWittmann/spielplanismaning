@@ -34,11 +34,14 @@
                         } else {
                             jgd.tore = 0;
                         }
-                        vm.gesamt += jgd.tore;
                     });
                 }
             });
             vm.loading = false;
         });
+
+        jugend.getGesamtTore().then(function (res) {
+            vm.gesamt = res.data;
+        })
     }
 })();
