@@ -18,7 +18,9 @@ var gulp = require('gulp'),
     git = require('gulp-git'),
     bump = require('gulp-bump'),
     filter = require('gulp-filter'),
-    tag_version = require('gulp-tag-version');
+    tag_version = require('gulp-tag-version'),
+    mocha = require('gulp-mocha');
+require('shelljs/global');
 
 gulp.task('default', ['watch']);
 
@@ -38,9 +40,13 @@ gulp.task('inject', function (done) {
 gulp.task('inject:css', function () {
     return gulp.src('./views/index.ejs')
         .pipe(inject(
-            gulp.src('./public/stylesheets/*.css', {read: false}), {starttag: '<!-- injector:css -->',
+            gulp.src('./public/stylesheets/*.css', {read: false}), {
+                starttag: '<!-- injector:css -->',
                 endtag: '<!-- endinjector -->',
-                transform: function(filepath) {return '<link rel="stylesheet" href="' + filepath.replace('/public/', '') + '">'}}
+                transform: function (filepath) {
+                    return '<link rel="stylesheet" href="' + filepath.replace('/public/', '') + '">'
+                }
+            }
         ))
         .pipe(gulp.dest('./views'));
 });
@@ -48,9 +54,13 @@ gulp.task('inject:css', function () {
 gulp.task('inject:js', function () {
     return gulp.src('./views/index.ejs')
         .pipe(inject(
-            gulp.src('./public/{components,services,templates}/**/*.js', {read: false}), {starttag: '<!-- injector:js -->',
+            gulp.src('./public/{components,services,templates}/**/*.js', {read: false}), {
+                starttag: '<!-- injector:js -->',
                 endtag: '<!-- endinjector -->',
-                transform: function(filepath) {return '<script src="' + filepath.replace('/public/', '') + '"></script>'}}
+                transform: function (filepath) {
+                    return '<script src="' + filepath.replace('/public/', '') + '"></script>'
+                }
+            }
         ))
         .pipe(gulp.dest('./views'));
 });
@@ -63,8 +73,12 @@ gulp.task('jshint', function () {
 });
 
 // test
-gulp.task('test', function () {
-    return runSequence('test:frontend', 'test:backend');
+gulp.task('test', function (done) {
+    return runSequence('test:frontend', 'test:backend', done);
+});
+
+gulp.task('test:watch', function (done) {
+    return gulp.watch(['**/*.js', 'views/**', '!public/bower_components/**', '!node_modules/**'], ['test'], done);
 });
 
 // test frontend
@@ -75,9 +89,19 @@ gulp.task('test:frontend', function (done) {
     }, done).start();
 });
 
+gulp.task('test:frontend:watch', function (done) {
+    return gulp.watch(['public/**/**', '!public/bower_components/**'], ['test:frontend'], done);
+});
+
 // test backend
-gulp.task('test:backend', function () {
-    return gutil.log('Backend-Tests');
+gulp.task('test:backend', function (done) {
+    gulp.src('routes/**/*spec.js', {read: false})
+        .pipe(mocha({reporter: 'spec'}));
+    return done();
+});
+
+gulp.task('test:backend:watch', function (done) {
+    return gulp.watch(['{models,routes}/**'], ['test:backend'], done);
 });
 
 // build
@@ -95,41 +119,36 @@ gulp.task('build:clean', function () {
 gulp.task('build:css', function () {
     return gulp.src('public/stylesheets/**/*.css')
         .pipe(concatCss('style.css'))
-        .pipe(gulp.dest('dist/public/stylesheets'))
+        .pipe(gulp.dest('public/stylesheets/'))
         .pipe(gp_rename('style.css'))
         .pipe(cleanCss())
-        .pipe(gulp.dest('dist/public/stylesheets'));
+        .pipe(gulp.dest('public/stylesheets/'));
 });
 
 // build js
 gulp.task('build:js', function () {
     return gulp.src(['public/**/*.js', '!public/bower_components/**', '!public/test/**/*.spc.js'])
-        .pipe(gp_concat('app.js'))
-        .pipe(gulp.dest('dist/public'))
-        .pipe(gp_rename('app.js'))
         .pipe(gp_uglify())
-        .pipe(gulp.dest('dist/public'));
+        .pipe(gulp.dest('public'));
 });
 
 // build images
 gulp.task('build:images', function () {
     return gulp.src('public/assets/img/**')
         .pipe(imagemin())
-        .pipe(gulp.dest('dist/public/assets/img'));
+        .pipe(gulp.dest('public/assets/img/'));
 });
 
 // build favicon
 gulp.task('build:favicon', function () {
-    gulp.src('public/favicon.ico')
-        .pipe(gulp.dest('dist/public'));
     return gulp.src('public/favicon.png')
         .pipe(imagemin())
-        .pipe(gulp.dest('dist/public'));
+        .pipe(gulp.dest('public'));
 });
 
 // serve
-gulp.task('serve', function () {
-    runSequence('inject', 'start:server');
+gulp.task('serve', function (done) {
+    runSequence('inject', 'start:server', done);
 });
 
 gulp.task('start:server', function () {
@@ -146,6 +165,19 @@ gulp.task('start:server', function () {
             .pipe(notify('Reloading page, please wait...'));
     });
     return runSequence('start:client');
+});
+
+gulp.task('start:server:headless', function (done) {
+    return nodemon({
+        // the script to run the app
+        script: 'app.js'
+    }).on('start', function () {
+        done();
+    });
+});
+
+gulp.task('quit:server', function () {
+    exit(1);
 });
 
 gulp.task('start:client', function () {
@@ -170,7 +202,13 @@ function inc(importance) {
         .pipe(tag_version());
 }
 
-gulp.task('patch', function() { return inc('patch'); })
-gulp.task('feature', function() { return inc('minor'); })
-gulp.task('release', function() { return inc('major'); })
+gulp.task('patch', function () {
+    return inc('patch');
+});
+gulp.task('feature', function () {
+    return inc('minor');
+});
+gulp.task('release', function () {
+    return inc('major');
+});
 

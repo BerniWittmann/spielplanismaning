@@ -47,6 +47,7 @@
     "gulp-inject": "^4.1.0",
     "gulp-jshint": "^2.0.1",
     "gulp-livereload": "^3.8.1",
+    "gulp-mocha": "^2.2.0",
     "gulp-nodemon": "^2.1.0",
     "gulp-notify": "^2.2.0",
     "gulp-open": "^2.0.0",
@@ -63,7 +64,9 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.1",
     "karma-safari-launcher": "^1.0.0",
-    "run-sequence": "^1.2.2"
+    "request": "^2.73.0",
+    "run-sequence": "^1.2.2",
+    "shelljs": "^0.7.0"
   },
   "keywords": [],
   "author": "",

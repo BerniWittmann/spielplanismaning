@@ -27,6 +27,5 @@
 
             expect(result).to.equal('TESTCONTENT');
         });
-        
     });
 }());
