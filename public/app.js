@@ -62,7 +62,7 @@
     }
 
     function getLockdown($http) {
-        return $http.get('/config/lockdownmode').then(function (res) {
+        return $http.get('/api/config/lockdownmode').then(function (res) {
             return res.data == true;
         });
     }

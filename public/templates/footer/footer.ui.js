@@ -20,7 +20,7 @@
         var vm = this;
         vm.version = '';
 
-        $http.get('/config/version').then(function (res) {
+        $http.get('/api/config/version').then(function (res) {
             vm.version = res.data;
         });
 

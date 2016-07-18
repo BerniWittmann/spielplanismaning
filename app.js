@@ -62,25 +62,27 @@ app.listen(app.get('port'), function () {
 ;
 /* Routes */
 
-var routes = require('./routes/index')((process.env.SECRET || 'SECRET'), sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
-var users = require('./routes/users')();
-var email = require('./routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
-var config = require('./routes/config')(process.env);
+var routes = require('./routes/index.js')();
+var users = require('./routes/users.js')();
+var email = require('./routes/email.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
+var config = require('./routes/config.js')(process.env);
 var teams = require('./routes/teams.js')();
 var gruppen = require('./routes/gruppen.js')();
 var jugenden = require('./routes/jugenden.js')();
 var spiele = require('./routes/spiele.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
 var spielplan = require('./routes/spielplan.js')();
 
-app.use('/users', users);
-app.use('/email', email);
-app.use('/config', config);
-app.use('/teams', teams);
-app.use('/gruppen', gruppen);
-app.use('/jugenden', jugenden);
-app.use('/spiele', spiele);
-app.use('/spielplan', spielplan);
+var API_PREFIX = '/api';
 app.use('/', routes);
+app.use(API_PREFIX + '/users', users);
+app.use(API_PREFIX + '/email', email);
+app.use(API_PREFIX + '/config', config);
+app.use(API_PREFIX + '/teams', teams);
+app.use(API_PREFIX + '/gruppen', gruppen);
+app.use(API_PREFIX + '/jugenden', jugenden);
+app.use(API_PREFIX + '/spiele', spiele);
+app.use(API_PREFIX + '/spielplan', spielplan);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,7 +1,7 @@
 angular
     .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function ($http, $state, $window, Logger) {
     var auth = {};
-    var ENDPOINT_URL = '/users';
+    var ENDPOINT_URL = '/api/users';
 
     auth.saveToken = function (token) {
         $window.localStorage['spielplan-ismaning-token'] = token;

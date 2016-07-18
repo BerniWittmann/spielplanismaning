@@ -5,7 +5,7 @@ angular
         gruppen: []
     };
 
-    var ENDPOINT_URL = '/gruppen';
+    var ENDPOINT_URL = '/api/gruppen';
 
     gruppe.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {

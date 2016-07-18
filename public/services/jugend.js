@@ -1,7 +1,7 @@
 angular
     .module('spi.jugend', ['spi.auth']).factory('jugend', ['$http', 'auth', function ($http) {
 
-    var ENDPOINT_URL = '/jugenden';
+    var ENDPOINT_URL = '/api/jugenden';
     var jugend = {
         jugenden: []
     };

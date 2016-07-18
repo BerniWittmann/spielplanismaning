@@ -1,7 +1,7 @@
 angular
     .module('spi.email', []).factory('email', ['$http', '$window', function ($http, $window) {
     var TOKENNAME = 'spielplan-ismaning-subscriptions';
-    var ENDPOINT_URL = '/email';
+    var ENDPOINT_URL = '/api/email';
     var email = {};
 
     email.send = function (email) {
@@ -28,7 +28,7 @@ angular
     };
 
     email.getSubscribers = function () {
-        return $http.get('/email/subscriber').error(function (err) {
+        return $http.get(ENDPOINT_URL + '/subscriber').error(function (err) {
             return err;
         }).success(function (res) {
             return res.data;

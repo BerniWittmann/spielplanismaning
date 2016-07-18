@@ -9,6 +9,8 @@ angular
     Logger
 ) {
 
+    var ENDPOINT_URL = '/api/spielplan';
+
     var spielplan = {
         startzeit: undefined
         , spielzeit: undefined
@@ -30,7 +32,7 @@ angular
     var spielplanerstellungRunning = false;
 
     spielplan.getZeiten = function () {
-        return $http.get('/spielplan').success(function (data) {
+        return $http.get(ENDPOINT_URL).success(function (data) {
             if (!_.isUndefined(data) && !_.isNull(data)) {
                 spielplan.startzeit = moment(data.startzeit, 'HH:mm');
                 spielplan.spielzeit = data.spielzeit;
@@ -48,7 +50,7 @@ angular
     };
 
     spielplan.saveZeiten = function (zeiten) {
-        return $http.put('/spielplan/zeiten', zeiten, {
+        return $http.put(ENDPOINT_URL + '/zeiten', zeiten, {
             headers: {
                 Authorization: 'Bearer ' + auth.getToken()
             }
@@ -200,7 +202,7 @@ angular
             }
 
             spielplan.maxProgress++;
-            $http.post('/spiele/alle', spielplan.spiele).then(pushSpiele, function (err) {
+            $http.post('/api/spiele/alle', spielplan.spiele).then(pushSpiele, function (err) {
                 console.log(err);
             });
 

@@ -24,7 +24,7 @@ module.exports = function (env) {
     require('../../models/Users')((process.env.SECRET || 'SECRET'));
     require('../../config/passport');
 
-    var routes = require('../index')((process.env.SECRET || 'SECRET'), sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+    var routes = require('../index')();
     var users = require('../users');
     var email = require('../email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
     var config = require('../config')(process.env);

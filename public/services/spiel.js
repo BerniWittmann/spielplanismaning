@@ -1,7 +1,7 @@
 angular
     .module('spi.spiel', ['spi.auth']).factory('spiel', ['$http', 'auth', 'Logger', function ($http, auth, Logger) {
 
-    var ENDPOINT_URL = '/spiele';
+    var ENDPOINT_URL = '/api/spiele';
     var spiel = {
         spiele: []
     };
