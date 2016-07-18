@@ -11,7 +11,7 @@ module.exports = function () {
 
     router.get('/', function (req, res) {
         var query = Spielplan.findOne({});
-        query.exec(function (err, spielplan) {
+        query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
             if (err) {
                 throw err;
             }
@@ -48,6 +48,32 @@ module.exports = function () {
                     return a.nummer - b.nummer;
                 }
             });
+        });
+    });
+
+    router.put('/ausnahmen', function (req, res) {
+        Spielplan.findOne({}).exec(function (err, spielplan) {
+            if (err) {
+                throw err;
+            }
+
+            spielplan.setAusnahmen(req.body, function (err, spielplan) {
+                if (err) {
+                    throw err;
+                }
+
+                res.json(spielplan.ausnahmen);
+            });
+        });
+    });
+
+    router.get('/ausnahmen', function (req, res) {
+        Spielplan.findOne({}).deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
+            if (err) {
+                throw err;
+            }
+
+            res.json(spielplan.ausnahmen);
         });
     });
 

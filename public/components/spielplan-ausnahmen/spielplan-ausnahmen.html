@@ -1,0 +1,13 @@
+<spi-panel>
+	<spi-panel-titel>Ausnahmen <span class="pull-right" data-ng-click="vm.addEmptyAusnahme()" uib-tooltip="Weitere Ausnahme hinzufügen" tooltip-append-to-body="true"><i class="fa fa-plus"></i></span></spi-panel-titel>
+	<div class="row">
+		<div class="col-md-12">
+			<p>Hier Teams auswählen, die nicht gleichzeitig spielen sollen</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<spi-spielplan-single-ausnahme data-ng-repeat="ausnahme in vm.ausnahmen track by $index" data-ausnahme="ausnahme" data-teams="vm.teams" data-ausnahmen="vm.ausnahmen"></spi-spielplan-single-ausnahme>
+		</div>
+	</div>
+</spi-panel>

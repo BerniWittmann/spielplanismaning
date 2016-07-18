@@ -1,7 +1,14 @@
 angular
-    .module('spi.spielplan', ['spi.auth', 'spi.spiel', 'spi.gruppe', 'spi.team']).factory('spielplan', ['$http', '$q', 'auth', 'spiel', 'gruppe', 'team', 'Logger', function ($http, $q, auth, spiel, gruppe, team, Logger) {
+    .module('spi.spielplan', ['spi.auth', 'spi.spiel', 'spi.gruppe', 'spi.team']).factory('spielplan', ['$http', '$q', 'auth', 'spiel', 'gruppe', 'team', 'Logger', function (
+    $http,
+    $q,
+    auth,
+    spiel,
+    gruppe,
+    team,
+    Logger
+) {
 
-    var ENDPOINT_URL = '/spielplan';
     var spielplan = {
         startzeit: undefined
         , spielzeit: undefined
@@ -15,31 +22,33 @@ angular
     var i;
     var spieleGesamt;
     var platz;
-    var plaetze = 3;
+    var plätze = 3;
     var zeit;
-    var geradeSpielendeTeams = [];
+    var leereSpieleStreak;
+    var maxLeereSpieleStreak = 6;
 
     var spielplanerstellungRunning = false;
 
     spielplan.getZeiten = function () {
-        return $http.get(ENDPOINT_URL).success(function (data) {
+        return $http.get('/spielplan').success(function (data) {
             if (!_.isUndefined(data) && !_.isNull(data)) {
                 spielplan.startzeit = moment(data.startzeit, 'HH:mm');
                 spielplan.spielzeit = data.spielzeit;
                 spielplan.pausenzeit = data.pausenzeit;
+                spielplan.ausnahmen = data.ausnahmen;
                 zeit = spielplan.startzeit;
             } else {
                 spielplan.startzeit = "09:00";
                 spielplan.spielzeit = 8;
                 spielplan.pausenzeit = 2;
+                spielplan.ausnahmen = [];
             }
-
             return spielplan.data;
         });
     };
 
     spielplan.saveZeiten = function (zeiten) {
-        return $http.put(ENDPOINT_URL + '/zeiten', zeiten, {
+        return $http.put('/spielplan/zeiten', zeiten, {
             headers: {
                 Authorization: 'Bearer ' + auth.getToken()
             }
@@ -53,8 +62,10 @@ angular
         spielplan.progress = 0;
         spielplan.getZeiten();
         spiel.deleteAll();
+        leereSpieleStreak = 0;
         spielplan.spiele = [];
         team.resetErgebnisse();
+        spielplan.error = undefined;
         return gruppe.getAll().then(function (gruppen) {
             spieleGesamt = calcSpieleGesamt(gruppen.data);
             Logger.log('Spielplanerstellung: Anzahl Spiele: ' + spieleGesamt);
@@ -69,8 +80,19 @@ angular
 
             while (i <= spieleGesamt) {
                 leerdurchgelaufeneGruppen = 0;
+                if(leereSpieleStreak >= maxLeereSpieleStreak) {
+                    Logger.log('Zu viele Ausnahmen! ' + leereSpieleStreak + ' leere Spiele hintereinander.');
+                    spieleGesamt = 0;
+                    spiel.deleteAll();
+                    spielplan.spiele = [];
+                    team.resetErgebnisse();
+                    spielplanerstellungRunning = false;
+                    spielplan.progress = 0;
+                    spielplan.error = 'Zu viele Ausnahmen! Spielplanerstellung nicht möglich!';
+                    return undefined;
+                }
                 _.forEach(gruppen.data, function (gruppe) {
-                    if (checkSpieleFuerGruppeUebrig(gruppe)) {
+                    if (checkSpieleFürGruppeÜbrig(gruppe)) {
                         Logger.log('Spielerstellung Nr. ' + i + ': gestartet');
 
                         var teamA = getTeamWithoutLast(gruppe);
@@ -102,9 +124,10 @@ angular
                                 spielplan.spiele.push(neuesSpiel);
                                 Logger.log('Spielplanerstellung: Spiel Nr.' + i + ' für Gruppe ' + gruppe.name + ' erstellt.');
                                 i++;
+                                leereSpieleStreak = 0;
                                 spielplan.progress++;
                                 if (i > 1 && (i - 1) % 3 == 0) {
-                                    lastPlayingTeams = geradeSpielendeTeams;
+                                    lastPlayingTeams = geradeSpielendeTeams
                                     geradeSpielendeTeams = [];
                                 }
                             } else {
@@ -120,18 +143,19 @@ angular
                 if (leerdurchgelaufeneGruppen == gruppen.data.length) {
                     //Leeres Spiel
                     Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    leeresSpiel = {
+                    var leeresSpiel = {
                         nummer: i
                         , platz: calcPlatz()
                         , uhrzeit: calcZeit()
-                    };
+                    }
                     spielplan.spiele.push(leeresSpiel);
                     i++;
                     spieleGesamt++;
+                    leereSpieleStreak++;
                     spielplan.progress++;
                     spielplan.maxProgress++;
                     if (i > 1 && (i - 1) % 3 == 0) {
-                        lastPlayingTeams = geradeSpielendeTeams;
+                        lastPlayingTeams = geradeSpielendeTeams
                         geradeSpielendeTeams = [];
                     }
                 }
@@ -140,7 +164,7 @@ angular
             if (_.last(spielplan.spiele).platz == 1) {
                 for (var j = 0; j < 2; j++) {
                     Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    leeresSpiel = {
+                    var leeresSpiel = {
                         nummer: i
                         , platz: calcPlatz()
                         , uhrzeit: calcZeit()
@@ -148,6 +172,7 @@ angular
                     spielplan.spiele.push(leeresSpiel);
                     i++;
                     spieleGesamt++;
+                    leereSpieleStreak++;
                     spielplan.progress++;
                     spielplan.maxProgress++;
                     if (i > 1 && (i - 1) % 3 == 0) {
@@ -165,10 +190,11 @@ angular
                 spielplan.spiele.push(leeresSpiel);
                 i++;
                 spieleGesamt++;
+                leereSpieleStreak++;
                 spielplan.progress++;
                 spielplan.maxProgress++;
                 if (i > 1 && (i - 1) % 3 == 0) {
-                    lastPlayingTeams = geradeSpielendeTeams;
+                    lastPlayingTeams = geradeSpielendeTeams
                     geradeSpielendeTeams = [];
                 }
             }
@@ -205,6 +231,7 @@ angular
         _.extend(teams, gruppe.teams);
         _.pullAllBy(teams, geradeSpielendeTeams, '_id');
 
+        teams = removeAusnahmen(teams, geradeSpielendeTeams);
         var moeglTeams = [];
         _.extend(moeglTeams, teams);
 
@@ -225,9 +252,9 @@ angular
             return undefined;
         }
         var team = _.head(teams);
-        var spieleTeam = getSpieleByTeam(team);
+        spieleTeam = getSpieleByTeam(team);
         _.forEach(teams, function (t) {
-            var spieleT = getSpieleByTeam(t);
+            spieleT = getSpieleByTeam(t);
 
             if (spieleT.length < spieleTeam.length) {
                 team = t;
@@ -246,6 +273,7 @@ angular
         _.extend(alle, gruppe.teams);
 
         _.pullAllBy(alle, geradeSpielendeTeams, '_id');
+        alle = removeAusnahmen(alle, geradeSpielendeTeams);
 
         var spiele = getSpieleByTeam(team);
         var bereitsgespielt = [team];
@@ -262,14 +290,14 @@ angular
         });
         _.pullAllBy(alle, bereitsgespielt, '_id');
 
-        var moeglicheGegner = [];
-        _.extend(moeglicheGegner, alle);
+        var möglicheGegner = [];
+        _.extend(möglicheGegner, alle);
 
-        _.pullAllBy(moeglicheGegner, lastPlayingTeams, '_id');
-        if (moeglicheGegner.length == 0) {
-            moeglicheGegner = alle;
+        _.pullAllBy(möglicheGegner, lastPlayingTeams, '_id');
+        if (möglicheGegner.length == 0) {
+            möglicheGegner = alle;
         }
-        return chooseTeam(moeglicheGegner);
+        return chooseTeam(möglicheGegner);
     }
 
     function addLastTeam(team) {
@@ -286,7 +314,7 @@ angular
 
     function calcPlatz() {
         platz++;
-        if (platz > plaetze) {
+        if (platz > plätze) {
             platz = 1;
         }
         return platz;
@@ -304,10 +332,34 @@ angular
         })
     }
 
-    function checkSpieleFuerGruppeUebrig(gruppe) {
+    function checkSpieleFürGruppeÜbrig(gruppe) {
         var max = (gruppe.teams.length * (gruppe.teams.length - 1) / 2);
         var result = getSpieleByGruppe(gruppe).length;
         return result < max;
+    }
+
+    function removeAusnahmen(teams, geradeSpielendeTeams) {
+        var zuloeschendeTeams = [];
+        _.forEach(geradeSpielendeTeams, function (team) {
+            var ausnahmeproTeam = getAusnahmenGegner(team);
+            _.forEach(ausnahmeproTeam, function (o) {
+                zuloeschendeTeams.push(o);
+            })
+        });
+        _.pullAllBy(teams, zuloeschendeTeams, '_id');
+        return teams;
+    }
+
+    function getAusnahmenGegner(team) {
+        var ausnahmenGegner = [];
+        _.forEach(spielplan.ausnahmen, function (o) {
+            if(!_.isNull(o.team1) && _.isEqual(o.team1._id, team._id)) {
+                ausnahmenGegner.push(o.team2);
+            }else if(!_.isNull(o.team2) && _.isEqual(o.team2._id, team._id)) {
+                ausnahmenGegner.push(o.team1);
+            }
+        });
+        return ausnahmenGegner;
     }
 
     window.onbeforeunload = function () {

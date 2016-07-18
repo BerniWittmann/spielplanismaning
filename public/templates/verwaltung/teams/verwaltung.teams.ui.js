@@ -3,7 +3,7 @@
 
     angular
         .module('spi.verwaltung.teams.ui', [
-            'spi.auth', 'ui.router', 'spi.gruppe', 'spi.jugend', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.spielplan'
+            'spi.auth', 'ui.router', 'spi.gruppe', 'spi.jugend', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.spielplan', 'spi.spielplan.ausnahmen.ui'
         ])
         .config(states)
         .controller('VerwaltungTeamsController', VerwaltungTeamsController);
@@ -34,20 +34,23 @@
         }
     }
 
-    function VerwaltungTeamsController(auth, jugend, spielplan) {
+    function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team, $timeout, $window) {
         var vm = this;
         vm.loading = true;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             jugend: {}
             , addJugend: function () {
-                jugend.create(vm.jugend).then(function () {
+                jugend.create(vm.jugend).then(function (res) {
                     spielplan.createSpielplan();
                     vm.jugend = {};
                     getAll();
+                    $timeout(function () {
+                        $scope.$apply();
+                    }, 0, false);
                 });
             }
+            , spielplanError: spielplan.error
             , isLoggedIn: auth.canAccess(1)
             , farben: [
                 {
@@ -100,10 +103,22 @@
         function getAll() {
             jugend.getAll().then(function (response) {
                 vm.jugenden = response.data;
-                vm.loading = false;
+                team.getAll().then(function (res) {
+                    vm.teams = res.data;
+                    vm.loading = false;
+                });
             });
         }
 
         getAll();
+
+        $scope.$watch(function () {
+            return spielplan.error;
+        }, function () {
+            vm.spielplanError = spielplan.error;
+            if(spielplan.error) {
+                $window.scrollTo(0, 0);
+            }
+        })
     }
 })();

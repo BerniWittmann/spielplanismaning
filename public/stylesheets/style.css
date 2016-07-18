@@ -1,10 +1,6 @@
 @font-face {
     font-family: "DIGITAL";
-<<<<<<< HEAD
-    /*noinspection CssUnknownTarget*/
-=======
     /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
->>>>>>> master
     src: url("/stylesheets/fonts/digital.ttf");
 }
 
@@ -32,6 +28,10 @@ a:hover {
 
 .margin-top-25 {
     margin-top: 25px;
+}
+
+.padding-bottom-15 {
+	padding-bottom: 15px;
 }
 
 .main-loader {
@@ -142,7 +142,7 @@ body {
 }
 
 .width-100 {
-    width: 100%;
+	width: 100%;
 }
 
 .has-error {
