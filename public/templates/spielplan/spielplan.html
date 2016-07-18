@@ -1,28 +1,29 @@
 <div class="row">
-	<div class="col-md-12 page-header">
-		<h3>Spielplan</h3>
-	</div>
+    <div class="col-md-12 page-header">
+        <h3>Spielplan</h3>
+    </div>
 </div>
 
 <div class="row">
-	<div class="col-md-12">
-		<table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading" id="spielplan">
-			<thead>
-				<tr>
-					<th class="text-center">Nr</th>
-					<th class="text-center">Zeit</th>
-					<th class="text-center">Platz</th>
-					<th>Jugend</th>
-					<th>Gruppe</th>
-					<th>Heim</th>
-					<th>Gast</th>
-					<th class="text-center">Spielstand</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'platz3': spiel.platz=='3'}" spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
-			</tbody>
-		</table>
-		<spi-loader loading="vm.loading"></spi-loader>
-	</div>
+    <div class="col-md-12">
+        <table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading" id="spielplan">
+            <thead>
+            <tr>
+                <th class="text-center">Nr</th>
+                <th class="text-center">Zeit</th>
+                <th class="text-center">Platz</th>
+                <th>Jugend</th>
+                <th>Gruppe</th>
+                <th>Heim</th>
+                <th>Gast</th>
+                <th class="text-center">Spielstand</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'platz3': spiel.platz=='3'}"
+                data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
+            </tbody>
+        </table>
+        <spi-loader loading="vm.loading"></spi-loader>
+    </div>
 </div>

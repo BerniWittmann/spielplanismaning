@@ -2,30 +2,41 @@
 <td class="text-center">{{vm.spiel.uhrzeit}}</td>
 <td data-ng-click="vm.gotoPlatz(vm.spiel.platz); $event.stopPropagation();" class="text-center">{{vm.spiel.platz}}</td>
 <td data-ng-click="vm.gotoJugend(vm.spiel.jugend); $event.stopPropagation();" class="valign">
-	<spi-jugend-label data-jugend="vm.spiel.jugend" class="hidden-print"></spi-jugend-label>
-	<span class="visible-print-block">{{vm.spiel.jugend.name}}</span>
+    <spi-jugend-label data-jugend="vm.spiel.jugend" class="hidden-print"></spi-jugend-label>
+    <span class="visible-print-block">{{vm.spiel.jugend.name}}</span>
 </td>
 <td data-ng-click="vm.gotoGruppe(vm.spiel.gruppe); $event.stopPropagation();">{{vm.spiel.gruppe.name}}</td>
 <td data-ng-click="vm.gotoTeam(vm.spiel.teamA); $event.stopPropagation();">{{vm.spiel.teamA.name}}</td>
 <td data-ng-click="vm.gotoTeam(vm.spiel.teamB); $event.stopPropagation();">{{vm.spiel.teamB.name}}</td>
 <td class="text-center">
-	<div data-ng-if="vm.spiel.jugend">
-		<div data-ng-if="vm.isEditing && vm.canEdit">
-			<input type="number" min="0" ng-model="vm.spiel.toreA" class="spielplannumberinput" data-ng-click="$event.stopPropagation();" focus-on="focusTextInput" ng-enter="vm.save()">
-			<span> : </span>
-			<input type="number" min="0" ng-model="vm.spiel.toreB" class="spielplannumberinput" data-ng-click="$event.stopPropagation();" ng-enter="vm.save()">
+    <div data-ng-if="vm.spiel.jugend">
+        <div data-ng-if="vm.isEditing && vm.canEdit">
+            <input type="number" min="0" data-ng-model="vm.spiel.toreA" class="spielplannumberinput"
+                   data-ng-click="$event.stopPropagation();" data-focus-on="focusTextInput" data-ng-enter="vm.save()"
+                   title="toreA">
+            <span> : </span>
+            <input type="number" min="0" data-ng-model="vm.spiel.toreB" class="spielplannumberinput"
+                   data-ng-click="$event.stopPropagation();" data-ng-enter="vm.save()" title="toreB">
 			<span class="pull-right">
-				<span class="hidden-print" data-ng-click="vm.save(); $event.stopPropagation();" uib-tooltip="Ergebnis speichern" tooltip-placement="top-right"><i class="icon-hover fa fa-check"></i></span>
-				<span data-ng-if="vm.canDelete" class="hidden-print" data-ng-click="vm.askDelete(); $event.stopPropagation();" uib-tooltip="Ergebnis zurücksetzen" tooltip-placement="top-right"><i class="icon-hover fa fa-trash"></i></span>
-				<span class="hidden-print" data-ng-click="vm.abort(); $event.stopPropagation();" uib-tooltip="Editieren abbrechen" tooltip-placement="top-right"><i class="icon-hover fa fa-remove"></i></span>
+				<span class="hidden-print" data-ng-click="vm.save(); $event.stopPropagation();"
+                      data-uib-tooltip="Ergebnis speichern" data-tooltip-placement="top-right"><i
+                        class="icon-hover fa fa-check"></i></span>
+				<span data-ng-if="vm.canDelete" class="hidden-print"
+                      data-ng-click="vm.askDelete(); $event.stopPropagation();" data-uib-tooltip="Ergebnis zurücksetzen"
+                      data-tooltip-placement="top-right"><i class="icon-hover fa fa-trash"></i></span>
+				<span class="hidden-print" data-ng-click="vm.abort(); $event.stopPropagation();"
+                      data-uib-tooltip="Editieren abbrechen" data-tooltip-placement="top-right"><i
+                        class="icon-hover fa fa-remove"></i></span>
 			</span>
-		</div>
-		<div data-ng-if="!vm.isEditing">
-			<span data-ng-if="vm.spiel.beendet">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</span>
-			<span data-ng-if="!vm.spiel.beendet">   :   </span>
+        </div>
+        <div data-ng-if="!vm.isEditing">
+            <span data-ng-if="vm.spiel.beendet">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</span>
+            <span data-ng-if="!vm.spiel.beendet">   :   </span>
 			<span class="pull-right" style="padding-left:33px;" data-ng-if="vm.canEdit">
-			<span class="hidden-print" data-ng-click="vm.edit(); $event.stopPropagation();" uib-tooltip="Ergebnis bearbeiten" tooltip-placement="top-right"><i class="icon-hover fa fa-pencil"></i></span>
+			<span class="hidden-print" data-ng-click="vm.edit(); $event.stopPropagation();"
+                  data-uib-tooltip="Ergebnis bearbeiten" data-tooltip-placement="top-right"><i
+                    class="icon-hover fa fa-pencil"></i></span>
 			</span>
-		</div>
-	</div>
+        </div>
+    </div>
 </td>

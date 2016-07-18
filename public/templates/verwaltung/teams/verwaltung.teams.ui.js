@@ -28,13 +28,13 @@
         } else {
             $timeout(function () {
                 $state.go('spi.login');
-            })
+            });
 
             return $q.reject();
         }
     }
 
-    function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team, $timeout) {
+    function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team, $timeout, $window) {
         var vm = this;
         vm.loading = true;
 
@@ -116,6 +116,9 @@
             return spielplan.error;
         }, function () {
             vm.spielplanError = spielplan.error;
+            if(spielplan.error) {
+                $window.scrollTo(0, 0);
+            }
         })
     }
 })();

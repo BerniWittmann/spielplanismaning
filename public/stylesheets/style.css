@@ -1,32 +1,33 @@
 @font-face {
-	font-family: "DIGITAL";
-	src: url("/stylesheets/fonts/digital.ttf");
+    font-family: "DIGITAL";
+    /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
+    src: url("/stylesheets/fonts/digital.ttf");
 }
 
 ul {
-	list-style-type: none;
-	-webkit-margin-before: 0;
-	-webkit-padding-start: 0px;
+    list-style-type: none;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
 }
 
 a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .padding-left-15 {
-	padding-left: 15px;
+    padding-left: 15px;
 }
 
 .padding-right-15 {
-	padding-right: 15px;
+    padding-right: 15px;
 }
 
 .padding-left-5 {
-	padding-left: 5px;
+    padding-left: 5px;
 }
 
 .margin-top-25 {
-	margin-top: 25px;
+    margin-top: 25px;
 }
 
 .padding-bottom-15 {
@@ -34,128 +35,128 @@ a:hover {
 }
 
 .main-loader {
-	margin-top: 20%;
+    margin-top: 20%;
 }
 
 .icon-hover {
-	color: grey;
+    color: grey;
 }
 
 .icon-hover:hover {
-	color: black;
+    color: black;
 }
 
 .text-bold {
-	font-weight: 600;
+    font-weight: 600;
 }
 
 .special-padding {
-	padding-right: 23.77px;
-	padding-left: 23.77px;
+    padding-right: 24px;
+    padding-left: 24px;
 }
 
 .width-60 {
-	width: 60px;
+    width: 60px;
 }
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 
 .jugend-label {
-	vertical-align: middle;
-	font-size: 90%;
+    vertical-align: middle;
+    font-size: 90%;
 }
 
 .jugend-label:hover {
-	color: gray;
+    color: gray;
 }
 
 .platz3 > td {
-	border-bottom: 2px solid #ddd !important;
+    border-bottom: 2px solid #ddd !important;
 }
 
 .spielplannumberinput {
-	max-width: 25px;
-	text-align: center;
+    max-width: 25px;
+    text-align: center;
 }
 
 .score {
-	font-size: 200%;
-	font-family: DIGITAL, Helvetica, Arial, sans-serif;
+    font-size: 200%;
+    font-family: DIGITAL, Helvetica, Arial, sans-serif;
 }
 
 .highlightTeam {
-	background-color: #E8E8E8 !important;
+    background-color: #E8E8E8 !important;
 }
 
 .highlightTeamName {
-	font-weight: 500;
+    font-weight: 500;
 }
 
 .footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 40px;
-	padding: 10px;
-	padding-left: 20px;
-	padding-right: 20px;
-	background-color: aliceblue;
-	text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    padding: 10px 20px;
+    background-color: aliceblue;
+    text-align: center;
 }
 
 body {
-	min-height: 100%;
-	position: relative;
+    min-height: 100%;
+    position: relative;
 }
 
 #page {
-	padding-bottom: 40px;
+    padding-bottom: 40px;
 }
 
 .brand-image {
-	margin-top: -6px;
+    margin-top: -6px;
 }
 
 .brand-image-normal {
-	display: block !important;
+    display: block !important;
 }
 
 .brand-image-hover {
-	display: none !important;
+    display: none !important;
 }
 
 .brand-image:hover .brand-image-normal {
-	display: none !important;
+    display: none !important;
 }
 
 .brand-image:hover .brand-image-hover {
-	display: block !important;
+    display: block !important;
 }
 
 .valign {
-	vertical-align: middle !important;
+    vertical-align: middle !important;
 }
 
 .width-100 {
 	width: 100%;
 }
 
-.has-error{
-	border-color: #a94442;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+.has-error {
+    border-color: #a94442;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
-.has-error{
-	border-color: #843534;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+.has-error {
+    border-color: #843534;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
 }
 
-.page-break	{ display: none; }
+.page-break {
+    display: none;
+}

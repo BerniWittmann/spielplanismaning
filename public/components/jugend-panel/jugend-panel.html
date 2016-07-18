@@ -1,39 +1,46 @@
 <spi-panel data-ng-if="vm.jugend._id">
-	<spi-panel-titel>
-		<a data-ui-sref="spi.tgj.jugend({jugendid: vm.jugend._id})">
-			<spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
-		</a><span data-ng-if="vm.canEdit" class="pull-right" data-ng-click="vm.askDeleteJugend(vm.jugend)" uib-tooltip="Jugend löschen"  tooltip-append-to-body="true"><i class="icon-hover fa fa-remove"></i></span>
-	</spi-panel-titel>
-	<div class="row" data-ng-if="vm.showMinZahlGruppen">
-		<div class="col-md-12">
-			<div class="alert alert-danger alert-dismissible">Achtung! Die Jugend "{{vm.jugend.name}}" muss immer mindestens 1 Gruppe haben!</div>
-		</div>
-	</div>
-	<spi-loading loading="vm.loading"></spi-loading>
-	<div class="row" data-ng-if="!vm.loading">
-		<div class="col-md-12">
-			<table>
-				<tr data-ng-repeat="gruppe in vm.gruppen">
-					<td> <a data-ui-sref="spi.tgj.gruppe({gruppeid: gruppe._id})">{{gruppe.name}}</a></td>
-					<td data-ng-if="vm.canEdit" class="padding-left-15" data-ng-click="vm.askDeleteGruppe(gruppe)" uib-tooltip="Gruppe löschen"><i class="icon-hover fa fa-remove"></i></td>
-					<td data-ng-if="vm.canEdit" class="padding-left-5" data-ng-click="vm.editGruppe(gruppe)" uib-tooltip="Gruppe bearbeiten"><i class="icon-hover fa fa-pencil"></i></td>
-				</tr>
-			</table>
-		</div>
-	</div>
+    <spi-panel-titel>
+        <a data-ui-sref="spi.tgj.jugend({jugendid: vm.jugend._id})">
+            <spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
+        </a><span data-ng-if="vm.canEdit" class="pull-right" data-ng-click="vm.askDeleteJugend(vm.jugend)"
+                  data-uib-tooltip="Jugend löschen" data-tooltip-append-to-body="true"><i
+            class="icon-hover fa fa-remove"></i></span>
+    </spi-panel-titel>
+    <div class="row" data-ng-if="vm.showMinZahlGruppen">
+        <div class="col-md-12">
+            <div class="alert alert-danger alert-dismissible">Achtung! Die Jugend "{{vm.jugend.name}}" muss immer
+                mindestens 1 Gruppe haben!
+            </div>
+        </div>
+    </div>
+    <spi-loading loading="vm.loading"></spi-loading>
+    <div class="row" data-ng-if="!vm.loading">
+        <div class="col-md-12">
+            <table>
+                <tr data-ng-repeat="gruppe in vm.gruppen">
+                    <td><a data-ui-sref="spi.tgj.gruppe({gruppeid: gruppe._id})">{{gruppe.name}}</a></td>
+                    <td data-ng-if="vm.canEdit" class="padding-left-15" data-ng-click="vm.askDeleteGruppe(gruppe)"
+                        data-uib-tooltip="Gruppe löschen"><i class="icon-hover fa fa-remove"></i></td>
+                    <td data-ng-if="vm.canEdit" class="padding-left-5" data-ng-click="vm.editGruppe(gruppe)"
+                        data-uib-tooltip="Gruppe bearbeiten"><i class="icon-hover fa fa-pencil"></i></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-	<div class="row" data-ng-if="vm.canEdit">
-		<div class="col-md-12">
-			<form ng-submit="vm.addGruppe()" style="margin-top:30px;">
-				<h5>Gruppe hinzufügen</h5>
-				<div class="alert alert-danger" data-ng-if="vm.error">
-					{{vm.error.message}}
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Gruppen-Name" ng-model="vm.gruppe.name" required></input>
-				</div>
-				<button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary">anlegen</button>
-			</form>
-		</div>
-	</div>
+    <div class="row" data-ng-if="vm.canEdit">
+        <div class="col-md-12">
+            <form data-ng-submit="vm.addGruppe()" style="margin-top:30px;">
+                <h5>Gruppe hinzufügen</h5>
+                <div class="alert alert-danger" data-ng-if="vm.error">
+                    {{vm.error.message}}
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Gruppen-Name" data-ng-model="vm.gruppe.name"
+                           required>
+                </div>
+                <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary">anlegen</button>
+            </form>
+        </div>
+    </div>
 </spi-panel>

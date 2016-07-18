@@ -1,16 +1,16 @@
 <div class="row">
-	<div class=" col-md-12 page-header">
-		<h3>Gruppen</h3>
-	</div>
+    <div class=" col-md-12 page-header">
+        <h3>Gruppen</h3>
+    </div>
 </div>
 
 <spi-loader loading="vm.loading"></spi-loader>
 
 <div class="row" data-ng-if="!vm.loading">
-	<div class="col-md-3" data-ng-repeat="gruppe in vm.gruppen">
-		<spi-gruppen-panel data-gruppe="gruppe"></spi-gruppen-panel>
-	</div>
-	<div class="col-md-4 col-md-offset-4" data-ng-if="vm.gruppen.length===0">
-		<div class="alert alert-info">Keine Gruppen gefunden</div>
-	</div>
+    <div class="col-md-3" data-ng-repeat="gruppe in vm.gruppen">
+        <spi-gruppen-panel data-gruppe="gruppe"></spi-gruppen-panel>
+    </div>
+    <div class="col-md-4 col-md-offset-4" data-ng-if="vm.gruppen.length===0">
+        <div class="alert alert-info">Keine Gruppen gefunden</div>
+    </div>
 </div>

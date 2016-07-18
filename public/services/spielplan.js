@@ -43,7 +43,6 @@ angular
                 spielplan.pausenzeit = 2;
                 spielplan.ausnahmen = [];
             }
-
             return spielplan.data;
         });
     };
@@ -169,7 +168,7 @@ angular
                         nummer: i
                         , platz: calcPlatz()
                         , uhrzeit: calcZeit()
-                    }
+                    };
                     spielplan.spiele.push(leeresSpiel);
                     i++;
                     spieleGesamt++;
@@ -177,7 +176,7 @@ angular
                     spielplan.progress++;
                     spielplan.maxProgress++;
                     if (i > 1 && (i - 1) % 3 == 0) {
-                        lastPlayingTeams = geradeSpielendeTeams
+                        lastPlayingTeams = geradeSpielendeTeams;
                         geradeSpielendeTeams = [];
                     }
                 }
@@ -187,7 +186,7 @@ angular
                     nummer: i
                     , platz: calcPlatz()
                     , uhrzeit: calcZeit()
-                }
+                };
                 spielplan.spiele.push(leeresSpiel);
                 i++;
                 spieleGesamt++;
@@ -201,7 +200,7 @@ angular
             }
 
             spielplan.maxProgress++;
-            $http.post('/allespiele', spielplan.spiele).then(pushSpiele, function (err) {
+            $http.post('/spiele/alle', spielplan.spiele).then(pushSpiele, function (err) {
                 console.log(err);
             });
 
@@ -215,14 +214,14 @@ angular
                 spielplanerstellungRunning = false;
             }
         });
-    }
+    };
 
     function calcSpieleGesamt(gruppen) {
-        var sum = 0
+        var sum = 0;
         _.forEach(gruppen, function (gruppe) {
             var n = gruppe.teams.length;
             sum += (n * (n - 1)) / 2;
-        })
+        });
 
         return sum;
     }
@@ -367,7 +366,7 @@ angular
         if (spielplanerstellungRunning) {
             return "Achtung! Spielplan wird gerade erstellt! Es verbleiben noch " + Math.round(spielplan.progress / spielplan.maxProgress) + "%. Bitte schließen Sie die Seite noch nicht!";
         }
-    }
+    };
 
     return spielplan;
 }]);

@@ -1,114 +1,121 @@
 <div class="row hidden-print">
-	<div class="col-xs-12 page-header">
-		<h3>Spielplan</h3>
-	</div>
+    <div class="col-xs-12 page-header">
+        <h3>Spielplan</h3>
+    </div>
 </div>
 <p class="hidden-print">Diese Seite dient dazu, alle Spiele für die Kampfgerichte auszudrucken</p>
 <spi-loader loading="vm.loading"></spi-loader>
 <div data-ng-if="!vm.loading">
-	<div data-ng-repeat="spiel in vm.spiele">
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="row text-center">
-					<div class="col-xs-12">
-						<h2>{{spiel.uhrzeit}} Uhr</h2>
-						<h4>Platz {{spiel.platz}}</h4>
-					</div>
-				</div>
-				<div class="row text-center">
-					<div class="col-xs-12">
-						<h3><spi-jugend-label jugend="spiel.jugend"></spi-jugend-label></h3>
-						<h6 data-ng-click="vm.gotoGruppe(spiel.gruppe)">{{spiel.gruppe.name}}</h6>
-					</div>
-				</div>
+    <div data-ng-repeat="spiel in vm.spiele track by $index">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row text-center">
+                    <div class="col-xs-12">
+                        <h2>{{spiel.uhrzeit}} Uhr</h2>
+                        <h4>Platz {{spiel.platz}}</h4>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-xs-12">
+                        <h3>
+                            <spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
+                        </h3>
+                        <h6 data-ng-click="vm.gotoGruppe(spiel.gruppe)">{{spiel.gruppe.name}}</h6>
+                    </div>
+                </div>
 
-				<div class="row text-center">
-					<div class="col-xs-12">
-						<div class="row">
-							<div class="col-xs-5">
-								<h4>Heim</h4>
-							</div>
+                <div class="row text-center">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <h4>Heim</h4>
+                            </div>
 
-							<div class="col-xs-5 col-xs-offset-2">
-								<h4>Gast</h4>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-5">
-								<h3 data-ng-click="vm.gotoTeam(spiel.teamA)">{{spiel.teamA.name}}</h3>
-							</div>
-							<div class="col-xs-5 col-xs-offset-2">
-								<h3 data-ng-click="vm.gotoTeam(spiel.teamB)">{{spiel.teamB.name}}</h3>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<br>
-			<br>
-		</div>
+                            <div class="col-xs-5 col-xs-offset-2">
+                                <h4>Gast</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <h3 data-ng-click="vm.gotoTeam(spiel.teamA)">{{spiel.teamA.name}}</h3>
+                            </div>
+                            <div class="col-xs-5 col-xs-offset-2">
+                                <h3 data-ng-click="vm.gotoTeam(spiel.teamB)">{{spiel.teamB.name}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+        </div>
 
-		<div class="row visible-print-block">
-			<div class="col-xs-12">
-				<div class="row">
-					<div class="col-xs-5">
-						<p>Trikotfarbe: </p>
-					</div>
-					<div class="col-xs-5 col-xs-offset-2">
-						<p>Trikotfarbe: </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-5">
-						<p>Tore: </p>
-					</div>
-					<div class="col-xs-5 col-xs-offset-2">
-						<p>Tore: </p>
-					</div>
-				</div>
-				<div class="row">
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>	
-				</div>
-				<hr class="alle-spiele-divider">
-				<div class="row">
-					<div class="col-xs-12">
-						<p>Bemerkungen zum Spiel / zu den Teams: </p>
-					</div>
-				</div>
-				<div class="row">
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-				</div>
-				<hr class="alle-spiele-divider">
-				<div class="row">
-					<div class="col-xs-5 col-xs-offset-1">
-						<h3 style="height:50px;"><div class="valign">Ergebnis:</div><div class="box"></div><div class="valign">:</div><div class="box"></div></h3>
-					</div>
-					<div class="col-xs-5 col-xs-offset-1">
-						<h5>Unterschrift Kampfgericht: <br><br><br>______________________________</h5>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="page-break"></div>
-	</div>
+        <div class="row visible-print-block">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <p>Trikotfarbe: </p>
+                    </div>
+                    <div class="col-xs-5 col-xs-offset-2">
+                        <p>Trikotfarbe: </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-5">
+                        <p>Tore: </p>
+                    </div>
+                    <div class="col-xs-5 col-xs-offset-2">
+                        <p>Tore: </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <hr class="alle-spiele-divider">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>Bemerkungen zum Spiel / zu den Teams: </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <hr class="alle-spiele-divider">
+                <div class="row">
+                    <div class="col-xs-5 col-xs-offset-1">
+                        <h3 style="height:50px;">
+                            <span class="valign">Ergebnis:</span>
+                            <span class="box"></span>
+                            <span class="valign">:</span>
+                            <span class="box"></span>
+                        </h3>
+                    </div>
+                    <div class="col-xs-5 col-xs-offset-1">
+                        <h5>Unterschrift Kampfgericht: <br><br><br>______________________________</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="$index < vm.spiele.length - 1" class="page-break"></div>
+    </div>
 </div>
