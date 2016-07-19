@@ -212,3 +212,14 @@ gulp.task('release', function () {
     return inc('major');
 });
 
+//open apps
+gulp.task('open', function () {
+    gulp.src(__filename)
+        .pipe(open({uri: 'http://spielplanismaning.herokuapp.com'}));
+});
+
+gulp.task('open_testing', function () {
+    gulp.src(__filename)
+        .pipe(open({uri: 'http://spielplanismaning-testing.herokuapp.com'}));
+});
+
