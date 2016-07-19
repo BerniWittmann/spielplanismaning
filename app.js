@@ -14,6 +14,8 @@ if (app.get('ENVIRONMENT') == 'PROD') {
     app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 }
 
+console.log(app.get('MONGODB_URI'));
+
 var mongoose = require('mongoose');
 var passport = require('passport');
 
