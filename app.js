@@ -8,11 +8,12 @@ var bodyParser = require('body-parser');
 var app = express();
 
 app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
-if (app.get('ENVIRONMENT') == 'PROD') {
-    app.set('MONGODB_URI', process.env.MONGODB_URI);
-} else if (app.get('ENVIRONMENT') == 'DEV') {
+if (app.get('ENVIRONMENT') == 'DEV') {
     app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
+} else {
+    app.set('MONGODB_URI', process.env.MONGODB_URI);
 }
+
 
 var mongoose = require('mongoose');
 var passport = require('passport');
