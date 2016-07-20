@@ -66,7 +66,7 @@
             });
 
             it('soll die Jugend an das Jugend-Label übergeben werden', function () {
-                expect(controller.gruppe.jugend).not.to.be.undefined;
+                expect(controller.gruppe.jugend).not.to.be.undefined();
                 expect(controller.gruppe.jugend._id).to.be.equal(1234);
                 expect(controller.gruppe.jugend.name).to.be.equal('Test Jugend');
             });
@@ -75,7 +75,7 @@
         it('die Teams der Gruppe sollen geladen werden', function () {
             var result = element.find('tbody').children();
 
-            expect(result).not.to.be.undefined;
+            expect(result).not.to.be.undefined();
             expect(result.length).to.be.equal(3);
 
             expect(angular.element(result[0]).find('a').text()).to.be.equal('Test Team 1');
