@@ -9,6 +9,7 @@
 
 .navbar-spi .navbar-nav>li>a:focus, .navbar-spi .navbar-nav>li>a:hover {
     color: white !important;
+    text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .navbar-spi .navbar-nav>li>a {
@@ -21,14 +22,29 @@
 
 .navbar-spi .navbar-nav>.active>a, .navbar-spi .navbar-nav>.active>a:focus, .navbar-spi .navbar-nav>.active>a:hover {
     background-color: transparent !important;
+    text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .navbar-spi .navbar-nav>.open>a, .navbar-spi .navbar-nav>.open>a:focus, .navbar-spi .navbar-nav>.open>a:hover {
     background-color: transparent !important;
+    text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .navbar-spi .navbar-text {
     color: white !important;
+}
+
+.navbar-spi .navbar-toggle .icon-bar {
+    background-color: white !important;
+}
+
+.navbar-spi .navbar-toggle {
+    border-color: transparent !important;
+}
+
+.navbar-spi .navbar-toggle:focus, .navbar-spi .navbar-toggle:hover {
+    background-color: transparent !important;
+    text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .dropdown-menu-spi:before {
