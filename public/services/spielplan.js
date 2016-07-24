@@ -62,75 +62,78 @@ angular
     spielplan.createSpielplan = function () {
         spielplanerstellungRunning = true;
         spielplan.progress = 0;
-        spielplan.getZeiten();
-        spiel.deleteAll();
-        leereSpieleStreak = 0;
-        spielplan.spiele = [];
-        team.resetErgebnisse();
-        spielplan.error = undefined;
-        return gruppe.getAll().then(function (gruppen) {
-            spieleGesamt = calcSpieleGesamt(gruppen.data);
-            Logger.log('Spielplanerstellung: Anzahl Spiele: ' + spieleGesamt);
-            spielplan.maxProgress = spieleGesamt + 1;
+        return spielplan.getZeiten().then(function () {
+            spiel.deleteAll();
+            leereSpieleStreak = 0;
+            spielplan.spiele = [];
+            team.resetErgebnisse();
+            spielplan.error = undefined;
+            return gruppe.getAll().then(function (gruppen) {
+                spieleGesamt = calcSpieleGesamt(gruppen.data);
+                Logger.log('Spielplanerstellung: Anzahl Spiele: ' + spieleGesamt);
+                spielplan.maxProgress = spieleGesamt + 1;
 
-            lastPlayingTeams = [];
-            geradeSpielendeTeams = [];
-            i = 1;
-            platz = 3; //Bei 3 anfangen macht calcPlatz einfacher
+                lastPlayingTeams = [];
+                geradeSpielendeTeams = [];
+                i = 1;
+                platz = 3; //Bei 3 anfangen macht calcPlatz einfacher
 
-            var leerdurchgelaufeneGruppen = 0;
+                var leerdurchgelaufeneGruppen = 0;
 
-            while (i <= spieleGesamt) {
-                leerdurchgelaufeneGruppen = 0;
-                if(leereSpieleStreak >= maxLeereSpieleStreak) {
-                    Logger.log('Zu viele Ausnahmen! ' + leereSpieleStreak + ' leere Spiele hintereinander.');
-                    spieleGesamt = 0;
-                    spiel.deleteAll();
-                    spielplan.spiele = [];
-                    team.resetErgebnisse();
-                    spielplanerstellungRunning = false;
-                    spielplan.progress = 0;
-                    spielplan.error = 'Zu viele Ausnahmen! Spielplanerstellung nicht möglich!';
-                    return undefined;
-                }
-                _.forEach(gruppen.data, function (gruppe) {
-                    if (checkSpieleFürGruppeÜbrig(gruppe)) {
-                        Logger.log('Spielerstellung Nr. ' + i + ': gestartet');
+                while (i <= spieleGesamt) {
+                    leerdurchgelaufeneGruppen = 0;
+                    if (leereSpieleStreak >= maxLeereSpieleStreak) {
+                        Logger.log('Zu viele Ausnahmen! ' + leereSpieleStreak + ' leere Spiele hintereinander.');
+                        spieleGesamt = 0;
+                        spiel.deleteAll();
+                        spielplan.spiele = [];
+                        team.resetErgebnisse();
+                        spielplanerstellungRunning = false;
+                        spielplan.progress = 0;
+                        spielplan.error = 'Zu viele Ausnahmen! Spielplanerstellung nicht möglich!';
+                        return undefined;
+                    }
+                    _.forEach(gruppen.data, function (gruppe) {
+                        if (checkSpieleFürGruppeÜbrig(gruppe)) {
+                            Logger.log('Spielerstellung Nr. ' + i + ': gestartet');
 
-                        var teamA = getTeamWithoutLast(gruppe);
-                        if (!_.isUndefined(teamA)) {
-                            addLastTeam(teamA);
-                            Logger.log('Spielerstellung Nr. ' + i + ': TeamA gewählt: ' + teamA.name);
+                            var teamA = getTeamWithoutLast(gruppe);
+                            if (!_.isUndefined(teamA)) {
+                                addLastTeam(teamA);
+                                Logger.log('Spielerstellung Nr. ' + i + ': TeamA gewählt: ' + teamA.name);
 
-                            var teamB = getPossibleGegner(gruppe, teamA);
-                            if (!_.isUndefined(teamB)) {
-                                addLastTeam(teamB);
-                                Logger.log('Spielerstellung Nr. ' + i + ': TeamB gewählt: ' + teamB.name);
+                                var teamB = getPossibleGegner(gruppe, teamA);
+                                if (!_.isUndefined(teamB)) {
+                                    addLastTeam(teamB);
+                                    Logger.log('Spielerstellung Nr. ' + i + ': TeamB gewählt: ' + teamB.name);
 
-                                var platz = calcPlatz();
-                                Logger.log('Spielerstellung Nr. ' + i + ': Platz vergeben: ' + platz);
+                                    var platz = calcPlatz();
+                                    Logger.log('Spielerstellung Nr. ' + i + ': Platz vergeben: ' + platz);
 
-                                var zeit = calcZeit(platz);
-                                Logger.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + zeit);
+                                    var zeit = calcZeit(platz);
+                                    Logger.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + zeit);
 
-                                var neuesSpiel = {
-                                    nummer: i
-                                    , platz: platz
-                                    , uhrzeit: zeit
-                                    , gruppe: gruppe._id
-                                    , jugend: gruppe.jugend._id
-                                    , teamA: teamA._id
-                                    , teamB: teamB._id
-                                };
+                                    var neuesSpiel = {
+                                        nummer: i
+                                        , platz: platz
+                                        , uhrzeit: zeit
+                                        , gruppe: gruppe._id
+                                        , jugend: gruppe.jugend._id
+                                        , teamA: teamA._id
+                                        , teamB: teamB._id
+                                    };
 
-                                spielplan.spiele.push(neuesSpiel);
-                                Logger.log('Spielplanerstellung: Spiel Nr.' + i + ' für Gruppe ' + gruppe.name + ' erstellt.');
-                                i++;
-                                leereSpieleStreak = 0;
-                                spielplan.progress++;
-                                if (i > 1 && (i - 1) % 3 == 0) {
-                                    lastPlayingTeams = geradeSpielendeTeams
-                                    geradeSpielendeTeams = [];
+                                    spielplan.spiele.push(neuesSpiel);
+                                    Logger.log('Spielplanerstellung: Spiel Nr.' + i + ' für Gruppe ' + gruppe.name + ' erstellt.');
+                                    i++;
+                                    leereSpieleStreak = 0;
+                                    spielplan.progress++;
+                                    if (i > 1 && (i - 1) % 3 == 0) {
+                                        lastPlayingTeams = geradeSpielendeTeams
+                                        geradeSpielendeTeams = [];
+                                    }
+                                } else {
+                                    leerdurchgelaufeneGruppen++;
                                 }
                             } else {
                                 leerdurchgelaufeneGruppen++;
@@ -138,33 +141,48 @@ angular
                         } else {
                             leerdurchgelaufeneGruppen++;
                         }
-                    } else {
-                        leerdurchgelaufeneGruppen++;
-                    }
-                });
-                if (leerdurchgelaufeneGruppen == gruppen.data.length) {
-                    //Leeres Spiel
-                    Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    var leeresSpiel = {
-                        nummer: i
-                        , platz: calcPlatz()
-                        , uhrzeit: calcZeit()
-                    }
-                    spielplan.spiele.push(leeresSpiel);
-                    i++;
-                    spieleGesamt++;
-                    leereSpieleStreak++;
-                    spielplan.progress++;
-                    spielplan.maxProgress++;
-                    if (i > 1 && (i - 1) % 3 == 0) {
-                        lastPlayingTeams = geradeSpielendeTeams
-                        geradeSpielendeTeams = [];
+                    });
+                    if (leerdurchgelaufeneGruppen == gruppen.data.length) {
+                        //Leeres Spiel
+                        Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
+                        var leeresSpiel = {
+                            nummer: i
+                            , platz: calcPlatz()
+                            , uhrzeit: calcZeit()
+                        }
+                        spielplan.spiele.push(leeresSpiel);
+                        i++;
+                        spieleGesamt++;
+                        leereSpieleStreak++;
+                        spielplan.progress++;
+                        spielplan.maxProgress++;
+                        if (i > 1 && (i - 1) % 3 == 0) {
+                            lastPlayingTeams = geradeSpielendeTeams
+                            geradeSpielendeTeams = [];
+                        }
                     }
                 }
-            }
 
-            if (_.last(spielplan.spiele).platz == 1) {
-                for (var j = 0; j < 2; j++) {
+                if (_.last(spielplan.spiele).platz == 1) {
+                    for (var j = 0; j < 2; j++) {
+                        Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
+                        var leeresSpiel = {
+                            nummer: i
+                            , platz: calcPlatz()
+                            , uhrzeit: calcZeit()
+                        };
+                        spielplan.spiele.push(leeresSpiel);
+                        i++;
+                        spieleGesamt++;
+                        leereSpieleStreak++;
+                        spielplan.progress++;
+                        spielplan.maxProgress++;
+                        if (i > 1 && (i - 1) % 3 == 0) {
+                            lastPlayingTeams = geradeSpielendeTeams;
+                            geradeSpielendeTeams = [];
+                        }
+                    }
+                } else if (_.last(spielplan.spiele).platz == 2) {
                     Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
                     var leeresSpiel = {
                         nummer: i
@@ -178,43 +196,26 @@ angular
                     spielplan.progress++;
                     spielplan.maxProgress++;
                     if (i > 1 && (i - 1) % 3 == 0) {
-                        lastPlayingTeams = geradeSpielendeTeams;
+                        lastPlayingTeams = geradeSpielendeTeams
                         geradeSpielendeTeams = [];
                     }
                 }
-            } else if (_.last(spielplan.spiele).platz == 2) {
-                Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                var leeresSpiel = {
-                    nummer: i
-                    , platz: calcPlatz()
-                    , uhrzeit: calcZeit()
-                };
-                spielplan.spiele.push(leeresSpiel);
-                i++;
-                spieleGesamt++;
-                leereSpieleStreak++;
-                spielplan.progress++;
+
                 spielplan.maxProgress++;
-                if (i > 1 && (i - 1) % 3 == 0) {
-                    lastPlayingTeams = geradeSpielendeTeams
-                    geradeSpielendeTeams = [];
-                }
-            }
-
-            spielplan.maxProgress++;
-            $http.post('/api/spiele/alle', spielplan.spiele).then(pushSpiele, function (err) {
-                console.log(err);
-            });
-
-            function pushSpiele() {
-                Logger.log('Alle Spiele gespeichert');
-                spiel.getAll().then(function (spiele) {
-                    spielplan.spiele = spiele;
+                $http.post('/api/spiele/alle', spielplan.spiele).then(pushSpiele, function (err) {
+                    console.log(err);
                 });
 
-                spielplan.progress = spielplan.maxProgress;
-                spielplanerstellungRunning = false;
-            }
+                function pushSpiele() {
+                    Logger.log('Alle Spiele gespeichert');
+                    spiel.getAll().then(function (spiele) {
+                        spielplan.spiele = spiele;
+                    });
+
+                    spielplan.progress = spielplan.maxProgress;
+                    spielplanerstellungRunning = false;
+                }
+            });
         });
     };
 
