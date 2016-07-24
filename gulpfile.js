@@ -85,7 +85,7 @@ gulp.task('test:watch', function (done) {
 gulp.task('test:frontend', function (done) {
     return new Server({
         configFile: __dirname + '/karma.conf.js',
-        singleRun: true
+        singleRun: false
     }, done).start();
 });
 
