@@ -18,7 +18,7 @@
 		var singleAusnahme = {
 			team1: undefined
 			, team2: undefined
-		}
+		};
 
 		_.extend(vm, {
 			ausnahmen: []
@@ -34,7 +34,7 @@
 		getAusnahmen();
 
 		function getAusnahmen() {
-			return $http.get('/spielplan/ausnahmen').then(function (res) {
+			return $http.get('/api/spielplan/ausnahmen').then(function (res) {
 				$timeout(function () {
 					$scope.$apply(function () {
 						vm.ausnahmen = res.data;
