@@ -1,0 +1,55 @@
+.navbar-spi {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: white;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: larger;
+    font-weight: 200;
+}
+
+.navbar-spi .navbar-nav>li>a:focus, .navbar-spi .navbar-nav>li>a:hover {
+    color: white !important;
+}
+
+.navbar-spi .navbar-nav>li>a {
+    color: white !important;
+}
+
+.navbar-spi .navbar-brand {
+    color: white !important;
+}
+
+.navbar-spi .navbar-nav>.active>a, .navbar-spi .navbar-nav>.active>a:focus, .navbar-spi .navbar-nav>.active>a:hover {
+    background-color: transparent !important;
+}
+
+.navbar-spi .navbar-nav>.open>a, .navbar-spi .navbar-nav>.open>a:focus, .navbar-spi .navbar-nav>.open>a:hover {
+    background-color: transparent !important;
+}
+
+.navbar-spi .navbar-text {
+    color: white !important;
+}
+
+.dropdown-menu-spi:before {
+    position: absolute;
+    top: -7px;
+    left: 9px;
+    display: inline-block;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #ccc;
+    border-left: 7px solid transparent;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    content: '';
+}
+
+.dropdown-menu-spi:after {
+    position: absolute;
+    top: -6px;
+    left: 10px;
+    display: inline-block;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ffffff;
+    border-left: 6px solid transparent;
+    content: '';
+}
