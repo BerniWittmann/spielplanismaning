@@ -16,7 +16,7 @@ module.exports = function (env) {
     });
 
     router.get('/kontakt', function (req, res) {
-        res.json((env.KONTAKTE || exampleContacts));
+        res.json((JSON.parse(env.KONTAKTE) || exampleContacts));
     });
 
     return router;
