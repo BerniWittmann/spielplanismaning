@@ -1,0 +1,80 @@
+<div class="row">
+    <div class="col-md-12 page-header">
+        <h3>Kontakt</h3>
+    </div>
+</div>
+
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row center-block" data-ng-if="!vm.loading">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="row" data-ng-if="vm.kontakte.length>0">
+            <div class="col-md-12">
+                <h4>Verantwortliche für den Spielbetrieb:</h4>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-striped table-hover">
+                        <tr data-ng-repeat="kontakt in vm.kontakte">
+                            <td>{{kontakt.turnier}}</td>
+                            <td>{{kontakt.name}} <a href="mailto:{{kontakt.email}}" class="pull-right"><i
+                                    class="fa fa-envelope"></i></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Technische Umsetzung:</h4>
+
+                <div class="row padding-left-15">
+                    <div class="col-md-12">
+                        <p>Bernhard Wittmann</p>
+
+                        <p>
+                            <a href="mailto:bugreport4+autbfctbcdterjvy8o2t@boards.trello.com">Probleme,
+                                Feature-Requests
+                                oder
+                                Bugs?
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </p>
+
+                        <p>
+                            <a href="mailto:berniw@mnet-online.de">Sonstige Fragen <i
+                                    class="fa fa-envelope"></i></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <p>Diese Seite wird bereitgestellt von <a href="http://handballismaning.de" target="_blank">TSV Ismaning
+                    Handball</a></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <br><br><br>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-left">
+            Version: {{vm.version}}
+        </div>
+        <div class="pull-right">
+            <i class="fa fa-copyright"></i> Bernhard Wittmann
+        </div>
+    </div>
+</div>
+
+
+
