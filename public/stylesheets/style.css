@@ -31,11 +31,12 @@ a:hover {
 }
 
 .padding-bottom-15 {
-	padding-bottom: 15px;
+    padding-bottom: 15px;
 }
 
 .main-loader {
-    margin-top: 20%;
+    margin-top: 3em;
+    margin-bottom: 3em;
 }
 
 .icon-hover {
@@ -104,17 +105,56 @@ input[type=number]::-webkit-outer-spin-button {
     width: 100%;
     height: 40px;
     padding: 10px 20px;
-    background-color: aliceblue;
     text-align: center;
+    color: white;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: larger;
+    font-weight: 200;
+}
+
+.footer a, .footer a:focus, .footer a:visited {
+    color: white;
+}
+
+.footer a:hover {
+    color: white;
+    text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 body {
     min-height: 100%;
     position: relative;
+    background-image: url("/assets/img/background.jpg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-attachment: fixed;
+    background-size: cover;
+    padding-bottom: 15px;
 }
 
 #page {
-    padding-bottom: 40px;
+    width: 90%;
+    margin: 0 auto;
+    background-color: white;
+    -webkit-box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
+    -moz-box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
+    box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
+    border-radius: 4px;
+    margin-bottom: 40px;
+}
+
+.fadein {
+    opacity: 0;
+    -moz-transition: opacity 0.5s;
+    -webkit-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+    margin-top: 70px;
+}
+
+.fadein.loaded {
+    opacity: 1;
+    margin-top: 0;
 }
 
 .brand-image {
@@ -142,7 +182,7 @@ body {
 }
 
 .width-100 {
-	width: 100%;
+    width: 100%;
 }
 
 .has-error {
@@ -159,4 +199,8 @@ body {
 
 .page-break {
     display: none;
+}
+
+.page-header {
+    margin-top: 0px;
 }
