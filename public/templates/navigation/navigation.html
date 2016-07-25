@@ -25,21 +25,29 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="spi-navbar">
             <ul class="nav navbar-nav">
-                <li data-ng-class="{active: vm.isAktiv('spi.home')}"><a data-ui-sref="spi.home"><i
+                <li data-ng-class="{active: vm.isAktiv('spi.home')}"><a data-ui-sref="spi.home" data-toggle="collapse"
+                                                                        data-target=".navbar-collapse.in"><i
                         class="fa fa-home"></i><span class="hidden-sm"> Home</span></a></li>
-                <li data-ng-class="{active: vm.isAktiv('spi.spielplan')}"><a data-ui-sref="spi.spielplan"><i
+                <li data-ng-class="{active: vm.isAktiv('spi.spielplan')}"><a data-ui-sref="spi.spielplan"
+                                                                             data-toggle="collapse"
+                                                                             data-target=".navbar-collapse.in"><i
                         class="fa fa-calendar-o"></i><span class="hidden-sm"> Spielplan</span></a></li>
                 <li data-ng-class="{active: vm.isAktiv('spi.tgj')}" class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Jugenden</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
-                        <li><a data-ui-sref="spi.tgj.teams">Teams</a></li>
-                        <li><a data-ui-sref="spi.tgj.gruppen">Gruppen</a></li>
-                        <li><a data-ui-sref="spi.tgj.jugenden">Jugenden</a></li>
+                        <li><a data-ui-sref="spi.tgj.teams" data-toggle="collapse" data-target=".navbar-collapse.in">Teams</a>
+                        </li>
+                        <li><a data-ui-sref="spi.tgj.gruppen" data-toggle="collapse" data-target=".navbar-collapse.in">Gruppen</a>
+                        </li>
+                        <li><a data-ui-sref="spi.tgj.jugenden" data-toggle="collapse" data-target=".navbar-collapse.in">Jugenden</a>
+                        </li>
                     </ul>
                 </li>
-                <li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"><i
+                <li data-ng-class="{active: vm.isAktiv('spi.tabellen')}"><a data-ui-sref="spi.tabellen"
+                                                                            data-toggle="collapse"
+                                                                            data-target=".navbar-collapse.in"><i
                         class="fa fa-table"></i><span class="hidden-sm"> Tabellen</span></a></li>
                 <li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.canAccess(0)"
                     class="dropdown">
@@ -47,12 +55,18 @@
                        aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
-                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.allgemein">Allgemein</a></li>
-                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.teams">Teams, Gruppen &
+                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.allgemein"
+                                                            data-toggle="collapse" data-target=".navbar-collapse.in">Allgemein</a>
+                        </li>
+                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.teams" data-toggle="collapse"
+                                                            data-target=".navbar-collapse.in">Teams, Gruppen &
                             Jugenden</a></li>
-                        <li data-ng-if="vm.canAccess(0)"><a data-ui-sref="spi.verwaltung.spiele-druck">Spiele
+                        <li data-ng-if="vm.canAccess(0)"><a data-ui-sref="spi.verwaltung.spiele-druck"
+                                                            data-toggle="collapse" data-target=".navbar-collapse.in">Spiele
                             Drucken</a></li>
-                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.email-abonnements">Email Abonnements</a></li>
+                        <li data-ng-if="vm.canAccess(1)"><a data-ui-sref="spi.verwaltung.email-abonnements"
+                                                            data-toggle="collapse" data-target=".navbar-collapse.in">Email
+                            Abonnements</a></li>
                     </ul>
                 </li>
             </ul>
@@ -62,8 +76,10 @@
                             class="fa fa-user"></i> <span class="hidden-sm hidden-md"
                                                           data-ng-bind="vm.currentUser()"></span></p>
                 </li>
-                <li data-ng-if="!vm.isLoggedIn()"><a data-ui-sref="spi.login">Login</a></li>
-                <li data-ng-if="vm.isLoggedIn()"><a data-ng-click="vm.logOut()">Logout</a></li>
+                <li data-ng-if="!vm.isLoggedIn()"><a data-ui-sref="spi.login" data-toggle="collapse"
+                                                     data-target=".navbar-collapse.in">Login</a></li>
+                <li data-ng-if="vm.isLoggedIn()"><a data-ng-click="vm.logOut()" data-toggle="collapse"
+                                                    data-target=".navbar-collapse.in">Logout</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

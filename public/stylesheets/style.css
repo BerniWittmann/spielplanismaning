@@ -124,9 +124,9 @@ body {
     width: 90%;
     margin: 0 auto;
     background-color: white;
-    -webkit-box-shadow: 10px 10px 25px -4px rgba(71, 71, 71, 0.83);
-    -moz-box-shadow: 10px 10px 25px -4px rgba(71, 71, 71, 0.83);
-    box-shadow: 10px 10px 25px -4px rgba(71, 71, 71, 0.83);
+    -webkit-box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
+    -moz-box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
+    box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
     border-radius: 4px;
 }
 
