@@ -35,7 +35,8 @@ a:hover {
 }
 
 .main-loader {
-    margin-top: 20%;
+    margin-top: 3em;
+    margin-bottom: 3em;
 }
 
 .icon-hover {
