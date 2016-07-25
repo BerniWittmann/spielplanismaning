@@ -149,10 +149,12 @@ body {
     -webkit-transition: opacity 0.5s;
     -o-transition: opacity 0.5s;
     transition: opacity 0.5s;
+    margin-top: 70px;
 }
 
 .fadein.loaded {
     opacity: 1;
+    margin-top: 0;
 }
 
 .brand-image {
