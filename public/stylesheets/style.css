@@ -143,6 +143,18 @@ body {
     margin-bottom: 40px;
 }
 
+.fadein {
+    opacity: 0;
+    -moz-transition: opacity 0.5s;
+    -webkit-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+
+.fadein.loaded {
+    opacity: 1;
+}
+
 .brand-image {
     margin-top: -6px;
 }

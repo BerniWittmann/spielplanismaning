@@ -24,7 +24,7 @@
             });
     }
 
-    function run($rootScope, $state) {
+    function run($rootScope, $window) {
         $rootScope.$on('$stateChangeStart', function () {
             $rootScope.loading = true;
         });
@@ -32,6 +32,11 @@
         $rootScope.$on('$stateChangeSuccess', function () {
             $rootScope.loading = false;
         });
+
+        $window.onload = function () {
+            var page = document.getElementById('page');
+            page.className = page.className + " loaded";
+        };
     }
 
     function AppController($q, auth, $state, $timeout, lockdownmode, $rootScope) {
