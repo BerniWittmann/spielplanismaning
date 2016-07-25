@@ -25,18 +25,12 @@
     }
 
     function run($rootScope, $state) {
-        $rootScope.showFooter = true;
         $rootScope.$on('$stateChangeStart', function () {
             $rootScope.loading = true;
         });
 
         $rootScope.$on('$stateChangeSuccess', function () {
             $rootScope.loading = false;
-            if ($state.includes('spi.kontakt')) {
-                $rootScope.showFooter = false;
-            } else {
-                $rootScope.showFooter = true;
-            }
         });
     }
 
