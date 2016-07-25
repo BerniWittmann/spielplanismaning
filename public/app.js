@@ -3,7 +3,7 @@
 
     angular
         .module('spi', [
-            'spi.auth', 'spi.logger', 'spi.home.ui', 'spi.login.ui', 'spi.tgj.ui', 'spi.navigation.ui', 'spi.team', 'spi.verwaltung.ui', 'ui.router', 'spi.tabellen.ui', 'spi.login.ui', 'spi.spielplan.ui', 'spi.jugenden.jugendlabel.ui', 'spi.spiel.ui', 'spi.tabelle.ui', 'spi.footer.ui', 'spi.loader.ui', 'spi.email', 'spi.team-abonnieren-modal.ui', 'spi.team.deabonnieren.ui', 'spi.platz.ui', 'spi.bestaetigen-modal.ui'
+            'spi.auth', 'spi.logger', 'spi.home.ui', 'spi.login.ui', 'spi.tgj.ui', 'spi.navigation.ui', 'spi.team', 'spi.verwaltung.ui', 'ui.router', 'spi.tabellen.ui', 'spi.login.ui', 'spi.spielplan.ui', 'spi.jugenden.jugendlabel.ui', 'spi.spiel.ui', 'spi.tabelle.ui', 'spi.footer.ui', 'spi.loader.ui', 'spi.email', 'spi.team-abonnieren-modal.ui', 'spi.team.deabonnieren.ui', 'spi.platz.ui', 'spi.bestaetigen-modal.ui', 'spi.kontakt.ui'
         ])
         .config(states)
         .controller('AppController', AppController)
@@ -24,13 +24,19 @@
             });
     }
 
-    function run($rootScope) {
+    function run($rootScope, $state) {
+        $rootScope.showFooter = true;
         $rootScope.$on('$stateChangeStart', function () {
             $rootScope.loading = true;
         });
 
         $rootScope.$on('$stateChangeSuccess', function () {
             $rootScope.loading = false;
+            if ($state.includes('spi.kontakt')) {
+                $rootScope.showFooter = false;
+            } else {
+                $rootScope.showFooter = true;
+            }
         });
     }
 
