@@ -4,6 +4,12 @@
     src: url("/stylesheets/fonts/digital.ttf");
 }
 
+@font-face {
+    font-family: "Roboto";
+    /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
+    src: url("/stylesheets/fonts/Roboto-Thin.ttf");
+}
+
 ul {
     list-style-type: none;
     -webkit-margin-before: 0;
@@ -107,9 +113,9 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 10px 20px;
     text-align: center;
     color: white;
-    font-family: 'Open Sans Condensed', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
     font-size: larger;
-    font-weight: 200;
 }
 
 .footer a, .footer a:focus, .footer a:visited {
