@@ -9,7 +9,7 @@
         .controller('AppController', AppController)
         .run(run);
 
-    function states($urlRouterProvider, $stateProvider) {
+    function states($urlRouterProvider, $stateProvider, $locationProvider) {
         $urlRouterProvider.otherwise('/home');
 
         $stateProvider
@@ -22,6 +22,8 @@
                 }
                 , controller: AppController
             });
+
+        $locationProvider.html5Mode(true);
     }
 
     function run($rootScope, $window) {
