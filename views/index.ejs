@@ -16,6 +16,8 @@
     <meta name="msapplication-TileColor" content="#000000">
     <meta name="msapplication-TileImage" content="/assets/img/hoelle_sued_logo_klein_gelb.png">
 
+    <base href="/">
+
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,6 +27,7 @@
 
     <!-- injector:css -->
     <link rel="stylesheet" href="stylesheets/colors.css">
+    <link rel="stylesheet" href="stylesheets/navbar.css">
     <link rel="stylesheet" href="stylesheets/print.css">
     <link rel="stylesheet" href="stylesheets/style.css">
     <!-- endinjector -->
@@ -47,6 +50,7 @@
     <script src="services/team.js"></script>
     <script src="components/bestaetigen-modal/bestaetigen-modal.js"></script>
     <script src="components/gruppe-edit-modal/gruppe-edit-modal.js"></script>
+    <script src="components/gruppen-panel/gruppen-panel.ui.js"></script>
     <script src="components/jugend-label/jugend-label.ui.js"></script>
     <script src="components/jugend-panel/jugend-panel.ui.js"></script>
     <script src="components/loader/loader.ui.js"></script>
@@ -60,6 +64,7 @@
     <script src="components/team-edit-modal/team-edit-modal.js"></script>
     <script src="templates/footer/footer.ui.js"></script>
     <script src="templates/home/home.ui.js"></script>
+    <script src="templates/kontakt/kontakt.ui.js"></script>
     <script src="templates/login/auth.js"></script>
     <script src="templates/login/login.ui.js"></script>
     <script src="templates/navigation/navigation.ui.js"></script>
@@ -70,7 +75,6 @@
     <script src="templates/team-deabonnieren/team-deabonnieren.ui.js"></script>
     <script src="templates/tgj/tgj.ui.js"></script>
     <script src="templates/verwaltung/verwaltung.ui.js"></script>
-    <script src="components/gruppen-panel/gruppen-panel.ui.js"></script>
     <script src="components/spielplan-ausnahmen/spielplan-single-ausnahme/spielplan-single-ausnahme.ui.js"></script>
     <script src="templates/tgj/gruppen/gruppen.ui.js"></script>
     <script src="templates/tgj/jugenden/jugenden.ui.js"></script>
@@ -89,22 +93,24 @@
 <header>
     <spi-navigation></spi-navigation>
 </header>
-<div id="page" class="container-fluid">
-    <spi-loader class="main-loader" loading="loading"></spi-loader>
-    <ui-view>
-        <div class="row">
-            <div class="col-md-12 main-loader">
-                <div class="center-block text-center">
-                    <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
-                    <h4 class="margin-top-25">Lade Spielplan</h4>
+<div id="page" class="container-fluid fadein">
+    <div style="padding-bottom: 10px;">
+        <ui-view>
+            <div class="row">
+                <div class="col-md-12 main-loader">
+                    <div class="center-block text-center">
+                        <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
+                        <h4 class="margin-top-25">Lade Spielplan</h4>
+                    </div>
                 </div>
             </div>
-        </div>
-    </ui-view>
+        </ui-view>
+    </div>
 </div>
 <footer>
     <spi-footer></spi-footer>
 </footer>
+
 </body>
 
 </html>
