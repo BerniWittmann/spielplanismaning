@@ -85,7 +85,9 @@ app.use(API_PREFIX + '/spiele', spiele);
 app.use(API_PREFIX + '/spielplan', spielplan);
 
 if (app.get('ENVIRONMENT') != 'PROD') {
-    app.use('/test-results', express.static(__dirname + '/karma_html/report/index.html'));
+    app.use('/test-results', express.static(__dirname + '/public/test/reports/'));
+    app.use('/test-results/backend', express.static(__dirname + '/public/test/reports/report-backend.html'));
+    app.use('/test-results/frontend', express.static(__dirname + '/public/test/reports/report-frontend.html'));
 }
 
 
