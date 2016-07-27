@@ -219,9 +219,32 @@
                 expect(result.length).to.be.equal(1);
             });
 
-            it('soll beim Klick auf Gruppe editieren der Editieren-Dialog geöffnet werden');
+            it('soll beim Klick auf Gruppe editieren der Editieren-Dialog geöffnet werden', function () {
+                var editIcon = angular.element(element.find('tbody').find('i').parent()[1]);
+                var spy_edit = chai.spy.on(mockGruppeEditierenDialog, 'open');
+                expect(spy_edit).to.not.have.been.called();
 
-            it('soll beim Klick auf Jugend Löschen ein Bestätigungsdialog erscheinen und die Jugend gelöscht werden');
+                editIcon.triggerHandler('click');
+                scope.$apply();
+
+                expect(spy_edit).to.have.been.called();
+            });
+
+            it('soll beim Klick auf Jugend Löschen ein Bestätigungsdialog erscheinen und die Jugend gelöscht werden', function () {
+                var loeschenIcon = element.find('spi-panel-titel').find('span');
+
+                var spy_bestaetigen = chai.spy.on(mockBestaetigenDialog, 'open');
+                var spy_delete = chai.spy.on(mockJugend, 'delete');
+                expect(spy_bestaetigen).not.to.have.been.called();
+                expect(spy_delete).not.to.have.been.called();
+
+                loeschenIcon.triggerHandler('click');
+                scope.$apply();
+
+                expect(spy_bestaetigen).to.have.been.called();
+                expect(spy_delete).to.have.been.called();
+                expect(element.children()).to.be.empty;
+            });
         });
 
         describe('Angenommen der Nutzer ist nicht angemeldet', function () {
