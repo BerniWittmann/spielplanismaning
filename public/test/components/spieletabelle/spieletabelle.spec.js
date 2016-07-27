@@ -139,7 +139,7 @@
             expect(angular.element(result[2]).scope().spiel.jugend.name).to.be.equal('Test Jugend');
             expect(angular.element(result[3]).text()).to.be.equal('Test Gruppe');
             expect(angular.element(result[4]).text()).to.contain('Test Team 1');
-            expect(angular.element(result[5]).text()).to.contain('Test Team 2');
+            expect(angular.element(result[5]).text()).to.contain('Test Team 2'); 
         });
 
         it('Bei Klick auf ein Spiel wird man zum Spiel weitergeleitet');

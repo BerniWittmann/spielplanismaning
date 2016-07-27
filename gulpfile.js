@@ -85,7 +85,7 @@ gulp.task('test:watch', function (done) {
 gulp.task('test:frontend', function (done) {
     return new Server({
         configFile: __dirname + '/karma.conf.js',
-        singleRun: false
+        singleRun: true
     }, done).start();
 });
 
@@ -96,7 +96,14 @@ gulp.task('test:frontend:watch', function (done) {
 // test backend
 gulp.task('test:backend', function (done) {
     gulp.src('routes/**/*spec.js', {read: false})
-        .pipe(mocha({reporter: 'spec'}));
+        .pipe(mocha({
+            reporter: 'mochawesome',
+            reporterOptions: {
+                reportDir: 'public/test/reports/',
+                reportName: 'report-backend',
+                reportTitle: 'Backend-Tests'
+            }
+        }));
     return done();
 });
 

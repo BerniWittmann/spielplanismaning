@@ -1,4 +1,4 @@
 /node_modules
 /public/bower_components
 /.idea
-/karma_html/
+/public/test/reports

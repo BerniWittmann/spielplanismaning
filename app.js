@@ -84,6 +84,10 @@ app.use(API_PREFIX + '/jugenden', jugenden);
 app.use(API_PREFIX + '/spiele', spiele);
 app.use(API_PREFIX + '/spielplan', spielplan);
 
+if (app.get('ENVIRONMENT') != 'PROD') {
+    app.use('/test-results', express.static(__dirname + '/karma_html/report/index.html'));
+}
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

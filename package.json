@@ -67,6 +67,7 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.1",
     "karma-safari-launcher": "^1.0.0",
+    "mochawesome": "^1.4.0",
     "request": "^2.73.0",
     "run-sequence": "^1.2.2",
     "shelljs": "^0.7.0"
