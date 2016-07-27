@@ -12,6 +12,10 @@
             scope = $rootScope.$new();
 
             Logger = _Logger_;
+
+            //Overwrite console.log to prevent Logs
+            console.log = function () {
+            };
         }));
 
         describe('Das Logging ist aktiviert', function () {
