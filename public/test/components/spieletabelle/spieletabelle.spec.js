@@ -89,7 +89,10 @@
                 "toreA": 3,
                 "__v": 0
             }];
-        var highlightedTeam = {};
+        var highlightedTeam = {
+            "_id": "5795054f25126d0300d95525",
+            "name": "Test Team 1"
+        };
         var $provide;
         var stateMock = {
             go: function () {
@@ -107,7 +110,7 @@
             $provide.service('$state', function () {
                 return stateMock;
             });
-            element = $compile('<spi-spiele-tabelle data-spiele="spiele" data-highlightedTeam="highlightedTeam"></spi-spiele-tabelle>')(scope);
+            element = $compile('<spi-spiele-tabelle data-spiele="spiele" data-highlighted-team="highlightedTeam"></spi-spiele-tabelle>')(scope);
             scope.$digest();
             controller = element.controller("spiSpieleTabelle");
         }));
@@ -200,6 +203,12 @@
             expect(spy).to.have.been.called.with('spi.platz', {
                 platznummer: '3'
             });
+        });
+
+        it('das ausgewählt Team wird gehighlited', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[4]);
+
+            expect(result.hasClass('highlightTeamName')).to.be.true;
         });
     });
 }());
