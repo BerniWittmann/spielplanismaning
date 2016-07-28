@@ -10,9 +10,7 @@
         var scope;
         var controller;
         var spiele = [{
-            "_id": {
-                "$oid": "5795079dfebe4a03004bfe2a"
-            },
+            "_id": "5795079dfebe4a03004bfe2a",
             "nummer": 1,
             "platz": 1,
             "uhrzeit": "09:00",
@@ -37,9 +35,7 @@
             "__v": 0
         },
             {
-                "_id": {
-                    "$oid": "5795079dfebe4a03004bfe2b"
-                },
+                "_id": "5795079dfebe4a03004bfe2b",
                 "nummer": 2,
                 "platz": 2,
                 "uhrzeit": "09:00",
@@ -64,9 +60,7 @@
                 "__v": 0
             },
             {
-                "_id": {
-                    "$oid": "5795079dfebe4a03004bfe2c"
-                },
+                "_id": "5795079dfebe4a03004bfe2c",
                 "nummer": 3,
                 "platz": 3,
                 "uhrzeit": "09:00",
@@ -139,19 +133,73 @@
             expect(angular.element(result[2]).scope().spiel.jugend.name).to.be.equal('Test Jugend');
             expect(angular.element(result[3]).text()).to.be.equal('Test Gruppe');
             expect(angular.element(result[4]).text()).to.contain('Test Team 1');
-            expect(angular.element(result[5]).text()).to.contain('Test Team 2'); 
+            expect(angular.element(result[5]).text()).to.contain('Test Team 2');
         });
 
-        it('Bei Klick auf ein Spiel wird man zum Spiel weitergeleitet');
+        it('Bei Klick auf ein Spiel wird man zum Spiel weitergeleitet', function () {
+            var result = angular.element(element.find('tbody').find('tr')[2]);
+            var spy = chai.spy.on(stateMock, 'go');
 
-        it('Bei Klick auf Team A wird man zum Team weitergeleitet');
+            result.triggerHandler('click');
 
-        it('Bei Klick auf Team B wird man zum Team weitergeleitet');
+            expect(spy).to.have.been.called.with('spi.spiel', {
+                spielid: '5795079dfebe4a03004bfe2c'
+            });
+        });
 
-        it('Bei Klick auf die Gruppe wird man zur Gruppe weitergeleitet');
+        it('Bei Klick auf Team A wird man zum Team weitergeleitet', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[4]);
+            var spy = chai.spy.on(stateMock, 'go');
 
-        it('Bei Klick auf die Jugend wird man zur Gruppe weitergeleitet');
+            result.triggerHandler('click');
 
-        it('Bei Klick auf den Platz wird man zum Platz weitergeleitet');
+            expect(spy).to.have.been.called.with('spi.tgj.team', {
+                teamid: '5795054f25126d0300d95525'
+            });
+        });
+
+        it('Bei Klick auf Team B wird man zum Team weitergeleitet', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[5]);
+            var spy = chai.spy.on(stateMock, 'go');
+
+            result.triggerHandler('click');
+
+            expect(spy).to.have.been.called.with('spi.tgj.team', {
+                teamid: '5795054c25126d0300d95524'
+            });
+        });
+
+        it('Bei Klick auf die Gruppe wird man zur Gruppe weitergeleitet', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[3]);
+            var spy = chai.spy.on(stateMock, 'go');
+
+            result.triggerHandler('click');
+
+            expect(spy).to.have.been.called.with('spi.tgj.gruppe', {
+                gruppeid: '5795053d25126d0300d95521'
+            });
+        });
+
+        it('Bei Klick auf die Jugend wird man zur Gruppe weitergeleitet', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[2]);
+            var spy = chai.spy.on(stateMock, 'go');
+
+            result.triggerHandler('click');
+
+            expect(spy).to.have.been.called.with('spi.tgj.jugend', {
+                jugendid: '5795053d25126d0300d95521'
+            });
+        });
+
+        it('Bei Klick auf den Platz wird man zum Platz weitergeleitet', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[1]);
+            var spy = chai.spy.on(stateMock, 'go');
+
+            result.triggerHandler('click');
+
+            expect(spy).to.have.been.called.with('spi.platz', {
+                platznummer: '3'
+            });
+        });
     });
 }());

@@ -90,7 +90,10 @@ gulp.task('test:frontend', function (done) {
 });
 
 gulp.task('test:frontend:watch', function (done) {
-    return gulp.watch(['public/**/**', '!public/bower_components/**'], ['test:frontend'], done);
+    return new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: false
+    }, done).start();
 });
 
 // test backend
