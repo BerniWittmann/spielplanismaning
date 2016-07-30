@@ -210,3 +210,20 @@ body {
 .page-header {
     margin-top: 0px;
 }
+
+.fa-timeline {
+    vertical-align: center;
+    line-height: 50px;
+}
+
+.timeline-header-only {
+    margin-top: 20px;
+}
+
+.timeline-header-only:before {
+    top: 17px;
+}
+
+.timeline-header-only:after {
+    top: 18px;
+}

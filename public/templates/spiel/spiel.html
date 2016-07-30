@@ -49,3 +49,26 @@
             {{vm.spiel.gewinner.name}} hat gewonnen</h5>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Liveticker</h3>
+        <timeline>
+            <timeline-event ng-repeat="event in vm.events" side="{{event.side}}">
+                <timeline-badge class="{{event.badgeClass}}" when-visible="animateElementIn"
+                                when-not-visible="animateElementOut" class="hidden">
+                    <i class="fa fa-lg fa-timeline {{event.badgeIconClass}}"></i>
+                    </span>
+                </timeline-badge>
+                <timeline-panel class="{{event.badgeClass}} timeline-header-only" when-visible="animateElementIn"
+                                when-not-visible="animateElementOut" data-ng-mouseover="showBody($event)"
+                                data-ng-mouseleave="hideBody($event)">
+                    <timeline-heading>
+                        <h4>{{event.title}}</h4>
+                    </timeline-heading>
+                    <span class="hidden"><p>{{event.content}}</p></span>
+                </timeline-panel>
+            </timeline-event>
+        </timeline>
+    </div>
+</div>
