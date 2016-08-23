@@ -3,6 +3,7 @@ node_js:
   - "6.3"
 before_script:
   - npm install
+  - bower install
 script: gulp test
 branches:
   only:
