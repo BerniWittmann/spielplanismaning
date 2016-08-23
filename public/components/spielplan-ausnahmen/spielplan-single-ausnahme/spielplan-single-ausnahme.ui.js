@@ -17,6 +17,7 @@
 
     function SpielplanAusnahmeController($scope, BestaetigenDialog, $timeout, $http, spielplan) {
         var vm = this;
+        vm.called = false;
 
         _.extend(vm, {
             askDelete: function () {
@@ -63,6 +64,7 @@
         }
 
         function saveAusnahme() {
+            vm.called = true;
             if (!_.isUndefined(vm.ausnahme.team1) && !_.isUndefined(vm.ausnahme.team2) && !_.isNull(vm.ausnahme.team1) && !_.isNull(vm.ausnahme.team2)) {
                 return $http.put('/api/spielplan/ausnahmen', vm.ausnahmen).error(function (err) {
                     console.log(err);

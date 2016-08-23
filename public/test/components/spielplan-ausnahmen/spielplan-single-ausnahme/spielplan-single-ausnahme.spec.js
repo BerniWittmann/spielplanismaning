@@ -142,7 +142,6 @@
         });
 
         it('Es gibt einen Löschen-Button', function () {
-            dump(element);
             var result = element.find('span');
 
             expect(result).not.to.be.undefined();
@@ -159,9 +158,33 @@
             expect(spyAsk).to.have.been.called();
         });
 
-        it('Wenn ein Team ausgewählt wird, können nur noch Teams aus anderen Jugenden ausgewählt werden');
+        /* it('Wenn ein Team ausgewählt wird, können nur noch Teams aus anderen Jugenden ausgewählt werden', function () {
+         var select1 = angular.element(element.find('select')[0]);
+         var select2 = angular.element(element.find('select')[1]);
+         var anzahlVorher = select2.find('option').length;
 
-        it('Wenn eine Ausnahme geändert wird, wird die Ausnahme gespeichert');
+         controller.ausnahme.team1 = teams[0];
+         angular.element(select1).triggerHandler('change');
+         timeout.flush();
+         dump(controller.teams2.length);
+         var anzahlNachher = select2.find('option').length;
+         expect(anzahlNachher).to.be.below(anzahlVorher);
+         });*/
+
+        /*  it('Wenn eine Ausnahme geändert wird, wird die Ausnahme gespeichert', function () {
+         var select1 = angular.element(element.find('select')[1]);
+         controller.ausnahme.team1 = teams[0];
+         controller.ausnahme.team2 = teams[2];
+         var spy = chai.spy.on(controller, 'saveAusnahme');
+         scope.$apply();
+
+         select1.triggerHandler('change');
+         dump(select1);
+         scope.$apply();
+         dump(controller.called);
+
+         expect(spy).to.have.been.called();
+         });*/
 
     });
 }());
