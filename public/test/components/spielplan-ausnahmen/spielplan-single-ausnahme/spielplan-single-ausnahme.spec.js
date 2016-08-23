@@ -144,7 +144,7 @@
         it('Es gibt einen Löschen-Button', function () {
             var result = element.find('span');
 
-            expect(result).not.to.be.undefined();
+            expect(result).not.to.be.undefined;
             expect(result.find('i').hasClass('fa fa-remove')).to.be.true;
         });
 
@@ -154,7 +154,7 @@
 
             hB.when('PUT', '/api/spielplan/ausnahmen').respond('');
             result.triggerHandler('click');
-            expect(controller.ausnahme).to.be.undefined();
+            expect(controller.ausnahme).to.be.undefined;
             expect(spyAsk).to.have.been.called();
         });
 
