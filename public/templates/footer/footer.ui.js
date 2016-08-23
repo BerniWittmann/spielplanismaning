@@ -18,10 +18,16 @@
 
     function FooterController($http) {
         var vm = this;
-        vm.version = '';
+        vm.isTesting = false;
 
         $http.get('/api/config/version').then(function (res) {
             vm.version = res.data;
+            $http.get('/api/config/env').then(function (response) {
+                if (_.isEqual(response.data, 'TESTING')) {
+                    vm.version += ' TESTUMGEBUNG';
+                }
+                vm.showBuildStatus = _.isEqual(response.data, 'TESTING') || _.isEqual(response.data, 'DEV');
+            });
         });
 
     }

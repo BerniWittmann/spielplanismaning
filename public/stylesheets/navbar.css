@@ -2,9 +2,9 @@
     background-color: transparent !important;
     border-color: transparent !important;
     color: white;
-    font-family: 'Open Sans Condensed', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
     font-size: larger;
-    font-weight: 200;
 }
 
 .navbar-spi .navbar-nav > li > a:focus, .navbar-spi .navbar-nav > li > a:hover {

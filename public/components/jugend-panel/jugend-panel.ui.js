@@ -3,7 +3,7 @@
 
     angular
         .module('spi.verwaltung.teams.jugendpanel.ui', [
-            'spi.auth', 'ui.bootstrap', 'spi.jugend', 'spi.gruppe', 'spi.panel.ui', 'spi.verwaltung.gruppe-edit-modal.ui', 'spi.spielplan', 'ui.router'
+            'spi.auth', 'ui.bootstrap', 'spi.jugend', 'spi.gruppe', 'spi.panel.ui', 'spi.verwaltung.gruppe-edit-modal.ui', 'spi.spielplan'
         ])
         .controller('JugendPanelController', JugendPanelController)
         .component('spiJugendPanel', {

@@ -1,13 +1,16 @@
 module.exports = function (env) {
     var express = require('express');
+    var version = require('../package.json').version;
     var router = express.Router();
-    var exampleContacts = [
-        {name: 'Klaus Krecken', email: 'klaus@krecken.de', turnier: 'Kinderbeachturnier'},
-        {name: 'Stefan Meyer', email: 'vorsitzender@fhi-ismaning.de', turnier: 'DBT Stoneline Beach Cup'}
-    ];
+    var exampleContacts = '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
 
     router.get('/version', function (req, res) {
-        res.json((env.VERSION || 'VERSION-TAG'));
+        res.json(version);
+    });
+
+    router.get('/env', function (req, res) {
+        res.json('TESTING');
+        //res.json(env.ENVIRONMENT);
     });
 
     router.get('/lockdownmode', function (req, res) {
@@ -16,7 +19,7 @@ module.exports = function (env) {
     });
 
     router.get('/kontakt', function (req, res) {
-        res.json((JSON.parse(env.KONTAKTE) || exampleContacts));
+        res.json(JSON.parse(env.KONTAKTE || exampleContacts));
     });
 
     return router;
