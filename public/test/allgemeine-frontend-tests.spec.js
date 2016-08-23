@@ -4,7 +4,7 @@
     var expect = chai.expect;
     var Assertion = chai.Assertion;
 
-    Assertion.addMethod('undefined', function () {
+    Assertion.addMethod('spiUndefined', function () {
         var obj = this._obj;
 
         // first, our instanceof check, shortcut
@@ -37,8 +37,8 @@
             var test = undefined;
             var test2 = 'Test';
 
-            expect(test).to.be.undefined();
-            expect(test2).not.to.be.undefined();
+            expect(test).to.be.spiUndefined();
+            expect(test2).not.to.be.spiUndefined();
         });
     });
 }());
