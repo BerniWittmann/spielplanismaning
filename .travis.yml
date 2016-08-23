@@ -4,10 +4,10 @@ node_js:
   - "6.1"
   - "5.11"
   - "node"
-  before_script:
-    - npm install
-  script: gulp test
-  branches:
-    only:
-    - master
-    - develop
+before_script:
+  - npm install
+script: gulp test
+branches:
+  only:
+  - master
+  - develop
