@@ -21,18 +21,24 @@
                     },
                     kontaktPromise: function ($http) {
                         return $http.get('/api/config/kontakt');
+                    },
+                    envPromise: function ($http) {
+                        return $http.get('/api/config/env');
                     }
                 }
             });
 
     }
 
-    function KontaktController(versionPromise, kontaktPromise) {
+    function KontaktController(versionPromise, kontaktPromise, envPromise) {
         var vm = this;
 
         vm.loading = true;
         vm.version = versionPromise.data;
-        vm.isTesting = _.toLower(vm.version).indexOf('test') > -1 || vm.version.indexOf('VERSION-TAG') > -1;
+        if (_.isEqual(envPromise.data, 'TESTING')) {
+            vm.version += ' TESTUMGEBUNG';
+        }
+        vm.showBuildStatus = _.isEqual(envPromise.data, 'TESTING') || _.isEqual(envPromise.data, 'DEV');
         vm.kontakte = kontaktPromise.data;
         vm.loading = false;
     }
