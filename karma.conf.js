@@ -61,21 +61,10 @@ module.exports = function (config) {
             moduleName: 'htmlModule'
         },
 
-        htmlReporter: {
-            outputFile: 'test/reports/report-frontend.html',
-
-            // Optional
-            pageTitle: 'Frontend Tests',
-            subPageTitle: 'Unit Tests (Frontend) für Spielplan Ismaning',
-            groupSuites: true,
-            useCompactStyle: true,
-            useLegacyStyle: true
-        },
-
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'html'],
+        reporters: ['mocha'],
 
 
 
