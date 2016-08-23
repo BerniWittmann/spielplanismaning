@@ -14,7 +14,7 @@
             , controllerAs: 'vm'
         });
 
-    function TabelleController($state) {
+    function TabelleController() {
         var vm = this;
 
         vm.$onChanges = function (changeObj) {
@@ -22,14 +22,6 @@
                 vm.teams = changeObj.teams.currentValue.sort(compare);
             }
         };
-
-        _.extend(vm, {
-            gotoTeam: function (team) {
-                $state.go('spi.tgj.team', {
-                    teamid: team._id
-                });
-            }
-        });
 
         function compare(a, b) {
             var result = a.punkte - b.punkte;

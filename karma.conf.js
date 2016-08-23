@@ -9,7 +9,7 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['mocha', 'chai'],
+        frameworks: ['mocha', 'chai-spies', 'chai'],
 
         // list of files / patterns to load in the browser
         files: [
@@ -21,7 +21,7 @@ module.exports = function (config) {
             //include spec files
             'test/**/*.spec.js',
             //include src files
-            '{components,templates}/**/*.js',
+            '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
             '{components,templates}/**/*.html.ext'
         ],
@@ -61,10 +61,23 @@ module.exports = function (config) {
             moduleName: 'htmlModule'
         },
 
+        htmlReporter: {
+            outputFile: 'test/reports/report-frontend.html',
+
+            // Optional
+            pageTitle: 'Frontend Tests',
+            subPageTitle: 'Unit Tests (Frontend) für Spielplan Ismaning',
+            groupSuites: true,
+            useCompactStyle: true,
+            useLegacyStyle: true
+        },
+
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['mocha'],
+        reporters: ['progress', 'html'],
+
+
 
         // web server port
         port: 9876,
@@ -88,10 +101,10 @@ module.exports = function (config) {
         singleRun: false,
 
         browserNoActivityTimeout: 10000,
-        browserDisconnectTolerance: 5,
+        browserDisconnectTolerance: 3,
 
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: 1
     })
-}
+};

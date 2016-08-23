@@ -15,13 +15,12 @@
             , controllerAs: 'vm'
         });
 
-    function GruppenPanelController(auth, gruppe) {
+    function GruppenPanelController(gruppe) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
             teams: []
-            , isLoggedIn: auth.canAccess(1)
         });
 
         getGruppe();

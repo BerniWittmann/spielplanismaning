@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "6"
+  - "6.1"
+  - "5.11"
+  - "node"
+before_script:
+  - npm install
+script: gulp test
+branches:
+  only:
+  - master
+  - develop
