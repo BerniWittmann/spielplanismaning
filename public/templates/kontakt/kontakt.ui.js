@@ -32,8 +32,8 @@
 
         vm.loading = true;
         vm.version = versionPromise.data;
+        vm.isTesting = _.toLower(vm.version).indexOf('test') > -1 || vm.version.indexOf('VERSION-TAG') > -1;
         vm.kontakte = kontaktPromise.data;
-        console.log(kontaktPromise);
         vm.loading = false;
     }
 })();
