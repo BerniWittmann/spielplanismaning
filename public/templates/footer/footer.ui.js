@@ -22,7 +22,12 @@
 
         $http.get('/api/config/version').then(function (res) {
             vm.version = res.data;
-            vm.isTesting = _.toLower(vm.version).indexOf('test') > -1;
+            $http.get('/api/config/env').then(function (response) {
+                if (_.isEqual(response.data, 'TESTING')) {
+                    vm.version += ' TESTUMGEBUNG';
+                }
+                vm.showBuildStatus = _.isEqual(response.data, 'TESTING') || _.isEqual(response.data, 'DEV');
+            });
         });
 
     }
