@@ -18,10 +18,11 @@
 
     function FooterController($http) {
         var vm = this;
-        vm.version = '';
+        vm.isTesting = false;
 
         $http.get('/api/config/version').then(function (res) {
             vm.version = res.data;
+            vm.isTesting = _.toLower(vm.version).indexOf('test') > -1;
         });
 
     }

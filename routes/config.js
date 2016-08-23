@@ -4,7 +4,11 @@ module.exports = function (env) {
     var exampleContacts = '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
 
     router.get('/version', function (req, res) {
-        res.json((env.VERSION || 'VERSION-TAG'));
+        var version = (env.VERSION || 'VERSION-TAG');
+        if (env.ENVIRONMENT == 'TESTING') {
+            version += ' TESTUMGEBUNG';
+        }
+        res.json(version);
     });
 
     router.get('/lockdownmode', function (req, res) {
