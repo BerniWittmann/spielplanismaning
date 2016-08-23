@@ -141,7 +141,7 @@
             });
 
             it('soll die Jugend an das Jugend-Label übergeben werden', function () {
-                expect(controller.jugend).not.to.be.undefined();
+                expect(controller.jugend).not.to.be.undefined;
                 expect(controller.jugend._id).to.be.equal(123);
                 expect(controller.jugend.name).to.be.equal('Test Jugend');
             });
@@ -182,21 +182,21 @@
             it('soll ein Button zum Löschen der Jugend angezeigt werden', function () {
                 var result = element.find('spi-panel-titel').find('span');
 
-                expect(result).not.to.be.undefined();
+                expect(result).not.to.be.undefined;
                 expect(result.find('i').hasClass('fa-remove')).to.be.true;
             });
 
             it('soll für jede Gruppe ein Icon zum Löschen gezeigt werden', function () {
                 var result = angular.element(element.find('tbody').find('i').parent()[0]);
 
-                expect(result).not.to.be.undefined();
+                expect(result).not.to.be.undefined;
                 expect(result.find('i').hasClass('fa-remove')).to.be.true;
             });
 
             it('soll für jede Gruppe ein Icon zum Editieren gezeigt werden', function () {
                 var result = angular.element(element.find('tbody').find('i').parent()[1]);
 
-                expect(result).not.to.be.undefined();
+                expect(result).not.to.be.undefined;
                 expect(result.find('i').hasClass('fa-pencil')).to.be.true;
             });
 
@@ -255,19 +255,19 @@
             it('soll der Jugend-Löschen Button nicht sichtbar sein', function () {
                 var result = element.find('spi-panel-titel').find('i');
 
-                expect(result).to.be.empty();
+                expect(result).to.be.empty;
             });
 
             it('soll der Gruppe-Löschen Button nicht sichtbar sein', function () {
                 var result = element.find('tbody').find('i');
 
-                expect(result).to.be.empty();
+                expect(result).to.be.empty;
             });
 
             it('soll der Gruppe-Editieren Button nicht sichtbar sein', function () {
                 var result = element.find('tbody').find('i');
 
-                expect(result).to.be.empty();
+                expect(result).to.be.empty;
             });
         });
     });

@@ -23,7 +23,7 @@
             it('der Loader wird angezeigt', function () {
                 var result = element.find('i');
 
-                expect(result).not.to.be.undefined();
+                expect(result).not.to.be.undefined;
                 expect(result.hasClass('fa-spinner')).to.be.true;
             });
         });

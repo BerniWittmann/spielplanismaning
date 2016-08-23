@@ -2,23 +2,6 @@
     'use strict';
 
     var expect = chai.expect;
-    var Assertion = chai.Assertion;
-
-    Assertion.addMethod('undefined', function () {
-        var obj = this._obj;
-
-        // first, our instanceof check, shortcut
-        new Assertion(this._obj).to.be.a(undefined);
-
-        // second, our type check
-        this.assert(
-            obj._type === type
-            , "expected #{this} to be undefined"
-            , "expected #{this} not to be undefined"
-            , undefined        // expected
-            , obj._type   // actual
-        );
-    });
 
     describe('Allgemeine Frontend Tests', function () {
         it('Spy für Methoden', function () {
@@ -37,8 +20,8 @@
             var test = undefined;
             var test2 = 'Test';
 
-            expect(test).to.be.undefined();
-            expect(test2).not.to.be.undefined();
+            expect(test).to.be.undefined;
+            expect(test2).not.to.be.undefined;
         });
     });
 }());

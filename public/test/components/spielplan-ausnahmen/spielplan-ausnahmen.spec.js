@@ -97,7 +97,7 @@
         it('Es gibt einen Hinzufügen-Button', function () {
             var button = element.find('spi-panel-titel').find('span');
 
-            expect(button).not.to.be.undefined();
+            expect(button).not.to.be.undefined;
         });
 
         it('Es kann eine neue Ausnahme hinzugefügt werden', function () {
