@@ -9,7 +9,7 @@ module.exports = function (env) {
     });
 
     router.get('/env', function (req, res) {
-        res.json(env.ENVIRONMENT);
+        res.json((env.ENVIRONMENT || 'DEV'));
     });
 
     router.get('/lockdownmode', function (req, res) {
