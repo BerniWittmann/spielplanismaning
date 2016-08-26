@@ -1,5 +1,5 @@
 angular
-    .module('spi.jugend', ['spi.auth']).factory('jugend', ['$http', 'auth', function ($http) {
+    .module('spi.jugend', []).factory('jugend', ['$http', function ($http) {
 
     var ENDPOINT_URL = '/api/jugenden';
     var jugend = {
@@ -38,9 +38,14 @@ angular
     };
 
     jugend.addGruppe = function (jugendId, gruppenId) {
-        var jugend = jugend.get(jugendId);
-        jugend.gruppen.push(gruppenId);
-        jugend.update(jugendId, jugend);
+        var jgd;
+        return jugend.get(jugendId).then(function (res) {
+            jgd = res;
+            jgd.gruppen.push(gruppenId);
+            return jugend.update(jugendId, jgd).then(function (res) {
+                return res;
+            });
+        });
     };
 
     jugend.getTore = function (id) {
