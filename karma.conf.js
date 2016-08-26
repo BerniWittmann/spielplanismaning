@@ -17,6 +17,7 @@ module.exports = function (config) {
             'bower_components/angular/angular.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+            'bower_components/moment/moment.js',
             'bower_components/lodash/lodash.js',
             //include spec files
             'test/**/*.spec.js',
