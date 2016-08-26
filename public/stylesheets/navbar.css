@@ -1,49 +1,49 @@
 .navbar-spi {
-    background-color: transparent !important;
-    border-color: transparent !important;
-    color: white;
+    background-color: black !important;
+    border-color: black !important;
+    color: #ffd90c;
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
     font-size: larger;
 }
 
 .navbar-spi .navbar-nav > li > a:focus, .navbar-spi .navbar-nav > li > a:hover {
-    color: white !important;
+    color: #ffd90c !important;
     text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .navbar-spi .navbar-nav > li > a {
-    color: white !important;
+    color: #ffd90c !important;
 }
 
 .navbar-spi .navbar-brand {
-    color: white !important;
+    color: #ffd90c !important;
 }
 
 .navbar-spi .navbar-nav > .active > a, .navbar-spi .navbar-nav > .active > a:focus, .navbar-spi .navbar-nav > .active > a:hover {
-    background-color: transparent !important;
+    background-color: black !important;
     text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .navbar-spi .navbar-nav > .open > a, .navbar-spi .navbar-nav > .open > a:focus, .navbar-spi .navbar-nav > .open > a:hover {
-    background-color: transparent !important;
+    background-color: black !important;
     text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
 .navbar-spi .navbar-text {
-    color: white !important;
+    color: #ffd90c !important;
 }
 
 .navbar-spi .navbar-toggle .icon-bar {
-    background-color: white !important;
+    background-color: #ffd90c !important;
 }
 
 .navbar-spi .navbar-toggle {
-    border-color: transparent !important;
+    border-color: black !important;
 }
 
 .navbar-spi .navbar-toggle:focus, .navbar-spi .navbar-toggle:hover {
-    background-color: transparent !important;
+    background-color: black !important;
     text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
 }
 
@@ -54,7 +54,7 @@
         left: 9px;
         display: inline-block;
         border-right: 7px solid transparent;
-        border-bottom: 7px solid #ccc;
+        border-bottom: 7px solid #ffd90c;
         border-left: 7px solid transparent;
         border-bottom-color: rgba(0, 0, 0, 0.2);
         content: '';
@@ -66,7 +66,7 @@
         left: 10px;
         display: inline-block;
         border-right: 6px solid transparent;
-        border-bottom: 6px solid #ffffff;
+        border-bottom: 6px solid #ffd90c;
         border-left: 6px solid transparent;
         content: '';
     }
@@ -74,11 +74,11 @@
 
 @media (max-width: 766px) {
     .navbar-spi .navbar-nav .open .dropdown-menu-spi > li > a {
-        color: white !important;
+        color: #ffd90c !important;
     }
 
     .navbar-spi .navbar-nav .open .dropdown-menu-spi > li > a:focus, .navbar-spi .navbar-nav .open .dropdown-menu-spi > li > a:hover {
-        color: white !important;
+        color: #ffd90c !important;
         text-shadow: 3px 3px 9px rgba(0, 0, 0, 0.8);
     }
 
