@@ -9,7 +9,7 @@
     function spiFooter() {
         return {
             restrict: 'E'
-            , templateUrl: 'templates/footer/footer.html'
+            , templateUrl: 'components/footer/footer.html'
             , scope: true
             , controller: FooterController
             , controllerAs: 'vm'
