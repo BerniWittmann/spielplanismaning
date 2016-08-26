@@ -53,7 +53,5 @@
 
             expect(spy).to.have.been.called.with(gewaehltesTeam, 'Neuer Name');
         });
-
-        it('test');
     });
 }());

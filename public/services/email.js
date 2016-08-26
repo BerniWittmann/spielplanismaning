@@ -36,7 +36,7 @@ angular
     };
 
     function getSubscriptionToken() {
-        if ($window.localStorage[TOKENNAME]) {
+        if (!_.isUndefined($window.localStorage[TOKENNAME])) {
             return (JSON.parse($window.localStorage[TOKENNAME]) || []);
         }
         return [];
