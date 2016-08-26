@@ -74,7 +74,6 @@ var spiele = require('./routes/spiele.js')(sendgrid, (process.env.ENVIRONMENT ||
 var spielplan = require('./routes/spielplan.js')();
 
 var API_PREFIX = '/api';
-app.use('/', routes);
 app.use(API_PREFIX + '/users', users);
 app.use(API_PREFIX + '/email', email);
 app.use(API_PREFIX + '/config', config);
@@ -83,12 +82,7 @@ app.use(API_PREFIX + '/gruppen', gruppen);
 app.use(API_PREFIX + '/jugenden', jugenden);
 app.use(API_PREFIX + '/spiele', spiele);
 app.use(API_PREFIX + '/spielplan', spielplan);
-
-if (app.get('ENVIRONMENT') != 'PROD') {
-    app.use('/test-results', express.static(__dirname + '/public/test/reports/'));
-    app.use('/test-results/backend', express.static(__dirname + '/public/test/reports/report-backend.html'));
-    app.use('/test-results/frontend', express.static(__dirname + '/public/test/reports/report-frontend.html'));
-}
+app.use(/\/.*/, routes);
 
 
 // catch 404 and forward to error handler

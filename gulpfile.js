@@ -100,12 +100,7 @@ gulp.task('test:frontend:watch', function (done) {
 gulp.task('test:backend', function (done) {
     gulp.src('routes/**/*spec.js', {read: false})
         .pipe(mocha({
-            reporter: 'mochawesome',
-            reporterOptions: {
-                reportDir: 'public/test/reports/',
-                reportName: 'report-backend',
-                reportTitle: 'Backend-Tests'
-            }
+            reporter: 'spec'
         }));
     return done();
 });
