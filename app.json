@@ -1,0 +1,36 @@
+{
+  "name": "spielplanismaning",
+  "scripts": {
+  },
+  "env": {
+    "DISABLEEMAIL": {
+      "required": true
+    },
+    "ENVIRONMENT": {
+      "required": true
+    },
+    "KONTAKTE": {
+      "required": true
+    },
+    "SECRET": {
+      "required": true
+    },
+    "VERSION": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "mongolab",
+    "sendgrid"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
