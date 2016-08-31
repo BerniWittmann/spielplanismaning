@@ -21,7 +21,7 @@ module.exports = function (config) {
             'bower_components/moment/moment.js',
             'bower_components/lodash/lodash.js',
             //include spec files
-            'test/**/*.spec.js',
+            '../test/frontend/**/*.spec.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
