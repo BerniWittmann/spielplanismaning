@@ -24,10 +24,10 @@ module.exports = function (env) {
     require('../../models/Users')((process.env.SECRET || 'SECRET'));
     require('../../config/passport');
 
-    var routes = require('../index')();
-    var users = require('../users');
-    var email = require('../email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
-    var config = require('../config')(process.env);
+    var routes = require('../../routes/index')();
+    var users = require('../../routes/users');
+    var email = require('../../routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
+    var config = require('../../routes/config')(process.env);
 
     app.use('/', routes);
     app.use('/users', users);

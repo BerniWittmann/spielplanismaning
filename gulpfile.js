@@ -19,7 +19,8 @@ var gulp = require('gulp'),
     bump = require('gulp-bump'),
     filter = require('gulp-filter'),
     tag_version = require('gulp-tag-version'),
-    mocha = require('gulp-mocha');
+    mocha = require('gulp-mocha'),
+    angularProtractor = require('gulp-angular-protractor');
 require('shelljs/global');
 
 gulp.task('default', ['watch']);
@@ -74,7 +75,7 @@ gulp.task('jshint', function () {
 
 // test
 gulp.task('test', function (done) {
-    return runSequence('test:frontend', 'test:backend', done);
+    return runSequence('test:frontend', 'test:backend', 'test:e2e:testing', done);
 });
 
 gulp.task('test:watch', function (done) {
@@ -86,27 +87,86 @@ gulp.task('test:frontend', function (done) {
     return new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
-    }, done).start();
+    }, function (result) {
+        if (result > 0) {
+            testnotify('Frontend-Tests', 'failed', done);
+        } else {
+            testnotify('Frontend-Tests', 'passed', done);
+        }
+    }).start();
 });
 
 gulp.task('test:frontend:watch', function (done) {
     return new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: false
-    }, done).start();
+    }, function (result) {
+        if (result > 0) {
+            testnotify('Frontend-Tests', 'failed', done);
+        } else {
+            testnotify('Frontend-Tests', 'passed', done);
+        }
+    }).start();
 });
 
 // test backend
 gulp.task('test:backend', function (done) {
-    gulp.src('routes/**/*spec.js', {read: false})
+    gulp.src('test/backend/*spec.js', {read: false})
         .pipe(mocha({
             reporter: 'spec'
-        }));
-    return done();
+        }))
+        .on('error', function (error) {
+            testnotify('Backend-Tests', 'failed', function () {
+                throw error;
+            });
+        })
+        .on('end', function () {
+            testnotify('Backend-Tests', 'passed', done);
+        });
 });
 
 gulp.task('test:backend:watch', function (done) {
     return gulp.watch(['{models,routes}/**'], ['test:backend'], done);
+});
+
+// test e2e
+gulp.task('test:e2e', function (done) {
+    return runSequence('test:e2e:local', done);
+});
+
+// test e2e local
+gulp.task('test:e2e:local', ['start:server:headless'], function (done) {
+    gulp.src(['./src/tests/*.js'])
+        .pipe(angularProtractor({
+            'configFile': 'test/e2e/protractor.local.config.js',
+            'autoStartStopServer': true,
+            'debug': false
+        }))
+        .on('error', function (error) {
+            testnotify('E2E-Tests', 'failed', function () {
+                throw error
+            });
+
+        })
+        .on('end', function () {
+            testnotify('E2E-Tests', 'passed', done);
+        });
+});
+
+// test e2e local
+gulp.task('test:e2e:testing', function (done) {
+    gulp.src(['./src/tests/*.js'])
+        .pipe(angularProtractor({
+            'configFile': 'test/e2e/protractor.testing.config.js',
+            'autoStartStopServer': true,
+            'debug': false
+        }))
+        .on('error', function (e) {
+            throw e;
+        })
+        .on('end', function () {
+            done();
+        });
 });
 
 // build
@@ -227,4 +287,15 @@ gulp.task('open_testing', function () {
     gulp.src(__filename)
         .pipe(open({uri: 'http://spielplanismaning-testing.herokuapp.com'}));
 });
+
+// notifications
+function testnotify(name, message, done) {
+    return gulp.src('gulpfile.js').pipe(notify({
+        "title": name,
+        "subtitle": name + ' have ' + message,
+        "icon": __dirname + "/test/icons/" + message + ".png"
+    })).on('end', function () {
+        done();
+    });
+}
 
