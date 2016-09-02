@@ -3,7 +3,7 @@
 
     var expect = chai.expect;
 
-    describe('Template: PLatz', function () {
+    describe('Template: Platz', function () {
         var URL = '/platz';
         var STATE_NAME = 'spi.platz';
 
