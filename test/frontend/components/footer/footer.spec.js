@@ -39,7 +39,7 @@
             });
 
             expect(link).not.to.be.undefined;
-            expect(link).not.to.be.empty;
+            expect(link).to.exist;
             expect(link.attr('data-ui-sref')).to.be.equal('spi.kontakt');
         });
 
@@ -53,7 +53,7 @@
 
                 expect(controller.showBuildStatus).to.be.true;
                 expect(result).not.to.be.undefined;
-                expect(result).not.to.be.empty;
+                expect(result).to.exist;
                 expect(result.length).to.be.above(0);
             });
         });
@@ -65,9 +65,9 @@
 
             it('soll der Buildstatus nicht gezeigt werden', function () {
                 var result = element.find('img');
-
                 expect(controller.showBuildStatus).to.be.false;
-                expect(result).to.be.empty;
+                expect(result).not.to.exist;
+
                 expect(result.length).to.be.equal(0);
             });
         });
