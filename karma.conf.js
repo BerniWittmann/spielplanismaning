@@ -23,6 +23,7 @@ module.exports = function (config) {
             'bower_components/moment/moment.js',
             'bower_components/lodash/lodash.js',
             '../node_modules/chai-jquery/chai-jquery.js',
+            'bower_components/ng-table/dist/ng-table.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',

@@ -26,6 +26,7 @@
         //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gruppen: [],
+            //TODO wird das überhaupt genutzt?
             gotoGruppe: function (gruppe) {
                 $state.go('spi.tgj.gruppe', {gruppeid: gruppe._id});
             }
@@ -33,6 +34,7 @@
 
         gruppe.getAll().then(function (response) {
             vm.gruppen = response.data;
+            //TODO vm.teams???? nicht vm.gruppen?
             _.forEach(vm.teams, function (o) {
                 o.jugendName = o.jugend.name;
             });
