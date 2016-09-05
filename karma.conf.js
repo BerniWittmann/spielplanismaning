@@ -96,8 +96,8 @@ module.exports = function (config) {
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false,
 
-        browserNoActivityTimeout: 10000,
-        browserDisconnectTolerance: 3,
+        browserNoActivityTimeout: 60000,
+        browserDisconnectTolerance: 2,
 
         // Concurrency level
         // how many browser should be started simultaneous
