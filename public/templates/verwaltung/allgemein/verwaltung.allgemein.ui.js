@@ -33,7 +33,7 @@
         }
     }
 
-    function VerwaltungAllgemeinController(auth, spielplan, email, BestaetigenDialog) {
+    function VerwaltungAllgemeinController(auth, spielplan) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
@@ -44,15 +44,15 @@
         _.extend(vm, {
             user: {}
             , register: function () {
-                auth.register(vm.user).error(function (error) {
-                    if (error.code == 11000) {
+                auth.register(vm.user).then(function () {
+                    vm.registerMsg = vm.user.username + ' wurde registriert.';
+                    vm.user = {};
+                }, function (error) {
+                    if (error.data.code == 11000) {
                         vm.registerErr = 'Dieser Username existiert bereits';
                     } else {
                         vm.registerErr = error;
                     }
-                }).then(function () {
-                    vm.registerMsg = vm.user.username + ' wurde registriert.';
-                    vm.user = {};
                 });
             }
             , startzeit: d
@@ -104,11 +104,11 @@
             if (auth.currentUser() == vm.username) {
                 return vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
             }
-            auth.deleteUser(vm.username).error(function (err) {
-                vm.delErr = err;
-            }).then(function () {
+            auth.deleteUser(vm.username).then(function () {
                 vm.username = undefined;
                 vm.delMsg = 'User gelöscht!';
+            }, function (err) {
+                vm.delErr = err;
             });
         };
 

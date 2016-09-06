@@ -29,17 +29,17 @@
         vm.register = function () {
             vm.user.username = vm.user.username.toLowerCase();
             auth.register(vm.user).error(function (error) {
-                vm.error = error;
+                vm.error = error.data;
             }).then(function () {
                 $state.go('spi.home');
             });
         };
         vm.login = function () {
             vm.user.username = vm.user.username.toLowerCase();
-            auth.logIn(vm.user).error(function (error) {
-                vm.error = error;
-            }).then(function () {
+            auth.logIn(vm.user).then(function () {
                 $state.go('spi.home');
+            }, function (error) {
+                vm.error = error.data;
             });
         };
         vm.resetErr = function () {

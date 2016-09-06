@@ -34,7 +34,7 @@
         }
     }
 
-    function VerwaltungTeamsController($scope, auth, $state, gruppe, jugend, spielplan, team, $timeout, $window) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, team, $timeout, $window) {
         var vm = this;
         vm.loading = true;
 

@@ -38,9 +38,13 @@
         var vm = this;
         vm.loading = true;
 
-        email.getSubscribers().error(function (res) {
-            console.log(res);
-            vm.abonnements = [];
+        email.getSubscribers().then(function (res) {
+            vm.abonnements = res.data;
+            _.forEach(vm.abonnements, function (o) {
+                o.jugendName = o.team.jugend.name;
+                o.teamName = o.team.name;
+            });
+
             _.extend(vm, {
                 tableParams: new NgTableParams({
                     count: 10
@@ -50,13 +54,9 @@
                 })
             });
             vm.loading = false;
-        }).then(function (res) {
-            vm.abonnements = res.data;
-            _.forEach(vm.abonnements, function (o) {
-                o.jugendName = o.team.jugend.name;
-                o.teamName = o.team.name;
-            });
-
+        }, function (res) {
+            console.log(res);
+            vm.abonnements = [];
             _.extend(vm, {
                 tableParams: new NgTableParams({
                     count: 10
@@ -94,11 +94,11 @@
         _.extend(vm.email, emailBlank);
 
         function send() {
-            email.send(vm.email).error(function (err) {
-                vm.err = err;
-            }).then(function () {
+            email.send(vm.email).then(function () {
                 vm.message = 'Emails versendet';
                 vm.email = emailBlank;
+            }, function (err) {
+                vm.err = err;
             });
         }
 

@@ -243,7 +243,7 @@
 
                 expect(spy_bestaetigen).to.have.been.called();
                 expect(spy_delete).to.have.been.called();
-                expect(element.children()).to.be.empty;
+                expect(element.children().length).to.be.equal(0);
             });
         });
 
@@ -255,19 +255,19 @@
             it('soll der Jugend-Löschen Button nicht sichtbar sein', function () {
                 var result = element.find('spi-panel-titel').find('i');
 
-                expect(result).to.be.empty;
+                expect(result).not.to.exist;
             });
 
             it('soll der Gruppe-Löschen Button nicht sichtbar sein', function () {
                 var result = element.find('tbody').find('i');
 
-                expect(result).to.be.empty;
+                expect(result).not.to.exist;
             });
 
             it('soll der Gruppe-Editieren Button nicht sichtbar sein', function () {
                 var result = element.find('tbody').find('i');
 
-                expect(result).to.be.empty;
+                expect(result).not.to.exist;
             });
         });
     });

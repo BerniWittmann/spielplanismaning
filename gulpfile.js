@@ -90,23 +90,16 @@ gulp.task('test:frontend', function (done) {
     }, function (result) {
         if (result > 0) {
             testnotify('Frontend-Tests', 'failed', done);
+            done();
         } else {
             testnotify('Frontend-Tests', 'passed', done);
+            done();  
         }
     }).start();
 });
 
 gulp.task('test:frontend:watch', function (done) {
-    return new Server({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: false
-    }, function (result) {
-        if (result > 0) {
-            testnotify('Frontend-Tests', 'failed', done);
-        } else {
-            testnotify('Frontend-Tests', 'passed', done);
-        }
-    }).start();
+    return gulp.watch(['**/*.js', 'test/frontend/**', 'views/**', '!public/bower_components/**', '!node_modules/**'], ['test:frontend'], done);
 });
 
 // test backend
