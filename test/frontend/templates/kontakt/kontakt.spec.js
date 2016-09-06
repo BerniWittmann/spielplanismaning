@@ -94,7 +94,7 @@
                 render();
                 var table = angular.element(element[0].querySelector('#build-tabelle'));
 
-                expect(table).not.to.be.empty;
+                expect(table).to.exist;
             });
 
             it('Die Version wird inklusive Test-Hinweis gezeigt', function () {
@@ -114,7 +114,7 @@
                 render();
                 var table = angular.element(element[0].querySelector('#build-tabelle'));
 
-                expect(table).to.be.empty;
+                expect(table).not.to.exist;
             });
 
             it('Die Version wird gezeigt', function () {

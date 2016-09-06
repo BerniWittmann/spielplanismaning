@@ -46,10 +46,10 @@
                 }
 
                 vm.aktuelleSpiele = _.slice(spiele, aktuellesSpielIndex, aktuellesSpielIndex + 3);
-                vm.neachsteSpiele = _.slice(spiele, aktuellesSpielIndex + 3, aktuellesSpielIndex + 6);
+                vm.naechsteSpiele = _.slice(spiele, aktuellesSpielIndex + 3, aktuellesSpielIndex + 6);
             } else {
                 vm.aktuelleSpiele = [];
-                vm.neachsteSpiele = [];
+                vm.naechsteSpiele = [];
             }
             vm.loading = false;
 

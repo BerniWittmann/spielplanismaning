@@ -20,8 +20,6 @@
         };
         var mockSpielplan = {
             createSpielplan: function () {
-                dump('Test');
-                dump(controller.ausnahme);
             }
         };
         var teams = [{

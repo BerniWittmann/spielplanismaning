@@ -26,6 +26,7 @@
         vm.platz = $stateParams.platznummer;
 
         //noinspection JSUnusedGlobalSymbols
+        //TODO wird nicht genutzt --> entfernen
         _.extend(vm, {
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
