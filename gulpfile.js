@@ -104,22 +104,22 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
-    gulp.src('test/backend/*spec.js', {read: false})
+    gulp.src('test/backend/*.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'spec'
         }))
-        .on('error', function (error) {
+    /* .on('error', function (error) {
             testnotify('Backend-Tests', 'failed', function () {
                 throw error;
             });
         })
         .on('end', function () {
             testnotify('Backend-Tests', 'passed', done);
-        });
+     })*/;
 });
 
 gulp.task('test:backend:watch', function (done) {
-    return gulp.watch(['{models,routes}/**'], ['test:backend'], done);
+    return gulp.watch(['{models,routes,test/backend}/**'], ['test:backend'], done);
 });
 
 // test e2e

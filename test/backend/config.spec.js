@@ -1,6 +1,5 @@
 var expect = require('chai').expect;
-var request = require("request");
-var url = 'http://localhost:8001';
+var request = require("supertest");
 var env = {
     ENVIRONMENT: 'TESTING',
     LOCKDOWNMODE: 'true'
@@ -8,58 +7,47 @@ var env = {
 var version = require('../../package.json').version;
 var server = require('./testserver.js')(env);
 
-before(function (done) {
-    return server.start(done);
-});
-
-describe('Route: config', function () {
+describe('Route: Config', function () {
 
     it('gibt die richtige Versionsnummer zurück', function (done) {
-        return request(url + '/config/version', function (error, response, body) {
-            if (error) {
-                expect(error).to.be.undefined;
-                expect(error.code).not.to.be.equal('ECONNREFUSED');
-            }
-
+        return request(server).get('/api/config/version').end(function (err, response) {
+            if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
-            expect(body).to.equal('"'+version+'"');
-
-            done();
+            expect(response.body).to.equal(version);
+            return done();
         });
     });
 
     it('gibt den Lockdownmode zurück', function (done) {
-        return request(url + '/config/lockdownmode', function (error, response, body) {
-            if (error) {
-                expect(error).to.be.undefined;
-                expect(error.code).not.to.be.equal('ECONNREFUSED');
-            }
-
+        return request(server).get('/api/config/lockdownmode').end(function (err, response) {
+            if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
-            expect(body).to.equal('true');
-
-            done();
+            expect(response.body).to.equal(true);
+            return done();
         });
     });
 
     it('gibt die Umgebung zurück', function (done) {
-        return request(url + '/config/env', function (error, response, body) {
-            if (error) {
-                expect(error).to.be.undefined;
-                expect(error.code).not.to.be.equal('ECONNREFUSED');
-            }
-
+        return request(server).get('/api/config/env').end(function (err, response) {
+            if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
-            expect(body).to.equal('"TESTING"');
-
-            done();
+            expect(response.body).to.equal('TESTING');
+            return done();
         });
-    })
+    });
+
+    it('gibt die Kontaktangaben zurück', function (done) {
+        return request(server).get('/api/config/kontakt').end(function (err, response) {
+            if (err) return done(err);
+            expect(response).not.to.be.undefined;
+            expect(response.statusCode).to.equal(200);
+            expect(response.body[0].name).to.equal('Klaus Krecken');
+            expect(response.body[1].name).to.equal('Stefan Meyer');
+            return done();
+        });
+    });
 });
 
-after(function (done) {
-    return server.quit(done);
-});
