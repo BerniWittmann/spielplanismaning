@@ -13,12 +13,17 @@ describe('Route: Email', function () {
     before(function (done) {
         // In our tests we use the test db
         mongoose.connect(env.MONGO_DB_URI);
-        mongoose.model('Team').create({name: 'Team1'}, function (err, team) {
-            if (err) return done(err);
-            // saved!
-            teamid = team._id;
-            done();
+        mongoose.model('Team').remove({}, function () {
+            mongoose.model('Subscriber').remove({}, function () {
+                mongoose.model('Team').create({name: 'Team1'}, function (err, team) {
+                    if (err) return done(err);
+                    // saved!
+                    teamid = team._id;
+                    done();
+                });
+            });
         });
+
     });
 
     it('soll Abonnenten hinzufügen können', function (done) {
@@ -89,13 +94,8 @@ describe('Route: Email', function () {
     });
 
     after(function (done) {
-        mongoose.model('Team').remove({}, function () {
-            mongoose.model('Subscriber').remove({}, function () {
-                mongoose.disconnect();
-                done();
-            });
-        });
-
+        mongoose.disconnect();
+        done();
     });
 });
 
