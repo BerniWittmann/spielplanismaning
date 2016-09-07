@@ -51,10 +51,14 @@ module.exports = function (env) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
 
-    app.use('/api', routes);
+    var homepath = __dirname.substring(0, __dirname.length - 'test/backend/'.length);
+    app.set('views', homepath + '/views');
+    app.set('view engine', 'ejs');
+    
     app.use('/api/users', users);
     app.use('/api/email', email);
     app.use('/api/config', config);
+    app.use(/\/.*/, routes);
 
     return app;
 };
