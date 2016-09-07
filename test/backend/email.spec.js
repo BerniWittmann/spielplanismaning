@@ -7,23 +7,21 @@ var env = {
 };
 var server = require('./testserver.js')(env);
 var mongoose = require('mongoose');
+var databaseSetup = require('./database-setup/database-setup')(env.MONGO_DB_URI);
 
 describe('Route: Email', function () {
     var teamid;
     before(function (done) {
         // In our tests we use the test db
         mongoose.connect(env.MONGO_DB_URI);
-        mongoose.model('Team').remove({}, function () {
-            mongoose.model('Subscriber').remove({}, function () {
-                mongoose.model('Team').create({name: 'Team1'}, function (err, team) {
-                    if (err) return done(err);
-                    // saved!
-                    teamid = team._id;
-                    done();
-                });
+        databaseSetup.wipeAndCreate(function (err) {
+            if (err) throw err;
+            mongoose.model('Team').find({name: 'Team AA 1'}).exec(function (err, res) {
+                if (err) throw err;
+                teamid = res[0]._id;
+                done();
             });
         });
-
     });
 
     it('soll Abonnenten hinzufügen können', function (done) {
@@ -70,8 +68,8 @@ describe('Route: Email', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.have.lengthOf(1);
-                expect(response.body[0].email).to.be.equal('test@t.de');
+                expect(response.body).to.have.lengthOf(2);
+                expect(response.body[1].email).to.be.equal('test@t.de');
                 return done();
             });
     });
@@ -85,15 +83,17 @@ describe('Route: Email', function () {
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
                 expect(response.body.n).to.be.equal(1);
-                mongoose.model('Subscriber').find({}).exec(function (err, subs) {
+                return mongoose.model('Subscriber').find({}).exec(function (err, subs) {
                     if (err) return done(err);
-                    expect(subs).to.have.lengthOf(0);
+                    expect(subs).to.have.lengthOf(1);
+                    expect(subs[0].email).to.be.equal('test@test.de');
                     return done();
                 });
             });
     });
 
     after(function (done) {
+
         mongoose.disconnect();
         done();
     });
