@@ -12,8 +12,6 @@ var databaseSetup = require('./database-setup/database-setup')(env.MONGO_DB_URI)
 describe('Route: Email', function () {
     var teamid;
     before(function (done) {
-        // In our tests we use the test db
-        mongoose.connect(env.MONGO_DB_URI);
         databaseSetup.wipeAndCreate(function (err) {
             if (err) throw err;
             mongoose.model('Team').find({name: 'Team AA 1'}).exec(function (err, res) {
@@ -93,9 +91,7 @@ describe('Route: Email', function () {
     });
 
     after(function (done) {
-
-        mongoose.disconnect();
-        done();
+        mongoose.disconnect(done);
     });
 });
 

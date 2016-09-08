@@ -1,16 +1,23 @@
-module.exports = function (MONGODB_URI, ROOT) {
+module.exports = function (MONGO_DB_URI, ROOT) {
     var async = require('async');
     var mongoose = require('mongoose');
     var spawn = require('child_process').spawn;
     ROOT = (ROOT || __dirname + '/data/spielplan');
     var LOGGING = false;
 
+    function connect(cb) {
+        mongoose.connect(MONGO_DB_URI, function (err) {
+            if (err) throw err;
+            return cb();
+        });
+    }
+
     function wipeDB(cb) {
-        mongoose.connection.on('connected', function (err) {
+        connect(function (err) {
             if (err) throw err;
             mongoose.connection.db.dropDatabase(function (err) {
                 if (err) throw err;
-                cb();
+                return cb();
             });
         });
     }
@@ -34,10 +41,13 @@ module.exports = function (MONGODB_URI, ROOT) {
         createSampleDB: createSampleDB,
         wipeDB: wipeDB,
         wipeAndCreate: function (cb) {
-            async.waterfall([wipeDB, createSampleDB], function (err) {
-                if (err) throw err;
-                cb();
-            });
+            async.waterfall([wipeDB, createSampleDB],
+                function (err) {
+                    if (err) throw err;
+                    cb();
+                }
+            )
+            ;
         }
     };
 };

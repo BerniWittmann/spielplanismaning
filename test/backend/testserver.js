@@ -47,16 +47,18 @@ module.exports = function (env) {
     var users = require('../../routes/users')();
     var email = require('../../routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var config = require('../../routes/config')(process.env);
+    var gruppen = require('../../routes/gruppen')();
 
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.urlencoded({extended: true}));
 
     var homepath = __dirname.substring(0, __dirname.length - 'test/backend/'.length);
     app.set('views', homepath + '/views');
     app.set('view engine', 'ejs');
-    
+
     app.use('/api/users', users);
     app.use('/api/email', email);
+    app.use('/api/gruppen', gruppen);
     app.use('/api/config', config);
     app.use(/\/.*/, routes);
 
