@@ -48,6 +48,7 @@ module.exports = function (env) {
     var email = require('../../routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var config = require('../../routes/config')(process.env);
     var gruppen = require('../../routes/gruppen')();
+    var jugenden = require('../../routes/jugenden')();
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
@@ -60,6 +61,7 @@ module.exports = function (env) {
     app.use('/api/email', email);
     app.use('/api/gruppen', gruppen);
     app.use('/api/config', config);
+    app.use('/api/jugenden', jugenden);
     app.use(/\/.*/, routes);
 
     return app;

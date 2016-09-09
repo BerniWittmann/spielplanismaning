@@ -12,6 +12,13 @@ module.exports = function (MONGO_DB_URI, ROOT) {
         });
     }
 
+    function disconnect(cb) {
+        mongoose.disconnect(function (err) {
+            if (err) throw err;
+            return cb();
+        })
+    }
+
     function wipeDB(cb) {
         connect(function (err) {
             if (err) throw err;
@@ -46,8 +53,8 @@ module.exports = function (MONGO_DB_URI, ROOT) {
                     if (err) throw err;
                     cb();
                 }
-            )
-            ;
-        }
+            );
+        },
+        disconnect: disconnect
     };
 };

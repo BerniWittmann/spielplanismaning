@@ -163,10 +163,11 @@ describe('Route: Gruppen', function () {
                 });
         });
     });
+
+    after(function (done) {
+        databaseSetup.disconnect(done);
+    });
 });
 
-after(function (done) {
-    mongoose.disconnect();
-    done();
-});
+
 

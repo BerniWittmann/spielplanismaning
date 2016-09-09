@@ -91,7 +91,7 @@ describe('Route: Email', function () {
     });
 
     after(function (done) {
-        mongoose.disconnect(done);
+        databaseSetup.disconnect(done);
     });
 });
 
