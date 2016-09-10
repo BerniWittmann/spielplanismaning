@@ -125,9 +125,9 @@ describe('Route: Jugenden', function () {
                 });
         });
     });
-});
 
-after(function (done) {
-    databaseSetup.disconnect(done);
+    after(function (done) {
+        databaseSetup.disconnect(done);
+    });
 });
 
