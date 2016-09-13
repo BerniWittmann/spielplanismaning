@@ -3,7 +3,7 @@ module.exports = function (MONGO_DB_URI, ROOT) {
     var mongoose = require('mongoose');
     var spawn = require('child_process').spawn;
     ROOT = (ROOT || __dirname + '/data/spielplan');
-    var LOGGING = false;
+    var LOGGING = true;
 
     function connect(cb) {
         mongoose.connect(MONGO_DB_URI, function (err) {
