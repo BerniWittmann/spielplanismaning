@@ -11,8 +11,8 @@ module.exports = function (MONGO_DB_URI, ROOT) {
             mongoose.model('Team').find().exec(function (err, res) {
                 if (err) throw err;
                 console.log(res);
+                return cb();
             });
-            return cb();
         });
     }
 
@@ -34,8 +34,8 @@ module.exports = function (MONGO_DB_URI, ROOT) {
     }
 
     function createSampleDB(cb) {
-        var args = ['--db', 'spielplan-test', '--drop', ROOT];
-        var mongorestore = spawn('./mongorestore', args);
+        var args = ['--db', 'spielplan-test', '--drop', 'test/backend/database-setup/data/spielplan'];
+        var mongorestore = spawn(__dirname + '/mongorestore', args);
         mongorestore.stdout.on('data', function (data) {
             if (LOGGING) console.log('stdout: ' + data);
         });
