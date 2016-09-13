@@ -8,6 +8,7 @@ module.exports = function (MONGO_DB_URI, ROOT) {
     function connect(cb) {
         mongoose.connect(MONGO_DB_URI, function (err) {
             if (err) throw err;
+            console.log('Connected');
             return cb();
         });
     }
