@@ -1,11 +1,12 @@
 language: node_js
 node_js:
 - '6.3'
+services:
+  - mongodb
 before_script:
 - npm install
 - bower install
-services:
-  - mongodb
+- mongo --version
 script: gulp test
 branches:
   only:
