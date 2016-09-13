@@ -16,6 +16,8 @@ describe('Route: Email', function () {
             if (err) throw err;
             mongoose.model('Team').find({name: 'Team AA 1'}).exec(function (err, res) {
                 if (err) throw err;
+                console.log(res);
+                console.log(err);
                 teamid = res[0]._id;
                 done();
             });
