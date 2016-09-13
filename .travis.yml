@@ -4,6 +4,7 @@ node_js:
 before_script:
 - npm install
 - bower install
+- mongorestore --db spielplan-test --drop test/backend/database-setup/data/spielplan
 services:
   - mongodb
 script: gulp test

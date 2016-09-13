@@ -8,7 +8,10 @@ module.exports = function (MONGO_DB_URI, ROOT) {
     function connect(cb) {
         mongoose.connect(MONGO_DB_URI, function (err) {
             if (err) throw err;
-            console.log('Connected');
+            mongoose.model('Teams').find().exec(function (err, res) {
+                if (err) throw err;
+                console.log(res);
+            });
             return cb();
         });
     }
@@ -32,7 +35,7 @@ module.exports = function (MONGO_DB_URI, ROOT) {
 
     function createSampleDB(cb) {
         var args = ['--db', 'spielplan-test', '--drop', ROOT];
-        var mongorestore = spawn(__dirname + '/mongorestore', args);
+        var mongorestore = spawn('./mongorestore', args);
         mongorestore.stdout.on('data', function (data) {
             if (LOGGING) console.log('stdout: ' + data);
         });
