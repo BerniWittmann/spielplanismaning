@@ -51,6 +51,7 @@ module.exports = function (env) {
     var jugenden = require('../../routes/jugenden')();
     var spiele = require('../../routes/spiele')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var spielplan = require('../../routes/spielplan')();
+    var teams = require('../../routes/teams')();
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
@@ -66,6 +67,7 @@ module.exports = function (env) {
     app.use('/api/jugenden', jugenden);
     app.use('/api/spiele', spiele);
     app.use('/api/spielplan', spielplan);
+    app.use('/api/teams', teams);
     app.use(/\/.*/, routes);
 
     return app;

@@ -9,6 +9,7 @@ module.exports = function () {
     router.get('/', function (req, res) {
         var query = Team.find();
         if (req.param('id')) {
+            //TODO findById verwenden, damit kein Array rauskommt
             query = Team.find({_id: req.param('id')});
         } else if (req.param('gruppe')) {
             query = Team.find({gruppe: req.param('gruppe')});
@@ -115,6 +116,7 @@ module.exports = function () {
                 throw err;
             }
 
+            //TODO mit async besser lösen
             for (var i = 0; i < teams.length; i++) {
                 var team = teams[i];
                 team.resetErgebnis(function (err) {
