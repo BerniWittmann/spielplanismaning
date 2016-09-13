@@ -1,6 +1,8 @@
 module.exports = function (env) {
     var express = require('express');
     var app = express();
+    var mongoose = require('mongoose');
+    var bodyParser = require('body-parser');
 
     process.env.SECRET = process.env.SECRET || env.SECRET || 'TEST-SECRET';
     process.env.ENVIRONMENT = process.env.ENVIRONMENT || env.ENVIRONMENT || 'TEST';
@@ -8,6 +10,9 @@ module.exports = function (env) {
     process.env.DISABLEEMAIL = process.env.DISABLEEMAIL || env.DISABLEEMAIL || 'true';
     process.env.VERSION = process.env.VERSION || env.VERSION || 'vtag';
     process.env.LOCKDOWNMODE = process.env.LOCKDOWNMODE || env.LOCKDOWNMODE || 'false';
+    process.env.KONTAKE = process.env.KONTAKTE || '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
+    process.env.DISABLE_EMAILS = process.env.DISABLE_EMAILS || 'true';
+
     sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'test'), (process.env.SENDGRID_PASSWORD || 'test'));
     sendgrid.send = function (mail, cb) {
         console.log('Mail sent.');
@@ -15,40 +20,56 @@ module.exports = function (env) {
         return cb();
     };
 
-    require('../../models/Gruppen');
-    require('../../models/Jugenden');
-    require('../../models/Spiele');
-    require('../../models/Spielplan');
-    require('../../models/Teams');
-    require('../../models/Subscriber');
-    require('../../models/Users')((process.env.SECRET || 'SECRET'));
+    if (!mongoose.models.Gruppe) {
+        require('./../../models/Gruppen');
+    }
+    if (!mongoose.models.Jugend) {
+        require('./../../models/Jugenden');
+    }
+    if (!mongoose.models.Spiel) {
+        require('./../../models/Spiele');
+    }
+    if (!mongoose.models.Spielplan) {
+        require('./../../models/Spielplan');
+    }
+    if (!mongoose.models.Team) {
+        require('./../../models/Teams');
+    }
+    if (!mongoose.models.Subscriber) {
+        require('./../../models/Subscriber');
+    }
+    if (!mongoose.models.User) {
+        require('./../../models/Users')((process.env.SECRET || 'SECRET'));
+    }
     require('../../config/passport');
 
     var routes = require('../../routes/index')();
-    var users = require('../../routes/users');
-    var email = require('../../routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
+    var users = require('../../routes/users')();
+    var email = require('../../routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var config = require('../../routes/config')(process.env);
+    var gruppen = require('../../routes/gruppen')();
+    var jugenden = require('../../routes/jugenden')();
+    var spiele = require('../../routes/spiele')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var spielplan = require('../../routes/spielplan')();
+    var teams = require('../../routes/teams')();
 
-    app.use('/', routes);
-    app.use('/users', users);
-    app.use('/email', email);
-    app.use('/config', config);
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: true}));
 
-    function start(done) {
-        server = require('http').createServer(app);
-        server.listen('8001');
-        server.start = start;
-        server.quit = quit;
-        var port = server.address().port;
-        console.log('Test server listening at port %s', port);
-        return done();
-    }
+    var homepath = __dirname.substring(0, __dirname.length - 'test/backend/'.length);
+    app.set('views', homepath + '/views');
+    app.set('view engine', 'ejs');
 
-    function quit(done) {
-        return server.close(done);
-    }
+    app.use('/api/users', users);
+    app.use('/api/email', email);
+    app.use('/api/gruppen', gruppen);
+    app.use('/api/config', config);
+    app.use('/api/jugenden', jugenden);
+    app.use('/api/spiele', spiele);
+    app.use('/api/spielplan', spielplan);
+    app.use('/api/teams', teams);
+    app.use(/\/.*/, routes);
 
-    var server = {start: start, quit: quit};
-    return server;
+    return app;
 };
 
