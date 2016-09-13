@@ -4,6 +4,8 @@ node_js:
 before_script:
 - npm install
 - bower install
+services:
+  - mongodb
 script: gulp test
 branches:
   only:
