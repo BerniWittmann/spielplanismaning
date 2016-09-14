@@ -1,6 +1,6 @@
 describe('Spielplan-Ismaning App', function () {
     it('soll einen Titel haben', function () {
-        expect(browser.getTitle()).toEqual('Spielplan1');
+        expect(browser.getTitle()).toEqual('Spielplan');
     });
 
     it('soll die Navigation laden', function () {
