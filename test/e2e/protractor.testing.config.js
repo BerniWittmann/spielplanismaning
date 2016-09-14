@@ -8,18 +8,7 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-        'build': process.env.TRAVIS_BUILD_NUMBER,
-    },
-    onPrepare: function () {
-        var SpecReporter = require('jasmine-spec-reporter');
-        // add jasmine spec reporter
-        jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
-
-        browser.get('http://www.spielplanismaning-testing.herokuapp.com');
-    },
-    jasmineNodeOpts: {
-        print: function () {
-        }
+        'build': process.env.TRAVIS_BUILD_NUMBER
     },
     baseUrl: 'http://www.spielplanismaning-testing.herokuapp.com'
 };
