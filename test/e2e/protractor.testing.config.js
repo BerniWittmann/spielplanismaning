@@ -6,10 +6,9 @@ exports.config = {
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     sauceSeleniumAddress: 'ondemand.saucelabs.com:80/wd/hub',
     capabilities: {
-        'browserName': 'firefox',
+        'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER,
-        'name': 'Travis Test on Testing'
     },
     onPrepare: function () {
         var SpecReporter = require('jasmine-spec-reporter');
