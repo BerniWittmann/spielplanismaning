@@ -1,6 +1,6 @@
 exports.config = {
     framework: 'jasmine',
-    seleniumAddress: 'http://localhost:4444/wd/hub',
+    seleniumAddress: 'ondemand.saucelabs.com:80',
     specs: ['*.spec.js'],
     capabilities: {
         'browserName': 'firefox'
@@ -15,5 +15,6 @@ exports.config = {
     jasmineNodeOpts: {
         print: function () {
         }
-    }
+    },
+    baseUrl: 'http://spielplanismaning-testing.herokuapp.com'
 };
