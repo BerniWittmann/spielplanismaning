@@ -1,6 +1,6 @@
 exports.config = {
     framework: 'jasmine',
-    seleniumAddress: 'ondemand.saucelabs.com:80',
+    seleniumAddress: 'ondemand.saucelabs.com:80/wd/hub',
     specs: ['*.spec.js'],
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
