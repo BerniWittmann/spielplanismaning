@@ -6,7 +6,8 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-        'build': process.env.TRAVIS_BUILD_NUMBER
+        'build': process.env.TRAVIS_BUILD_NUMBER,
+        'name': 'Travis Test Testing #' + process.env.TRAVIS_BUILD_NUMBER
     },
     onPrepare: function () {
         var SpecReporter = require('jasmine-spec-reporter');
