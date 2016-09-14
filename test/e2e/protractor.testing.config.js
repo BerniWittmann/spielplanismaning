@@ -12,8 +12,6 @@ exports.config = {
         'name': 'Travis Test on Testing'
     },
     onPrepare: function () {
-        console.log(process.env.SAUCE_USERNAME);
-        console.log(process.env.SAUCE_ACCESS_KEY);
         var SpecReporter = require('jasmine-spec-reporter');
         // add jasmine spec reporter
         jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
