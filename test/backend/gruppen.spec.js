@@ -1,21 +1,18 @@
 var expect = require('chai').expect;
 var request = require("supertest");
-var env = {
-    ENVIRONMENT: 'TESTING',
-    LOCKDOWNMODE: 'false',
-    MONGO_DB_URI: 'mongodb://localhost/spielplan-test'
-};
+var env = {};
 var server = require('./testserver.js')(env);
 var mongoose = require('mongoose');
-var databaseSetup = require('./database-setup/database-setup')(env.MONGO_DB_URI);
 
 describe('Route: Gruppen', function () {
     var jugendid;
     var anzahlVorher = 2;
     var gruppeid = '57cffb4055a8d45fc084c108';
+    var neueGruppeId;
+    var neueGruppeJugend;
     var anzahlTeamsGruppe;
     before(function (done) {
-        databaseSetup.wipeAndCreate(function (err) {
+        server.connectDB(function (err) {
             if (err) throw err;
             mongoose.model('Jugend').find({name: 'Jugend 2'}).exec(function (err, res) {
                 if (err) throw err;
@@ -98,11 +95,12 @@ describe('Route: Gruppen', function () {
                 expect(response.body._id).to.exist;
                 expect(response.body.name).to.be.equal(gruppe.name);
                 expect(response.body.jugend).to.be.equal(jugendid.toString());
+                neueGruppeId = response.body._id;
+                neueGruppeJugend = response.body.jugend;
                 mongoose.model('Gruppe').find({jugend: jugendid.toString()}).exec(function (err, res) {
                     if (err) throw err;
                     expect(res).to.have.lengthOf(anzahlVorher + 1);
                     return done();
-
                 });
             });
     });
@@ -140,32 +138,39 @@ describe('Route: Gruppen', function () {
     });
 
     it('soll eine Gruppe löschen können und die Teams mitlöschen', function (done) {
-        var anzahlTeamsVorher;
-        mongoose.model('Team').find().exec(function (err, res) {
-            if (err) throw err;
-            anzahlTeamsVorher = res.length;
-            return request(server)
-                .del('/api/gruppen?id=' + gruppeid)
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) throw err;
+        return request(server)
+            .post('/api/teams?jugend=' + neueGruppeJugend + '&gruppe=' + neueGruppeId)
+            .send({name: 'Test Team'})
+            .expect(200)
+            .end(function (err) {
+                if (err) throw err;
+                var anzahlTeamsVorher;
 
-                    expect(res.body).to.equal('success');
-                    mongoose.model('Gruppe').findById(gruppeid).exec(function (err, res) {
-                        if (err) throw err;
-                        expect(res).not.to.exist;
-                        mongoose.model('Team').find().exec(function (err, res) {
+                mongoose.model('Team').find().exec(function (err, res) {
+                    if (err) throw err;
+                    anzahlTeamsVorher = res.length;
+                    return request(server)
+                        .del('/api/gruppen?id=' + neueGruppeId)
+                        .expect(200)
+                        .end(function (err, res) {
                             if (err) throw err;
-                            expect(res.length).to.be.equal(anzahlTeamsVorher - anzahlTeamsGruppe);
-                            done();
+                            expect(res.body).to.equal('success');
+                            mongoose.model('Gruppe').findById(neueGruppeId).exec(function (err, res) {
+                                if (err) throw err;
+                                expect(res).not.to.exist;
+                                mongoose.model('Team').find().exec(function (err, res) {
+                                    if (err) throw err;
+                                    expect(res.length).to.be.equal(anzahlTeamsVorher - 1);
+                                    done();
+                                });
+                            });
                         });
-                    });
                 });
-        });
+            });
     });
 
     after(function (done) {
-        databaseSetup.disconnect(done);
+        server.disconnectDB(done);
     });
 });
 

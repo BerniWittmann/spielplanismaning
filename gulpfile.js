@@ -20,8 +20,11 @@ var gulp = require('gulp'),
     filter = require('gulp-filter'),
     tag_version = require('gulp-tag-version'),
     mocha = require('gulp-mocha'),
-    angularProtractor = require('gulp-angular-protractor');
+    angularProtractor = require('gulp-angular-protractor'),
+    mongobackup = require('mongobackup');
 require('shelljs/global');
+var spawn = require('child_process').spawn;
+var mongoose = require('mongoose');
 
 gulp.task('default', ['watch']);
 
@@ -75,7 +78,11 @@ gulp.task('jshint', function () {
 
 // test
 gulp.task('test', function (done) {
-    return runSequence('test:frontend', 'test:backend', 'test:e2e:testing', done);
+    return runSequence('test:frontend', 'test:backend', 'test:e2e', done);
+});
+
+gulp.task('test:travis', function (done) {
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', done);
 });
 
 gulp.task('test:watch', function (done) {
@@ -104,23 +111,59 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
+    return runSequence('testDB:wipeAndRestore', 'test:backend:withOutWipe', done);
+});
+
+gulp.task('test:backend:withOutWipe', function (done) {
     gulp.src('test/backend/*.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'spec',
             timeout: 5000
         }))
-      /*  .on('error', function () {
-            testnotify('Backend-Tests', 'failed', done);
-            done();
-        })*/
+        /*  .on('error', function () {
+         testnotify('Backend-Tests', 'failed', done);
+         done();
+         })*/
         .on('end', function () {
-           // testnotify('Backend-Tests', 'passed', done);
+            // testnotify('Backend-Tests', 'passed', done);
             done();
         });
 });
 
 gulp.task('test:backend:watch', function (done) {
     return gulp.watch(['{models,routes,test/backend}/**'], ['test:backend'], done);
+});
+
+// test DB
+gulp.task('testDB:wipeAndRestore', function (done) {
+    return runSequence('testDB:wipe', 'testDB:restore', done);
+});
+
+gulp.task('testDB:wipe', function (done) {
+    mongoose.connect('mongodb://localhost/spielplan-test', function (err) {
+        if (err) throw err;
+        mongoose.connection.db.dropDatabase(function (err) {
+            if (err) throw err;
+            mongoose.disconnect(done);
+        });
+    });
+});
+
+gulp.task('testDB:restore', function (done) {
+    var DB_SETUP_PATH = __dirname + '/test/backend/database-setup';
+    var LOGGING = false;
+    var args = ['--db', 'spielplan-test', '--drop', DB_SETUP_PATH + '/data/spielplan'];
+    var mongorestore = spawn(DB_SETUP_PATH + '/mongorestore', args);
+    mongorestore.stdout.on('data', function (data) {
+        if (LOGGING) console.log('stdout: ' + data);
+    });
+    mongorestore.stderr.on('data', function (data) {
+        if (LOGGING) console.log('stderr: ' + data);
+    });
+    mongorestore.on('exit', function (code) {
+        if (LOGGING) console.log('mongorestore exited with code ' + code);
+        done();
+    });
 });
 
 // test e2e

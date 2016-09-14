@@ -1,13 +1,8 @@
 var expect = require('chai').expect;
 var request = require("supertest");
-var env = {
-    ENVIRONMENT: 'TESTING',
-    LOCKDOWNMODE: 'false',
-    MONGO_DB_URI: 'mongodb://localhost/spielplan-test'
-};
+var env = {};
 var server = require('./testserver.js')(env);
 var mongoose = require('mongoose');
-var databaseSetup = require('./database-setup/database-setup')(env.MONGO_DB_URI);
 
 describe('Route: Teams', function () {
     var jugendid;
@@ -15,7 +10,7 @@ describe('Route: Teams', function () {
     var teamid;
     var neuesTeamid;
     before(function (done) {
-        databaseSetup.wipeAndCreate(function (err) {
+        server.connectDB(function (err) {
             if (err) throw err;
             mongoose.model('Jugend').find({name: 'Jugend 2'}).exec(function (err, res) {
                 if (err) throw err;
@@ -181,7 +176,7 @@ describe('Route: Teams', function () {
     });
 
     after(function (done) {
-        databaseSetup.disconnect(done);
+        server.disconnectDB(done);
     });
 });
 

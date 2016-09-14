@@ -7,7 +7,7 @@ before_script:
 - bower install
 - mongo --version
 - mongorestore --db spielplan-test --drop test/backend/database-setup/data/spielplan
-script: gulp test
+script: gulp test:travis
 branches:
   only:
   - master

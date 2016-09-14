@@ -5,13 +5,14 @@ module.exports = function (env) {
     var bodyParser = require('body-parser');
 
     process.env.SECRET = process.env.SECRET || env.SECRET || 'TEST-SECRET';
-    process.env.ENVIRONMENT = process.env.ENVIRONMENT || env.ENVIRONMENT || 'TEST';
+    process.env.ENVIRONMENT = process.env.ENVIRONMENT || env.ENVIRONMENT || 'DEV';
     process.env.URL = process.env.URL || env.URL || 'http://localhost:8001';
     process.env.DISABLEEMAIL = process.env.DISABLEEMAIL || env.DISABLEEMAIL || 'true';
     process.env.VERSION = process.env.VERSION || env.VERSION || 'vtag';
     process.env.LOCKDOWNMODE = process.env.LOCKDOWNMODE || env.LOCKDOWNMODE || 'false';
     process.env.KONTAKE = process.env.KONTAKTE || '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
     process.env.DISABLE_EMAILS = process.env.DISABLE_EMAILS || 'true';
+    process.env.MONGO_DB_URI = process.env.MONGO_DB_URI || env.MONGO_DB_URI || 'mongodb://localhost/spielplan-test';
 
     sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'test'), (process.env.SENDGRID_PASSWORD || 'test'));
     sendgrid.send = function (mail, cb) {
@@ -69,6 +70,11 @@ module.exports = function (env) {
     app.use('/api/spielplan', spielplan);
     app.use('/api/teams', teams);
     app.use(/\/.*/, routes);
+
+    var databaseSetup = require('./database-setup/database-setup')(process.env.MONGO_DB_URI);
+
+    app.connectDB = databaseSetup.connect;
+    app.disconnectDB = databaseSetup.disconnect;
 
     return app;
 };

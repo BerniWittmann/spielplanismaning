@@ -1,10 +1,6 @@
 var expect = require('chai').expect;
 var request = require("supertest");
-var env = {
-    ENVIRONMENT: 'TESTING',
-    LOCKDOWNMODE: 'false',
-    MONGO_DB_URI: 'mongodb://localhost/spielplan-test'
-};
+var env = {};
 var server = require('./testserver.js')(env);
 
 describe('Route: Index', function () {
