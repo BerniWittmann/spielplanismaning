@@ -190,8 +190,8 @@ gulp.task('test:e2e:local', ['start:server:headless'], function (done) {
         });
 });
 
-// test e2e local
-gulp.task('test:e2e:testing', function (done) {
+// test e2e testing
+gulp.task('test:e2e:testing', ['start:server:headless'], function (done) {
     gulp.src(['./src/tests/*.js'])
         .pipe(angularProtractor({
             'configFile': 'test/e2e/protractor.testing.config.js',
