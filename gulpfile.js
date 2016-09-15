@@ -21,7 +21,8 @@ var gulp = require('gulp'),
     tag_version = require('gulp-tag-version'),
     mocha = require('gulp-mocha'),
     angularProtractor = require('gulp-angular-protractor'),
-    mongobackup = require('mongobackup');
+    mongobackup = require('mongobackup'),
+    apidoc = require('gulp-apidoc');
 require('shelljs/global');
 var spawn = require('child_process').spawn;
 var mongoose = require('mongoose');
@@ -290,7 +291,7 @@ gulp.task('start:client', function () {
 // versioning
 function inc(importance) {
     // get all the files to bump version in
-    return gulp.src(['./package.json', './bower.json'])
+    return gulp.src(['./package.json', './bower.json', './apidoc.json'])
     // bump the version number in those files
         .pipe(bump({type: importance}))
         // save it back to filesystem
@@ -335,4 +336,13 @@ function testnotify(name, message, done) {
         done();
     });
 }
+
+// api doc
+gulp.task('apidoc', function (done) {
+    apidoc({
+        src: "routes",
+        dest: "docs",
+        includeFilters: [".*\\.js$"]
+    }, done);
+});
 
