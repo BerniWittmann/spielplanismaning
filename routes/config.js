@@ -4,6 +4,19 @@ module.exports = function (env) {
     var router = express.Router();
     var exampleContacts = '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
 
+    /**
+     * @api {get} /config/version Version
+     * @apiName GetVersion
+     * @apiGroup Config
+     *
+     * @apiSuccess {String} body Version of the app.
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "1.0.0"
+     *     }
+     **/
     router.get('/version', function (req, res) {
         res.json(version);
     });

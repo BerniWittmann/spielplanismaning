@@ -1,10 +1,10 @@
-module.exports = function (sendgrid, env, url) {
+module.exports = function (sendgrid, env, url, disableEmails) {
     var express = require('express');
     var router = express.Router();
 
     var mongoose = require('mongoose');
     var Subscriber = mongoose.model('Subscriber');
-    var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url);
+    var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
 
     router.post('/', function (req, res) {
         Subscriber.find().exec(function (err, subs) {

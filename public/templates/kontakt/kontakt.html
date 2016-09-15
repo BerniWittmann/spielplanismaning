@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <h4>Verantwortliche für den Spielbetrieb:</h4>
                 <div class="table-responsive">
-                    <table class="table table-condensed table-striped table-hover">
+                    <table class="table table-condensed table-striped table-hover" id="kontakte-tabelle">
                         <tr data-ng-repeat="kontakt in vm.kontakte">
                             <td>{{kontakt.turnier}}</td>
                             <td>{{kontakt.name}} <a href="mailto:{{kontakt.email}}" class="pull-right"><i
@@ -68,13 +68,14 @@
 <div class="row" data-ng-if="vm.showBuildStatus">
     <div class="col-md-6 col-md-offset-3">
         <h4>Build Status:</h4>
-        <table class="table table-condensed table-striped table-hover">
+        <table class="table table-condensed table-striped table-hover" id="build-tabelle">
             <tr>
                 <td>
                     <a href="https://spielplanismaning-testing.herokuapp.com/">Testumgebung</a>
                 </td>
                 <td>
-                    <a href="https://travis-ci.org/BerniWittmann/spielplanismaning"><img src="https://travis-ci.org/BerniWittmann/spielplanismaning.svg?branch=develop"></a>
+                    <a href="https://travis-ci.org/BerniWittmann/spielplanismaning"><img
+                            src="https://travis-ci.org/BerniWittmann/spielplanismaning.svg?branch=develop"></a>
                 </td>
             </tr>
             <tr>
@@ -82,7 +83,8 @@
                     <a href="https://spielplanismaning.herokuapp.com/">Produktionsumgebung</a>
                 </td>
                 <td>
-                    <a href="https://travis-ci.org/BerniWittmann/spielplanismaning"><img src="https://travis-ci.org/BerniWittmann/spielplanismaning.svg?branch=master"></a>
+                    <a href="https://travis-ci.org/BerniWittmann/spielplanismaning"><img
+                            src="https://travis-ci.org/BerniWittmann/spielplanismaning.svg?branch=master"></a>
                 </td>
             </tr>
         </table>
@@ -91,7 +93,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="pull-left">
+        <div class="pull-left" id="version">
             Version: {{vm.version}}
         </div>
         <div class="pull-right">

@@ -20,7 +20,7 @@
                         <h3>
                             <spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
                         </h3>
-                        <h6 data-ng-click="vm.gotoGruppe(spiel.gruppe)">{{spiel.gruppe.name}}</h6>
+                        <h6 class="spiel-gruppe" data-ng-click="vm.gotoGruppe(spiel.gruppe)">{{spiel.gruppe.name}}</h6>
                     </div>
                 </div>
 
@@ -37,10 +37,12 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-5">
-                                <h3 data-ng-click="vm.gotoTeam(spiel.teamA)">{{spiel.teamA.name}}</h3>
+                                <h3 class="spiel-teamA" data-ng-click="vm.gotoTeam(spiel.teamA)">
+                                    {{spiel.teamA.name}}</h3>
                             </div>
                             <div class="col-xs-5 col-xs-offset-2">
-                                <h3 data-ng-click="vm.gotoTeam(spiel.teamB)">{{spiel.teamB.name}}</h3>
+                                <h3 class="spiel-teamB" data-ng-click="vm.gotoTeam(spiel.teamB)">
+                                    {{spiel.teamB.name}}</h3>
                             </div>
                         </div>
                     </div>

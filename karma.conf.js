@@ -14,16 +14,23 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             //include bower dependecies
+            'bower_components/jquery/dist/jquery.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+            'bower_components/angular-ui-router/release/angular-ui-router.js',
+            'bower_components/angular-sanitize/angular-sanitize.js',
+            'bower_components/moment/moment.js',
             'bower_components/lodash/lodash.js',
-            //include spec files
-            'test/**/*.spec.js',
+            '../node_modules/chai-jquery/chai-jquery.js',
+            'bower_components/ng-table/dist/ng-table.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
-            '{components,templates}/**/*.html.ext'
+            '{components,templates}/**/*.html.ext',
+            //include spec files
+            '../test/frontend/**/*.spec.js'
+
         ],
 
         // list of files to exclude

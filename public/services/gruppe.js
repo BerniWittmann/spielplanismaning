@@ -1,5 +1,5 @@
 angular
-    .module('spi.gruppe', ['spi.auth']).factory('gruppe', ['$http', 'auth', function ($http) {
+    .module('spi.gruppe', []).factory('gruppe', ['$http', function ($http) {
 
     var gruppe = {
         gruppen: []

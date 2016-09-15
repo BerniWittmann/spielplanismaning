@@ -19,8 +19,13 @@ var gulp = require('gulp'),
     bump = require('gulp-bump'),
     filter = require('gulp-filter'),
     tag_version = require('gulp-tag-version'),
-    mocha = require('gulp-mocha');
+    mocha = require('gulp-mocha'),
+    angularProtractor = require('gulp-angular-protractor'),
+    mongobackup = require('mongobackup'),
+    apidoc = require('gulp-apidoc');
 require('shelljs/global');
+var spawn = require('child_process').spawn;
+var mongoose = require('mongoose');
 
 gulp.task('default', ['watch']);
 
@@ -74,7 +79,11 @@ gulp.task('jshint', function () {
 
 // test
 gulp.task('test', function (done) {
-    return runSequence('test:frontend', 'test:backend', done);
+    return runSequence('test:frontend', 'test:backend', 'test:e2e', done);
+});
+
+gulp.task('test:travis', function (done) {
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', done);
 });
 
 gulp.task('test:watch', function (done) {
@@ -86,27 +95,116 @@ gulp.task('test:frontend', function (done) {
     return new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
-    }, done).start();
+    }, function (result) {
+        if (result > 0) {
+            testnotify('Frontend-Tests', 'failed', done);
+            done();
+        } else {
+            testnotify('Frontend-Tests', 'passed', done);
+            done();
+        }
+    }).start();
 });
 
 gulp.task('test:frontend:watch', function (done) {
-    return new Server({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: false
-    }, done).start();
+    return gulp.watch(['**/*.js', 'test/frontend/**', 'views/**', '!public/bower_components/**', '!node_modules/**'], ['test:frontend'], done);
 });
 
 // test backend
 gulp.task('test:backend', function (done) {
-    gulp.src('routes/**/*spec.js', {read: false})
+    return runSequence('testDB:wipeAndRestore', 'test:backend:withOutWipe', done);
+});
+
+gulp.task('test:backend:withOutWipe', function (done) {
+    gulp.src('test/backend/*.spec.js', {read: false})
         .pipe(mocha({
-            reporter: 'spec'
-        }));
-    return done();
+            reporter: 'spec',
+            timeout: 5000
+        }))
+        /*  .on('error', function () {
+         testnotify('Backend-Tests', 'failed', done);
+         done();
+         })*/
+        .on('end', function () {
+            // testnotify('Backend-Tests', 'passed', done);
+            done();
+        });
 });
 
 gulp.task('test:backend:watch', function (done) {
-    return gulp.watch(['{models,routes}/**'], ['test:backend'], done);
+    return gulp.watch(['{models,routes,test/backend}/**'], ['test:backend'], done);
+});
+
+// test DB
+gulp.task('testDB:wipeAndRestore', function (done) {
+    return runSequence('testDB:wipe', 'testDB:restore', done);
+});
+
+gulp.task('testDB:wipe', function (done) {
+    mongoose.connect('mongodb://localhost/spielplan-test', function (err) {
+        if (err) throw err;
+        mongoose.connection.db.dropDatabase(function (err) {
+            if (err) throw err;
+            mongoose.disconnect(done);
+        });
+    });
+});
+
+gulp.task('testDB:restore', function (done) {
+    var DB_SETUP_PATH = __dirname + '/test/backend/database-setup';
+    var LOGGING = false;
+    var args = ['--db', 'spielplan-test', '--drop', DB_SETUP_PATH + '/data/spielplan'];
+    var mongorestore = spawn(DB_SETUP_PATH + '/mongorestore', args);
+    mongorestore.stdout.on('data', function (data) {
+        if (LOGGING) console.log('stdout: ' + data);
+    });
+    mongorestore.stderr.on('data', function (data) {
+        if (LOGGING) console.log('stderr: ' + data);
+    });
+    mongorestore.on('exit', function (code) {
+        if (LOGGING) console.log('mongorestore exited with code ' + code);
+        done();
+    });
+});
+
+// test e2e
+gulp.task('test:e2e', function (done) {
+    return runSequence('test:e2e:local', done);
+});
+
+// test e2e local
+gulp.task('test:e2e:local', ['start:server:headless'], function (done) {
+    gulp.src(['./src/tests/*.js'])
+        .pipe(angularProtractor({
+            'configFile': 'test/e2e/protractor.local.config.js',
+            'autoStartStopServer': true,
+            'debug': false
+        }))
+        .on('error', function (error) {
+            testnotify('E2E-Tests', 'failed', function () {
+                throw error
+            });
+
+        })
+        .on('end', function () {
+            testnotify('E2E-Tests', 'passed', done);
+        });
+});
+
+// test e2e testing
+gulp.task('test:e2e:testing', function (done) {
+    gulp.src(['./src/tests/*.js'])
+        .pipe(angularProtractor({
+            'configFile': 'test/e2e/protractor.testing.config.js',
+            'autoStartStopServer': true,
+            'debug': false
+        }))
+        .on('error', function (e) {
+            throw e;
+        })
+        .on('end', function () {
+            done();
+        });
 });
 
 // build
@@ -193,7 +291,7 @@ gulp.task('start:client', function () {
 // versioning
 function inc(importance) {
     // get all the files to bump version in
-    return gulp.src(['./package.json', './bower.json'])
+    return gulp.src(['./package.json', './bower.json', './apidoc.json'])
     // bump the version number in those files
         .pipe(bump({type: importance}))
         // save it back to filesystem
@@ -226,5 +324,25 @@ gulp.task('open', function () {
 gulp.task('open_testing', function () {
     gulp.src(__filename)
         .pipe(open({uri: 'http://spielplanismaning-testing.herokuapp.com'}));
+});
+
+// notifications
+function testnotify(name, message, done) {
+    return gulp.src('gulpfile.js').pipe(notify({
+        "title": name,
+        "subtitle": name + ' have ' + message,
+        "icon": __dirname + "/test/icons/" + message + ".png"
+    })).on('end', function () {
+        done();
+    });
+}
+
+// api doc
+gulp.task('apidoc', function (done) {
+    apidoc({
+        src: "routes",
+        dest: "docs",
+        includeFilters: [".*\\.js$"]
+    }, done);
 });
 

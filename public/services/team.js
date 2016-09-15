@@ -1,5 +1,5 @@
 angular
-    .module('spi.team', ['spi.auth']).factory('team', ['$http', 'auth', function ($http) {
+    .module('spi.team', []).factory('team', ['$http', function ($http) {
 
     var ENDPOINT_URL = '/api/teams';
     var team = {

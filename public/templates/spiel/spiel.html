@@ -11,8 +11,8 @@
 
 <div class="row text-center" data-ng-if="!vm.loading">
     <div class="col-xs-12">
-        <h2>{{vm.spiel.uhrzeit}} Uhr</h2>
-        <h4>Platz {{vm.spiel.platz}}</h4>
+        <h2 id="spiel-uhrzeit">{{vm.spiel.uhrzeit}} Uhr</h2>
+        <h4 id="spiel-platz">Platz {{vm.spiel.platz}}</h4>
     </div>
 </div>
 
@@ -29,14 +29,14 @@
         </div>
         <div class="row">
             <div class="col-xs-4">
-                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)">{{vm.spiel.teamA.name}}</h3>
+                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)" id="spiel-teamA">{{vm.spiel.teamA.name}}</h3>
             </div>
             <div class="col-xs-4">
-                <h1 data-ng-if="vm.spiel.beendet"><span class="score">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</span>
+                <h1 data-ng-if="vm.spiel.beendet" id="spiel-stand"><span class="score">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</span>
                 </h1>
             </div>
             <div class="col-xs-4">
-                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamB)">{{vm.spiel.teamB.name}}</h3>
+                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamB)" id="spiel-teamB">{{vm.spiel.teamB.name}}</h3>
             </div>
         </div>
     </div>
@@ -44,8 +44,8 @@
 
 <div data-ng-if="!vm.loading && vm.spiel.beendet" class="row text-center">
     <div class="col-xs-12">
-        <h5 data-ng-if="vm.spiel.unentschieden">Unentschieden</h5>
-        <h5 data-ng-if="!vm.spiel.unentschieden" data-ng-click="vm.gotoTeam(vm.spiel.gewinner)">
+        <h5 data-ng-if="vm.spiel.unentschieden" id="spiel-unentschieden">Unentschieden</h5>
+        <h5 data-ng-if="!vm.spiel.unentschieden" data-ng-click="vm.gotoTeam(vm.spiel.gewinner)" id="spiel-gewinner">
             {{vm.spiel.gewinner.name}} hat gewonnen</h5>
     </div>
 </div>
