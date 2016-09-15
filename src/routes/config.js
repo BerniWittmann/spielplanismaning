@@ -1,6 +1,6 @@
 module.exports = function (env) {
     var express = require('express');
-    var version = require('../package.json').version;
+    var version = require('../../package.json').version;
     var router = express.Router();
     var exampleContacts = '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
 
