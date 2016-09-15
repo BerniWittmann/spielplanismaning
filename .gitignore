@@ -1,5 +1,5 @@
 /node_modules
-/public/bower_components
+/src/public/bower_components
 /.idea
 /node_modules/**/*
 /test/backend/database-setup/mongorestore

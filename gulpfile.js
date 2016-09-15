@@ -31,7 +31,7 @@ gulp.task('default', ['watch']);
 
 // configure which files to watch and what tasks to use on file changes
 gulp.task('watch', function () {
-    return gulp.watch(['**/*.js', '!public/bower_components/**', '!node_modules/**'], ['watch-task']);
+    return gulp.watch(['**/*.js', '!src/public/bower_components/**', '!node_modules/**'], ['watch-task']);
 });
 
 gulp.task('watch-task', function () {
@@ -42,6 +42,7 @@ gulp.task('inject', function (done) {
     return runSequence('inject:css', 'inject:js', done);
 });
 
+//TODO
 gulp.task('inject:css', function () {
     return gulp.src('./views/index.ejs')
         .pipe(inject(
@@ -72,7 +73,7 @@ gulp.task('inject:js', function () {
 
 // jshint task
 gulp.task('jshint', function () {
-    return gulp.src(['public/**/*.js', '!public/bower_components/**'])
+    return gulp.src(['src/public/**/*.js', '!src/public/bower_components/**'])
         .pipe(jshint({laxcomma: true}))
         .pipe(jshint.reporter('jshint-stylish'));
 });
@@ -87,7 +88,7 @@ gulp.task('test:travis', function (done) {
 });
 
 gulp.task('test:watch', function (done) {
-    return gulp.watch(['**/*.js', 'views/**', '!public/bower_components/**', '!node_modules/**'], ['test'], done);
+    return gulp.watch(['**/*.js', 'src/views/**', '!src/public/bower_components/**', '!src/node_modules/**'], ['test'], done);
 });
 
 // test frontend
@@ -107,7 +108,7 @@ gulp.task('test:frontend', function (done) {
 });
 
 gulp.task('test:frontend:watch', function (done) {
-    return gulp.watch(['**/*.js', 'test/frontend/**', 'views/**', '!public/bower_components/**', '!node_modules/**'], ['test:frontend'], done);
+    return gulp.watch(['**/*.js', 'test/frontend/**', 'src/views/**', '!src/public/bower_components/**', '!src/node_modules/**'], ['test:frontend'], done);
 });
 
 // test backend
@@ -132,7 +133,7 @@ gulp.task('test:backend:withOutWipe', function (done) {
 });
 
 gulp.task('test:backend:watch', function (done) {
-    return gulp.watch(['{models,routes,test/backend}/**'], ['test:backend'], done);
+    return gulp.watch(['src/{models,routes,test/backend}/**'], ['test:backend'], done);
 });
 
 // test DB
@@ -174,7 +175,7 @@ gulp.task('test:e2e', function (done) {
 
 // test e2e local
 gulp.task('test:e2e:local', ['start:server:headless'], function (done) {
-    gulp.src(['./src/tests/*.js'])
+    gulp.src(['./test/*.js'])
         .pipe(angularProtractor({
             'configFile': 'test/e2e/protractor.local.config.js',
             'autoStartStopServer': true,
@@ -193,7 +194,7 @@ gulp.task('test:e2e:local', ['start:server:headless'], function (done) {
 
 // test e2e testing
 gulp.task('test:e2e:testing', function (done) {
-    gulp.src(['./src/tests/*.js'])
+    gulp.src(['./test/*.js'])
         .pipe(angularProtractor({
             'configFile': 'test/e2e/protractor.testing.config.js',
             'autoStartStopServer': true,
@@ -207,17 +208,20 @@ gulp.task('test:e2e:testing', function (done) {
         });
 });
 
+
 // build
 gulp.task('build', function (done) {
     return runSequence('build:clean', ['build:css', 'build:js', 'build:images', 'build:favicon'], done);
 });
 
+//TODO
 // clean dist
 gulp.task('build:clean', function () {
     return gulp.src('dist', {read: false})
         .pipe(clean());
 });
 
+//TODO
 // build css
 gulp.task('build:css', function () {
     return gulp.src('public/stylesheets/**/*.css')
@@ -228,6 +232,7 @@ gulp.task('build:css', function () {
         .pipe(gulp.dest('public/stylesheets/'));
 });
 
+//TODO
 // build js
 gulp.task('build:js', function () {
     return gulp.src(['public/**/*.js', '!public/bower_components/**', '!public/test/**/*.spc.js'])
@@ -235,6 +240,7 @@ gulp.task('build:js', function () {
         .pipe(gulp.dest('public'));
 });
 
+//TODO
 // build images
 gulp.task('build:images', function () {
     return gulp.src('public/assets/img/**')
@@ -254,6 +260,7 @@ gulp.task('serve', function (done) {
     runSequence('inject', 'start:server', done);
 });
 
+//TODO
 gulp.task('start:server', function () {
     livereload.listen();
     // configure nodemon
@@ -270,6 +277,7 @@ gulp.task('start:server', function () {
     return runSequence('start:client');
 });
 
+//TODO
 gulp.task('start:server:headless', function (done) {
     return nodemon({
         // the script to run the app
@@ -291,7 +299,7 @@ gulp.task('start:client', function () {
 // versioning
 function inc(importance) {
     // get all the files to bump version in
-    return gulp.src(['./package.json', './bower.json', './apidoc.json'])
+    return gulp.src(['./package.json', './bower.json', './src/routes/apidoc.json'])
     // bump the version number in those files
         .pipe(bump({type: importance}))
         // save it back to filesystem
@@ -340,7 +348,7 @@ function testnotify(name, message, done) {
 // api doc
 gulp.task('apidoc', function (done) {
     apidoc({
-        src: "routes",
+        src: "src/routes",
         dest: "docs",
         includeFilters: [".*\\.js$"]
     }, done);
