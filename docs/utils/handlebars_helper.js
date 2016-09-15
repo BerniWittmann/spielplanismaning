@@ -2,18 +2,18 @@ define([
     'locales',
     'handlebars',
     'diffMatchPatch'
-], function (locale, Handlebars, DiffMatchPatch) {
+], function(locale, Handlebars, DiffMatchPatch) {
 
     /**
      * start/stop timer for simple performance check.
      */
     var timer;
-    Handlebars.registerHelper('startTimer', function (text) {
+    Handlebars.registerHelper('startTimer', function(text) {
         timer = new Date();
         return '';
     });
 
-    Handlebars.registerHelper('stopTimer', function (text) {
+    Handlebars.registerHelper('stopTimer', function(text) {
         console.log(new Date() - timer);
         return '';
     });
@@ -22,7 +22,7 @@ define([
      * Return localized Text.
      * @param string text
      */
-    Handlebars.registerHelper('__', function (text) {
+    Handlebars.registerHelper('__', function(text) {
         return locale.__(text);
     });
 
@@ -30,7 +30,7 @@ define([
      * Console log.
      * @param mixed obj
      */
-    Handlebars.registerHelper('cl', function (obj) {
+    Handlebars.registerHelper('cl', function(obj) {
         console.log(obj);
         return '';
     });
@@ -39,21 +39,19 @@ define([
      * Replace underscore with space.
      * @param string text
      */
-    Handlebars.registerHelper('underscoreToSpace', function (text) {
+    Handlebars.registerHelper('underscoreToSpace', function(text) {
         return text.replace(/(_+)/g, ' ');
     });
 
     /**
      *
      */
-    Handlebars.registerHelper('assign', function (name) {
-        if (arguments.length > 0) {
+    Handlebars.registerHelper('assign', function(name) {
+        if(arguments.length > 0) {
             var type = typeof(arguments[1]);
             var arg = null;
-            if (type === 'string' || type === 'number' || type === 'boolean') arg = arguments[1];
-            Handlebars.registerHelper(name, function () {
-                return arg;
-            });
+            if(type === 'string' || type === 'number' || type === 'boolean') arg = arguments[1];
+            Handlebars.registerHelper(name, function() { return arg; });
         }
         return '';
     });
@@ -61,18 +59,18 @@ define([
     /**
      *
      */
-    Handlebars.registerHelper('nl2br', function (text) {
+    Handlebars.registerHelper('nl2br', function(text) {
         return _handlebarsNewlineToBreak(text);
     });
 
     /**
      *
      */
-    Handlebars.registerHelper('if_eq', function (context, options) {
+    Handlebars.registerHelper('if_eq', function(context, options) {
         var compare = context;
         // Get length if context is an object
-        if (context instanceof Object && !(options.hash.compare instanceof Object))
-            compare = Object.keys(context).length;
+        if (context instanceof Object && ! (options.hash.compare instanceof Object))
+             compare = Object.keys(context).length;
 
         if (compare === options.hash.compare)
             return options.fn(this);
@@ -83,13 +81,13 @@ define([
     /**
      *
      */
-    Handlebars.registerHelper('if_gt', function (context, options) {
+    Handlebars.registerHelper('if_gt', function(context, options) {
         var compare = context;
         // Get length if context is an object
-        if (context instanceof Object && !(options.hash.compare instanceof Object))
-            compare = Object.keys(context).length;
+        if (context instanceof Object && ! (options.hash.compare instanceof Object))
+             compare = Object.keys(context).length;
 
-        if (compare > options.hash.compare)
+        if(compare > options.hash.compare)
             return options.fn(this);
 
         return options.inverse(this);
@@ -99,26 +97,26 @@ define([
      *
      */
     var templateCache = {};
-    Handlebars.registerHelper('subTemplate', function (name, sourceContext) {
-        if (!templateCache[name])
+    Handlebars.registerHelper('subTemplate', function(name, sourceContext) {
+        if ( ! templateCache[name])
             templateCache[name] = Handlebars.compile($('#template-' + name).html());
 
         var template = templateCache[name];
         var templateContext = $.extend({}, this, sourceContext.hash);
-        return new Handlebars.SafeString(template(templateContext));
+        return new Handlebars.SafeString( template(templateContext) );
     });
 
     /**
      *
      */
-    Handlebars.registerHelper('toLowerCase', function (value) {
+    Handlebars.registerHelper('toLowerCase', function(value) {
         return (value && typeof value === 'string') ? value.toLowerCase() : '';
     });
 
     /**
      *
      */
-    Handlebars.registerHelper('splitFill', function (value, splitChar, fillChar) {
+    Handlebars.registerHelper('splitFill', function(value, splitChar, fillChar) {
         var splits = value.split(splitChar);
         return new Array(splits.length).join(fillChar) + splits[splits.length - 1];
     });
@@ -136,11 +134,11 @@ define([
     /**
      *
      */
-    Handlebars.registerHelper('each_compare_list_field', function (source, compare, options) {
+    Handlebars.registerHelper('each_compare_list_field', function(source, compare, options) {
         var fieldName = options.hash.field;
         var newSource = [];
         if (source) {
-            source.forEach(function (entry) {
+            source.forEach(function(entry) {
                 var values = entry;
                 values['key'] = entry[fieldName];
                 newSource.push(values);
@@ -149,7 +147,7 @@ define([
 
         var newCompare = [];
         if (compare) {
-            compare.forEach(function (entry) {
+            compare.forEach(function(entry) {
                 var values = entry;
                 values['key'] = entry[fieldName];
                 newCompare.push(values);
@@ -161,11 +159,11 @@ define([
     /**
      *
      */
-    Handlebars.registerHelper('each_compare_keys', function (source, compare, options) {
+    Handlebars.registerHelper('each_compare_keys', function(source, compare, options) {
         var newSource = [];
         if (source) {
             var sourceFields = Object.keys(source);
-            sourceFields.forEach(function (name) {
+            sourceFields.forEach(function(name) {
                 var values = {};
                 values['value'] = source[name];
                 values['key'] = name;
@@ -176,7 +174,7 @@ define([
         var newCompare = [];
         if (compare) {
             var compareFields = Object.keys(compare);
-            compareFields.forEach(function (name) {
+            compareFields.forEach(function(name) {
                 var values = {};
                 values['value'] = compare[name];
                 values['key'] = name;
@@ -189,25 +187,25 @@ define([
     /**
      *
      */
-    Handlebars.registerHelper('each_compare_field', function (source, compare, options) {
+    Handlebars.registerHelper('each_compare_field', function(source, compare, options) {
         return _handlebarsEachCompared('field', source, compare, options);
     });
 
     /**
      *
      */
-    Handlebars.registerHelper('each_compare_title', function (source, compare, options) {
+    Handlebars.registerHelper('each_compare_title', function(source, compare, options) {
         return _handlebarsEachCompared('title', source, compare, options);
     });
 
     /**
      *
      */
-    Handlebars.registerHelper('reformat', function (source, type) {
+    Handlebars.registerHelper('reformat', function(source, type){
         if (type == 'json')
             try {
-                return JSON.stringify(JSON.parse(source.trim()), null, "    ");
-            } catch (e) {
+               return JSON.stringify(JSON.parse(source.trim()),null, "    ");
+            } catch(e) {
 
             }
         return source
@@ -216,15 +214,15 @@ define([
     /**
      *
      */
-    Handlebars.registerHelper('showDiff', function (source, compare, options) {
+    Handlebars.registerHelper('showDiff', function(source, compare, options) {
         var ds = '';
-        if (source === compare) {
+        if(source === compare) {
             ds = source;
         } else {
-            if (!source)
+            if( ! source)
                 return compare;
 
-            if (!compare)
+            if( ! compare)
                 return source;
 
             var d = diffMatchPatch.diff_main(compare, source);
@@ -232,7 +230,7 @@ define([
             ds = diffMatchPatch.diff_prettyHtml(d);
             ds = ds.replace(/&para;/gm, '');
         }
-        if (options === 'nl2br')
+        if(options === 'nl2br')
             ds = _handlebarsNewlineToBreak(ds);
 
         return ds;
@@ -241,15 +239,16 @@ define([
     /**
      *
      */
-    function _handlebarsEachCompared(fieldname, source, compare, options) {
+    function _handlebarsEachCompared(fieldname, source, compare, options)
+    {
         var dataList = [];
         var index = 0;
-        if (source) {
-            source.forEach(function (sourceEntry) {
+        if(source) {
+            source.forEach(function(sourceEntry) {
                 var found = false;
                 if (compare) {
-                    compare.forEach(function (compareEntry) {
-                        if (sourceEntry[fieldname] === compareEntry[fieldname]) {
+                    compare.forEach(function(compareEntry) {
+                        if(sourceEntry[fieldname] === compareEntry[fieldname]) {
                             var data = {
                                 typeSame: true,
                                 source: sourceEntry,
@@ -262,7 +261,7 @@ define([
                         }
                     });
                 }
-                if (!found) {
+                if ( ! found) {
                     var data = {
                         typeIns: true,
                         source: sourceEntry,
@@ -275,15 +274,15 @@ define([
         }
 
         if (compare) {
-            compare.forEach(function (compareEntry) {
+            compare.forEach(function(compareEntry) {
                 var found = false;
                 if (source) {
-                    source.forEach(function (sourceEntry) {
-                        if (sourceEntry[fieldname] === compareEntry[fieldname])
+                    source.forEach(function(sourceEntry) {
+                        if(sourceEntry[fieldname] === compareEntry[fieldname])
                             found = true;
                     });
                 }
-                if (!found) {
+                if ( ! found) {
                     var data = {
                         typeDel: true,
                         compare: compareEntry,
@@ -298,7 +297,7 @@ define([
         var ret = '';
         var length = dataList.length;
         for (var index in dataList) {
-            if (index == (length - 1))
+            if(index == (length - 1))
                 dataList[index]['_last'] = true;
             ret = ret + options.fn(dataList[index]);
         }
@@ -310,30 +309,30 @@ define([
     /**
      * Overwrite Colors
      */
-    DiffMatchPatch.prototype.diff_prettyHtml = function (diffs) {
-        var html = [];
-        var pattern_amp = /&/g;
-        var pattern_lt = /</g;
-        var pattern_gt = />/g;
-        var pattern_para = /\n/g;
-        for (var x = 0; x < diffs.length; x++) {
-            var op = diffs[x][0];    // Operation (insert, delete, equal)
-            var data = diffs[x][1];  // Text of change.
-            var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
-                .replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
-            switch (op) {
-                case DIFF_INSERT:
-                    html[x] = '<ins>' + text + '</ins>';
-                    break;
-                case DIFF_DELETE:
-                    html[x] = '<del>' + text + '</del>';
-                    break;
-                case DIFF_EQUAL:
-                    html[x] = '<span>' + text + '</span>';
-                    break;
-            }
+    DiffMatchPatch.prototype.diff_prettyHtml = function(diffs) {
+      var html = [];
+      var pattern_amp = /&/g;
+      var pattern_lt = /</g;
+      var pattern_gt = />/g;
+      var pattern_para = /\n/g;
+      for (var x = 0; x < diffs.length; x++) {
+        var op = diffs[x][0];    // Operation (insert, delete, equal)
+        var data = diffs[x][1];  // Text of change.
+        var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
+            .replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
+        switch (op) {
+          case DIFF_INSERT:
+            html[x] = '<ins>' + text + '</ins>';
+            break;
+          case DIFF_DELETE:
+            html[x] = '<del>' + text + '</del>';
+            break;
+          case DIFF_EQUAL:
+            html[x] = '<span>' + text + '</span>';
+            break;
         }
-        return html.join('');
+      }
+      return html.join('');
     };
 
     // Exports
