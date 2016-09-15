@@ -22,43 +22,43 @@ module.exports = function (env) {
     };
 
     if (!mongoose.models.Gruppe) {
-        require('./../../models/Gruppen');
+        require('./../../src/models/Gruppen');
     }
     if (!mongoose.models.Jugend) {
-        require('./../../models/Jugenden');
+        require('./../../src/models/Jugenden');
     }
     if (!mongoose.models.Spiel) {
-        require('./../../models/Spiele');
+        require('./../../src/models/Spiele');
     }
     if (!mongoose.models.Spielplan) {
-        require('./../../models/Spielplan');
+        require('./../../src/models/Spielplan');
     }
     if (!mongoose.models.Team) {
-        require('./../../models/Teams');
+        require('./../../src/models/Teams');
     }
     if (!mongoose.models.Subscriber) {
-        require('./../../models/Subscriber');
+        require('./../../src/models/Subscriber');
     }
     if (!mongoose.models.User) {
-        require('./../../models/Users')((process.env.SECRET || 'SECRET'));
+        require('./../../src/models/Users')((process.env.SECRET || 'SECRET'));
     }
-    require('../../config/passport');
+    require('../../src/config/passport');
 
-    var routes = require('../../routes/index')();
-    var users = require('../../routes/users')();
-    var email = require('../../routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
-    var config = require('../../routes/config')(process.env);
-    var gruppen = require('../../routes/gruppen')();
-    var jugenden = require('../../routes/jugenden')();
-    var spiele = require('../../routes/spiele')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
-    var spielplan = require('../../routes/spielplan')();
-    var teams = require('../../routes/teams')();
+    var routes = require('../../src/routes/index')();
+    var users = require('../../src/routes/users')();
+    var email = require('../../src/routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var config = require('../../src/routes/config')(process.env);
+    var gruppen = require('../../src/routes/gruppen')();
+    var jugenden = require('../../src/routes/jugenden')();
+    var spiele = require('../../src/routes/spiele')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var spielplan = require('../../src/routes/spielplan')();
+    var teams = require('../../src/routes/teams')();
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
 
     var homepath = __dirname.substring(0, __dirname.length - 'test/backend/'.length);
-    app.set('views', homepath + '/views');
+    app.set('views', homepath + '/src/views');
     app.set('view engine', 'ejs');
 
     app.use('/api/users', users);

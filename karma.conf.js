@@ -5,7 +5,7 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: 'public',
+        basePath: 'src/public',
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -22,14 +22,14 @@ module.exports = function (config) {
             'bower_components/angular-sanitize/angular-sanitize.js',
             'bower_components/moment/moment.js',
             'bower_components/lodash/lodash.js',
-            '../node_modules/chai-jquery/chai-jquery.js',
+            '../../node_modules/chai-jquery/chai-jquery.js',
             'bower_components/ng-table/dist/ng-table.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
             '{components,templates}/**/*.html.ext',
             //include spec files
-            '../test/frontend/**/*.spec.js'
+            '../../test/frontend/**/*.spec.js'
 
         ],
 
