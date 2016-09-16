@@ -7,6 +7,7 @@ module.exports = function (env) {
     /**
      * @api {get} /config/version Version
      * @apiName GetVersion
+     * @apiDescription Gibt die aktuelle Version der App zurück
      * @apiGroup Config
      *
      * @apiSuccess {String} body Version of the app.
@@ -89,17 +90,15 @@ module.exports = function (env) {
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
-     *     {
-     *       [{
-     *       "name": "Klaus Krecken",
-     *       "email": "klaus@krecken.de",
-     *       "turnier": "Kinderbeachturnier"
-     *       },{
-     *       "name": "Stefan Meyer",
-     *       "email": "vorsitzender@fhi-ismaning.de",
-     *       "turnier": "DBT Stoneline Beach Cup"
-     *       }]
-     *     }
+     *     [{
+     *         "name": "Klaus Krecken",
+     *         "email": "klaus@krecken.de",
+     *         "turnier": "Kinderbeachturnier"
+     *     },{
+     *         "name": "Stefan Meyer",
+     *         "email": "vorsitzender@fhi-ismaning.de",
+     *         "turnier": "DBT Stoneline Beach Cup"
+     *     }]
      *
      **/
     router.get('/kontakt', function (req, res) {

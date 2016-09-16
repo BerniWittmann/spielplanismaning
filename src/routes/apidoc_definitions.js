@@ -12,3 +12,13 @@
  * @apiDefine JugendObject
  * @apiSuccess {Object} jugend Jugend-Object
  */
+
+/**
+ * @apiDefine vResponse
+ * @apiSuccess {Integer} __v Datenbank-interne Versionierung
+ */
+
+/**
+ * @apiDefine teamID
+ * @apiSuccess {String} team Team-ID 
+ */
