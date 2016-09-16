@@ -10,7 +10,7 @@ exports.config = {
         // add jasmine spec reporter
         jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
 
-        browser.get('http://localhost:8000');
+        process.env.TEST_BASE_URI = 'http://localhost:8000';
     },
     jasmineNodeOpts: {
         print: function () {
