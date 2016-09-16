@@ -11,6 +11,7 @@ var htmlmin = require('gulp-htmlmin');
 var ngAnnotate = require('gulp-ng-annotate');
 var sourcemaps = require('gulp-sourcemaps');
 
+
 var uglify = false;
 
 // build
@@ -22,16 +23,21 @@ gulp.task('build', function (done) {
 
 gulp.task('build:dist', function (done) {
     uglify = true;
-    return runSequence('build:sequence', done);
+    return runSequence('inject:modules', 'build:sequence', done);
 });
 
 gulp.task('build:sequence', function (done) {
-    return runSequence('build:clean', ['build:css', 'build:js', 'build:images', 'build:favicon', 'build:html', 'build:bower'], 'inject', 'build:views', done);
+    return runSequence('clean:build', ['build:css', 'build:js', 'build:images', 'build:favicon', 'build:html', 'build:bower'], 'inject', 'build:views', 'clean:tmp', done);
 });
 
 // clean dist
-gulp.task('build:clean', function () {
+gulp.task('clean:build', function () {
     return gulp.src('./dist', {read: false})
+        .pipe(clean());
+});
+
+gulp.task('clean:tmp', function () {
+    return gulp.src('./tmp', {read: false})
         .pipe(clean());
 });
 
@@ -57,7 +63,7 @@ gulp.task('build:js', function (done) {
 
 gulp.task('build:js:angular', function () {
     if (uglify) {
-        return gulp.src(['./src/public/**/*.js', '!./src/public/bower_components/**'])
+        return gulp.src(['./tmp/app.js', './src/public/**/*.js', '!./src/public/bower_components/**', '!./src/public/app.js'])
             .pipe(ngAnnotate())
             .pipe(concatJs('app.js'))
             .pipe(gp_uglify())
