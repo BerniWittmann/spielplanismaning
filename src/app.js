@@ -9,6 +9,8 @@ var passport = require('passport');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
+var app = express();
+
 require('./models/Gruppen');
 require('./models/Jugenden');
 require('./models/Spiele');
@@ -17,8 +19,6 @@ require('./models/Teams');
 require('./models/Subscriber');
 require('./models/Users')((process.env.SECRET || 'SECRET'));
 require('./config/passport');
-
-var app = express();
 
 app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
 if (app.get('ENVIRONMENT') == 'DEV') {
@@ -57,31 +57,10 @@ app.set('port', (process.env.PORT || 8000));
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
-})
-;
-/* Routes */
+});
 
-var routes = require('./routes/index.js')();
-var users = require('./routes/users.js')();
-var email = require('./routes/email.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
-var config = require('./routes/config.js')(process.env);
-var teams = require('./routes/teams.js')();
-var gruppen = require('./routes/gruppen.js')();
-var jugenden = require('./routes/jugenden.js')();
-var spiele = require('./routes/spiele.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
-var spielplan = require('./routes/spielplan.js')();
-
-var API_PREFIX = '/api';
-app.use(API_PREFIX + '/users', users);
-app.use(API_PREFIX + '/email', email);
-app.use(API_PREFIX + '/config', config);
-app.use(API_PREFIX + '/teams', teams);
-app.use(API_PREFIX + '/gruppen', gruppen);
-app.use(API_PREFIX + '/jugenden', jugenden);
-app.use(API_PREFIX + '/spiele', spiele);
-app.use(API_PREFIX + '/spielplan', spielplan);
-app.use(/\/.*/, routes);
-
+//Setup Routes
+require('./routes/routes.js')(app, sendgrid);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
