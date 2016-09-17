@@ -130,6 +130,7 @@ input[type=number]::-webkit-outer-spin-button {
 body {
     min-height: 100%;
     position: relative;
+    /*noinspection CssUnknownTarget*/
     background-image: url("/assets/img/background.jpg");
     background-repeat: no-repeat;
     background-position: left top;
@@ -142,9 +143,9 @@ body {
     width: 90%;
     margin: 0 auto;
     background-color: white;
-    -webkit-box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
-    -moz-box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
-    box-shadow: 10px 10px 25px 0px rgba(71, 71, 71, 0.83);
+    -webkit-box-shadow: 10px 10px 25px 0 rgba(71, 71, 71, 0.83);
+    -moz-box-shadow: 10px 10px 25px 0 rgba(71, 71, 71, 0.83);
+    box-shadow: 10px 10px 25px 0 rgba(71, 71, 71, 0.83);
     border-radius: 4px;
     margin-bottom: 40px;
 }
@@ -208,5 +209,5 @@ body {
 }
 
 .page-header {
-    margin-top: 0px;
+    margin-top: 0;
 }
