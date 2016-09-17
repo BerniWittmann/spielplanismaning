@@ -69,3 +69,15 @@
  *         toreA: 4
  *     }
  */
+
+/**
+ * @apiDefine FehlendeFelderError
+ * 
+ * @apiError FehlendeFelder Es wurden nicht alle Felder ausgefüllt. Benutzername oder/und Passwort fehlen
+ *
+ * @apiErrorExample Error-Response FehlendeFelder:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *         "message": "Bitte alle Felder ausfüllen"
+ *     }
+ */

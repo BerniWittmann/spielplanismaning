@@ -87,8 +87,8 @@ module.exports = function () {
      *
      * @apiError MaximalzahlErreicht Maximalzahl an Gruppen für die gewählte Jugend erreicht.
      *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 404 Not Found
+     * @apiErrorExample Error-Response MaximalzahlErreicht:
+     *     HTTP/1.1 418 I’m a teapot
      *     {
      *         "message": "Maximalzahl an Gruppen für diese Jugend erreicht"
      *     }
