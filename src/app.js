@@ -4,28 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var app = express();
-
-app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
-if (app.get('ENVIRONMENT') == 'DEV') {
-    app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
-} else {
-    app.set('MONGODB_URI', process.env.MONGODB_URI);
-}
-
-
 var mongoose = require('mongoose');
 var passport = require('passport');
-
-// connect MongoDB
-mongoose.connect(app.get('MONGODB_URI'), function (err) {
-    if (!err) {
-        console.log('Connected to Database on ' + app.get('MONGODB_URI'));
-    } else {
-        console.log(err); //failed to connect
-    }
-});
 
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
@@ -37,6 +17,24 @@ require('./models/Teams');
 require('./models/Subscriber');
 require('./models/Users')((process.env.SECRET || 'SECRET'));
 require('./config/passport');
+
+var app = express();
+
+app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
+if (app.get('ENVIRONMENT') == 'DEV') {
+    app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
+} else {
+    app.set('MONGODB_URI', process.env.MONGODB_URI);
+}
+
+// connect MongoDB
+mongoose.connect(app.get('MONGODB_URI'), function (err) {
+    if (!err) {
+        console.log('Connected to Database on ' + app.get('MONGODB_URI'));
+    } else {
+        console.log(err); //failed to connect
+    }
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
