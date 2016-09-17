@@ -29,3 +29,8 @@ notifications:
     on_pull_requests: false
     rooms:
       secure: iMFuDbqhVhvMxuWyrRx3xkhMXYchW9fYiVfWMMPdKqMdEAps9lpZ5W5pYkBgCCS+XDamVforN5zG1H8qrCkMkm8x+TXdM7FHOzgnlW+D8ufDXFoMF9kz4DR45fopHCUHJh3HM32zKqxEfPA5uiRN9dLf59dlogQ/TpX7h3fp2jrRGjDBLJw58hg0IwsZB3xQZkNzKT3qzQEdH2KRWB0Xgs1Ksan4PrD3ev9/d0vA0lpDHIJR7ynnnqdXIMs8DoFd+6fGLdvS6zZIXMNzdot46HvP1YoJEaw1p8Xcnk2EfAELQI2nnPFnzLv254+hAJAratzDuYA0VcjxJXx7/UOeFq4KoDfm1/K9puNOF4tZgGHi+PLOmqtFH52Un+zTQr9biW1nGq/UFLK4Ti+MrbwnL0i+i9uWBKC/2aVw0J1agxT3hJLqzi1qCsbXS/JqtRQrQhI4ZqRLU3Lz19CEmhezN2voTGIEyJZ6R2TQkzskr+Tg0sDgqMaX7tcVw4cdXCnFpLcYWKXsP+PMg0qEtSzA0Xn8zvW6E6KaAtLoJ1GBo6O8HLcSgMIzFIgwHN50SvTBY15Xu7dodS3K+WQu+OEP8tW3sum/o2f82MlytlsudbMcAVmctLMou/b7ThiIv1mFaVyFNUvBhtfz+Mq1CjJHkrBj65ne8c/9uE2V9j2F010=
+  email:
+    recipients:
+      - b.wittmann@mail.de
+    on_success: never
+    on_failure: always

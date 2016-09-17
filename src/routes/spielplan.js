@@ -9,6 +9,32 @@ module.exports = function () {
     var Spielplan = mongoose.model('Spielplan');
     var Spiel = mongoose.model('Spiel');
 
+    /**
+     * @api {get} /spielplan Get Spielplan
+     * @apiName GetSpielplan
+     * @apiDescription Lädt den Spielplan
+     * @apiGroup Spielplan
+     *
+     * @apiSuccess {String} _id ID des Spielplans
+     * @apiSuccess {String} startzeit Startzeit
+     * @apiSuccess {Integer} spielzeit Spielzeit in Minuten
+     * @apiSuccess {Integer} pausenzeit Pausenzeit in Minuten
+     * @apiSuccess {Array} ausnahmen Ausnahmen bei der Spielplanerstellung
+     * @apiSuccess {Array} spiele Spiele (wird nicht genutzt) TODO entfernen
+     * @apiUse vResponse
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [{
+     *         _id: '57579d1eff6aa513ad6859df',
+     *         startzeit: '09:00',
+     *         spielzeit: 8,
+     *         pausenzeit: 2,
+     *         __v: 50,
+     *         ausnahmen: [ [ Object ], [ Object ] ],
+     *         spiele: []
+     *     }]
+     **/
     router.get('/', function (req, res) {
         var query = Spielplan.findOne({});
         query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
@@ -19,6 +45,20 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {Put} /spielplan/zeiten Update Spielplan-Zeiten
+     * @apiName PutSpielplanZeiten
+     * @apiDescription Updatet die Spielplan-Zeiten
+     * @apiGroup Spielplan
+     *
+     * @apiSuccess {String} body Success-Message: Spielplan erstellt
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "Spielplan erstellt"
+     *     }
+     **/
     router.put('/zeiten', function (req, res) {
         Spielplan.findOneAndUpdate({}, req.body, {
             upsert: true
@@ -51,6 +91,28 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {Put} /spielplan/ausnahmen Update Spielplan-Ausnahmen
+     * @apiName PutSpielplanAusnahmen
+     * @apiDescription Updatet die Spielplan-Ausnahmen
+     * @apiGroup Spielplan
+     *
+     * @apiSuccess {String} _id ID der Ausnahme
+     * @apiSuccess {Object} team1 Team-Object des ersten Teams
+     * @apiSuccess {Object} team2 Team-Object des zweiten Teams
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [ {
+     *         _id: '5769b241246cc9db21377284',
+     *         team1: [Object],
+     *         team2: [Object]
+     *     }, {
+     *         team1: null,
+     *         team2: null,
+     *         _id: '577be9e15060bba2b1d5659d'
+     *      } ]
+     **/
     router.put('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).exec(function (err, spielplan) {
             if (err) {
@@ -67,6 +129,28 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {get} /spielplan/ausnahmen Get Spielplan-Ausnahmen
+     * @apiName GetSpielplanAusnahmen
+     * @apiDescription Lädt die Spielplan-Ausnahmen
+     * @apiGroup Spielplan
+     *
+     * @apiSuccess {String} _id ID der Ausnahme
+     * @apiSuccess {Object} team1 Team-Object des ersten Teams
+     * @apiSuccess {Object} team2 Team-Object des zweiten Teams
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [ {
+     *         _id: '5769b241246cc9db21377284',
+     *         team1: [Object],
+     *         team2: [Object]
+     *     }, {
+     *         team1: null,
+     *         team2: null,
+     *         _id: '577be9e15060bba2b1d5659d'
+     *      } ]
+     **/
     router.get('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
             if (err) {

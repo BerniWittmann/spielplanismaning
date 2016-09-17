@@ -14,7 +14,8 @@ exports.config = {
         // add jasmine spec reporter
         jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
 
-        browser.get('http://spielplanismaning-testing.herokuapp.com');
+        process.env.TEST_BASE_URI = 'http://spielplanismaning-testing.herokuapp.com';
+
     },
     jasmineNodeOpts: {
         print: function () {
