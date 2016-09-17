@@ -2,13 +2,9 @@ angular
     .module('spi.team', []).factory('team', ['$http', function ($http) {
 
     var ENDPOINT_URL = '/api/teams';
-    var team = {
-        teams: []
-    };
 
     team.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {
-            angular.copy(data, team.teams);
             return data;
         });
     };

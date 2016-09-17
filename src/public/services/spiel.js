@@ -2,13 +2,9 @@ angular
     .module('spi.spiel', []).factory('spiel', ['$http', 'Logger', function ($http, Logger) {
 
     var ENDPOINT_URL = '/api/spiele';
-    var spiel = {
-        spiele: []
-    };
 
     spiel.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {
-            angular.copy(data, spiel.spiele);
             return data;
         });
     };
