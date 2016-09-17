@@ -7,6 +7,32 @@ module.exports = function () {
     var Jugend = mongoose.model('Jugend');
     var Team = mongoose.model('Team');
 
+    /**
+     * @api {get} /jugenden Get Jugenden
+     * @apiName GetJugenden
+     * @apiDescription Lädt Jugenden, entweder Alle oder gefiltert nach ID
+     * @apiGroup Jugend
+     *
+     * @apiParam {String} [id]  Optionale ID der Jugend.
+     *
+     * @apiSuccess {String} _id ID der Jugend
+     * @apiSuccess {name} name Name der Jugend
+     * @apiSuccess {String} color Farbe der Jugend
+     * @apiSuccess {Array} grupppen Gruppen der Jugend
+     * @apiSuccess {Array} teams Teams der Jugend
+     * @apiUse vResponse
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [{
+     *         _id: '57cffb4055a8d45fc084c107',
+     *         name: 'Jugend 1',
+     *         color: 'gruen',
+     *         teams: [Object],
+     *         gruppen: [Object],
+     *         __v: 4
+     *     }]
+     **/
     router.get('/', function (req, res) {
         var query = Jugend.find();
         if (req.param('id')) {
@@ -21,6 +47,31 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {Post} /jugenden Create Jugend
+     * @apiName CreateJugend
+     * @apiDescription Speichert eine neue Jugend
+     * @apiGroup Jugend
+     *
+     * @apiSuccess {String} _id ID der Jugend
+     * @apiSuccess {name} name Name der Jugend
+     * @apiSuccess {String} color Farbe der Jugend
+     * @apiSuccess {Array} grupppen Gruppen der Jugend
+     * @apiSuccess {Array} teams Teams der Jugend
+     * @apiUse vResponse
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         _id: '57cffb4055a8d45fc084c107',
+     *         name: 'Jugend 1',
+     *         color: 'gruen',
+     *         teams: [ [Object], [Object] ],
+     *         gruppen: [Object],
+     *         __v: 4
+     *     }
+     *
+     **/
     router.post('/', function (req, res) {
         var jugend = new Jugend(req.body);
 
@@ -51,6 +102,22 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {del} /jugenden Delete Jugend
+     * @apiName DeleteJugend
+     * @apiDescription Löscht eine Jugend
+     * @apiGroup Jugend
+     *
+     * @apiParam {String} id ID der Jugend.
+     *
+     * @apiSuccess {String} body Erfolgsnachricht: Successful
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "Successful"
+     *     }
+     **/
     router.delete('/', function (req, res) {
         Team.remove({
             "jugend": req.param('id')
@@ -78,6 +145,22 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {get} /jugenden/tore Get Tore
+     * @apiName GetTore
+     * @apiDescription Lädt die Tore, entweder die aller Jugenden oder einer einzelnen
+     * @apiGroup Jugend
+     *
+     * @apiParam {String} [id]  Optionale ID der Jugend.
+     *
+     * @apiSuccess {Integer} Body Tore
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         9
+     *     }
+     **/
     router.get('/tore', function (req, res) {
         var query = Jugend.find();
         if (req.param('id')) {

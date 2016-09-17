@@ -9,6 +9,20 @@ module.exports = function (sendgrid, env, url, disableMails) {
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
+    /**
+     * @api {get} /spiele Get Spiele
+     * @apiName GetSpiele
+     * @apiDescription Lädt Spiele, entweder Alle oder gefiltert nach ID, Gruppe, Jugend oder Team
+     * @apiGroup Spiele
+     *
+     * @apiParam {String} [id]  Optionale ID des Spiels.
+     * @apiParam {String} [gruppe]  Optionale ID der Gruppe.
+     * @apiParam {String} [jugend]  Optionale ID der Jugend.
+     * @apiParam {String} [team]  Optionale ID des Teams.
+     *
+     *
+     * @apiUse spielResponse
+     **/
     router.get('/', function (req, res) {
         var query = Spiel.find();
         if (req.param('id')) {
@@ -36,6 +50,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
+    /**
+     * @api {Post} /spiele Create Spiel
+     * @apiName CreateSpiel
+     * @apiDescription Speichert ein Spiel
+     * @apiGroup Spiele
+     *
+     * @apiUse spielResponse
+     *
+     **/
     router.post('/', function (req, res) {
         var spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
@@ -50,6 +73,22 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
+    /**
+     * @api {del} /spiele Delete Spiel
+     * @apiName DeleteSpiel
+     * @apiDescription Löscht ein Spiel
+     * @apiGroup Spiele
+     *
+     * @apiParam {String} id ID des Spiels.
+     *
+     * @apiSuccess {String} body Erfolgsnachricht: success
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "success"
+     *     }
+     **/
     router.delete('/', function (req, res) {
         Spiel.remove({
             "_id": req.param('id')
@@ -62,6 +101,21 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
+    /**
+     * @api {Post} /spiele/alle Create Spielplan
+     * @apiName CreateSpiele
+     * @apiDescription Speichert alle Spiele
+     * @apiGroup Spiele
+     *
+     * @apiSuccess {String} body Erfolgsnachricht: Spielplan erstellt
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "Spielplan erstellt"
+     *     }
+     *
+     **/
     router.post('/alle', function (req, res) {
         var spiele = req.body;
         async.eachSeries(spiele, function (singlespiel, asyncdone) {
@@ -75,6 +129,20 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
+    /**
+     * @api {del} /spiele/alle Delete Alle Spiele
+     * @apiName DeleteAlleSpiel
+     * @apiDescription Löscht alle Spiele
+     * @apiGroup Spiele
+     *
+     * @apiSuccess {String} body Erfolgsnachricht: success
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "success"
+     *     }
+     **/
     router.delete('/alle', function (req, res) {
         Spiel.remove({}, function (err) {
             if (err) {
@@ -85,6 +153,16 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
+    /**
+     * @api {del} /spiele/tore Delete Spiel Ergebnis
+     * @apiName DeleteSpielErgebnis
+     * @apiDescription Löscht die Ergebnisse eines Spiels
+     * @apiGroup Spiele
+     *
+     * @apiParam {String} id ID des Spiels
+     *
+     * @apiUse spielResponse
+     **/
     router.delete('/tore', function (req, res) {
         var query = Spiel.findById(req.param('id'));
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
@@ -120,6 +198,17 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
+    /**
+     * @api {PUT} /spiele/tore Update Spiel Ergebnis
+     * @apiName UpdateSpielErgebnis
+     * @apiDescription Speichert das Ergebnis eines Spiels
+     * @apiGroup Spiele
+     *
+     * @apiParam {String} id ID des Spiels
+     *
+     * @apiUse spielResponse
+     *
+     **/
     router.put('/tore', function (req, res) {
         var query = Spiel.findById(req.param('id'));
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {

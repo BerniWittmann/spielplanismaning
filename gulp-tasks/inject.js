@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var inject = require('gulp-inject');
+var replace = require('gulp-replace');
 
 gulp.task('inject', function (done) {
     return runSequence('moveViews', 'inject:css', 'inject:js', done);
@@ -37,4 +38,10 @@ gulp.task('inject:js', function () {
             }
         ))
         .pipe(gulp.dest('./dist/views'));
+});
+
+gulp.task('inject:modules', function () {
+    return gulp.src('./src/public/app.js')
+        .pipe(replace("/* module-injector */", "'templates',"))
+        .pipe(gulp.dest('./tmp'));
 });

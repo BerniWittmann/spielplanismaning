@@ -6,6 +6,40 @@ module.exports = function () {
     var Jugend = mongoose.model('Jugend');
     var Team = mongoose.model('Team');
 
+    /**
+     * @api {get} /teams Get Team
+     * @apiName GetTeams
+     * @apiDescription Lädt Teams, entweder Alle oder gefiltert nach ID, Jugend oder Gruppe
+     * @apiGroup Teams
+     *
+     * @apiParam {String} [id] Optionale ID des Teams.
+     * @apiParam {String} [gruppe] Optionale ID der Gruppe.
+     * @apiParam {String} [jugend] Optionale ID der Jugend.
+     *
+     * @apiSuccess {String} _id ID des Teams
+     * @apiSuccess {name} name Name des Teams
+     * @apiUse JugendObject
+     * @apiUse GruppeObject
+     * @apiSuccess {Integer} tore Anzahl Tore des Teams
+     * @apiSuccess {Integer} gtore Anzahl Gegen-Tore des Teams
+     * @apiSuccess {Integer} punkte Anzahl Punkte des Teams
+     * @apiSuccess {Integer} gpunkte Anzahl Gegenpunkte des Teams
+     * @apiUse vResponse
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [{
+     *         _id: '57cffb4055a8d45fc084c108',
+     *         name: 'Team A1',
+     *         jugend: [ Object ],
+     *         gruppe: [ Object ],
+     *         tore: 4,
+     *         gtore: 1,
+     *         punkte: 2,
+     *         gpunkte: 0
+     *         __v: 3
+     *     }]
+     **/
     router.get('/', function (req, res) {
         var query = Team.find();
         if (req.param('id')) {
@@ -26,6 +60,22 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {del} /teams Delete Team
+     * @apiName DeleteTeams
+     * @apiDescription Löscht ein Team
+     * @apiGroup Teams
+     *
+     * @apiParam {String} id ID des Teams.
+     *
+     * @apiSuccess {String} body Success-Message: success
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "success"
+     *     }
+     **/
     router.delete('/', function (req, res) {
         var query = Team.findById(req.param('id'));
         query.deepPopulate('gruppe, jugend').exec(function (err, team) {
@@ -58,6 +108,39 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {post} /teams Create Team
+     * @apiName CreateTeams
+     * @apiDescription Speichert ein neues Team
+     * @apiGroup Teams
+     *
+     * @apiParam {String} gruppe ID der Gruppe.
+     * @apiParam {String} jugend ID der Jugend.
+     *
+     * @apiSuccess {String} _id ID des Teams
+     * @apiSuccess {name} name Name des Teams
+     * @apiUse JugendObject
+     * @apiUse GruppeObject
+     * @apiSuccess {Integer} tore Anzahl Tore des Teams
+     * @apiSuccess {Integer} gtore Anzahl Gegen-Tore des Teams
+     * @apiSuccess {Integer} punkte Anzahl Punkte des Teams
+     * @apiSuccess {Integer} gpunkte Anzahl Gegenpunkte des Teams
+     * @apiUse vResponse
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [{
+     *         _id: '57cffb4055a8d45fc084c108',
+     *         name: 'Neues Team',
+     *         jugend: [ Object ],
+     *         gruppe: [ Object ],
+     *         tore: 0,
+     *         gtore: 0,
+     *         punkte: 0,
+     *         gpunkte: 0
+     *         __v: 3
+     *     }]
+     **/
     router.post('/', function (req, res) {
         var team = new Team(req.body);
         team.jugend = req.param('jugend');
@@ -96,6 +179,38 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {put} /teams Update Team
+     * @apiName UpdateTeam
+     * @apiDescription Speichert einen neuen Team Namen
+     * @apiGroup Teams
+     *
+     * @apiParam {String} id ID des Teams.
+     *
+     * @apiSuccess {String} _id ID des Teams
+     * @apiSuccess {name} name Name des Teams
+     * @apiUse JugendObject
+     * @apiUse GruppeObject
+     * @apiSuccess {Integer} tore Anzahl Tore des Teams
+     * @apiSuccess {Integer} gtore Anzahl Gegen-Tore des Teams
+     * @apiSuccess {Integer} punkte Anzahl Punkte des Teams
+     * @apiSuccess {Integer} gpunkte Anzahl Gegenpunkte des Teams
+     * @apiUse vResponse
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [{
+     *         _id: '57cffb4055a8d45fc084c108',
+     *         name: 'Neuer Name',
+     *         jugend: [ Object ],
+     *         gruppe: [ Object ],
+     *         tore: 4,
+     *         gtore: 1,
+     *         punkte: 2,
+     *         gpunkte: 0
+     *         __v: 3
+     *     }]
+     **/
     router.put('/', function (req, res) {
         Team.findById(req.param('id'), function (err, team) {
             team.name = req.body.name;
@@ -109,6 +224,20 @@ module.exports = function () {
         });
     });
 
+    /**
+     * @api {put} /teams/resetErgebnisse Reset Team-Ergebnis
+     * @apiName ResetTeamErgebnis
+     * @apiDescription Setzt die Ergebnisse aller Teams zurück
+     * @apiGroup Teams
+     *
+     * @apiSuccess {String} body Success-Message: Successful Reset
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         "Successful Reset"
+     *     }
+     **/
     router.put('/resetErgebnisse', function (req, res) {
         var query = Team.find();
         query.exec(function (err, teams) {
