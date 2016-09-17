@@ -1,14 +1,20 @@
 angular
-    .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function ($http, $state, $window, Logger) {
+    .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function (
+    $http,
+    $state,
+    $window,
+    Logger
+) {
     var auth = {};
     var ENDPOINT_URL = '/api/users';
+    var TOKEN_NAME = 'spielplan-ismaning-token';
 
     auth.saveToken = function (token) {
-        $window.localStorage['spielplan-ismaning-token'] = token;
+        $window.localStorage[TOKEN_NAME] = token;
     };
 
     auth.getToken = function () {
-        return $window.localStorage['spielplan-ismaning-token'];
+        return $window.localStorage[TOKEN_NAME];
     };
 
     auth.isLoggedIn = function () {
@@ -62,7 +68,7 @@ angular
     };
 
     auth.logOut = function () {
-        $window.localStorage.removeItem('spielplan-ismaning-token');
+        $window.localStorage.removeItem(TOKEN_NAME);
         $state.go('spi.home');
     };
 
