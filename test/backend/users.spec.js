@@ -95,7 +95,7 @@ describe('Route: Users', function () {
             .expect(401)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.message).to.equal('Falsches Passwort.');
+                expect(res.body.message).to.equal('Falscher Benutzername/Passwort');
                 return done();
             });
     });
@@ -107,7 +107,7 @@ describe('Route: Users', function () {
             .expect(401)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.message).to.equal('Falscher Benutzername.');
+                expect(res.body.message).to.equal('Falscher Benutzername/Passwort');
                 return done();
             });
     });
