@@ -91,12 +91,12 @@ module.exports = function (env) {
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     [{
-     *         "name": "Klaus Krecken",
-     *         "email": "klaus@krecken.de",
+     *         "name": "Name Nachname",
+     *         "email": "email@test.de",
      *         "turnier": "Kinderbeachturnier"
      *     },{
-     *         "name": "Stefan Meyer",
-     *         "email": "vorsitzender@fhi-ismaning.de",
+     *         "name": "Hans Meyer",
+     *         "email": "hm@mail.de",
      *         "turnier": "DBT Stoneline Beach Cup"
      *     }]
      *

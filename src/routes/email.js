@@ -91,8 +91,8 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiParam {String} email  Email-Adresse des Abonnenten.
      * @apiParam {String} team ID des Teams.
      *
-     * @apiSuccess {id} ok Anzahl gefundene Abonnements
-     * @apiSuccess {id} n Anzahl gelöschte Abonnements
+     * @apiSuccess {Integer} ok Anzahl gefundene Abonnements
+     * @apiSuccess {Integer} n Anzahl gelöschte Abonnements
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK

@@ -22,3 +22,8 @@
  * @apiDefine teamID
  * @apiSuccess {String} team Team-ID 
  */
+
+/**
+ * @apiDefine jugendID
+ * @apiSuccess {String} jugend Jugend-ID
+ */
