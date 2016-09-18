@@ -21,9 +21,16 @@ angular
         });
     }
 
+    function getLockdown() {
+        return $http.get('/api/config/lockdownmode').success(function (res) {
+            return res.data;
+        });
+    }
+
     return {
         getEnv: getEnv,
         getVersion: getVersion,
-        getKontakte: getKontakte
+        getKontakte: getKontakte,
+        getLockdown: getLockdown
     };
 }]);

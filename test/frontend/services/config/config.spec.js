@@ -13,6 +13,7 @@
         var env = 'TESTING';
         var version = '1.0.0';
         var kontakte = [{name: 'Name', email: 'Test@test.de', turnier: 'Test-Turnier'}];
+        var lockdown = true;
         var config;
 
         beforeEach(inject(function (_config_, $httpBackend) {
@@ -51,10 +52,20 @@
         });
 
         it('soll die Kontakte laden', function () {
-            response = env;
+            response = kontakte;
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/kontakt').respond(201, response);
 
             config.getKontakte().then(function (res) {
+                responseTest = res.data;
+                expect(_.isEqual(res.data, response)).to.be.true;
+            });
+        });
+
+        it('soll den LockdownMode laden', function () {
+            response = lockdown;
+            httpBackend.expectGET(ENDPOINT_BASE_URL + '/lockdownmode').respond(201, response);
+
+            config.getLockdown().then(function (res) {
                 responseTest = res.data;
                 expect(_.isEqual(res.data, response)).to.be.true;
             });

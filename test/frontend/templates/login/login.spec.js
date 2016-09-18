@@ -48,7 +48,7 @@
             var ctrl = scope.vm = $controller('LoginController', {
                 auth: mockAuth,
                 $state: mockState,
-                lockdown: (lockdown || false)
+                lockdown: {data: (lockdown || false)}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
