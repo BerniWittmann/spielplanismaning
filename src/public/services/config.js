@@ -9,7 +9,21 @@ angular
         });
     }
 
+    function getVersion() {
+        return $http.get(ENDPOINT_URL + '/version').success(function (res) {
+            return res.data;
+        });
+    }
+    
+    function getKontakte() {
+        return $http.get(ENDPOINT_URL + '/kontakt').success(function (res) {
+            return res.data;
+        });
+    }
+
     return {
-        getEnv: getEnv
+        getEnv: getEnv,
+        getVersion: getVersion,
+        getKontakte: getKontakte
     };
 }]);
