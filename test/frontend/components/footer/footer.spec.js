@@ -9,25 +9,29 @@
         var element;
         var scope;
         var controller;
-        var $httpBackend;
         var env = 'TESTING';
+        var $provide;
 
-        beforeEach(inject(function ($rootScope, $compile, _$httpBackend_) {
-            $httpBackend = _$httpBackend_;
+        beforeEach(module(function (_$provide_) {
+            $provide = _$provide_;
+        }));
+
+        beforeEach(inject(function ($rootScope, $compile, $q) {
             scope = $rootScope.$new();
 
-            $httpBackend.expectGET('/api/config/version').respond(201, '0.0.0');
-            $httpBackend.expectGET('/api/config/env').respond(201, env);
+            $provide.service('config', function () {
+                return {
+                    getEnv: function () {
+                        var deferred = $q.defer();
+                        deferred.resolve({data: env});
+                        return deferred.promise;
+                    }
+                };
+            });
             element = $compile('<spi-footer></spi-footer>')(scope);
             scope.$digest();
             controller = element.controller("spiFooter");
-            $httpBackend.flush();
         }));
-
-        afterEach(function () {
-            $httpBackend.verifyNoOutstandingExpectation();
-            $httpBackend.verifyNoOutstandingRequest();
-        });
 
         it('soll der Link zur Kontaktseite erscheinen', function () {
             var link = undefined;
@@ -46,11 +50,11 @@
         describe('Auf der Testumgebung', function () {
             before(function () {
                 env = 'TESTING';
+                scope.$digest();
             });
 
             it('soll der Buildstatus gezeigt werden', function () {
                 var result = element.find('img');
-
                 expect(controller.showBuildStatus).to.be.true;
                 expect(result).not.to.be.undefined;
                 expect(result).to.exist;
@@ -61,6 +65,7 @@
         describe('Auf der Produktionsumgebung', function () {
             before(function () {
                 env = 'PROD';
+                scope.$digest();
             });
 
             it('soll der Buildstatus nicht gezeigt werden', function () {
