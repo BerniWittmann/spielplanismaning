@@ -16,7 +16,8 @@ gulp.task('serve:dist', function (done) {
 gulp.task('start:server', function (done) {
     return nodemon({
         // the script to run the app
-        script: './dist/app.js'
+        script: './dist/app.js',
+        ignore: ['./../']
     }).on('start', function () {
         done();
     });
