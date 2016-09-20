@@ -79,7 +79,7 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 90%;
 }
 
-.jugend-label:hover {
+.jugend-label a:hover {
     color: gray;
 }
 
