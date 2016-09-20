@@ -9,6 +9,7 @@
         .controller('EmailAbonnementsContoller', EmailAbonnementsContoller);
 
     function states($stateProvider) {
+        //noinspection JSUnusedGlobalSymbols
         $stateProvider
             .state('spi.verwaltung.email-abonnements', {
                 url: '/email-abonnements'
@@ -16,7 +17,10 @@
                 , controller: EmailAbonnementsContoller
                 , controllerAs: 'vm'
                 , resolve: {
-                    authenticate: authenticate
+                    authenticate: authenticate,
+                    getSubscribersPromise: function (email) {
+                        return email.getSubscribers();
+                    }
                 }
             });
 
@@ -34,41 +38,17 @@
         }
     }
 
-    function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state) {
+    function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, getSubscribersPromise) {
         var vm = this;
         vm.loading = true;
 
-        email.getSubscribers().then(function (res) {
-            vm.abonnements = res.data;
-            _.forEach(vm.abonnements, function (o) {
-                o.jugendName = o.team.jugend.name;
-                o.teamName = o.team.name;
-            });
-
-            _.extend(vm, {
-                tableParams: new NgTableParams({
-                    count: 10
-                }, {
-                    counts: []
-                    , data: vm.abonnements
-                })
-            });
-            vm.loading = false;
-        }, function (res) {
-            console.log(res);
-            vm.abonnements = [];
-            _.extend(vm, {
-                tableParams: new NgTableParams({
-                    count: 10
-                }, {
-                    counts: []
-                    , data: vm.abonnements
-                })
-            });
-            vm.loading = false;
-        });
+        var emailBlank = {
+            subject: ''
+            , text: ''
+        };
 
         _.extend(vm, {
+            abonnements: (getSubscribersPromise.data || []),
             send: function () {
                 if (!_.isEqual(vm.email, emailBlank)) {
                     return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
@@ -83,15 +63,25 @@
                 $state.go('spi.tgj.jugend', {
                     jugendid: jugend._id
                 });
-            }
+            }, resetForm: resetForm,
+            email: {}
         });
 
-        var emailBlank = {
-            subject: ''
-            , text: ''
-        };
-        vm.email = {};
         _.extend(vm.email, emailBlank);
+
+        _.forEach(vm.abonnements, function (o) {
+            o.jugendName = o.team.jugend.name;
+            o.teamName = o.team.name;
+        });
+
+        _.extend(vm, {
+            tableParams: new NgTableParams({
+                count: 10
+            }, {
+                counts: []
+                , data: vm.abonnements
+            })
+        });
 
         function send() {
             email.send(vm.email).then(function () {
@@ -102,10 +92,11 @@
             });
         }
 
-        vm.resetForm = function () {
+        function resetForm() {
             vm.message = undefined;
             vm.err = undefined;
-        };
+        }
 
+        vm.loading = false;
     }
 })();
