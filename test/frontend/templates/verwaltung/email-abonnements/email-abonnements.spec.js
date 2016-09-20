@@ -70,11 +70,7 @@
                 }
             };
             mockEmail = {
-                getSubscribers: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: abonnements});
-                    return deferred.promise;
-                }, send: function () {
+                send: function () {
                     var deferred = $q.defer();
                     deferred.resolve();
                     return deferred.promise;
@@ -84,7 +80,8 @@
             var ctrl = scope.vm = $controller('EmailAbonnementsContoller', {
                 email: mockEmail,
                 $state: mockState,
-                BestaetigenDialog: mockBestaetigenDialog
+                BestaetigenDialog: mockBestaetigenDialog,
+                getSubscribersPromise: {data: abonnements}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
