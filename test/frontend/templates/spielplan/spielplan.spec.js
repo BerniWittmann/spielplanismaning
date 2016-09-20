@@ -44,7 +44,6 @@
             beendet: false,
             jugend: 'jgd2'
         }];
-        var mockSpiel;
         var mockState = {
             go: function () {
             }
@@ -68,16 +67,9 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
-            mockSpiel = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: spiele});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('SpielplanController', {
-                spiel: mockSpiel,
+                spielPromise: {data: spiele},
                 $state: mockState
             });
             $rootScope.$digest();
@@ -133,6 +125,20 @@
             var spy = chai.spy.on(mockState, 'go');
             angular.element(element.find('tbody').find('tr')[0]).triggerHandler('click');
             expect(spy).to.have.been.called.with('spi.spiel', {spielid: '1'});
+        });
+
+        describe('Template: Spielplan', function () {
+            before(function () {
+                spiele = [];
+            });
+
+            it('Wenn keine Spiele vorhanden sind, soll ein Hinweis angezeigt werden', function () {
+                render();
+                expect(element.find('tbody')).not.to.exist;
+                var alert = element.find('div.alert');
+                expect(alert).to.exist;
+                expect(alert.text()).to.equal('Keine Spiele gefunden.');
+            });
         });
     });
 }());
