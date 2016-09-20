@@ -72,15 +72,10 @@
             expect(result.hasClass('jugend-label-gelb')).to.be.true;
         });
 
-        it('bei einem Klick soll man zur Jugend-Seite weitergeleitet werden', function () {
-            var spy_go = chai.spy.on(mockState, 'go');
-            expect(spy_go).not.to.have.been.called();
+        it('soll einen Link zur Jugendseite haben', function () {
+            var result = element.find('a');
 
-            element.find('span').triggerHandler('click');
-
-            expect(spy_go).to.have.been.called();
-            expect(calledState.statename).to.be.equal('spi.tgj.jugend');
-            expect(calledState.param.jugendid).to.be.equal(123);
+            expect(result.attr('data-ui-sref')).to.contain('spi.tgj.jugend');
         });
     });
 }());

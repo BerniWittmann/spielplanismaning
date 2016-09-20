@@ -11,25 +11,28 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tgj.gruppe', {
-                url: '/gruppen/:gruppeid'
-                , templateUrl: 'templates/tgj/gruppen/gruppe/gruppe.html'
-                , controller: GruppeController
-                , controllerAs: 'vm'
+                url: '/gruppen/:gruppeid',
+                templateUrl: 'templates/tgj/gruppen/gruppe/gruppe.html',
+                controller: GruppeController,
+                controllerAs: 'vm',
+                resolve: {
+                    gruppePromise: function (gruppe, $stateParams) {
+                        return gruppe.get($stateParams.gruppeid);
+                    }
+                }
             });
-
     }
 
-    function GruppeController(gruppe, $stateParams, spiel) {
+    function GruppeController(gruppePromise, spiel) {
         var vm = this;
         vm.loading = true;
 
-        gruppe.get($stateParams.gruppeid).then(function (response) {
-            vm.gruppe = response;
-            spiel.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
-                vm.spiele = _.sortBy(res, ['nummer']);
-                vm.loading = false;
-            })
+        _.extend(vm, {
+            gruppe: gruppePromise
         });
-
+        spiel.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
+            vm.spiele = _.sortBy(res, ['nummer']);
+            vm.loading = false;
+        });
     }
 })();
