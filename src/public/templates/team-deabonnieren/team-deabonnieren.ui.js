@@ -11,29 +11,31 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.team-deabonnieren', {
-                url: '/teams/:teamid/deabonnieren'
-                , templateUrl: 'templates/team-deabonnieren/team-deabonnieren.html'
-                , controller: TeamDeabonnierenController
-                , controllerAs: 'vm'
+                url: '/teams/:teamid/deabonnieren',
+                templateUrl: 'templates/team-deabonnieren/team-deabonnieren.html',
+                controller: TeamDeabonnierenController,
+                controllerAs: 'vm',
+                resolve: {
+                    teamPromise: function (team, $stateParams) {
+                        return team.get($stateParams.teamid);
+                    }
+                }
             });
 
     }
 
-    function TeamDeabonnierenController(team, $stateParams, email, $state, $timeout) {
+    function TeamDeabonnierenController(teamPromise, email, $state, $timeout) {
         var vm = this;
         vm.loading = true;
 
-        team.get($stateParams.teamid).then(function (response) {
-            vm.team = response;
-            vm.sub = {
-                team: vm.team._id
-                , email: ''
-            };
-            if (email.getSubscriptionByTeam({team: vm.team._id}).length == 1) {
-                vm.sub.email = _.head(email.getSubscriptionByTeam({team: vm.team._id})).email;
-            }
-            vm.loading = false;
-        });
+        vm.team = teamPromise;
+        vm.sub = {
+            team: vm.team._id,
+            email: ''
+        };
+        if (email.getSubscriptionByTeam({team: vm.team._id}).length == 1) {
+            vm.sub.email = _.head(email.getSubscriptionByTeam({team: vm.team._id})).email;
+        }
 
         vm.abbrechen = function () {
             vm.message = undefined;
@@ -66,5 +68,8 @@
                 });
             }, 3000);
         }
+
+        vm.loading = false;
     }
-})();
+})
+();
