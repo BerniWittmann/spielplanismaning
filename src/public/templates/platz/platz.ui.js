@@ -11,35 +11,26 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.platz', {
-                url: '/platz/:platznummer'
-                , templateUrl: 'templates/platz/platz.html'
-                , controller: PlatzController
-                , controllerAs: 'vm'
+                url: '/platz/:platznummer',
+                templateUrl: 'templates/platz/platz.html',
+                controller: PlatzController,
+                controllerAs: 'vm',
+                resolve: {
+                    spielPromise: function (spiel) {
+                        return spiel.getAll();
+                    }
+                }
             });
-
     }
 
-    function PlatzController($state, spiel, $stateParams) {
+    function PlatzController(spielPromise, $stateParams) {
         var vm = this;
         vm.loading = true;
-        vm.spiele = [];
-        vm.platz = $stateParams.platznummer;
 
-        //noinspection JSUnusedGlobalSymbols
-        //TODO wird nicht genutzt --> entfernen
         _.extend(vm, {
-            gotoSpiel: function (gewaehltesspiel) {
-                if (gewaehltesspiel.jugend) {
-                    $state.go('spi.spiel', {
-                        spielid: gewaehltesspiel._id
-                    });
-                }
-            }
+            platz: $stateParams.platznummer,
+            spiele: _.sortBy(_.filter(spielPromise.data, {platz: parseInt($stateParams.platznummer)}), ['nummer'])
         });
-
-        spiel.getAll().then(function (res) {
-            vm.spiele = _.sortBy(_.filter(res.data, {platz: parseInt(vm.platz)}), ['nummer']);
-            vm.loading = false;
-        });
+        vm.loading = false;
     }
 })();
