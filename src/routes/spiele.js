@@ -41,7 +41,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             query = Spiel.find({jugend: req.param('jugend')});
         }
 
-        query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
+        query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
             if (err) {
                 throw err;
             }
