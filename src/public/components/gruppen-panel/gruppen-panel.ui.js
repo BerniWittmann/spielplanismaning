@@ -7,31 +7,20 @@
         ])
         .controller('GruppenPanelController', GruppenPanelController)
         .component('spiGruppenPanel', {
-            templateUrl: 'components/gruppen-panel/gruppen-panel.html'
-            , bindings: {
+            templateUrl: 'components/gruppen-panel/gruppen-panel.html',
+            bindings: {
                 gruppe: '='
-            }
-            , controller: 'GruppenPanelController'
-            , controllerAs: 'vm'
+            },
+            controller: 'GruppenPanelController',
+            controllerAs: 'vm'
         });
 
-    function GruppenPanelController(gruppe) {
+    function GruppenPanelController() {
         var vm = this;
-        vm.loading = true;
-
+        
         _.extend(vm, {
-            teams: []
+            teams: _.sortBy(vm.gruppe.teams, 'name')
         });
-
-        getGruppe();
-
-        function getGruppe() {
-            gruppe.get(vm.gruppe._id).then(function (res) {
-                vm.gruppe = res;
-                vm.teams = _.sortBy(res.teams, 'name');
-                vm.loading = false;
-            })
-        }
     }
 
 })();
