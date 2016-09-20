@@ -35,7 +35,6 @@
             jugend: jugendPromise,
             spiele: _.sortBy(spielPromise, ['nummer'])
         });
-        console.log(jugendPromise);
 
         vm.loading = false;
     }
