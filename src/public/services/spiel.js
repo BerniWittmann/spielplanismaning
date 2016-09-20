@@ -3,6 +3,8 @@ angular
 
     var ENDPOINT_URL = '/api/spiele';
 
+    var spiel = {};
+
     spiel.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {
             return data;

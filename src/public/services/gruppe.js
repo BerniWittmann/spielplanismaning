@@ -3,6 +3,8 @@ angular
 
     var ENDPOINT_URL = '/api/gruppen';
 
+    var gruppe = {};
+
     gruppe.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {
             return data;

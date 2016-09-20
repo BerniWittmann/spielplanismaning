@@ -3,6 +3,8 @@ angular
 
     var ENDPOINT_URL = '/api/teams';
 
+    var team = {};
+
     team.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {
             return data;
