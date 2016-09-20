@@ -11,35 +11,32 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tgj.jugend', {
-                url: '/jugenden/:jugendid'
-                , templateUrl: 'templates/tgj/jugenden/jugend/jugend.html'
-                , controller: JugendController
-                , controllerAs: 'vm'
+                url: '/jugenden/:jugendid',
+                templateUrl: 'templates/tgj/jugenden/jugend/jugend.html',
+                controller: JugendController,
+                controllerAs: 'vm',
+                resolve: {
+                    jugendPromise: function (jugend, $stateParams) {
+                        return jugend.get($stateParams.jugendid);
+                    },
+                    spielPromise: function (spiel, $stateParams) {
+                        return spiel.getByJugend($stateParams.jugendid);
+                    }
+                }
             });
 
     }
 
-    function JugendController(jugend, $stateParams, spiel, $scope) {
+    function JugendController(jugendPromise, spielPromise) {
         var vm = this;
-        var loadingCompleted = 0;
-        $scope.loading = true;
+        vm.loading = true;
 
-        jugend.get($stateParams.jugendid).then(function (response) {
-            vm.jugend = response;
-            loadingCompleted++;
+        _.extend(vm, {
+            jugend: jugendPromise,
+            spiele: _.sortBy(spielPromise, ['nummer'])
         });
+        console.log(jugendPromise);
 
-        spiel.getByJugend($stateParams.jugendid).then(function (response) {
-            vm.spiele = _.sortBy(response, ['nummer']);
-            loadingCompleted++;
-        });
-
-        $scope.$watch(function () {
-            return loadingCompleted;
-        }, function () {
-            if (loadingCompleted >= 2) {
-                $scope.loading = false;
-            }
-        })
+        vm.loading = false;
     }
 })();

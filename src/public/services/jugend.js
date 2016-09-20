@@ -13,7 +13,7 @@ angular
 
     jugend.get = function (id) {
         return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
-            return _.head(res.data);
+            return res.data;
         });
     };
 
