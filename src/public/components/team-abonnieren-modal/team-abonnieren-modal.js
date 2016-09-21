@@ -29,70 +29,70 @@
         }
     }
 
-    function TeamAbonnierenController($state
-        , $uibModalInstance
-        , gewTeam
-        , email) {
+    function TeamAbonnierenController($state, $uibModalInstance, gewTeam, email) {
         var vm = this;
         vm.loading = true;
         var emptymessage = {
-            text: ''
-            , type: ''
+            text: '',
+            type: ''
         };
-        vm.message = emptymessage;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
-            team: gewTeam
-            , save: save
-            , abbrechen: function () {
+            team: gewTeam,
+            message: emptymessage,
+            save: save,
+            abbrechen: function () {
                 $uibModalInstance.dismiss('cancel');
-            }
-            , abonnent: {
-                email: ''
-                , team: gewTeam._id
-            }
-            , addAbonnent: function (form) {
+            },
+            abonnent: {
+                email: '',
+                team: gewTeam._id
+            },
+            addAbonnent: function (form) {
                 vm.submitted = true;
                 if (form.$valid && !vm.bereitsabonniert) {
                     email.addSubscriber(vm.abonnent).then(function () {
                         vm.message = {
-                            type: 'success'
-                            , text: vm.team.name + ' wurde abonniert.'
+                            type: 'success',
+                            text: vm.team.name + ' wurde abonniert.'
                         };
                         vm.abonnent.email = '';
                         setTimeout(save, 3000);
                     }, function (err) {
                         vm.message = {
-                            type: 'error'
-                            , text: err
+                            type: 'error',
+                            text: err
                         }
                     });
 
                 }
 
-            }
-            , resetFormValidation: function () {
+            },
+            resetFormValidation: function () {
                 vm.submitted = false;
                 vm.bereitsabonniert = false;
                 vm.message = emptymessage;
                 if (vm.abonnent.email && email.checkSubscription(vm.abonnent)) {
                     vm.message = {
-                        type: 'info'
-                        , text: vm.team.name + ' ist bereits abonniert!'
+                        type: 'info',
+                        text: vm.team.name + ' ist bereits abonniert!'
                     };
                     vm.bereitsabonniert = true;
                 }
-            }
+            },
+            gotoAbmelden: function () {
+                $uibModalInstance.close();
+                $state.go('spi.team-deabonnieren', {teamid: vm.team._id});
+            },
+            bereitsabonniert: false
         });
 
-        vm.bereitsabonniert = false;
         if (email.checkSubscription({
                 team: vm.team._id
             })) {
             vm.message = {
-                type: 'info'
-                , text: vm.team.name + ' ist bereits abonniert!'
+                type: 'info',
+                text: vm.team.name + ' ist bereits abonniert!'
             };
             vm.abonnent.email = _.head(email.getSubscriptionByTeam({
                 team: vm.team._id
@@ -103,11 +103,6 @@
 
         function save() {
             $uibModalInstance.close();
-        }
-
-        vm.gotoAbmelden = function () {
-            $uibModalInstance.close();
-            $state.go('spi.team-deabonnieren', {teamid: vm.team._id});
         }
     }
 })();
