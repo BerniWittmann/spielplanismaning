@@ -74,9 +74,6 @@
                 },
                 delete: function (team) {
                     return $q.when({data: team});
-                },
-                getByGruppe: function () {
-                    return $q.when(mockTeams);
                 }
             };
 
@@ -87,13 +84,14 @@
                 gewGruppe: gewGruppe,
                 spielplan: spielplan,
                 TeamEditierenDialog: TeamEditierenDialog,
-                BestaetigenDialog: BestaetigenDialog
+                BestaetigenDialog: BestaetigenDialog,
+                teamPromise: mockTeams
             });
 
         }));
 
         it('sollen die vorhandenen Teams geladen werden', function () {
-            controller.getTeamsByGruppe();
+            console.log(controller);
             scope.$apply();
 
             var result = controller.teams;
