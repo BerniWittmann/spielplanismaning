@@ -29,11 +29,6 @@
                 _id: 'jgd1'
             }
         }];
-        var mockGruppe;
-        var mockState = {
-            go: function () {
-            }
-        };
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
@@ -52,18 +47,9 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
-            $httpBackend = $injector.get('$httpBackend');
-            mockGruppe = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: gruppen});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('GruppenController', {
-                gruppe: mockGruppe,
-                $state: mockState
+                gruppePromise: {data: gruppen}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -79,7 +65,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller, $httpBackend;
+        var element, render, ctrl, scope, $state, $rootScope, $controller;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.
@@ -90,9 +76,6 @@
             scope = routeDetails.scope;
 
             render = function () {
-                $httpBackend.expectGET('/api/gruppen?id=1').respond(201, gruppen[0]);
-                $httpBackend.expectGET('/api/gruppen?id=2').respond(201, gruppen[1]);
-                $httpBackend.expectGET('/api/gruppen?id=3').respond(201, gruppen[2]);
                 element = routeDetails.render();
             };
         }));

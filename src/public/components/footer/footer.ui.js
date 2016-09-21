@@ -2,34 +2,28 @@
     'use strict';
 
     angular
-        .module('spi.footer.ui', [])
+        .module('spi.footer.ui', ['spi.config'])
         .directive('spiFooter', spiFooter)
         .controller('FooterController', FooterController);
 
     function spiFooter() {
+        //noinspection JSUnusedGlobalSymbols
         return {
-            restrict: 'E'
-            , templateUrl: 'components/footer/footer.html'
-            , scope: true
-            , controller: FooterController
-            , controllerAs: 'vm'
-        };
+            restrict: 'E',
+            templateUrl: 'components/footer/footer.html',
+            scope: true,
+            controller: FooterController,
+            controllerAs: 'vm'
+        }
     }
 
-    function FooterController($http) {
+    function FooterController(config) {
         var vm = this;
-        vm.isTesting = false;
 
-        $http.get('/api/config/version').then(function (res) {
-            vm.version = res.data;
-            $http.get('/api/config/env').then(function (response) {
-                if (_.isEqual(response.data, 'TESTING')) {
-                    vm.version += ' TESTUMGEBUNG';
-                }
-                vm.showBuildStatus = _.isEqual(response.data, 'TESTING') || _.isEqual(response.data, 'DEV');
+        config.getEnv().then(function (res) {
+            _.extend(vm, {
+                showBuildStatus: _.isEqual(res.data, 'TESTING') || _.isEqual(res.data, 'DEV')
             });
         });
-
     }
-
 })();

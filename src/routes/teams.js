@@ -150,6 +150,7 @@ module.exports = function () {
             if (err) {
                 throw err;
             }
+            //TODO Async lösen
             Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
                 if (err) {
                     throw err;

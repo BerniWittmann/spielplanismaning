@@ -96,7 +96,13 @@ module.exports = function () {
                         throw err;
                     }
 
-                    res.json(jugend);
+                    jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
+                        if (err) {
+                            throw err;
+                        }
+
+                        res.json(jgd);
+                    });
                 });
             });
         });

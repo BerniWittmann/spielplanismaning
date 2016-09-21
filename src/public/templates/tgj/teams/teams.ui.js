@@ -11,55 +11,60 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tgj.teams', {
-                url: '/teams'
-                , templateUrl: 'templates/tgj/teams/teams.html'
-                , controller: TeamsController
-                , controllerAs: 'vm'
+                url: '/teams',
+                templateUrl: 'templates/tgj/teams/teams.html',
+                controller: TeamsController,
+                controllerAs: 'vm',
+                resolve: {
+                    teamPromise: function (team) {
+                        return team.getAll();
+                    }
+                }
             });
 
     }
 
-    function TeamsController($state, team, NgTableParams) {
+    function TeamsController($state, teamPromise, NgTableParams) {
         var vm = this;
         vm.loading = true;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
-            teams: []
-            , gotoTeam: function (team) {
+            teams: teamPromise.data,
+            gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {
                     teamid: team._id
                 });
-            }
-            , gotoGruppe: function (gruppe) {
+            },
+            gotoGruppe: function (gruppe) {
                 $state.go('spi.tgj.gruppe', {
                     gruppeid: gruppe._id
                 });
-            }
-            , gotoJugend: function (jugend) {
+            },
+            gotoJugend: function (jugend) {
                 $state.go('spi.tgj.jugend', {
                     jugendid: jugend._id
                 });
             }
         });
 
-        team.getAll().then(function (response) {
-            vm.teams = response.data;
-            _.forEach(vm.teams, function (o) {
-                o.jugendName = o.jugend.name;
-                o.gruppenName = o.gruppe.name;
-                o.tordiff = o.tore - o.gtore;
-            });
-            vm.teams = _.sortBy(vm.teams, ['jugendName', 'gruppenName', 'name']);
-            _.extend(vm, {
-                tableParams: new NgTableParams({
-                    count: 10
-                }, {
-                    counts: []
-                    , data: vm.teams
-                })
-            });
-            vm.loading = false;
+        _.forEach(vm.teams, function (o) {
+            o.jugendName = o.jugend.name;
+            o.gruppenName = o.gruppe.name;
+            o.tordiff = o.tore - o.gtore;
         });
+        
+        vm.teams = _.sortBy(vm.teams, ['jugendName', 'gruppenName', 'name']);
+        
+        _.extend(vm, {
+            tableParams: new NgTableParams({
+                count: 10
+            }, {
+                counts: []
+                , data: vm.teams
+            })
+        });
+        
+        vm.loading = false;
     }
-})();
+})
+();

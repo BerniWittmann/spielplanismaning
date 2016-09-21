@@ -3,7 +3,7 @@
 
     var expect = chai.expect;
 
-    describe('Template: Verwaltung Allgemein', function () {
+    describe('Template: Verwaltung Teams', function () {
         var URL = '/teams';
         var STATE_NAME = 'spi.verwaltung.teams';
 
@@ -38,6 +38,7 @@
             name: 'Team 3',
             jugend: 'j3'
         }];
+        //noinspection JSUnusedGlobalSymbols
         var mockScope = {
             $watch: function () {
             },
@@ -47,10 +48,10 @@
         var mockAuth;
         var mockJugend;
         var mockSpielplan;
-        var mockTeam;
         var mockTimeout = function (fn) {
             fn();
         };
+        //noinspection JSUnusedGlobalSymbols
         var mockWindow = {
             scrollTo: function () {
             }
@@ -77,7 +78,13 @@
             mockJugend = {
                 create: function () {
                     var deferred = $q.defer();
-                    deferred.resolve();
+                    deferred.resolve({
+                        data: {
+                            name: 'Jugend Test',
+                            color: 'lila',
+                            _id: 'j4'
+                        }
+                    });
                     return deferred.promise;
                 }, getAll: function () {
                     var deferred = $q.defer();
@@ -90,22 +97,16 @@
                 createSpielplan: function () {
                 }
             };
-            mockTeam = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: teams});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('VerwaltungTeamsController', {
                 $scope: mockScope,
                 auth: mockAuth,
                 jugend: mockJugend,
                 spielplan: mockSpielplan,
-                team: mockTeam,
+                teamPromise: {data: teams},
                 $timeout: mockTimeout,
-                $window: mockWindow
+                $window: mockWindow,
+                jugendPromise: {data: jugenden}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -121,7 +122,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller, $httpBackend;
+        var element, render, ctrl, scope, $state, $rootScope, $controller, $httpBackend, expectViertenRequest;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.
@@ -136,6 +137,9 @@
                 $httpBackend.expectGET('/api/gruppen?jugend=j1').respond(201, {});
                 $httpBackend.expectGET('/api/gruppen?jugend=j2').respond(201, {});
                 $httpBackend.expectGET('/api/gruppen?jugend=j3').respond(201, {});
+                if (expectViertenRequest) {
+                    $httpBackend.expectGET('/api/gruppen?jugend=j4').respond(201, {});
+                }
                 element = routeDetails.render();
             };
         }));
@@ -160,6 +164,7 @@
             };
             var spy = chai.spy.on(mockJugend, 'create');
             var spySpielplan = chai.spy.on(mockSpielplan, 'createSpielplan');
+            $httpBackend.expectGET('/api/gruppen?jugend=j4').respond(201, {});
 
             ctrl.addJugend();
             scope.$digest();
@@ -169,6 +174,7 @@
         });
 
         it('Es werden die Ausnhamen angezeigt', function () {
+            expectViertenRequest = true;
             render();
             expect(element.find('spi-spielplan-ausnahmen')).to.exist;
         });

@@ -8,7 +8,6 @@
         beforeEach(module('htmlModule'));
         var element;
         var scope;
-        var $provide;
         var controller;
         var gruppe = {
             _id: 123,
@@ -33,19 +32,10 @@
             name: 'Test Gruppe'
         };
 
-        beforeEach(module(function (_$provide_) {
-            $provide = _$provide_;
-        }));
-
         beforeEach(inject(function ($rootScope, $compile, $q) {
             scope = $rootScope.$new();
             scope.gruppeObject = gruppe;
-
-            $provide.service('gruppe', function () {
-                this.get = function () {
-                    return $q.when(gruppe);
-                }
-            });
+            
             element = $compile('<spi-gruppen-panel data-gruppe="gruppeObject"></spi-gruppen-panel>')(scope);
             scope.$digest();
             controller = element.controller("spiGruppenPanel");

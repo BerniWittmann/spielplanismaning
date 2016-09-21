@@ -16,7 +16,10 @@
                 , controller: SpieleDruckController
                 , controllerAs: 'vm'
                 , resolve: {
-                    authenticate: authenticate
+                    authenticate: authenticate,
+                    spielPromise: function (spiel) {
+                        return spiel.getAll();
+                    }
                 }
             });
 
@@ -34,13 +37,12 @@
         }
     }
 
-    function SpieleDruckController($state, spiel) {
+    function SpieleDruckController($state, spielPromise) {
         var vm = this;
         vm.loading = true;
-        vm.spiele = [];
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
+            spiele: _.sortBy(spielPromise.data, ['platz', 'nummer']),
             gotoTeam: function (gewaehltesteam) {
                 if (gewaehltesteam) {
                     $state.go('spi.tgj.team', {
@@ -57,9 +59,6 @@
             }
         });
 
-        spiel.getAll().then(function (res) {
-            vm.spiele = _.sortBy(res.data, ['platz', 'nummer']);
-            vm.loading = false;
-        });
+        vm.loading = false;
     }
 })();

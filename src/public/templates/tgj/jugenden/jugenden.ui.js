@@ -11,25 +11,27 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tgj.jugenden', {
-                url: '/jugenden'
-                , templateUrl: 'templates/tgj/jugenden/jugenden.html'
-                , controller: 'JugendenController'
-                , controllerAs: 'vm'
+                url: '/jugenden',
+                templateUrl: 'templates/tgj/jugenden/jugenden.html',
+                controller: 'JugendenController',
+                controllerAs: 'vm',
+                resolve: {
+                    jugendPromise: function (jugend) {
+                        return jugend.getAll();
+                    }
+                }
             });
 
     }
 
-    function JugendenController(jugend) {
+    function JugendenController(jugendPromise) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            jugenden: []
+            jugenden: jugendPromise.data
         });
 
-        jugend.getAll().then(function (response) {
-            vm.jugenden = response.data;
-            vm.loading = false;
-        });
+        vm.loading = false;
     }
 })();

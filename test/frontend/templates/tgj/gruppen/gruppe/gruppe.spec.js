@@ -24,10 +24,6 @@
                 _id: 't3'
             }]
         };
-        var mockGruppe;
-        var mockStateParams = {
-            gruppeid: '1'
-        };
         var spiele = [{
             nummer: 1,
             uhrzeit: '09:00',
@@ -63,14 +59,6 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
-            $httpBackend = $injector.get('$httpBackend');
-            mockGruppe = {
-                get: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve(gruppe);
-                    return deferred.promise;
-                }
-            };
             mockSpiel = {
                 getByGruppe: function () {
                     var deferred = $q.defer();
@@ -80,8 +68,7 @@
             };
 
             var ctrl = scope.vm = $controller('GruppeController', {
-                gruppe: mockGruppe,
-                $stateParams: mockStateParams,
+                gruppePromise: gruppe,
                 spiel: mockSpiel
             });
             $rootScope.$digest();
@@ -98,7 +85,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller, $httpBackend;
+        var element, render, ctrl, scope, $state, $rootScope, $controller;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.

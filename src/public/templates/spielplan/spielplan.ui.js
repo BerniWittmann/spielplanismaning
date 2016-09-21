@@ -11,21 +11,25 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.spielplan', {
-                url: '/spielplan'
-                , templateUrl: 'templates/spielplan/spielplan.html'
-                , controller: SpielplanController
-                , controllerAs: 'vm'
+                url: '/spielplan',
+                templateUrl: 'templates/spielplan/spielplan.html',
+                controller: SpielplanController,
+                controllerAs: 'vm',
+                resolve: {
+                    spielPromise: function (spiel) {
+                        return spiel.getAll();
+                    }
+                }
             });
 
     }
 
-    function SpielplanController($state, spiel) {
+    function SpielplanController($state, spielPromise) {
         var vm = this;
         vm.loading = true;
-        vm.spiele = [];
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
+            spiele: _.sortBy(spielPromise.data, ['nummer']),
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
                     $state.go('spi.spiel', {
@@ -35,9 +39,6 @@
             }
         });
 
-        spiel.getAll().then(function (res) {
-            vm.spiele = _.sortBy(res.data, ['nummer']);
-            vm.loading = false;
-        });
+        vm.loading = false;
     }
 })();

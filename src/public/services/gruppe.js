@@ -1,11 +1,9 @@
 angular
     .module('spi.gruppe', []).factory('gruppe', ['$http', function ($http) {
 
-    var gruppe = {
-        gruppen: []
-    };
-
     var ENDPOINT_URL = '/api/gruppen';
+
+    var gruppe = {};
 
     gruppe.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {

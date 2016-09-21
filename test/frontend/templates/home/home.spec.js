@@ -38,9 +38,6 @@
             beendet: false,
             jugend: 'jgd2'
         }];
-        var mockSpiel;
-
-        var lockdown = false;
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
@@ -58,16 +55,9 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
-            mockSpiel = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: spiele});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('HomeController', {
-                spiel: mockSpiel
+                spielPromise: {data: spiele}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

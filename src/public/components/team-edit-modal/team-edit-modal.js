@@ -30,21 +30,18 @@
     }
 
     function TeamEditierenController(
-        $uibModalInstance
-        , team
-        , gewTeam
+        $uibModalInstance, team, gewTeam
     ) {
         var vm = this;
 
         _.extend(vm, {
-            team: gewTeam
-            , save: save
-            , abbrechen: function () {
+            team: gewTeam,
+            save: save,
+            abbrechen: function () {
                 $uibModalInstance.dismiss('cancel');
-            }
+            },
+            name: gewTeam.name
         });
-
-        vm.name = vm.team.name;
 
         function save() {
             vm.loading = true;

@@ -11,7 +11,7 @@
         <div class="row" data-ng-if="vm.kontakte.length>0">
             <div class="col-md-12">
                 <h4>Verantwortliche für den Spielbetrieb:</h4>
-                <div class="table-responsive">
+                <div class="table-responsive" data-ng-if="vm.kontakte.length > 0">
                     <table class="table table-condensed table-striped table-hover" id="kontakte-tabelle">
                         <tr data-ng-repeat="kontakt in vm.kontakte">
                             <td>{{kontakt.turnier}}</td>
@@ -21,6 +21,7 @@
                         </tr>
                     </table>
                 </div>
+                <div class="alert alert-info" data-ng-if="vm.kontakte.length == 0"></div>
             </div>
         </div>
 

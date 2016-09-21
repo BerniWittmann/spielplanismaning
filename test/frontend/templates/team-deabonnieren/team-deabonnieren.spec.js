@@ -23,7 +23,6 @@
             team: '1',
             email: 'test@t.de'
         }];
-        var mockTeam;
         var mockStateParams = {
             teamid: '1'
         };
@@ -51,13 +50,6 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
-            mockTeam = {
-                get: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve(team);
-                    return deferred.promise;
-                }
-            };
             mockEmail = {
                 getSubscriptionByTeam: function () {
                     return abonnement;
@@ -73,7 +65,7 @@
             };
 
             var ctrl = scope.vm = $controller('TeamDeabonnierenController', {
-                team: mockTeam,
+                teamPromise: team,
                 $state: mockState,
                 email: mockEmail,
                 $timeout: mockTimeout,

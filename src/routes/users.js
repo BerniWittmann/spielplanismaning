@@ -72,7 +72,7 @@ module.exports = function () {
      * @apiErrorExample Error-Response FalscheAnmeldedaten:
      *     HTTP/1.1 401 Unauthorized
      *     {
-     *         "message": "Falsches Passwort"
+     *         "message": "Falscher Benutzername/Passwort"
      *     }
      *
      * @apiSuccess {String} token User-Token
@@ -101,7 +101,6 @@ module.exports = function () {
                     token: user.generateJWT()
                 });
             } else {
-                //TODO statuscode anpassen
                 return res.status(401).json(info);
             }
         })(req, res, next);

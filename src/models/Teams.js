@@ -29,8 +29,6 @@ var TeamSchema = new mongoose.Schema({
 });
 
 TeamSchema.methods.setErgebnis = function (tore, toreAlt, gTore, gToreAlt, punkte, punkteAlt, gPunkte, gPunkteAlt, cb) {
-    //TODO entferne console.log
-    //console.log(tore + " " + toreAlt + " " + gTore + " " + gToreAlt + " " + punkte + " " + punkteAlt + " " + gPunkte + " " + gPunkteAlt);
     this.tore = this.tore + tore - toreAlt;
     this.gtore = this.gtore + gTore - gToreAlt;
     this.punkte = this.punkte + punkte - punkteAlt;

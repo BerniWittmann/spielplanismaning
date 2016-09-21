@@ -36,25 +36,29 @@
         }
     }
 
-    function BestaetigenController($uibModalInstance
+    function BestaetigenController(
+        $uibModalInstance
         , message
         , fction
-        , parameters) {
+        , parameters
+    ) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            message: message
-            , save: save
-            , abbrechen: function () {
-                $uibModalInstance.dismiss('cancel');
-            }
+            message: message,
+            save: save,
+            abbrechen: abbrechen
         });
         vm.loading = false;
 
         function save() {
             $uibModalInstance.close();
             return fction(parameters);
+        }
+
+        function abbrechen() {
+            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

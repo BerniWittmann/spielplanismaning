@@ -59,24 +59,17 @@
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
             mockJugend = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: jugenden});
-                    return deferred.promise;
-                },
                 getTore: function (id) {
                     var deferred = $q.defer();
                     deferred.resolve({data: parseInt(id) * 3});
-                    return deferred.promise;
-                }, getGesamtTore: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: 18});
                     return deferred.promise;
                 }
             };
 
             var ctrl = scope.vm = $controller('TabellenController', {
-                jugend: mockJugend
+                jugend: mockJugend,
+                jugendPromise: {data: jugenden},
+                jugendTorePromise: {data: 18}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

@@ -24,7 +24,7 @@ angular
     var i;
     var spieleGesamt;
     var platz;
-    var plätze = 3;
+    var plaetze = 3;
     var zeit;
     var leereSpieleStreak;
     var maxLeereSpieleStreak = 6;
@@ -317,7 +317,7 @@ angular
 
     function calcPlatz() {
         platz++;
-        if (platz > plätze) {
+        if (platz > plaetze) {
             platz = 1;
         }
         return platz;

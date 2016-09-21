@@ -21,24 +21,22 @@
     function NavigationController($state, $scope, auth, spielplan) {
         var vm = this;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
-            isLoggedIn: auth.isLoggedIn
-            , canAccess: function (i) {
+            isLoggedIn: auth.isLoggedIn,
+            canAccess: function (i) {
                 return auth.canAccess(i)
-            }
-            , currentUser: auth.currentUser
-            , logOut: auth.logOut
-            , isAktiv: function (name) {
+            },
+            currentUser: auth.currentUser,
+            logOut: auth.logOut,
+            isAktiv: function (name) {
                 return $state.includes(name);
-            }
+            },
+            prog: spielplan.progress,
+            progMax: spielplan.maxProgress,
+            progDisplay: "",
+            message: "<strong>Achtung!</strong> Spielplan wird gerade erstellt.",
+            type: 'info'
         });
-
-        vm.prog = spielplan.progress;
-        vm.progMax = spielplan.maxProgress;
-        vm.progDisplay = "";
-        vm.message = "<strong>Achtung!</strong> Spielplan wird gerade erstellt.";
-        vm.type = "info";
 
         $scope.$watch(function () {
             return spielplan.progress;
