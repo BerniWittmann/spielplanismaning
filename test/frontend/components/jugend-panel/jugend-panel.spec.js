@@ -93,11 +93,6 @@
                         jugend.gruppen = _.pullAllBy(jugend.gruppen, [{_id: gruppenid}], '_id');
 
                         return $q.when(jugend.gruppen);
-                    },
-                    getByJugend: function (jugendid) {
-                        expect(jugendid).to.be.equal(jugend._id);
-
-                        return $q.when(jugend.gruppen);
                     }
                 };
                 return mockGruppe;
