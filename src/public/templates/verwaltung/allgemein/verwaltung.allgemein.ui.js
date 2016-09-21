@@ -9,14 +9,18 @@
         .controller('VerwaltungAllgemeinController', VerwaltungAllgemeinController);
 
     function states($stateProvider) {
+        //noinspection JSUnusedGlobalSymbols
         $stateProvider
             .state('spi.verwaltung.allgemein', {
-                url: '/allgemein'
-                , templateUrl: 'templates/verwaltung/allgemein/verwaltung.allgemein.html'
-                , controller: VerwaltungAllgemeinController
-                , controllerAs: 'vm'
-                , resolve: {
-                    authenticate: authenticate
+                url: '/allgemein',
+                templateUrl: 'templates/verwaltung/allgemein/verwaltung.allgemein.html',
+                controller: VerwaltungAllgemeinController,
+                controllerAs: 'vm',
+                resolve: {
+                    authenticate: authenticate,
+                    getZeitenPromise: function (spielplan) {
+                        return spielplan.getZeiten();
+                    }
                 }
             });
     }
@@ -33,7 +37,7 @@
         }
     }
 
-    function VerwaltungAllgemeinController(auth, spielplan) {
+    function VerwaltungAllgemeinController(auth, spielplan, getZeitenPromise) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
@@ -42,85 +46,94 @@
 
         //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
-            user: {}
-            , register: function () {
-                auth.register(vm.user).then(function () {
-                    vm.registerMsg = vm.user.username + ' wurde registriert.';
-                    vm.user = {};
-                }, function (error) {
-                    if (error.data.code == 11000) {
-                        vm.registerErr = 'Dieser Username existiert bereits';
-                    } else {
-                        vm.registerErr = error;
-                    }
-                });
-            }
-            , startzeit: d
-            , spielzeit: 8
-            , pausenzeit: 2
-            , saveSpielzeit: function () {
-                vm.loading = true;
-                spielplan.saveZeiten({
-                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
-                    , spielzeit: vm.spielzeit
-                    , pausenzeit: vm.pausenzeit
-                }).then(function () {
-                    vm.loading = false;
-                });
-            }
-            , increment: function (name) {
-                if (_.isEqual(name, 'spielzeit')) {
-                    vm.spielzeit = vm.spielzeit + 1;
-                } else if (_.isEqual(name, 'pausenzeit')) {
-                    vm.pausenzeit = vm.pausenzeit + 1;
-                }
-            }
-            , decrement: function (name) {
-                if (_.isEqual(name, 'spielzeit')) {
-                    if (vm.spielzeit > 1) {
-                        vm.spielzeit = vm.spielzeit - 1;
-                    }
-                } else if (_.isEqual(name, 'pausenzeit')) {
-                    if (vm.pausenzeit > 1) {
-                        vm.pausenzeit = vm.pausenzeit - 1;
-                    }
-                }
-            }
+            user: {},
+            register: register,
+            startzeit: d,
+            spielzeit: 8,
+            pausenzeit: 2,
+            resetRegisterForm: resetRegisterForm,
+            resetDeleteForm: resetDeleteForm,
+            delete: deleteUser,
+            saveSpielzeit: saveSpielzeit,
+            increment: increment,
+            decrement: decrement
         });
 
-        spielplan.getZeiten().then(function (response) {
-            if (!_.isUndefined(response.data) && !_.isNull(response.data)) {
-                var d = new Date();
-                d.setHours(parseInt(response.data.startzeit.substring(0, 2)));
-                d.setMinutes(parseInt(response.data.startzeit.substring(3, 5)));
-                vm.startzeit = d;
-                vm.spielzeit = response.data.spielzeit;
-                vm.pausenzeit = response.data.pausenzeit;
-            }
-            vm.loading = false;
-        });
+        if (!_.isUndefined(getZeitenPromise.data) && !_.isNull(getZeitenPromise.data)) {
+            var date = new Date();
+            date.setHours(parseInt(getZeitenPromise.data.startzeit.substring(0, 2)));
+            date.setMinutes(parseInt(getZeitenPromise.data.startzeit.substring(3, 5)));
+            vm.startzeit = date;
+            vm.spielzeit = getZeitenPromise.data.spielzeit;
+            vm.pausenzeit = getZeitenPromise.data.pausenzeit;
+        }
 
-        vm.delete = function () {
+        function resetDeleteForm() {
+            vm.delErr = undefined;
+            vm.delMsg = undefined;
+        }
+
+        function resetRegisterForm() {
+            vm.registerErr = undefined;
+            vm.registerMsg = undefined;
+        }
+
+        function register() {
+            auth.register(vm.user).then(function () {
+                vm.registerMsg = vm.user.username + ' wurde registriert.';
+                vm.user = {};
+            }, function (error) {
+                if (error.data.code == 11000) {
+                    vm.registerErr = 'Dieser Username existiert bereits';
+                } else {
+                    vm.registerErr = error;
+                }
+            });
+        }
+
+        function deleteUser() {
             if (auth.currentUser() == vm.username) {
                 return vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
             }
-            auth.deleteUser(vm.username).then(function () {
+            return auth.deleteUser(vm.username).then(function () {
                 vm.username = undefined;
                 vm.delMsg = 'User gelöscht!';
             }, function (err) {
                 vm.delErr = err;
             });
-        };
+        }
 
-        vm.resetDeleteForm = function () {
-            vm.delErr = undefined;
-            vm.delMsg = undefined;
-        };
+        function saveSpielzeit() {
+            vm.loading = true;
+            spielplan.saveZeiten({
+                startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
+                , spielzeit: vm.spielzeit
+                , pausenzeit: vm.pausenzeit
+            }).then(function () {
+                vm.loading = false;
+            });
+        }
 
-        vm.resetRegisterForm = function () {
-            vm.registerErr = undefined;
-            vm.registerMsg = undefined;
-        };
+        function increment(name) {
+            if (_.isEqual(name, 'spielzeit')) {
+                vm.spielzeit = vm.spielzeit + 1;
+            } else if (_.isEqual(name, 'pausenzeit')) {
+                vm.pausenzeit = vm.pausenzeit + 1;
+            }
+        }
 
+        function decrement(name) {
+            if (_.isEqual(name, 'spielzeit')) {
+                if (vm.spielzeit > 1) {
+                    vm.spielzeit = vm.spielzeit - 1;
+                }
+            } else if (_.isEqual(name, 'pausenzeit')) {
+                if (vm.pausenzeit > 1) {
+                    vm.pausenzeit = vm.pausenzeit - 1;
+                }
+            }
+        }
+
+        vm.loading = false;
     }
 })();

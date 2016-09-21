@@ -52,7 +52,6 @@
                 _id: 'j2'
             }
         }];
-        var mockTeam;
         var mockState = {
             go: function () {
             }
@@ -75,19 +74,10 @@
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
-            var $q = $injector.get('$q');
-            $httpBackend = $injector.get('$httpBackend');
-            mockTeam = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: teams});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('TeamsController', {
                 $state: mockState,
-                team: mockTeam
+                teamPromise: {data: teams}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -103,7 +93,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller, $httpBackend;
+        var element, render, ctrl, scope, $state, $rootScope, $controller;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.

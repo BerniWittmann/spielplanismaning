@@ -53,7 +53,6 @@
                 name: 'Gruppe 1'
             }
         }];
-        var mockSpiel;
         var mockState = {
             go: function () {
             }
@@ -77,16 +76,9 @@
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
-            mockSpiel = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: spiele});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('SpieleDruckController', {
-                spiel: mockSpiel,
+                spielPromise: {data: spiele},
                 $state: mockState
             });
             $rootScope.$digest();

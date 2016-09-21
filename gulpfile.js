@@ -7,18 +7,20 @@ var bump = require('gulp-bump');
 var filter = require('gulp-filter');
 var tag_version = require('gulp-tag-version');
 var apidoc = require('gulp-apidoc');
+var watch = require('gulp-watch');
 
 require('require-dir')('./gulp-tasks');
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['build-and-watch']);
 
 // configure which files to watch and what tasks to use on file changes
-gulp.task('watch', function () {
-    return gulp.watch(['**/*.js', '!src/public/bower_components/**', '!node_modules/**'], ['watch-task']);
+gulp.task('build-and-watch', function () {
+    return runSequence('serve', 'watch-task');
 });
 
 gulp.task('watch-task', function () {
-    return runSequence('jshint', 'test');
+    return watch('src/**', {ignoreInitial: true})
+        .pipe(gulp.dest('dist/'));
 });
 
 // jshint task

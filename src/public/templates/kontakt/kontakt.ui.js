@@ -3,7 +3,7 @@
 
     angular
         .module('spi.kontakt.ui', [
-            'ui.router'
+            'ui.router', 'spi.config'
         ])
         .config(states)
         .controller('KontaktController', KontaktController);
@@ -16,14 +16,14 @@
                 , controller: KontaktController
                 , controllerAs: 'vm'
                 , resolve: {
-                    versionPromise: function ($http) {
-                        return $http.get('/api/config/version');
+                    versionPromise: function (config) {
+                        return config.getVersion();
                     },
-                    kontaktPromise: function ($http) {
-                        return $http.get('/api/config/kontakt');
+                    kontaktPromise: function (config) {
+                        return config.getKontakte();
                     },
-                    envPromise: function ($http) {
-                        return $http.get('/api/config/env');
+                    envPromise: function (config) {
+                        return config.getEnv();
                     }
                 }
             });
@@ -34,12 +34,15 @@
         var vm = this;
 
         vm.loading = true;
-        vm.version = versionPromise.data;
+
+        _.extend(vm, {
+            version: versionPromise.data,
+            showBuildStatus: _.isEqual(envPromise.data, 'TESTING') || _.isEqual(envPromise.data, 'DEV'),
+            kontakte: kontaktPromise.data
+        });
         if (_.isEqual(envPromise.data, 'TESTING')) {
             vm.version += ' TESTUMGEBUNG';
         }
-        vm.showBuildStatus = _.isEqual(envPromise.data, 'TESTING') || _.isEqual(envPromise.data, 'DEV');
-        vm.kontakte = kontaktPromise.data;
         vm.loading = false;
     }
 })();

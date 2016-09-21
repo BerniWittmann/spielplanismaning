@@ -29,7 +29,6 @@
             name: 'Jugend 3',
             gruppen: []
         }];
-        var mockJugend;
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
@@ -49,18 +48,10 @@
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
-            var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
-            mockJugend = {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve({data: jugenden});
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('JugendenController', {
-                jugend: mockJugend
+                jugendPromise: {data: jugenden}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

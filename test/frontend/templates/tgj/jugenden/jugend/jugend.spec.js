@@ -27,10 +27,6 @@
                 _id: 't3'
             }]
         };
-        var mockJugend;
-        var mockStateParams = {
-            jugendid: '1'
-        };
         var spiele = [{
             nummer: 1,
             uhrzeit: '09:00',
@@ -47,12 +43,6 @@
             teamA: 't3',
             teamB: 't1'
         }];
-        var mockSpiel;
-        var mockScope = {
-            $watch: function (fn1, fn2) {
-                fn2();
-            }
-        };
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
@@ -70,28 +60,11 @@
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
-            var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
-            mockJugend = {
-                get: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve(jugend);
-                    return deferred.promise;
-                }
-            };
-            mockSpiel = {
-                getByJugend: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve(spiele);
-                    return deferred.promise;
-                }
-            };
 
             var ctrl = scope.vm = $controller('JugendController', {
-                jugend: mockJugend,
-                $stateParams: mockStateParams,
-                spiel: mockSpiel,
-                $scope: mockScope
+                jugendPromise: jugend,
+                spielPromise: spiele
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

@@ -18,77 +18,81 @@
     function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, BestaetigenDialog) {
         var vm = this;
         vm.loading = true;
-        vm.error = undefined;
 
-        //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
         _.extend(vm, {
-            gruppe: {}
-            , addGruppe: function () {
-                if (!vm.loading) {
-                    vm.loading = true;
-                    vm.error = undefined;
-                    gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {
-                        vm.error = error;
-                        vm.loading = false;
-                    }).then(function () {
-                        spielplan.createSpielplan();
-                        getGruppen();
-                        vm.gruppe = {};
-                        vm.showMinZahlGruppen = false;
-                        vm.loading = false;
-                    });
-                }
-            }
-            , deleteGruppe: function (id) {
-                if (!vm.loading) {
-                    vm.loading = true;
-                    vm.error = undefined;
-                    if (vm.gruppen.length > 1) {
-                        gruppe.delete(id).then(function () {
-                            spielplan.createSpielplan();
-                            getGruppen();
-                            vm.loading = false;
-                        });
-                    } else {
-                        vm.loading = false;
-                        vm.showMinZahlGruppen = true;
-                    }
-                }
-            }
-            , deleteJugend: function (id) {
-                if (!vm.loading) {
-                    vm.loading = true;
-                    jugend.delete(id).then(function () {
-                        vm.loading = false;
-                        spielplan.createSpielplan();
-                    });
-                    vm.jugend = {};
-                }
-            }
-            , editGruppe: function (gewaehlteGruppe) {
-                GruppeEditierenDialog.open(gewaehlteGruppe);
-            }
-            , canEdit: canEdit()
-            , askDeleteJugend: function (jugend) {
-                return BestaetigenDialog.open('Jugend ' + jugend.name + ' wirklich löschen?', vm.deleteJugend, jugend._id)
-            }
-            , askDeleteGruppe: function (gruppe) {
-                return BestaetigenDialog.open('Gruppe ' + gruppe.name + ' wirklich löschen?', vm.deleteGruppe, gruppe._id)
-            }
+            gruppe: {},
+            error: undefined,
+            gruppen: _.sortBy(vm.jugend.gruppen, 'name'),
+            canEdit: canEdit(),
+            addGruppe: addGruppe,
+            deleteGruppe: deleteGruppe,
+            deleteJugend: deleteJugend,
+            editGruppe: editGruppe,
+            askDeleteJugend: askDeleteJugend,
+            askDeleteGruppe: askDeleteGruppe
         });
 
-        getGruppen();
-
-        function getGruppen() {
-            gruppe.getByJugend(vm.jugend._id).then(function (res) {
-                vm.gruppen = _.sortBy(res, 'name');
-                vm.loading = false;
-            })
-        }
+        vm.loading = false;
 
         function canEdit() {
             return auth.canAccess(1) && $state.includes('spi.verwaltung');
         }
-    }
 
+        function askDeleteGruppe(gruppe) {
+            return BestaetigenDialog.open('Gruppe ' + gruppe.name + ' wirklich löschen?', vm.deleteGruppe, gruppe._id)
+        }
+
+        function askDeleteJugend(jugend) {
+            return BestaetigenDialog.open('Jugend ' + jugend.name + ' wirklich löschen?', vm.deleteJugend, jugend._id)
+        }
+
+        function editGruppe(gewaehlteGruppe) {
+            GruppeEditierenDialog.open(gewaehlteGruppe);
+        }
+
+        function deleteJugend(id) {
+            if (!vm.loading) {
+                vm.loading = true;
+                jugend.delete(id).then(function () {
+                    vm.jugend = {};
+                    vm.loading = false;
+                    spielplan.createSpielplan();
+                });
+            }
+        }
+
+        function deleteGruppe(id) {
+            if (!vm.loading) {
+                vm.loading = true;
+                vm.error = undefined;
+                if (vm.gruppen.length > 1) {
+                    gruppe.delete(id).then(function () {
+                        spielplan.createSpielplan();
+                        vm.gruppen = _.pullAllBy(vm.gruppen, [{'_id': id}], '_id');
+                        vm.loading = false;
+                    });
+                } else {
+                    vm.loading = false;
+                    vm.showMinZahlGruppen = true;
+                }
+            }
+        }
+
+        function addGruppe() {
+            if (!vm.loading) {
+                vm.loading = true;
+                vm.error = undefined;
+                gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {
+                    vm.error = error;
+                    vm.loading = false;
+                }).then(function (res) {
+                    spielplan.createSpielplan();
+                    vm.gruppen.push(res.data);
+                    vm.gruppe = {};
+                    vm.showMinZahlGruppen = false;
+                    vm.loading = false;
+                });
+            }
+        }
+    }
 })();

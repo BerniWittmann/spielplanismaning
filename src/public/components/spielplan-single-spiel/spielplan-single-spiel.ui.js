@@ -18,11 +18,9 @@
             }
         })
         .directive("focusOn", function ($timeout) {
-            //noinspection JSUnusedGlobalSymbols
             return {
                 restrict: "A"
                 , link: function (scope, element, attrs) {
-                    //noinspection JSUnresolvedVariable
                     scope.$on(attrs.focusOn, function () {
                         $timeout((function () {
                             element[0].focus();
@@ -36,7 +34,6 @@
                 element.bind("keydown keypress", function (event) {
                     if (event.which === 13) {
                         scope.$apply(function () {
-                            //noinspection JSUnresolvedVariable
                             scope.$eval(attrs.ngEnter);
                         });
 
@@ -49,27 +46,26 @@
     function SpielplanSingleSpielController($scope, $state, auth, spiel, BestaetigenDialog, $timeout) {
         var vm = this;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
-            canEdit: auth.canAccess(0)
-            , canDelete: auth.canAccess(1)
-            , spiel: $scope.spiSingleSpiel
-            , isEditing: false
-            , edit: function () {
+            canEdit: auth.canAccess(0),
+            canDelete: auth.canAccess(1),
+            spiel: $scope.spiSingleSpiel,
+            isEditing: false,
+            edit: function () {
                 if (vm.canEdit) {
                     vm.isEditing = true;
                     $timeout(function () {
                         $scope.$broadcast("focusTextInput");
                     }, 0);
                 }
-            }
-            , abort: function () {
+            },
+            abort: function () {
                 vm.spiel.toreA = altToreA;
                 vm.spiel.toreB = altToreB;
                 vm.isEditing = false;
-            }
-            , save: saveSpiel
-            , deleteSpiel: function () {
+            },
+            save: saveSpiel,
+            deleteSpiel: function () {
                 return spiel.resetSpiel(vm.spiel).then(function (res) {
                     vm.spiel = res.data;
                     _.extend(vm.spiel, {
@@ -80,36 +76,32 @@
                     altToreB = undefined;
                     vm.isEditing = false;
                 })
-            }
-            , askDelete: function () {
+            },
+            askDelete: function () {
                 return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
-            }
-        });
-
-        //noinspection JSUnusedGlobalSymbols
-        _.extend(vm, {
+            },
             gotoTeam: function (team) {
                 if (team) {
                     $state.go('spi.tgj.team', {
                         teamid: team._id
                     })
                 }
-            }
-            , gotoGruppe: function (gruppe) {
+            },
+            gotoGruppe: function (gruppe) {
                 if (gruppe) {
                     $state.go('spi.tgj.gruppe', {
                         gruppeid: gruppe._id
                     });
                 }
-            }
-            , gotoJugend: function (jugend) {
+            },
+            gotoJugend: function (jugend) {
                 if (jugend) {
                     $state.go('spi.tgj.jugend', {
                         jugendid: jugend._id
                     });
                 }
-            }
-            , gotoPlatz: function (platznummer) {
+            },
+            gotoPlatz: function (platznummer) {
                 $state.go('spi.platz', {
                     platznummer: platznummer
                 });

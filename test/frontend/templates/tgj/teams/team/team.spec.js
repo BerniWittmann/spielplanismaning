@@ -43,13 +43,7 @@
             teamA: 't3',
             teamB: 't1'
         }];
-        var mockSpiel;
         var mockTeamAbonnierenDialog;
-        var mockScope = {
-            $watch: function (fn1, fn2) {
-                fn2();
-            }
-        };
         var mockEmail = {
             isSubscribed: false,
             checkSubscription: function () {
@@ -76,20 +70,9 @@
             var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
             mockTeam = {
-                get: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve(team);
-                    return deferred.promise;
-                }, getByGruppe: function () {
+                getByGruppe: function () {
                     var deferred = $q.defer();
                     deferred.resolve(team.gruppe.teams);
-                    return deferred.promise;
-                }
-            };
-            mockSpiel = {
-                getByTeam: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve(spiele);
                     return deferred.promise;
                 }
             };
@@ -106,9 +89,9 @@
             var ctrl = scope.vm = $controller('TeamController', {
                 team: mockTeam,
                 $stateParams: mockStateParams,
-                spiel: mockSpiel,
+                spielPromise: spiele,
+                teamPromise: team,
                 TeamAbonnierenDialog: mockTeamAbonnierenDialog,
-                $scope: mockScope,
                 email: mockEmail
             });
             $rootScope.$digest();

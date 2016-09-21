@@ -23,7 +23,6 @@ module.exports = function (secret) {
     });
 
     UserSchema.methods.generateJWT = function () {
-
         // set expiration to 60 days
         var today = new Date();
         var exp = new Date(today);

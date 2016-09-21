@@ -52,7 +52,7 @@
 
         it('soll eine bestimmte Jugend laden', function () {
             response = mockJugenden[0];
-            httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, [response]);
+            httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             jugend.get('1').then(function (res) {
                 responseTest = res;
@@ -93,7 +93,7 @@
 
         it('soll einer Jugend eine Gruppe hinzufügen können', function () {
             response = mockJugenden[0];
-            httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, [response]);
+            httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
             response.gruppen.push('abc');
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 

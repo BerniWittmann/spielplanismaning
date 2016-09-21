@@ -16,7 +16,13 @@
                 , controller: VerwaltungTeamsController
                 , controllerAs: 'vm'
                 , resolve: {
-                    authenticate: authenticate
+                    authenticate: authenticate,
+                    jugendPromise: function (jugend) {
+                        return jugend.getAll();
+                    },
+                    teamPromise: function (team) {
+                        return team.getAll();
+                    }
                 }
             });
 
@@ -34,25 +40,28 @@
         }
     }
 
-    function VerwaltungTeamsController($scope, auth, jugend, spielplan, team, $timeout, $window) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugendPromise, teamPromise) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            jugend: {}
-            , addJugend: function () {
+            jugend: {},
+            jugenden: jugendPromise.data,
+            teams: teamPromise.data,
+            addJugend: function () {
                 jugend.create(vm.jugend).then(function (res) {
+                    console.log(res.data);
                     spielplan.createSpielplan();
                     vm.jugend = {};
-                    getAll();
+                    vm.jugenden.push(res.data);
                     $timeout(function () {
                         $scope.$apply();
                     }, 0, false);
                 });
-            }
-            , spielplanError: spielplan.error
-            , isLoggedIn: auth.canAccess(1)
-            , farben: [
+            },
+            spielplanError: spielplan.error,
+            isLoggedIn: auth.canAccess(1),
+            farben: [
                 {
                     name: 'Grün'
                     , wert: 'gruen'
@@ -100,18 +109,6 @@
             ]
         });
 
-        function getAll() {
-            jugend.getAll().then(function (response) {
-                vm.jugenden = response.data;
-                team.getAll().then(function (res) {
-                    vm.teams = res.data;
-                    vm.loading = false;
-                });
-            });
-        }
-
-        getAll();
-
         $scope.$watch(function () {
             return spielplan.error;
         }, function () {
@@ -119,6 +116,8 @@
             if(spielplan.error) {
                 $window.scrollTo(0, 0);
             }
-        })
+        });
+
+        vm.loading = false;
     }
 })();

@@ -1,5 +1,12 @@
+.jugend-label a {
+    color: white;
+}
+
 .jugend-label-gruen {
     background-color: greenyellow;
+}
+
+.jugend-label-gruen a {
     color: black;
 }
 
@@ -8,24 +15,48 @@
     color: black;
 }
 
+.jugend-label-gelb a{
+    color: black;
+}
+
 .jugend-label-rot {
     background-color: red;
+}
+
+.jugend-label-rot a {
+    color: white;
 }
 
 .jugend-label-blau {
     background-color: blue;
 }
 
+.jugend-label-blau a {
+    color: white;
+}
+
 .jugend-label-orange {
     background-color: orange;
+}
+
+.jugend-label-orange a {
+    color: black;
 }
 
 .jugend-label-lila {
     background-color: purple;
 }
 
+.jugend-label-lila a {
+    color: white;
+}
+
 .jugend-label-hellblau {
     background-color: lightblue;
+    color: black;
+}
+
+.jugend-label-hellblau a {
     color: black;
 }
 
@@ -34,7 +65,15 @@
     color: black;
 }
 
+.jugend-label-hellgruen a {
+    color: black;
+}
+
 .jugend-label-hellrot {
     background-color: lightcoral;
     color: black;
+}
+
+.jugend-label-hellrot a {
+    background-color: lightcoral;
 }

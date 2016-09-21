@@ -72,7 +72,7 @@
             };
 
             var ctrl = scope.vm = $controller('SpielController', {
-                spiel: mockSpiel,
+                spielPromise: spiel,
                 $state: mockState,
                 $stateParams: mockStateParams
             });

@@ -10,10 +10,10 @@ passport.use(new LocalStrategy(
                 return done(err);
             }
             if (!user) {
-                return done(null, false, {message: 'Falscher Benutzername.'});
+                return done(null, false, {message: 'Falscher Benutzername/Passwort'});
             }
             if (!user.validPassword(password)) {
-                return done(null, false, {message: 'Falsches Passwort.'});
+                return done(null, false, {message: 'Falscher Benutzername/Passwort'});
             }
             return done(null, user);
         });

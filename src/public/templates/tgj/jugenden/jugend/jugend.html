@@ -8,14 +8,14 @@
 
 <spi-loader loading="loading"></spi-loader>
 
-<div class="row" data-ng-if="!loading">
+<div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
         <h4>Spiele</h4>
         <spi-spiele-tabelle data-spiele="vm.spiele"></spi-spiele-tabelle>
     </div>
 </div>
 
-<div class="row" data-ng-if="!loading">
+<div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
         <h4>Gruppen</h4>
         <div class="col-md-6" data-ng-repeat="gruppe in vm.jugend.gruppen">

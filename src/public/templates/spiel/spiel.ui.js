@@ -11,29 +11,32 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.spiel', {
-                url: '/spiel/:spielid'
-                , templateUrl: 'templates/spiel/spiel.html'
-                , controller: SpielController
-                , controllerAs: 'vm'
+                url: '/spiel/:spielid',
+                templateUrl: 'templates/spiel/spiel.html',
+                controller: SpielController,
+                controllerAs: 'vm',
+                resolve: {
+                    spielPromise: function (spiel, $stateParams) {
+                        return spiel.get($stateParams.spielid);
+                    }
+                }
             });
 
     }
 
-    function SpielController($stateParams, $state, spiel) {
+    function SpielController($state, spielPromise) {
         var vm = this;
         vm.loading = true;
 
-        spiel.get($stateParams.spielid).then(function (response) {
-            vm.spiel = response;
-            vm.loading = false;
-        });
-
         _.extend(vm, {
+            spiel: spielPromise,
             gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {
                     teamid: team._id
                 });
             }
-        })
+        });
+
+        vm.loading = false;
     }
 })();

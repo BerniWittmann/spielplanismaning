@@ -9,36 +9,30 @@
         .controller('GruppenController', GruppenController);
 
     function states($stateProvider) {
+        //noinspection JSUnusedGlobalSymbols
         $stateProvider
             .state('spi.tgj.gruppen', {
-                url: '/gruppen'
-                , templateUrl: 'templates/tgj/gruppen/gruppen.html'
-                , controller: GruppenController
-                , controllerAs: 'vm'
+                url: '/gruppen',
+                templateUrl: 'templates/tgj/gruppen/gruppen.html',
+                controller: GruppenController,
+                controllerAs: 'vm',
+                resolve: {
+                    gruppePromise: function (gruppe) {
+                        return gruppe.getAll();
+                    }
+                }
             });
 
     }
 
-    function GruppenController($state, gruppe) {
+    function GruppenController(gruppePromise) {
         var vm = this;
         vm.loading = true;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
-            gruppen: [],
-            //TODO wird das überhaupt genutzt?
-            gotoGruppe: function (gruppe) {
-                $state.go('spi.tgj.gruppe', {gruppeid: gruppe._id});
-            }
+            gruppen: gruppePromise.data
         });
 
-        gruppe.getAll().then(function (response) {
-            vm.gruppen = response.data;
-            //TODO vm.teams???? nicht vm.gruppen?
-            _.forEach(vm.teams, function (o) {
-                o.jugendName = o.jugend.name;
-            });
-            vm.loading = false;
-        });
+        vm.loading = false;
     }
 })();

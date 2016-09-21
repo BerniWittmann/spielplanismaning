@@ -41,7 +41,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             query = Spiel.find({jugend: req.param('jugend')});
         }
 
-        query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiele) {
+        query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
             if (err) {
                 throw err;
             }
@@ -179,6 +179,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     throw err;
                 }
 
+                //TODO mit async lösen
                 //Set Ergebnis Team A
                 spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
                     if (err) {

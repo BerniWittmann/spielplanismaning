@@ -11,37 +11,42 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tabellen', {
-                url: '/tabellen'
-                , templateUrl: 'templates/tabellen/tabellen.html'
-                , controller: TabellenController
-                , controllerAs: 'vm'
+                url: '/tabellen',
+                templateUrl: 'templates/tabellen/tabellen.html',
+                controller: TabellenController,
+                controllerAs: 'vm',
+                resolve: {
+                    jugendPromise: function (jugend) {
+                        return jugend.getAll();
+                    },
+                    jugendTorePormise: function (jugend) {
+                        return jugend.getGesamtTore();
+                    }
+                }
             });
 
     }
 
-    function TabellenController(jugend) {
+    function TabellenController(jugend, jugendPromise, jugendTorePromise) {
         var vm = this;
         vm.loading = true;
-        vm.gesamt = 0;
 
-        jugend.getAll().then(function (res) {
-            vm.jugenden = res.data;
-            _.forEach(vm.jugenden, function (jgd) {
-                if (!_.isUndefined(jgd) && !_.isNull(jgd)) {
-                    jugend.getTore(jgd._id).then(function (res) {
-                        if (res.data >= 0) {
-                            jgd.tore = res.data;
-                        } else {
-                            jgd.tore = 0;
-                        }
-                    });
-                }
-            });
-            vm.loading = false;
+        _.extend(vm, {
+            gesamt: jugendTorePromise.data,
+            jugenden: jugendPromise.data
         });
-
-        jugend.getGesamtTore().then(function (res) {
-            vm.gesamt = res.data;
-        })
+        _.forEach(vm.jugenden, function (jgd) {
+            if (!_.isUndefined(jgd) && !_.isNull(jgd)) {
+                jugend.getTore(jgd._id).then(function (res) {
+                    if (res.data >= 0) {
+                        jgd.tore = res.data;
+                    } else {
+                        jgd.tore = 0;
+                    }
+                });
+            }
+        });
+        
+        vm.loading = false;
     }
 })();

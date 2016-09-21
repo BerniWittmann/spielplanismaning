@@ -18,7 +18,6 @@
     function JugendLabelController($state) {
         var vm = this;
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             gotoJugend: function () {
                 $state.go('spi.tgj.jugend', {

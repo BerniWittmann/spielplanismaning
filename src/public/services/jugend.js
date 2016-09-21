@@ -2,20 +2,18 @@ angular
     .module('spi.jugend', []).factory('jugend', ['$http', function ($http) {
 
     var ENDPOINT_URL = '/api/jugenden';
-    var jugend = {
-        jugenden: []
-    };
+
+    var jugend = {};
 
     jugend.getAll = function () {
         return $http.get(ENDPOINT_URL).success(function (data) {
-            angular.copy(data, jugend.jugenden);
             return data;
         });
     };
 
     jugend.get = function (id) {
         return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
-            return _.head(res.data);
+            return res.data;
         });
     };
 
