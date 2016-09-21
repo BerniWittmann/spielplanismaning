@@ -179,6 +179,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     throw err;
                 }
 
+                //TODO mit async lösen
                 //Set Ergebnis Team A
                 spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
                     if (err) {
