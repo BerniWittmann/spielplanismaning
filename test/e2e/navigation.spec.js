@@ -1,4 +1,4 @@
-describe('Spielplan-Ismaning App', function () {
+describe('Navigation', function () {
     var utils = require('./utils.js')();
     var navigation = require('./PageObjects/navigation.js')();
 
@@ -57,7 +57,7 @@ describe('Spielplan-Ismaning App', function () {
 
     it('Man soll zur Login-Seite navigieren können', function () {
         navigation.klickeNavElement('login');
-        //expect(element(by.tagName('h3')).getText()).toEqual('Login');
+        expect(element(by.tagName('h3')).getText()).toEqual('Login');
         expect(browser.getCurrentUrl()).toEqual(utils.getBaseURI() + '/login');
     });
 });
