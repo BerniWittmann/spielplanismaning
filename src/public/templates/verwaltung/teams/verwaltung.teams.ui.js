@@ -50,6 +50,7 @@
             teams: teamPromise.data,
             addJugend: function () {
                 jugend.create(vm.jugend).then(function (res) {
+                    console.log(res.data);
                     spielplan.createSpielplan();
                     vm.jugend = {};
                     vm.jugenden.push(res.data);
