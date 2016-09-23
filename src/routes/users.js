@@ -7,6 +7,8 @@ module.exports = function () {
     var passport = require('passport');
     var jwt = require('express-jwt');
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {post} /users/register Register User
      * @apiName UserRegister
@@ -33,29 +35,24 @@ module.exports = function () {
      **/
     router.post('/register', function (req, res) {
         if (!req.body.username || !req.body.password) {
-            return res.status(400).json({
-                message: 'Bitte alle Felder ausfüllen'
-            });
+            return messages.ErrorFehlendeFelder(res);
         }
 
         var user = new User();
 
         user.username = req.body.username;
         if (!user.setRole(req.body.role)) {
-            return res.status(400).json({
-                message: 'Unbekannte Rolle'
-            });
+            return messages.ErrorUnbekannteRolle(res);
         }
 
         user.setPassword(req.body.password);
 
         user.save(function (err) {
             if (err) {
-                return res.status(500).json(err);
+                return messages.Error(res, err);
             }
 
-            return res.json({message: 'success'});
-
+            return messages.Success(res);
         });
     });
 
@@ -85,15 +82,13 @@ module.exports = function () {
      **/
     router.post('/login', function (req, res, next) {
         if (!req.body.username || !req.body.password) {
-            return res.status(400).json({
-                message: 'Bitte alle Felder ausfüllen'
-            });
+            return messages.ErrorFehlendeFelder(res);
         }
 
         //noinspection JSUnresolvedFunction
         passport.authenticate('local', function (err, user, info) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
             if (user) {
@@ -101,7 +96,7 @@ module.exports = function () {
                     token: user.generateJWT()
                 });
             } else {
-                return res.status(401).json(info);
+                return messages.ErrorFalscheAnmeldedaten(res);
             }
         })(req, res, next);
     });
@@ -140,19 +135,18 @@ module.exports = function () {
      **/
     router.put('/delete', function (req, res) {
         if (req.body.username == 'berni') {
-            return res.status(500).json('Dieser User kann nicht gelöscht werden!');
+           return messages.ErrorUserNichtLoeschbar(res);
         }
         User.find({
             username: req.body.username
         }).remove().exec(function (err, user) {
             if (err) {
-                console.log(err);
-                return res.status(500).json(err);
+                return messages.Error(res, err);
             }
             if (user.result.n > 0) {
-                return res.json(user);
+                return messages.Deleted(res);
             } else {
-                return res.status(404).json('Konnte keinen User mit Namen ' + req.body.username + ' finden.');
+                return messages.ErrorUserNotFound(res, req.body.username);
             }
 
         });
