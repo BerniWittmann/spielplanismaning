@@ -15,23 +15,11 @@ module.exports = function () {
      * @apiDescription Registriert einen neuen Benutzer
      * @apiGroup Users
      *
-     * @apiUse FehlendeFelderError
+     * @apiUse ErrorUnbekannteRolle
      *
-     * @apiError UnbekannteRolle Unbekannte Benutzerrolle
+     * @apiUse ErrorFehlendeFelder
      *
-     * @apiErrorExample Error-Response UnbekannteRolle:
-     *     HTTP/1.1 400 Bad Request
-     *     {
-     *         "message": "Unbekannte Rolle"
-     *     }
-     *
-     * @apiSuccess {String} message Success-Message: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "message": "success"
-     *     }
+     * @apiUse SuccessMessage
      **/
     router.post('/register', function (req, res) {
         if (!req.body.username || !req.body.password) {
@@ -62,15 +50,9 @@ module.exports = function () {
      * @apiDescription Loggt einen Benutzer ein
      * @apiGroup Users
      *
-     * @apiUse FehlendeFelderError
+     * @apiUse ErrorFehlendeFelder
      *
-     * @apiError FalscheAnmeldedaten Falscher Benutzerame oder/und Falsches Passwort
-     *
-     * @apiErrorExample Error-Response FalscheAnmeldedaten:
-     *     HTTP/1.1 401 Unauthorized
-     *     {
-     *         "message": "Falscher Benutzername/Passwort"
-     *     }
+     * @apiUse ErrorFalscheAnmeldedaten
      *
      * @apiSuccess {String} token User-Token
      *
@@ -107,31 +89,11 @@ module.exports = function () {
      * @apiDescription Löscht einen Benutzer
      * @apiGroup Users
      *
-     * @apiError BerniError Benutzer Berni kann nicht gelöscht werden
+     * @apiUse ErrorUserNotFound
      *
-     * @apiErrorExample Error-Response BerniError:
-     *     HTTP/1.1 500 Internal Server Error
-     *     {
-     *         "Dieser User kann nicht gelöscht werden!"
-     *     }
+     * @apiUse ErrorUserNichtLoeschbar
      *
-     * @apiError UserNotFound Nutzer Nicht gefunden
-     *
-     * @apiErrorExample Error-Response UserNotFound:
-     *     HTTP/1.1 404 NOT FOUND
-     *     {
-     *         "Konnte keinen User mit Namen test-user finden."
-     *     }
-     *
-     * @apiSuccess {Integer} ok Anzahl gefundene Nutzer
-     * @apiSuccess {Integer} n Anzahl gelöschte Nutzer
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       ok: 1,
-     *       n: 1
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.put('/delete', function (req, res) {
         if (req.body.username == 'berni') {

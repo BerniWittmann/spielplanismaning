@@ -2,13 +2,11 @@ module.exports = {
     /**
      * @apiDefine ErrorUnbekannteRolle
      *
-     * @apiError UnbekannteRolle Unbekannte Benutzerrolle
+     * @apiError (UnbekannteRolle) {String} MESSAGE Error-Message: 'Unbekannte Benutzerrolle'
+     * @apiError (UnbekannteRolle) {Integer} STATUSCODE Status-Code: 400
+     * @apiError (UnbekannteRolle) {String} MESSAGEKEY Key der Message: 'ERROR_UNBEKANNTE_ROLLE'
      *
-     * @apiError {String} MESSAGE Error-Messge: 'Unbekannte Benutzerrolle'
-     * @apiError {Integer} STATUSCODE Status-Code: 400
-     * @apiError {String} MESSAGEKEY Key der Message: 'ERROR_UNBEKANNTE_ROLLE'
-     *
-     * @apiErrorExample Error-Response:
+     * @apiErrorExample Error-Response UnbekannteRolle:
      *     HTTP/1.1 400 Bad Request
      *     {
      *          "MESSAGE": "Unbekannte Benutzerrolle",

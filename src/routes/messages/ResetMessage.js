@@ -2,7 +2,7 @@ module.exports = {
     /**
      * @apiDefine ResetMessage
      *
-     * @apiSuccess {String} MESSAGE Success-Messge: 'Successfully Reset'
+     * @apiSuccess {String} MESSAGE Success-Message: 'Successfully Reset'
      * @apiSuccess {Integer} STATUSCODE Status-Code: 200
      * @apiSuccess {String} MESSAGEKEY Key der Message: 'RESET_MESSAGE''
      *

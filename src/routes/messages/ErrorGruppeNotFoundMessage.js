@@ -2,14 +2,12 @@ module.exports = function (err) {
     /**
      * @apiDefine ErrorGruppeNotFoundMessage
      *
-     * @apiError GruppeNotFound Gruppe wurde nicht gefunden
+     * @apiError (GruppeNotFound) {String} MESSAGE Error-Message: 'Error'
+     * @apiError (GruppeNotFound) {Integer} STATUSCODE Status-Code: 200
+     * @apiError (GruppeNotFound) {String} MESSAGEKEY Key der Message: 'SUCCESS_DELETE_MESSAGE'
+     * @apiError (GruppeNotFound) {Object} ERROR Error Object
      *
-     * @apiError {String} MESSAGE Error-Messge: 'Error'
-     * @apiError {Integer} STATUSCODE Status-Code: 200
-     * @apiError {String} MESSAGEKEY Key der Message: 'SUCCESS_DELETE_MESSAGE'
-     * @apiError {Object} ERROR Error Object
-     *
-     * @apiErrorExample Error-Response:
+     * @apiErrorExample Error-Response GruppeNotFound:
      *     HTTP/1.1 500 INTERNAL SERVER ERROR
      *     {
      *          "MESSAGE": "Gruppe nicht gefunden",

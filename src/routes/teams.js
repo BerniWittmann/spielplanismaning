@@ -70,13 +70,7 @@ module.exports = function () {
      *
      * @apiParam {String} id ID des Teams.
      *
-     * @apiSuccess {String} body Success-Message: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "success"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
         var query = Team.findById(req.param('id'));
@@ -233,13 +227,7 @@ module.exports = function () {
      * @apiDescription Setzt die Ergebnisse aller Teams zurück
      * @apiGroup Teams
      *
-     * @apiSuccess {String} body Success-Message: Successful Reset
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "Successful Reset"
-     *     }
+     * @apiUse ResetMessage
      **/
     router.put('/resetErgebnisse', function (req, res) {
         var query = Team.find();

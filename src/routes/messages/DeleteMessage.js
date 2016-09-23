@@ -2,7 +2,7 @@ module.exports = {
     /**
      * @apiDefine SuccessDeleteMessage
      *
-     * @apiSuccess {String} MESSAGE Success-Messge: 'Successfully Deleted'
+     * @apiSuccess {String} MESSAGE Success-Message: 'Successfully Deleted'
      * @apiSuccess {Integer} STATUSCODE Status-Code: 200
      * @apiSuccess {String} MESSAGEKEY Key der Message: 'SUCCESS_DELETE_MESSAGE''
      *

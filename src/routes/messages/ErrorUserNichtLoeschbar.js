@@ -1,14 +1,12 @@
 module.exports = {
     /**
-     * @apiDefine ErrorUserNichtLoschbar
+     * @apiDefine ErrorUserNichtLoeschbar
      *
-     * @apiError UserNichtLoschbar Benutzer kann nicht gelöscht werden
+     * @apiError (UserNichtLoeschbar) {String} MESSAGE Error-Message: 'Benutzer kann nicht gelöscht werden'
+     * @apiError (UserNichtLoeschbar) {Integer} STATUSCODE Status-Code: 403
+     * @apiError (UserNichtLoeschbar) {String} MESSAGEKEY Key der Message: 'ERROR_USER_NICHT_LOESCHBAR'
      *
-     * @apiError {String} MESSAGE Error-Messge: 'Benutzer kann nicht gelöscht werden'
-     * @apiError {Integer} STATUSCODE Status-Code: 403
-     * @apiError {String} MESSAGEKEY Key der Message: 'ERROR_USER_NICHT_LOESCHBAR'
-     *
-     * @apiErrorExample Error-Response:
+     * @apiErrorExample Error-Response UserNichtLoeschbar:
      *     HTTP/1.1 403 Forbidden
      *     {
      *          "MESSAGE": "Benutzer kann nicht gelöscht werden",

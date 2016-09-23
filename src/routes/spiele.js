@@ -83,13 +83,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      * @apiParam {String} id ID des Spiels.
      *
-     * @apiSuccess {String} body Erfolgsnachricht: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "success"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
         Spiel.remove({
@@ -109,13 +103,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Speichert alle Spiele
      * @apiGroup Spiele
      *
-     * @apiSuccess {String} body Erfolgsnachricht: Spielplan erstellt
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "Spielplan erstellt"
-     *     }
+     * @apiUse SpielplanErstelltMessage
      *
      **/
     router.post('/alle', function (req, res) {
@@ -137,13 +125,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Löscht alle Spiele
      * @apiGroup Spiele
      *
-     * @apiSuccess {String} body Erfolgsnachricht: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "success"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/alle', function (req, res) {
         Spiel.remove({}, function (err) {

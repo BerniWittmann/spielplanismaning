@@ -1,14 +1,12 @@
 module.exports = {
     /**
      * @apiDefine ErrorFalscheAnmeldedaten
+     * 
+     * @apiError (FalscheAnmeldedaten) {String} MESSAGE Error-Message: 'Falsche Anmeldedaten. Benutzername oder/und Passwort sind falsch'
+     * @apiError (FalscheAnmeldedaten) {Integer} STATUSCODE Status-Code: 401
+     * @apiError (FalscheAnmeldedaten) {String} MESSAGEKEY Key der Message: 'ERROR_FALSCHE_ANMELDEDATEN'
      *
-     * @apiError FalscheAnmeldedaten Falsche Anmeldedaten. Benutzername oder/und Passwort sind falsch
-     *
-     * @apiError {String} MESSAGE Error-Messge: 'Falsche Anmeldedaten. Benutzername oder/und Passwort sind falsch'
-     * @apiError {Integer} STATUSCODE Status-Code: 401
-     * @apiError {String} MESSAGEKEY Key der Message: 'ERROR_FALSCHE_ANMELDEDATEN'
-     *
-     * @apiErrorExample Error-Response:
+     * @apiErrorExample Error-Response FalscheAnmeldedaten:
      *     HTTP/1.1 401 Unauthorized
      *     {
      *          "MESSAGE": "Falsche Anmeldedaten. Benutzername oder/und Passwort sind falsch",

@@ -118,13 +118,7 @@ module.exports = function () {
      *
      * @apiParam {String} id ID der Jugend.
      *
-     * @apiSuccess {String} body Erfolgsnachricht: Successful
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "Successful"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
         Team.remove({

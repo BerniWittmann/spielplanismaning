@@ -2,14 +2,12 @@ module.exports = function (err) {
     /**
      * @apiDefine ErrorMessage
      *
-     * @apiError Error Ein Fehler ist aufgetreten
+     * @apiError (Error) {String} MESSAGE Error-Message: 'Error'
+     * @apiError (Error) {Integer} STATUSCODE Status-Code: 200
+     * @apiError (Error) {String} MESSAGEKEY Key der Message: 'ERROR_MESSAGE'
+     * @apiError (Error) {Object} ERROR Error Object
      *
-     * @apiError {String} MESSAGE Error-Messge: 'Error'
-     * @apiError {Integer} STATUSCODE Status-Code: 200
-     * @apiError {String} MESSAGEKEY Key der Message: 'ERROR_MESSAGE'
-     * @apiError {Object} ERROR Error Object
-     *
-     * @apiErrorExample Error-Response:
+     * @apiErrorExample Error-Response Error:
      *     HTTP/1.1 500 INTERNAL SERVER ERROR
      *     {
      *          "MESSAGE": "Error",

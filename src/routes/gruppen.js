@@ -24,6 +24,8 @@ module.exports = function () {
      * @apiSuccess {Array} teams Teams der Gruppe
      * @apiUse vResponse
      *
+     * @apiUse ErrorGruppeNotFoundMessage
+     *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     [{
@@ -87,13 +89,7 @@ module.exports = function () {
      *         teams: [ [Object], [Object], [Object] ]
      *     }]
      *
-     * @apiError MaximalzahlErreicht Maximalzahl an Gruppen für die gewählte Jugend erreicht.
-     *
-     * @apiErrorExample Error-Response MaximalzahlErreicht:
-     *     HTTP/1.1 418 I’m a teapot
-     *     {
-     *         "message": "Maximalzahl an Gruppen für diese Jugend erreicht"
-     *     }
+     * @apiUse ErrorMaxZahlGruppe
      **/
     router.post('/', function (req, res) {
         var gruppe = new Gruppe(req.body);
@@ -130,13 +126,7 @@ module.exports = function () {
      *
      * @apiParam {String} id ID der Gruppe.
      *
-     * @apiSuccess {String} body Erfolgsnachricht: Success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "success"
-     *     }
+     * @apiUse SuccessMessage
      **/
     router.delete('/', function (req, res) {
         Gruppe.findById(req.param('id'), function (err, gruppe) {

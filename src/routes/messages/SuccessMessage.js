@@ -2,7 +2,7 @@ module.exports = {
     /**
      * @apiDefine SuccessMessage
      *
-     * @apiSuccess {String} MESSAGE Success-Messge: 'Success'
+     * @apiSuccess {String} MESSAGE Success-Message: 'Success'
      * @apiSuccess {Integer} STATUSCODE Status-Code: 200
      * @apiSuccess {String} MESSAGEKEY Key der Message: 'SUCCESS_MESSAGE''
      *

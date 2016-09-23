@@ -53,13 +53,7 @@ module.exports = function () {
      * @apiDescription Updatet die Spielplan-Zeiten
      * @apiGroup Spielplan
      *
-     * @apiSuccess {String} body Success-Message: Spielplan erstellt
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "Spielplan erstellt"
-     *     }
+     * @apiUse SpielplanErstelltMessage
      **/
     router.put('/zeiten', function (req, res) {
         Spielplan.findOneAndUpdate({}, req.body, {
