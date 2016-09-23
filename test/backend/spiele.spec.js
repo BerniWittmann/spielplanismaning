@@ -142,7 +142,7 @@ describe('Route: Spiele', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.be.equal('success');
+                expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
                 mongoose.model('Spiel').find().exec(function (err, res) {
                     if (err) throw err;
                     expect(res).to.have.lengthOf(9);
@@ -161,7 +161,7 @@ describe('Route: Spiele', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.be.equal('success');
+                expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
                 mongoose.model('Spiel').find().exec(function (err, res) {
                     if (err) throw err;
                     expect(res).to.have.lengthOf(0);
@@ -180,7 +180,7 @@ describe('Route: Spiele', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.be.equal('Spielplan erstellt');
+                expect(response.body.MESSAGEKEY).to.be.equal('SPIELPLAN_CREATED_MESSAGE');
                 mongoose.model('Spiel').find().exec(function (err, res) {
                     if (err) throw err;
                     expect(res).to.have.lengthOf(9);

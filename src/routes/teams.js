@@ -6,6 +6,8 @@ module.exports = function () {
     var Jugend = mongoose.model('Jugend');
     var Team = mongoose.model('Team');
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {get} /teams Get Team
      * @apiName GetTeams
@@ -53,10 +55,10 @@ module.exports = function () {
 
         query.deepPopulate('gruppe jugend').exec(function (err, teams) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json(teams);
+            return res.json(teams);
         });
     });
 
@@ -68,40 +70,34 @@ module.exports = function () {
      *
      * @apiParam {String} id ID des Teams.
      *
-     * @apiSuccess {String} body Success-Message: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "success"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
         var query = Team.findById(req.param('id'));
         query.deepPopulate('gruppe, jugend').exec(function (err, team) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
             team.jugend.teams.splice(team.jugend.teams.indexOf(team), 1);
             team.jugend.save(function (err) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
                 team.gruppe.teams.splice(team.gruppe.teams.indexOf(team), 1);
                 team.gruppe.save(function (err) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     Team.remove({
                         "_id": team
                     }, function (err) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
-                        res.json("success");
+                        return messages.Deleted(res);
                     });
                 });
             });
@@ -148,29 +144,29 @@ module.exports = function () {
 
         team.save(function (err, team) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
             //TODO Async lösen
             Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
                 gruppe.pushTeams(team, function (err) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     Jugend.findById(team.jugend).exec(function (err, jugend) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
                         jugend.pushTeams(team, function (err) {
                             if (err) {
-                                throw err;
+                                return messages.Error(res, err);
                             }
 
-                            res.json(team);
+                            return res.json(team);
                         })
                     });
 
@@ -217,10 +213,10 @@ module.exports = function () {
             team.name = req.body.name;
             team.save(function (err, team) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
-                res.json(team);
+                return res.json(team);
             });
         });
     });
@@ -231,19 +227,13 @@ module.exports = function () {
      * @apiDescription Setzt die Ergebnisse aller Teams zurück
      * @apiGroup Teams
      *
-     * @apiSuccess {String} body Success-Message: Successful Reset
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "Successful Reset"
-     *     }
+     * @apiUse ResetMessage
      **/
     router.put('/resetErgebnisse', function (req, res) {
         var query = Team.find();
         query.exec(function (err, teams) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
             //TODO mit async besser lösen
@@ -251,11 +241,11 @@ module.exports = function () {
                 var team = teams[i];
                 team.resetErgebnis(function (err) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
-                })
+                });
             }
-            res.json('Successful Reset');
+            return messages.Reset(res);
         });
     });
 

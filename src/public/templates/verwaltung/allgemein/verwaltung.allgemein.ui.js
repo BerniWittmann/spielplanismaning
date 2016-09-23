@@ -83,7 +83,7 @@
                 vm.registerMsg = vm.user.username + ' wurde registriert.';
                 vm.user = {};
             }, function (error) {
-                if (error.data.code == 11000) {
+                if (error.data.ERROR.code == 11000) {
                     vm.registerErr = 'Dieser Username existiert bereits';
                 } else {
                     vm.registerErr = error;

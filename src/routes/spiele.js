@@ -9,6 +9,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {get} /spiele Get Spiele
      * @apiName GetSpiele
@@ -43,10 +45,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json(spiele);
+            return res.json(spiele);
         });
     });
 
@@ -66,10 +68,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
         spiel.save(function (err, spiel) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json(spiel);
+            return res.json(spiel);
         });
     });
 
@@ -81,23 +83,17 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      * @apiParam {String} id ID des Spiels.
      *
-     * @apiSuccess {String} body Erfolgsnachricht: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "success"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
         Spiel.remove({
             "_id": req.param('id')
         }, function (err) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json('success');
+            return messages.Deleted(res);
         });
     });
 
@@ -107,13 +103,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Speichert alle Spiele
      * @apiGroup Spiele
      *
-     * @apiSuccess {String} body Erfolgsnachricht: Spielplan erstellt
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "Spielplan erstellt"
-     *     }
+     * @apiUse SpielplanErstelltMessage
      *
      **/
     router.post('/alle', function (req, res) {
@@ -124,8 +114,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
             spiel.gruppe = singlespiel.gruppe;
             spiel.save(asyncdone);
         }, function (err) {
-            if (err) return console.log(err);
-            res.json('Spielplan erstellt');
+            if (err) return messages.Error(res, err);
+            return messages.SpielplanErstellt(res);
         });
     });
 
@@ -135,21 +125,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Löscht alle Spiele
      * @apiGroup Spiele
      *
-     * @apiSuccess {String} body Erfolgsnachricht: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "success"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/alle', function (req, res) {
         Spiel.remove({}, function (err) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json('success');
+            return messages.Deleted(res);
         });
     });
 
@@ -167,7 +151,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
         var query = Spiel.findById(req.param('id'));
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
             var toreAOld = spiel.toreA;
@@ -176,23 +160,23 @@ module.exports = function (sendgrid, env, url, disableMails) {
             var punkteBOld = spiel.punkteB;
             spiel.reset(function (err, spiel) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
                 //TODO mit async lösen
                 //Set Ergebnis Team A
                 spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     //Set Ergebnis Team B
                     spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
-                        res.json(spiel);
+                        return res.json(spiel);
                     });
                 });
             });
@@ -214,7 +198,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
         var query = Spiel.findById(req.param('id'));
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
             var toreAOld = spiel.toreA;
             var toreBOld = spiel.toreB;
@@ -222,7 +206,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             var punkteBOld = spiel.punkteB;
             spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
                 //Set Ergebnis Team A
@@ -231,7 +215,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     teamA
                 ) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     //Set Ergebnis Team B
@@ -240,7 +224,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         teamB
                     ) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
                         function sendNextSpielUpdates(cb) {
@@ -248,7 +232,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                 nummer: spiel.nummer + 6
                             }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
                                 if (err) {
-                                    return console.log(err)
+                                    return messages.Error(res, err);
                                 }
                                 if (nextspiel) {
                                     if (!nextspiel.beendet) {
@@ -270,7 +254,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                             });
                                         }, function (err) {
                                             if (err) {
-                                                console.log(err);
+                                                return messages.Error(res, err);
                                             }
                                             return cb(null, {});
                                         });
@@ -287,7 +271,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         if (disableMails != 'true') {
                             return sendNextSpielUpdates(function (err) {
                                 if (err) {
-                                    return console.log(err);
+                                    return messages.Error(res, err);
                                 }
 
                                 async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
@@ -305,12 +289,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
                                     });
                                 }, function (err) {
-                                    if (err) return console.log(err);
-                                    res.json(spiel);
+                                    if (err) return messages.Error(res, err);
+                                    return res.json(spiel);
                                 });
                             });
                         } else {
-                            res.json(spiel);
+                            return res.json(spiel);
                         }
                     });
                 });

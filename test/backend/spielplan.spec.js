@@ -49,7 +49,7 @@ describe('Route: Spielplan', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.equal('Spielplan erstellt');
+                expect(response.body.MESSAGEKEY).to.equal('SPIELPLAN_CREATED_MESSAGE');
                 mongoose.model('Spielplan').findOne().exec(function (err, res) {
                     if (err) throw err;
                     expect(res.startzeit).to.be.equal(spielplan.startzeit);

@@ -22,7 +22,7 @@ angular
     }
 
     function getLockdown() {
-        return $http.get('/api/config/lockdownmode').success(function (res) {
+        return $http.get(ENDPOINT_URL + '/lockdownmode').success(function (res) {
             return res;
         });
     }

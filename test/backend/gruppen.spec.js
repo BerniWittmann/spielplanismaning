@@ -130,8 +130,8 @@ describe('Route: Gruppen', function () {
                         if (err) return done(err);
                         expect(response).not.to.be.undefined;
                         expect(response.statusCode).to.equal(418);
-                        expect(response.body.message).to.exist;
-                        expect(response.body.message).to.be.equal('Maximalzahl an Gruppen für diese Jugend erreicht');
+                        expect(response.body.MESSAGE).to.exist;
+                        expect(response.body.MESSAGEKEY).to.be.equal('ERROR_GROUP_MAX_AMOUNT');
                         return done();
                     });
             });
@@ -154,7 +154,7 @@ describe('Route: Gruppen', function () {
                         .expect(200)
                         .end(function (err, res) {
                             if (err) throw err;
-                            expect(res.body).to.equal('success');
+                            expect(res.body.MESSAGEKEY).to.equal('SUCCESS_DELETE_MESSAGE');
                             mongoose.model('Gruppe').findById(neueGruppeId).exec(function (err, res) {
                                 if (err) throw err;
                                 expect(res).not.to.exist;

@@ -138,7 +138,7 @@ describe('Route: Teams', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.be.equal('success');
+                expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
                 mongoose.model('Team').find().exec(function (err, res) {
                     if (err) throw err;
                     expect(res).to.have.lengthOf(8);
@@ -161,7 +161,7 @@ describe('Route: Teams', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.be.equal('Successful Reset');
+                expect(response.body.MESSAGEKEY).to.be.equal('RESET_MESSAGE');
                 mongoose.model('Team').find().exec(function (err, res) {
                     if (err) throw err;
                     res.forEach(function (team) {
