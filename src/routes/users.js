@@ -86,7 +86,7 @@ module.exports = function () {
         }
 
         //noinspection JSUnresolvedFunction
-        passport.authenticate('local', function (err, user, info) {
+        passport.authenticate('local', function (err, user) {
             if (err) {
                 return messages.Error(res, err);
             }
@@ -148,7 +148,6 @@ module.exports = function () {
             } else {
                 return messages.ErrorUserNotFound(res, req.body.username);
             }
-
         });
     });
 

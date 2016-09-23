@@ -28,7 +28,7 @@ describe('Route: Users', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body.message).to.equal('success');
+                expect(response.body.MESSAGEKEY).to.equal('SUCCESS_MESSAGE');
                 mongoose.model('User').findOne({username: user.username}).exec(function (err, res) {
                     if (err) throw err;
                     expect(res.username).to.be.equal(user.username);
@@ -47,7 +47,7 @@ describe('Route: Users', function () {
             .expect(400)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.message).to.equal('Bitte alle Felder ausfüllen');
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_FEHLENDE_FELDER');
                 return done();
             });
     });
@@ -59,7 +59,8 @@ describe('Route: Users', function () {
             .expect(500)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.code).to.equal(11000);
+                expect(res.body.MESSAGEKEY).to.equal('ERROR');
+                expect(res.body.ERROR.code).to.equal(11000);
                 return done();
             });
     });
@@ -83,7 +84,7 @@ describe('Route: Users', function () {
             .expect(400)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.message).to.equal('Bitte alle Felder ausfüllen');
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_FEHLENDE_FELDER');
                 return done();
             });
     });
@@ -95,7 +96,7 @@ describe('Route: Users', function () {
             .expect(401)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.message).to.equal('Falscher Benutzername/Passwort');
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_FALSCHE_ANMELDEDATEN');
                 return done();
             });
     });
@@ -107,7 +108,7 @@ describe('Route: Users', function () {
             .expect(401)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.message).to.equal('Falscher Benutzername/Passwort');
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_FALSCHE_ANMELDEDATEN');
                 return done();
             });
     });
@@ -119,7 +120,7 @@ describe('Route: Users', function () {
             .expect(200)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body.n).to.be.equal(1);
+                expect(res.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
                 mongoose.model('User').find({username: 'test-user'}).exec(function (err, res) {
                     if (err) throw err;
                     expect(res).to.be.empty;
@@ -135,7 +136,8 @@ describe('Route: Users', function () {
             .expect(404)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body).to.equal('Konnte keinen User mit Namen tippfehler finden.');
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_USER_NOT_FOUND');
+                expect(res.body.MESSAGE).to.equal('Benutzer tippfehler wurde nicht gefunden');
                 return done();
             });
     });
@@ -144,10 +146,10 @@ describe('Route: Users', function () {
         return request(server)
             .put('/api/users/delete')
             .send({username: 'berni'})
-            .expect(500)
+            .expect(403)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res.body).to.be.equal('Dieser User kann nicht gelöscht werden!');
+                expect(res.body.MESSAGEKEY).to.be.equal('ERROR_USER_NICHT_LOESCHBAR');
                 return done();
             });
     });

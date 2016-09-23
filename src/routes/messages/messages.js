@@ -35,7 +35,7 @@ module.exports = function () {
             send(require('./ErrorFalscheAnmeldedaten.js'), res);
         },
         ErrorUserNichtLoeschbar: function (res) {
-            send(require('./ErrorFalscheAnmeldedaten.js'), res);
+            send(require('./ErrorUserNichtLoeschbar.js'), res);
         },
         ErrorUserNotFound: function (res, username) {
             send(require('./ErrorUserNotFound.js')(username), res);

@@ -107,7 +107,7 @@ describe('Route: Jugenden', function () {
                 .end(function (err, res) {
                     if (err) throw err;
 
-                    expect(res.body).to.equal('Successful');
+                    expect(res.body.MESSAGEKEY).to.equal('SUCCESS_DELETE_MESSAGE');
                     mongoose.model('Jugend').findById(neueJugendid).exec(function (err, res) {
                         if (err) throw err;
                         expect(res).not.to.exist;

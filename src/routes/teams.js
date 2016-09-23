@@ -255,7 +255,7 @@ module.exports = function () {
                     if (err) {
                         return messages.Error(res, err);
                     }
-                })
+                });
             }
             return messages.Reset(res);
         });

@@ -75,7 +75,7 @@ describe('Route: Email', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body.n).to.be.equal(1);
+                expect(response.body.MESSAGEKEY).to.equal('SUCCESS_DELETE_MESSAGE');
                 return mongoose.model('Subscriber').find({}).exec(function (err, subs) {
                     if (err) return done(err);
                     expect(subs).to.have.lengthOf(1);
