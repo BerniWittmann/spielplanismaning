@@ -7,6 +7,8 @@ module.exports = function () {
     var Jugend = mongoose.model('Jugend');
     var Team = mongoose.model('Team');
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {get} /gruppen Get Gruppen
      * @apiName GetGruppen
@@ -21,6 +23,8 @@ module.exports = function () {
      * @apiUse JugendObject
      * @apiSuccess {Array} teams Teams der Gruppe
      * @apiUse vResponse
+     *
+     * @apiUse ErrorGruppeNotFoundMessage
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -39,7 +43,7 @@ module.exports = function () {
      *         teams: [ [Object], [Object], [Object] ]
      *     }]
      **/
-    router.get('/', function (req, res, next) {
+    router.get('/', function (req, res) {
         var query = Gruppe.find();
         if (req.param('id')) {
             query = Gruppe.findById(req.param('id'));
@@ -51,13 +55,13 @@ module.exports = function () {
 
         query.deepPopulate('jugend teams').exec(function (err, gruppe) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
             if (!gruppe) {
-                return next(new Error('can\'t find Gruppe'));
+                return messages.ErrorGruppeNotFound(res, err);
             }
 
-            res.json(gruppe);
+            return res.json(gruppe);
         });
     });
 
@@ -85,13 +89,7 @@ module.exports = function () {
      *         teams: [ [Object], [Object], [Object] ]
      *     }]
      *
-     * @apiError MaximalzahlErreicht Maximalzahl an Gruppen für die gewählte Jugend erreicht.
-     *
-     * @apiErrorExample Error-Response MaximalzahlErreicht:
-     *     HTTP/1.1 418 I’m a teapot
-     *     {
-     *         "message": "Maximalzahl an Gruppen für diese Jugend erreicht"
-     *     }
+     * @apiUse ErrorMaxZahlGruppe
      **/
     router.post('/', function (req, res) {
         var gruppe = new Gruppe(req.body);
@@ -100,22 +98,20 @@ module.exports = function () {
 
         query.exec(function (err, jugend) {
             if (jugend.gruppen.length >= 4) {
-                return res.status(418).json({
-                    message: 'Maximalzahl an Gruppen für diese Jugend erreicht'
-                });
+                return messages.ErrorMaxZahlGruppe(res);
             } else {
                 gruppe.save(function (err, gruppe) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     jugend.pushGruppe(gruppe, function (err) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
-                        res.json(gruppe);
-                    })
+                        return res.json(gruppe);
+                    });
                 });
             }
 
@@ -130,44 +126,38 @@ module.exports = function () {
      *
      * @apiParam {String} id ID der Gruppe.
      *
-     * @apiSuccess {String} body Erfolgsnachricht: Success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "success"
-     *     }
+     * @apiUse SuccessMessage
      **/
     router.delete('/', function (req, res) {
         Gruppe.findById(req.param('id'), function (err, gruppe) {
             if (err) {
-                return err;
+                return messages.Error(res, err);
             }
             Jugend.findById(gruppe.jugend, function (err, jugend) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
                 jugend.removeGruppe(gruppe, function (err) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     Team.remove({
                         "gruppe": gruppe
                     }, function (err) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
                         Gruppe.remove({
                             "_id": gruppe
                         }, function (err) {
                             if (err) {
-                                throw err;
+                                return messages.Error(res, err);
                             }
 
-                            res.json("success");
+                            return messages.Deleted(res);
                         });
                     });
                 });

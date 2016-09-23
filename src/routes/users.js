@@ -7,55 +7,40 @@ module.exports = function () {
     var passport = require('passport');
     var jwt = require('express-jwt');
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {post} /users/register Register User
      * @apiName UserRegister
      * @apiDescription Registriert einen neuen Benutzer
      * @apiGroup Users
      *
-     * @apiUse FehlendeFelderError
+     * @apiUse ErrorUnbekannteRolle
      *
-     * @apiError UnbekannteRolle Unbekannte Benutzerrolle
+     * @apiUse ErrorFehlendeFelder
      *
-     * @apiErrorExample Error-Response UnbekannteRolle:
-     *     HTTP/1.1 400 Bad Request
-     *     {
-     *         "message": "Unbekannte Rolle"
-     *     }
-     *
-     * @apiSuccess {String} message Success-Message: success
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "message": "success"
-     *     }
+     * @apiUse SuccessMessage
      **/
     router.post('/register', function (req, res) {
         if (!req.body.username || !req.body.password) {
-            return res.status(400).json({
-                message: 'Bitte alle Felder ausfüllen'
-            });
+            return messages.ErrorFehlendeFelder(res);
         }
 
         var user = new User();
 
         user.username = req.body.username;
         if (!user.setRole(req.body.role)) {
-            return res.status(400).json({
-                message: 'Unbekannte Rolle'
-            });
+            return messages.ErrorUnbekannteRolle(res);
         }
 
         user.setPassword(req.body.password);
 
         user.save(function (err) {
             if (err) {
-                return res.status(500).json(err);
+                return messages.Error(res, err);
             }
 
-            return res.json({message: 'success'});
-
+            return messages.Success(res);
         });
     });
 
@@ -65,15 +50,9 @@ module.exports = function () {
      * @apiDescription Loggt einen Benutzer ein
      * @apiGroup Users
      *
-     * @apiUse FehlendeFelderError
+     * @apiUse ErrorFehlendeFelder
      *
-     * @apiError FalscheAnmeldedaten Falscher Benutzerame oder/und Falsches Passwort
-     *
-     * @apiErrorExample Error-Response FalscheAnmeldedaten:
-     *     HTTP/1.1 401 Unauthorized
-     *     {
-     *         "message": "Falscher Benutzername/Passwort"
-     *     }
+     * @apiUse ErrorFalscheAnmeldedaten
      *
      * @apiSuccess {String} token User-Token
      *
@@ -85,15 +64,13 @@ module.exports = function () {
      **/
     router.post('/login', function (req, res, next) {
         if (!req.body.username || !req.body.password) {
-            return res.status(400).json({
-                message: 'Bitte alle Felder ausfüllen'
-            });
+            return messages.ErrorFehlendeFelder(res);
         }
 
         //noinspection JSUnresolvedFunction
-        passport.authenticate('local', function (err, user, info) {
+        passport.authenticate('local', function (err, user) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
             if (user) {
@@ -101,7 +78,7 @@ module.exports = function () {
                     token: user.generateJWT()
                 });
             } else {
-                return res.status(401).json(info);
+                return messages.ErrorFalscheAnmeldedaten(res);
             }
         })(req, res, next);
     });
@@ -112,49 +89,27 @@ module.exports = function () {
      * @apiDescription Löscht einen Benutzer
      * @apiGroup Users
      *
-     * @apiError BerniError Benutzer Berni kann nicht gelöscht werden
+     * @apiUse ErrorUserNotFound
      *
-     * @apiErrorExample Error-Response BerniError:
-     *     HTTP/1.1 500 Internal Server Error
-     *     {
-     *         "Dieser User kann nicht gelöscht werden!"
-     *     }
+     * @apiUse ErrorUserNichtLoeschbar
      *
-     * @apiError UserNotFound Nutzer Nicht gefunden
-     *
-     * @apiErrorExample Error-Response UserNotFound:
-     *     HTTP/1.1 404 NOT FOUND
-     *     {
-     *         "Konnte keinen User mit Namen test-user finden."
-     *     }
-     *
-     * @apiSuccess {Integer} ok Anzahl gefundene Nutzer
-     * @apiSuccess {Integer} n Anzahl gelöschte Nutzer
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       ok: 1,
-     *       n: 1
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.put('/delete', function (req, res) {
         if (req.body.username == 'berni') {
-            return res.status(500).json('Dieser User kann nicht gelöscht werden!');
+           return messages.ErrorUserNichtLoeschbar(res);
         }
         User.find({
             username: req.body.username
         }).remove().exec(function (err, user) {
             if (err) {
-                console.log(err);
-                return res.status(500).json(err);
+                return messages.Error(res, err);
             }
             if (user.result.n > 0) {
-                return res.json(user);
+                return messages.Deleted(res);
             } else {
-                return res.status(404).json('Konnte keinen User mit Namen ' + req.body.username + ' finden.');
+                return messages.ErrorUserNotFound(res, req.body.username);
             }
-
         });
     });
 

@@ -39,7 +39,7 @@
                 register: function () {
                     var deferred = $q.defer();
                     if (mockAuth.bereitsRegistriert) {
-                        deferred.reject({data: {code: 11000}});
+                        deferred.reject({data: {ERROR: {code: 11000}}});
                     } else {
                         deferred.resolve();
                     }
