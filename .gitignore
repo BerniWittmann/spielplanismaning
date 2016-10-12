@@ -1,7 +1,6 @@
-/node_modules
-/src/public/bower_components
 /.idea
-/node_modules/**/*
 /test/backend/database-setup/mongorestore
 /dist/
 /src/public/bower_components/
+/spielplanismaning.iml
+node_modules/
