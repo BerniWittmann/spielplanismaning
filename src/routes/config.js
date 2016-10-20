@@ -19,7 +19,7 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/version', function (req, res) {
-        res.json(version);
+        return res.json(version);
     });
 
     /**
@@ -74,7 +74,7 @@ module.exports = function (env) {
      *
      **/
     router.get('/lockdownmode', function (req, res) {
-        res.json((env.LOCKDOWNMODE || 'false') == 'true');
+        return res.json((env.LOCKDOWNMODE || 'false') == 'true');
     });
 
     /**
@@ -101,7 +101,7 @@ module.exports = function (env) {
      *
      **/
     router.get('/kontakt', function (req, res) {
-        res.json(JSON.parse(env.KONTAKTE || exampleContacts));
+        return res.json(JSON.parse(env.KONTAKTE || exampleContacts));
     });
 
     return router;

@@ -5,6 +5,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
     var mongoose = require('mongoose');
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
+    var messages = require('./messages/messages.js')();
 
     /**
      * @api {post} /email Send Email
@@ -15,13 +16,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiParam {String} subject  Betreff der Email.
      * @apiParam {String} text     Text der Email.
      *
-     * @apiSuccess {Array} body Empty TODO
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       []
-     *     }
+     * @apiUse SuccessMessage
      **/
     router.post('/', function (req, res) {
         Subscriber.find().exec(function (err, subs) {
@@ -37,13 +32,12 @@ module.exports = function (sendgrid, env, url, disableEmails) {
             emails = emails.filter(onlyUnique);
 
             //noinspection JSUnresolvedFunction
-            MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err, result) {
+            MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err) {
                 if (err) {
-                    return console.log(err);
+                    return messages.Error(res, err);
                 }
 
-                //TODO message
-                res.json(result);
+                return messages.Success(res);
             });
         });
     });
@@ -75,10 +69,10 @@ module.exports = function (sendgrid, env, url, disableEmails) {
         var subscriber = new Subscriber(req.body);
         subscriber.save(function (err, sub) {
             if (err) {
-                return err;
+                return messages.Error(res, err);
             }
 
-            res.json(sub);
+            return res.json(sub);
         });
     });
 
@@ -91,24 +85,15 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiParam {String} email  Email-Adresse des Abonnenten.
      * @apiParam {String} team ID des Teams.
      *
-     * @apiSuccess {Integer} ok Anzahl gefundene Abonnements
-     * @apiSuccess {Integer} n Anzahl gelöschte Abonnements
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       ok: 1,
-     *       n: 1
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/subscriber', function (req, res) {
         Subscriber.find({email: req.param('email'), team: req.param('team')}).remove().exec(function (err, sub) {
             if (err) {
-                return err;
+                return messages.Error(res, err);
             }
 
-            //TODO message
-            res.json(sub);
+            return messages.Deleted(res);
         });
     });
 
@@ -153,10 +138,10 @@ module.exports = function (sendgrid, env, url, disableEmails) {
         var query = Subscriber.find();
         query.deepPopulate('team team.jugend').exec(function (err, subs) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json(subs);
+            return res.json(subs);
         });
     });
 

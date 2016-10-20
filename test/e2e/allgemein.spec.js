@@ -1,4 +1,4 @@
-describe('Navigation', function () {
+describe('Spielplan-Ismaning App', function () {
     var utils = require('./utils.js')();
 
     beforeAll(function () {

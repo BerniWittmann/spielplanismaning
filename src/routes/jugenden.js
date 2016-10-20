@@ -7,6 +7,8 @@ module.exports = function () {
     var Jugend = mongoose.model('Jugend');
     var Team = mongoose.model('Team');
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {get} /jugenden Get Jugenden
      * @apiName GetJugenden
@@ -40,10 +42,10 @@ module.exports = function () {
         }
         query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json(jugenden);
+            return res.json(jugenden);
         });
     });
 
@@ -77,7 +79,7 @@ module.exports = function () {
 
         jugend.save(function (err, jugend) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
             var gruppe = new Gruppe({
                 name: "Gruppe A"
@@ -86,22 +88,22 @@ module.exports = function () {
 
             gruppe.save(function (err, gruppe) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
                 jugend.gruppen.push(gruppe._id);
 
                 jugend.save(function (err, jugend) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
 
                     jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
                         if (err) {
-                            throw err;
+                            return messages.Error(res, err);
                         }
 
-                        res.json(jgd);
+                        return res.json(jgd);
                     });
                 });
             });
@@ -116,36 +118,30 @@ module.exports = function () {
      *
      * @apiParam {String} id ID der Jugend.
      *
-     * @apiSuccess {String} body Erfolgsnachricht: Successful
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "Successful"
-     *     }
+     * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
         Team.remove({
             "jugend": req.param('id')
         }, function (err) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
             Gruppe.remove({
                 "jugend": req.param('id')
             }, function (err) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
                 Jugend.remove({
                     "_id": req.param('id')
                 }, function (err) {
                     if (err) {
-                        throw err;
+                        return messages.Error(res, err);
                     }
-                    res.json('Successful');
+                    return messages.Deleted(res);
                 });
             });
         });
@@ -176,7 +172,7 @@ module.exports = function () {
         var teams = [];
         query.deepPopulate('teams').exec(function (err, jugenden) {
             if (err) {
-                return err;
+                return messages.Error(res, err);
             }
             if (!req.param('id')) {
                 jugenden.forEach(function (jugend) {
@@ -192,7 +188,7 @@ module.exports = function () {
             teams.forEach(function (team) {
                 tore += team.tore;
             });
-            res.json(tore);
+            return res.json(tore);
         });
     });
 

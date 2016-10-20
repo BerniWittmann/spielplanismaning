@@ -9,6 +9,8 @@ module.exports = function () {
     var Spielplan = mongoose.model('Spielplan');
     var Spiel = mongoose.model('Spiel');
 
+    var messages = require('./messages/messages.js')();
+
     /**
      * @api {get} /spielplan Get Spielplan
      * @apiName GetSpielplan
@@ -39,9 +41,9 @@ module.exports = function () {
         var query = Spielplan.findOne({});
         query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
-            res.json(spielplan);
+            return res.json(spielplan);
         });
     });
 
@@ -51,25 +53,17 @@ module.exports = function () {
      * @apiDescription Updatet die Spielplan-Zeiten
      * @apiGroup Spielplan
      *
-     * @apiSuccess {String} body Success-Message: Spielplan erstellt
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *         "Spielplan erstellt"
-     *     }
+     * @apiUse SpielplanErstelltMessage
      **/
     router.put('/zeiten', function (req, res) {
         Spielplan.findOneAndUpdate({}, req.body, {
             upsert: true
         }, function (err) {
-            if (err) return res.send(500, {
-                error: err
-            });
+            if (err) return messages.Error(res, err);
 
             Spiel.find().exec(function (err, spiele) {
                 if (err) {
-                    return err;
+                    return messages.Error(res, err);
                 }
 
                 spiele = spiele.sort(compareNumbers);
@@ -78,9 +72,9 @@ module.exports = function () {
                     singlespiel.uhrzeit = zeit.format('HH:mm');
                     singlespiel.save(asyncdone);
                 }, function (err) {
-                    if (err) return console.log(err);
+                    if (err) return messages.Error(res, err);
 
-                    res.json('Spielplan erstellt');
+                    return messages.SpielplanErstellt(res);
 
                 });
 
@@ -116,15 +110,15 @@ module.exports = function () {
     router.put('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).exec(function (err, spielplan) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
             spielplan.setAusnahmen(req.body, function (err, spielplan) {
                 if (err) {
-                    throw err;
+                    return messages.Error(res, err);
                 }
 
-                res.json(spielplan.ausnahmen);
+                return res.json(spielplan.ausnahmen);
             });
         });
     });
@@ -154,10 +148,10 @@ module.exports = function () {
     router.get('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
             if (err) {
-                throw err;
+                return messages.Error(res, err);
             }
 
-            res.json(spielplan.ausnahmen);
+            return res.json(spielplan.ausnahmen);
         });
     });
 

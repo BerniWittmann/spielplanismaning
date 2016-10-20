@@ -1,4 +1,4 @@
-describe('Spielplan-Ismaning App', function () {
+describe('Navigation', function () {
     var utils = require('./utils.js')();
     var navigation = require('./PageObjects/navigation.js')();
 
