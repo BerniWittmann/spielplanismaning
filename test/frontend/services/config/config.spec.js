@@ -10,7 +10,7 @@
         var httpBackend;
         var response;
         var responseTest;
-        var env = 'TESTING';
+        var env = 'testing';
         var version = '1.0.0';
         var kontakte = [{name: 'Name', email: 'Test@test.de', turnier: 'Test-Turnier'}];
         var lockdown = true;

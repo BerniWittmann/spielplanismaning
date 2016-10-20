@@ -37,10 +37,10 @@
 
         _.extend(vm, {
             version: versionPromise.data,
-            showBuildStatus: _.isEqual(envPromise.data, 'TESTING') || _.isEqual(envPromise.data, 'DEV'),
+            showBuildStatus: _.isEqual(envPromise.data, 'testing') || _.isEqual(envPromise.data, 'development'),
             kontakte: kontaktPromise.data
         });
-        if (_.isEqual(envPromise.data, 'TESTING')) {
+        if (_.isEqual(envPromise.data, 'testing')) {
             vm.version += ' TESTUMGEBUNG';
         }
         vm.loading = false;

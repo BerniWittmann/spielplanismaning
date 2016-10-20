@@ -9,7 +9,7 @@
         var element;
         var scope;
         var controller;
-        var env = 'TESTING';
+        var env = 'testing';
         var $provide;
 
         beforeEach(module(function (_$provide_) {
@@ -49,7 +49,7 @@
 
         describe('Auf der Testumgebung', function () {
             before(function () {
-                env = 'TESTING';
+                env = 'testing';
                 scope.$digest();
             });
 
@@ -64,7 +64,7 @@
 
         describe('Auf der Produktionsumgebung', function () {
             before(function () {
-                env = 'PROD';
+                env = 'production';
                 scope.$digest();
             });
 

@@ -20,8 +20,8 @@ require('./models/Subscriber');
 require('./models/Users')((process.env.SECRET || 'SECRET'));
 require('./config/passport');
 
-app.set('ENVIRONMENT', (process.env.ENVIRONMENT || 'DEV'));
-if (app.get('ENVIRONMENT') == 'DEV') {
+app.set('ENVIRONMENT', (process.env.NODE_ENV || 'development'));
+if (app.get('ENVIRONMENT') == 'development') {
     app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 } else {
     app.set('MONGODB_URI', process.env.MONGODB_URI);
@@ -73,7 +73,7 @@ app.use(function (req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('ENVIRONMENT') === 'DEV') {
+if (app.get('ENVIRONMENT') === 'development') {
     app.use(function (err, req, res) {
         res.status(err.status || 500);
         res.render('error', {

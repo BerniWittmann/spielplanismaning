@@ -121,7 +121,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     function sendMail(mail, cb) {
         if (disableMails != 'true') {
-            if (env !== 'PROD') {
+            if (env !== 'production') {
                 mail.setTos(['kinderbeach.ismaning@mail.com']);
                 mail.setSmtpapiTos(['kinderbeach.ismaning@mail.com']);
             }
