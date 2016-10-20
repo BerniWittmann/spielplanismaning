@@ -90,8 +90,8 @@
             if (!vm.loading) {
                 vm.loading = true;
                 _.extend(vm.team, {
-                    gruppe: vm.gruppe._id
-                    , jugend: vm.gruppe.jugend._id
+                    gruppe: vm.gruppe._id,
+                    jugend: vm.gruppe.jugend
                 });
                 return team.create(vm.team).then(function (res) {
                     spielplan.createSpielplan();
