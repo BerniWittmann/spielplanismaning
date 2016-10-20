@@ -41,6 +41,7 @@
             auth.logIn(vm.user).then(function () {
                 $state.go('spi.home');
             }, function (error) {
+                console.log(error);
                 vm.error = error.data;
             });
         };

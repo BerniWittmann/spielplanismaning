@@ -6,12 +6,15 @@
         <p>Bitte haben Sie Verständnis.</p>
     </div>
 </div>
+<div class="row margin-top-25">
+    <div class="col-md-6 col-md-offset-3">
+        <div data-ng-show="vm.error" class="alert alert-danger">
+            <span>{{ vm.error.MESSAGE }}</span>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <div data-ng-show="vm.error" class="alert alert-danger">
-            <span>{{ vm.error.message }}</span>
-        </div>
-
         <form data-ng-submit="vm.login()" style="margin-top:80px;">
             <h3 class="width-100 text-center">Login</h3>
 
