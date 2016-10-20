@@ -39,7 +39,7 @@
                     if (_.isEqual(user.username, 'berni') && _.isEqual(user.password, '12345')) {
                         deferred.resolve();
                     } else {
-                        deferred.reject({data: {message: 'Falscher Username/Passwort'}});
+                        deferred.reject({data: {MESSAGE: 'Falscher Username/Passwort'}});
                     }
                     return deferred.promise;
                 }
@@ -139,11 +139,10 @@
             element.find('form').find('button').click();
             scope.$digest();
             
-            expect(ctrl.error.message).to.be.equal('Falscher Username/Passwort');
+            expect(ctrl.error.MESSAGE).to.be.equal('Falscher Username/Passwort');
             var result = element.find('div.alert-danger');
             expect(result).to.exist;
             expect(result.text()).to.include('Falscher Username/Passwort');
-            expect(ctrl.error.message).to.be.equal('Falscher Username/Passwort');
         });
     });
 }());

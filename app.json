@@ -6,7 +6,7 @@
     "DISABLEEMAIL": {
       "required": true
     },
-    "ENVIRONMENT": {
+    "NODE_ENV": {
       "required": true
     },
     "KONTAKTE": {
