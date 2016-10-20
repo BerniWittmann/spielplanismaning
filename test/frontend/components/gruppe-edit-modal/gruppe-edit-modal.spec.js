@@ -32,10 +32,7 @@
     var gewGruppe = {
         name: 'Test Gruppe',
         _id: '1234',
-        jugend: {
-            _id: '1234',
-            name: 'Test Jugend'
-        }
+        jugend: '5678'
     };
 
     var spielplan = {
@@ -124,7 +121,7 @@
             expect(controller.teams.length).to.be.equal(4);
             expect(result.name).to.be.equal('Test Team 4');
             expect(result.gruppe).to.be.equal('1234');
-            expect(result.jugend).to.be.equal('1234');
+            expect(result.jugend).to.be.equal('5678');
         });
 
         it('soll bem Erstellen eines Teams der Spielplan neu erstellt werden', function () {
