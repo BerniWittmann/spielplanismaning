@@ -5,7 +5,7 @@ module.exports = function (env) {
     var bodyParser = require('body-parser');
 
     process.env.SECRET = process.env.SECRET || env.SECRET || 'TEST-SECRET';
-    process.env.ENVIRONMENT = process.env.ENVIRONMENT || env.ENVIRONMENT || 'DEV';
+    process.env.NODE_ENV = process.env.NODE_ENV || env.NODE_ENV || 'development';
     process.env.URL = process.env.URL || env.URL || 'http://localhost:8001';
     process.env.DISABLEEMAIL = process.env.DISABLEEMAIL || env.DISABLEEMAIL || 'true';
     process.env.VERSION = process.env.VERSION || env.VERSION || 'vtag';
@@ -46,11 +46,11 @@ module.exports = function (env) {
 
     var routes = require('../../src/routes/index')();
     var users = require('../../src/routes/users')();
-    var email = require('../../src/routes/email')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var email = require('../../src/routes/email')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var config = require('../../src/routes/config')(process.env);
     var gruppen = require('../../src/routes/gruppen')();
     var jugenden = require('../../src/routes/jugenden')();
-    var spiele = require('../../src/routes/spiele')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var spiele = require('../../src/routes/spiele')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var spielplan = require('../../src/routes/spielplan')();
     var teams = require('../../src/routes/teams')();
 

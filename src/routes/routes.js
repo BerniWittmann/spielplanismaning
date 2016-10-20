@@ -1,12 +1,12 @@
 module.exports = function (app, sendgrid) {
     var routes = require('./index.js')();
     var users = require('./users.js')();
-    var email = require('./email.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'));
+    var email = require('./email.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'));
     var config = require('./config.js')(process.env);
     var teams = require('./teams.js')();
     var gruppen = require('./gruppen.js')();
     var jugenden = require('./jugenden.js')();
-    var spiele = require('./spiele.js')(sendgrid, (process.env.ENVIRONMENT || 'DEV'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+    var spiele = require('./spiele.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
     var spielplan = require('./spielplan.js')();
 
     var API_PREFIX = '/api';

@@ -38,7 +38,7 @@
             var ctrl = scope.vm = $controller('KontaktController', {
                 versionPromise: {data: '0.0.0'},
                 kontaktPromise: {data: mockKontakte},
-                envPromise: {data: (env || 'DEV')}
+                envPromise: {data: (env || 'development')}
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -88,7 +88,7 @@
 
         describe('Testumgebung', function () {
             before(function () {
-                env = 'TESTING';
+                env = 'testing';
             });
             it('Der Build Status soll auf der Testumgebung angezeigt werden', function () {
                 render();
@@ -108,7 +108,7 @@
 
         describe('Produktionsumgebung', function () {
             before(function () {
-                env = 'PROD';
+                env = 'production';
             });
             it('Der Build Status soll auf der Produktionsumgebumg versteckt werden', function () {
                 render();

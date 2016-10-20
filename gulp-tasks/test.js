@@ -94,7 +94,7 @@ gulp.task('test:e2e', function (done) {
 
 // test e2e local
 gulp.task('test:e2e:local', ['start:server'], function (done) {
-    gulp.src(['././test/*.spec.js'])
+    gulp.src(['././test/e2e/*.spec.js'])
         .pipe(angularProtractor({
             'configFile': '././test/e2e/protractor.local.config.js',
             'autoStartStopServer': true,
@@ -110,7 +110,7 @@ gulp.task('test:e2e:local', ['start:server'], function (done) {
 
 // test e2e testing
 gulp.task('test:e2e:testing', function (done) {
-    gulp.src(['././test/*.spec.js'])
+    gulp.src(['././test/e2e/*.spec.js'])
         .pipe(angularProtractor({
             'configFile': '././test/e2e/protractor.testing.config.js',
             'autoStartStopServer': true,

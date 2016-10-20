@@ -33,23 +33,23 @@ module.exports = function (env) {
      * @apiSuccessExample Success-Response Testing:
      *     HTTP/1.1 200 OK
      *     {
-     *       "TESTING"
+     *       "testing"
      *     }
      *
      * @apiSuccessExample Success-Response Production:
      *     HTTP/1.1 200 OK
      *     {
-     *       "PRODUCTION"
+     *       "production"
      *     }
      *
      * @apiSuccessExample Success-Response Development:
      *     HTTP/1.1 200 OK
      *     {
-     *       "DEV"
+     *       "development"
      *     }
      **/
     router.get('/env', function (req, res) {
-        return res.json((env.ENVIRONMENT || 'DEV'));
+        res.json((env.NODE_ENV || 'development'));
     });
 
     /**

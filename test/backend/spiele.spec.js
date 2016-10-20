@@ -14,7 +14,7 @@ describe('Route: Spiele', function () {
     before(function (done) {
         server.connectDB(function (err) {
             if (err) throw err;
-            mongoose.model('Team').findOne('Team BA 1').exec(function (err, res) {
+            mongoose.model('Team').findOne({'name': 'Team BA 1'}).exec(function (err, res) {
                 if (err) throw err;
                 expect(res).not.to.be.null;
                 teamid = res._id;
