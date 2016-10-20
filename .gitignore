@@ -5,3 +5,4 @@
 /test/backend/database-setup/mongorestore
 /dist/
 /src/public/bower_components/
+/spielplanismaning.iml
