@@ -15,16 +15,6 @@
             , controllerAs: 'vm'
         });
 
-    function JugendLabelController($state) {
-        var vm = this;
-
-        _.extend(vm, {
-            gotoJugend: function () {
-                $state.go('spi.tgj.jugend', {
-                    jugendid: vm.jugend._id
-                });
-            }
-        });
-    }
+    function JugendLabelController() {}
 
 })();
