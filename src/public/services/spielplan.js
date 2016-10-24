@@ -58,7 +58,6 @@ angular
     };
 
     spielplan.createSpielplan = function () {
-        Logger.disableLogging();
         spielplanerstellungRunning = true;
         spielplan.progress = 0;
         return spielplan.getZeiten().then(function () {
@@ -163,7 +162,6 @@ angular
                         }
                     }
 
-                    console.log(spielplan.spiele);
                     if (_.last(spielplan.spiele).platz == 1) {
                         for (var j = 0; j < 2; j++) {
                             Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');

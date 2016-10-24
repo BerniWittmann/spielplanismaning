@@ -45,7 +45,6 @@
             vm.progMax = spielplan.maxProgress;
             if (vm.prog > 0 && vm.progMax > 0) {
                 vm.progDisplay = Math.floor(vm.prog / vm.progMax * 100) + '%';
-                console.log(vm.progDisplay);
 
                 if (_.isEqual(vm.prog, vm.progMax)) {
                     vm.message = "Spielplan wurde erfolgreich erstellt.";
