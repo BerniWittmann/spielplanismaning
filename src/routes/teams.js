@@ -5,6 +5,7 @@ module.exports = function () {
     var Gruppe = mongoose.model('Gruppe');
     var Jugend = mongoose.model('Jugend');
     var Team = mongoose.model('Team');
+    var async = require('async');
 
     var messages = require('./messages/messages.js')();
 
