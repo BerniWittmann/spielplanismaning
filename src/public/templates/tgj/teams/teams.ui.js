@@ -27,7 +27,6 @@
     function TeamsController($state, teamPromise, NgTableParams) {
         var vm = this;
         vm.loading = true;
-
         _.extend(vm, {
             teams: teamPromise.data,
             gotoTeam: function (team) {
