@@ -62,7 +62,7 @@
                         vm.message = {
                             type: 'error',
                             text: err
-                        }
+                        };
                     });
 
                 }

@@ -31,19 +31,19 @@ angular
     spiel.getByGruppe = function (gruppenid) {
         return $http.get(ENDPOINT_URL + '?gruppe=' + gruppenid).then(function (res) {
             return res.data;
-        })
+        });
     };
 
     spiel.getByJugend = function (jugendid) {
         return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
             return res.data;
-        })
+        });
     };
 
     spiel.getByTeam = function (teamid) {
         return $http.get(ENDPOINT_URL + '?team=' + teamid).then(function (res) {
             return res.data;
-        })
+        });
     };
 
     spiel.delete = function (spielid) {

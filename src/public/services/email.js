@@ -65,7 +65,7 @@ angular
         }).then(function (res) {
             $window.localStorage[TOKENNAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
             return res.data;
-        })
+        });
     };
 
     return email;

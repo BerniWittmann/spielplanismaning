@@ -26,13 +26,13 @@ angular
     jugend.delete = function (id) {
         return $http.delete(ENDPOINT_URL + '?id=' + id).then(function (res) {
             return res;
-        })
+        });
     };
 
     jugend.update = function (jugendId, jugend) {
         return $http.put(ENDPOINT_URL + '?id=' + jugendId, jugend).then(function (res) {
             return res.data;
-        })
+        });
     };
 
     jugend.addGruppe = function (jugendId, gruppenId) {

@@ -10,7 +10,7 @@
     <div class="col-md-12">
         <div class="table-responsive">
             <table data-ng-table="vm.tableParams" class="table table-condensed table-striped table-hover"
-                   data-show-filter="true">
+                   data-show-filter="true" data-ng-if="vm.tableParams.total() > 0">
                 <tr data-ng-repeat="team in $data" data-ng-click="vm.gotoTeam(team)" class="text-center">
                     <td data-title="'Name'" data-sortable="'name'" class="text-left" data-filter="{name: 'text'}">
                         {{team.name}}
@@ -33,7 +33,9 @@
                     </td>
                 </tr>
             </table>
-            <div class="alert alert-info" data-ng-if="vm.tableParams.total()===0">Keine Teams gefunden</div>
+            <div class="col-md-4 col-md-offset-4" data-ng-if="vm.tableParams.total()===0">
+                <div class="alert alert-info">Keine Teams gefunden</div>
+            </div>
         </div>
     </div>
 </div>

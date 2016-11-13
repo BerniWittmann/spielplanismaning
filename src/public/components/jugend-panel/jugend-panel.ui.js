@@ -39,11 +39,11 @@
         }
 
         function askDeleteGruppe(gruppe) {
-            return BestaetigenDialog.open('Gruppe ' + gruppe.name + ' wirklich löschen?', vm.deleteGruppe, gruppe._id)
+            return BestaetigenDialog.open('Gruppe ' + gruppe.name + ' wirklich löschen?', vm.deleteGruppe, gruppe._id);
         }
 
         function askDeleteJugend(jugend) {
-            return BestaetigenDialog.open('Jugend ' + jugend.name + ' wirklich löschen?', vm.deleteJugend, jugend._id)
+            return BestaetigenDialog.open('Jugend ' + jugend.name + ' wirklich löschen?', vm.deleteJugend, jugend._id);
         }
 
         function editGruppe(gewaehlteGruppe) {

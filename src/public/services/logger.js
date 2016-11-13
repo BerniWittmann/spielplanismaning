@@ -13,7 +13,7 @@
 
         return {
             log: function (text) {
-                return log(text)
+                return log(text);
             }
             , enableLogging: enableLogging
             , disableLogging: disableLogging

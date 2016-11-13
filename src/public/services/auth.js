@@ -61,7 +61,7 @@ angular
                 return err;
             }).success(function (data) {
                 return data;
-            })
+            });
         } else {
             return new Error('No Permission');
         }

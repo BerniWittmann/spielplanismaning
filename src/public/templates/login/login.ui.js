@@ -17,7 +17,7 @@
                 , controllerAs: 'vm'
                 , resolve: {
                     lockdown: function (config) {
-                        return config.getLockdown()
+                        return config.getLockdown();
                     }
                 }
             });
@@ -47,6 +47,6 @@
         };
         vm.resetErr = function () {
             vm.error = undefined;
-        }
+        };
     }
 })();

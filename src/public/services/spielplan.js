@@ -127,8 +127,8 @@ angular
                                         i++;
                                         leereSpieleStreak = 0;
                                         spielplan.progress++;
-                                        if (i > 1 && (i - 1) % 3 == 0) {
-                                            lastPlayingTeams = geradeSpielendeTeams
+                                        if (i > 1 && (i - 1) % 3 === 0) {
+                                            lastPlayingTeams = geradeSpielendeTeams;
                                             geradeSpielendeTeams = [];
                                         }
                                     } else {
@@ -148,21 +148,21 @@ angular
                                 nummer: i
                                 , platz: calcPlatz()
                                 , uhrzeit: calcZeit()
-                            }
+                            };
                             spielplan.spiele.push(leeresSpiel);
                             i++;
                             spieleGesamt++;
                             leereSpieleStreak++;
                             spielplan.progress++;
                             spielplan.maxProgress++;
-                            if (i > 1 && (i - 1) % 3 == 0) {
-                                lastPlayingTeams = geradeSpielendeTeams
+                            if (i > 1 && (i - 1) % 3 === 0) {
+                                lastPlayingTeams = geradeSpielendeTeams;
                                 geradeSpielendeTeams = [];
                             }
                         }
                     }
 
-                    if (_.last(spielplan.spiele).platz == 1) {
+                    if (_.last(spielplan.spiele).platz === 1) {
                         for (var j = 0; j < 2; j++) {
                             Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
                             var leeresSpiel = {
@@ -176,12 +176,12 @@ angular
                             leereSpieleStreak++;
                             spielplan.progress++;
                             spielplan.maxProgress++;
-                            if (i > 1 && (i - 1) % 3 == 0) {
+                            if (i > 1 && (i - 1) % 3 === 0) {
                                 lastPlayingTeams = geradeSpielendeTeams;
                                 geradeSpielendeTeams = [];
                             }
                         }
-                    } else if (_.last(spielplan.spiele).platz == 2) {
+                    } else if (_.last(spielplan.spiele).platz === 2) {
                         Logger.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
                         var leeresSpiel = {
                             nummer: i
@@ -194,8 +194,8 @@ angular
                         leereSpieleStreak++;
                         spielplan.progress++;
                         spielplan.maxProgress++;
-                        if (i > 1 && (i - 1) % 3 == 0) {
-                            lastPlayingTeams = geradeSpielendeTeams
+                        if (i > 1 && (i - 1) % 3 === 0) {
+                            lastPlayingTeams = geradeSpielendeTeams;
                             geradeSpielendeTeams = [];
                         }
                     }
@@ -239,11 +239,11 @@ angular
         _.extend(moeglTeams, teams);
 
         _.pullAllBy(teams, lastPlayingTeams, '_id');
-        if (teams.length == 0) {
+        if (teams.length === 0) {
             teams = moeglTeams;
         }
 
-        if (teams.length == 0) {
+        if (teams.length === 0) {
             //Empty Game
             return undefined;
         }
@@ -297,7 +297,7 @@ angular
         _.extend(möglicheGegner, alle);
 
         _.pullAllBy(möglicheGegner, lastPlayingTeams, '_id');
-        if (möglicheGegner.length == 0) {
+        if (möglicheGegner.length === 0) {
             möglicheGegner = alle;
         }
         return chooseTeam(möglicheGegner);
@@ -332,7 +332,7 @@ angular
     function getSpieleByGruppe(gruppe) {
         return _.filter(spielplan.spiele, function (o) {
             return _.isEqual(o.gruppe, gruppe._id);
-        })
+        });
     }
 
     function checkSpieleFürGruppeÜbrig(gruppe) {
@@ -347,7 +347,7 @@ angular
             var ausnahmeproTeam = getAusnahmenGegner(team);
             _.forEach(ausnahmeproTeam, function (o) {
                 zuloeschendeTeams.push(o);
-            })
+            });
         });
         _.pullAllBy(teams, zuloeschendeTeams, '_id');
         return teams;

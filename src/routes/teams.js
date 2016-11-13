@@ -45,7 +45,6 @@ module.exports = function () {
     router.get('/', function (req, res) {
         var query = Team.find();
         if (req.query.id) {
-            //TODO findById verwenden, damit kein Array rauskommt
             query = Team.find({_id: req.query.id});
         } else if (req.query.gruppe) {
             query = Team.find({gruppe: req.query.gruppe});

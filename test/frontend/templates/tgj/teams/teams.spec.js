@@ -127,14 +127,13 @@
                 teams = [];
             });
 
-            //TODO Test ergänzen, wenn umgesetzt
-            it('soll ein Hinweis angezeigt werden'/*, function () {
-             render();
-             expect(element.find('table')).to.not.exist;
-             var result = element.find('div.alert-info');
-             expect(result).to.exist;
-             expect(result.text()).to.contain('Keine Teams gefunden');
-             }*/);
+            it('soll ein Hinweis angezeigt werden', function () {
+                render();
+                expect(element.find('table')).to.not.exist;
+                var result = element.find('div.alert-info');
+                expect(result).to.exist;
+                expect(result.text()).to.contain('Keine Teams gefunden');
+            });
         });
     });
 }());

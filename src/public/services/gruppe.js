@@ -32,7 +32,7 @@ angular
     gruppe.delete = function (id) {
         return $http.delete(ENDPOINT_URL + '?id=' + id).then(function (res) {
             return res;
-        })
+        });
     };
 
     return gruppe;

@@ -26,7 +26,7 @@ angular
     team.getByGruppe = function (gruppenid) {
         return $http.get(ENDPOINT_URL + '?gruppe=' + gruppenid).then(function (res) {
             return res.data;
-        })
+        });
     };
 
     team.delete = function (teamid) {

@@ -15,7 +15,7 @@
                 , scope: {
                     'spiSingleSpiel': '='
                 }
-            }
+            };
         })
         .directive("focusOn", function ($timeout) {
             return {
@@ -75,7 +75,7 @@
                     altToreA = undefined;
                     altToreB = undefined;
                     vm.isEditing = false;
-                })
+                });
             },
             askDelete: function () {
                 return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
@@ -84,7 +84,7 @@
                 if (team) {
                     $state.go('spi.tgj.team', {
                         teamid: team._id
-                    })
+                    });
                 }
             },
             gotoGruppe: function (gruppe) {
@@ -108,7 +108,7 @@
             }
         });
 
-        if (!vm.spiel.beendet && vm.spiel.toreA == 0 && vm.spiel.toreB == 0) {
+        if (!vm.spiel.beendet && vm.spiel.toreA === 0 && vm.spiel.toreB === 0) {
             vm.spiel.toreA = undefined;
             vm.spiel.toreB = undefined;
         }

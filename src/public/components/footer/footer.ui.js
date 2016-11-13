@@ -14,7 +14,7 @@
             scope: true,
             controller: FooterController,
             controllerAs: 'vm'
-        }
+        };
     }
 
     function FooterController(config) {
