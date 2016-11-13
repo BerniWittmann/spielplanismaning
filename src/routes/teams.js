@@ -145,16 +145,23 @@ module.exports = function () {
             if (err) {
                 return messages.Error(res, err);
             }
-            //TODO Async lösen
-            Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-                gruppe.pushTeams(team, function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
 
+            async.parallel([
+                function (cb) {
+                    Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
+                        gruppe.pushTeams(team, function (err) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+
+                            return cb();
+                        });
+                    });
+                },
+                function (cb) {
                     Jugend.findById(team.jugend).exec(function (err, jugend) {
                         if (err) {
                             return messages.Error(res, err);
@@ -165,13 +172,17 @@ module.exports = function () {
                                 return messages.Error(res, err);
                             }
 
-                            return res.json(team);
-                        })
+                            return cb();
+                        });
                     });
+                }
+            ], function (err) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
 
-                });
+                return res.json(team);
             });
-
         });
     });
 
@@ -235,16 +246,21 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            //TODO mit async besser lösen
-            for (var i = 0; i < teams.length; i++) {
-                var team = teams[i];
+            async.each(teams, function (team, cb) {
                 team.resetErgebnis(function (err) {
                     if (err) {
                         return messages.Error(res, err);
                     }
+
+                    return cb();
                 });
-            }
-            return messages.Reset(res);
+            }, function (err) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
+
+                return messages.Reset(res);
+            });
         });
     });
 

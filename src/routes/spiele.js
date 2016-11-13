@@ -164,20 +164,30 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
 
                 //TODO mit async lösen
-                //Set Ergebnis Team A
-                spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
+                async.parallel([
+                    function (cb) {
+                        spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+                            return cb();
+                        });
+                    },
+                    function (cb) {
+                        spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+
+                            return cb();
+                        });
+                    }
+                ], function (err) {
                     if (err) {
                         return messages.Error(res, err);
                     }
 
-                    //Set Ergebnis Team B
-                    spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        return res.json(spiel);
-                    });
+                    res.json(spiel);
                 });
             });
         });
