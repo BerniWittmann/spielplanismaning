@@ -37,8 +37,8 @@ module.exports = function () {
      **/
     router.get('/', function (req, res) {
         var query = Jugend.find();
-        if (req.param('id')) {
-            query = Jugend.findById(req.param('id'));
+        if (req.params.id) {
+            query = Jugend.findById(req.params.id);
         }
         query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
             if (err) {
@@ -122,21 +122,21 @@ module.exports = function () {
      **/
     router.delete('/', function (req, res) {
         Team.remove({
-            "jugend": req.param('id')
+            "jugend": req.params.id
         }, function (err) {
             if (err) {
                 return messages.Error(res, err);
             }
 
             Gruppe.remove({
-                "jugend": req.param('id')
+                "jugend": req.params.id
             }, function (err) {
                 if (err) {
                     return messages.Error(res, err);
                 }
 
                 Jugend.remove({
-                    "_id": req.param('id')
+                    "_id": req.params.id
                 }, function (err) {
                     if (err) {
                         return messages.Error(res, err);
@@ -165,8 +165,8 @@ module.exports = function () {
      **/
     router.get('/tore', function (req, res) {
         var query = Jugend.find();
-        if (req.param('id')) {
-            query = Jugend.findById(req.param('id'));
+        if (req.params.id) {
+            query = Jugend.findById(req.params.id);
         }
         var tore = 0;
         var teams = [];
@@ -174,7 +174,7 @@ module.exports = function () {
             if (err) {
                 return messages.Error(res, err);
             }
-            if (!req.param('id')) {
+            if (!req.params.id) {
                 jugenden.forEach(function (jugend) {
                     jugend.teams.forEach(function (team) {
                         teams.push(team);

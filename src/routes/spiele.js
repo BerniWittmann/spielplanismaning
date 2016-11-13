@@ -27,20 +27,20 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.get('/', function (req, res) {
         var query = Spiel.find();
-        if (req.param('id')) {
-            query = Spiel.findById(req.param('id'));
-        } else if (req.param('team')) {
+        if (req.params.id) {
+            query = Spiel.findById(req.params.id);
+        } else if (req.params.team) {
             //noinspection JSUnresolvedFunction
             query = Spiel.find({}).or([{
-                teamA: req.param('team')
+                teamA: req.param.team
             }, {
-                teamB: req.param('team')
+                teamB: req.params.team
             }]);
-        } else if (req.param('gruppe')) {
-            query = Spiel.find({gruppe: req.param('gruppe')});
+        } else if (req.params.grupe) {
+            query = Spiel.find({gruppe: req.params.gruppe});
         }
-        else if (req.param('jugend')) {
-            query = Spiel.find({jugend: req.param('jugend')});
+        else if (req.params.jugend) {
+            query = Spiel.find({jugend: req.params.jugend});
         }
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
@@ -87,7 +87,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.delete('/', function (req, res) {
         Spiel.remove({
-            "_id": req.param('id')
+            "_id": req.params.id
         }, function (err) {
             if (err) {
                 return messages.Error(res, err);
@@ -148,7 +148,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.delete('/tore', function (req, res) {
-        var query = Spiel.findById(req.param('id'));
+        var query = Spiel.findById(req.params.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
@@ -195,7 +195,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
-        var query = Spiel.findById(req.param('id'));
+        var query = Spiel.findById(req.params.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
