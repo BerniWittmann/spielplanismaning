@@ -88,7 +88,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/subscriber', function (req, res) {
-        Subscriber.find({email: req.params.email, team: req.params.team}).remove().exec(function (err, sub) {
+        Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err, sub) {
             if (err) {
                 return messages.Error(res, err);
             }

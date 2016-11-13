@@ -44,13 +44,13 @@ module.exports = function () {
      **/
     router.get('/', function (req, res) {
         var query = Team.find();
-        if (req.params.id) {
+        if (req.query.id) {
             //TODO findById verwenden, damit kein Array rauskommt
-            query = Team.find({_id: req.params.id});
-        } else if (req.params.gruppe) {
-            query = Team.find({gruppe: req.params.gruppe});
-        } else if (req.params.jugend) {
-            query = Team.find({jugend: req.params.jugend});
+            query = Team.find({_id: req.query.id});
+        } else if (req.query.gruppe) {
+            query = Team.find({gruppe: req.query.gruppe});
+        } else if (req.query.jugend) {
+            query = Team.find({jugend: req.query.jugend});
         }
 
         query.deepPopulate('gruppe jugend').exec(function (err, teams) {
@@ -73,7 +73,7 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        var query = Team.findById(req.params.id);
+        var query = Team.findById(req.query.id);
         query.deepPopulate('gruppe, jugend').exec(function (err, team) {
             if (err) {
                 return messages.Error(res, err);
@@ -139,8 +139,8 @@ module.exports = function () {
      **/
     router.post('/', function (req, res) {
         var team = new Team(req.body);
-        team.jugend = req.params.jugend;
-        team.gruppe = req.params.gruppe;
+        team.jugend = req.query.jugend;
+        team.gruppe = req.query.gruppe;
 
         team.save(function (err, team) {
             if (err) {
@@ -209,7 +209,7 @@ module.exports = function () {
      *     }]
      **/
     router.put('/', function (req, res) {
-        Team.findById(req.params.id, function (err, team) {
+        Team.findById(req.query.id, function (err, team) {
             team.name = req.body.name;
             team.save(function (err, team) {
                 if (err) {

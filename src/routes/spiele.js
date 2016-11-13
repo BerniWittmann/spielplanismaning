@@ -27,20 +27,20 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.get('/', function (req, res) {
         var query = Spiel.find();
-        if (req.params.id) {
-            query = Spiel.findById(req.params.id);
-        } else if (req.params.team) {
+        if (req.query.id) {
+            query = Spiel.findById(req.query.id);
+        } else if (req.query.team) {
             //noinspection JSUnresolvedFunction
             query = Spiel.find({}).or([{
-                teamA: req.param.team
+                teamA: req.query.team
             }, {
-                teamB: req.params.team
+                teamB: req.query.team
             }]);
-        } else if (req.params.grupe) {
-            query = Spiel.find({gruppe: req.params.gruppe});
+        } else if (req.query.gruppe) {
+            query = Spiel.find({gruppe: req.query.gruppe});
         }
-        else if (req.params.jugend) {
-            query = Spiel.find({jugend: req.params.jugend});
+        else if (req.query.jugend) {
+            query = Spiel.find({jugend: req.query.jugend});
         }
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
@@ -87,7 +87,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.delete('/', function (req, res) {
         Spiel.remove({
-            "_id": req.params.id
+            "_id": req.query.id
         }, function (err) {
             if (err) {
                 return messages.Error(res, err);
@@ -148,7 +148,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.delete('/tore', function (req, res) {
-        var query = Spiel.findById(req.params.id);
+        var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
@@ -195,7 +195,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
-        var query = Spiel.findById(req.params.id);
+        var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);

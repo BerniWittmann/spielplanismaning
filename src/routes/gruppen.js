@@ -45,11 +45,11 @@ module.exports = function () {
      **/
     router.get('/', function (req, res) {
         var query = Gruppe.find();
-        if (req.params.id) {
-            query = Gruppe.findById(req.params.id);
-        } else if (req.params.jugend) {
+        if (req.query.id) {
+            query = Gruppe.findById(req.query.id);
+        } else if (req.query.jugend) {
             query = Gruppe.find({
-                "jugend": req.params.jugend
+                "jugend": req.query.jugend
             });
         }
 
@@ -93,7 +93,7 @@ module.exports = function () {
      **/
     router.post('/', function (req, res) {
         var gruppe = new Gruppe(req.body);
-        gruppe.jugend = req.params.jugend;
+        gruppe.jugend = req.query.jugend;
         var query = Jugend.findById(gruppe.jugend);
 
         query.exec(function (err, jugend) {
@@ -129,7 +129,7 @@ module.exports = function () {
      * @apiUse SuccessMessage
      **/
     router.delete('/', function (req, res) {
-        Gruppe.findById(req.params.id, function (err, gruppe) {
+        Gruppe.findById(req.query.id, function (err, gruppe) {
             if (err) {
                 return messages.Error(res, err);
             }
