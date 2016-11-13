@@ -77,9 +77,5 @@
                 expect(_.isEqual(res.data, response)).to.be.true;
             });
         });
-
-        // TODO Test für Spielplanerstellung
-        it('Der Spielplan kann generiert werden');
-
     });
 }());

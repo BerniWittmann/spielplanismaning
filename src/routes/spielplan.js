@@ -22,7 +22,6 @@ module.exports = function () {
      * @apiSuccess {Integer} spielzeit Spielzeit in Minuten
      * @apiSuccess {Integer} pausenzeit Pausenzeit in Minuten
      * @apiSuccess {Array} ausnahmen Ausnahmen bei der Spielplanerstellung
-     * @apiSuccess {Array} spiele Spiele (wird nicht genutzt) TODO entfernen
      * @apiUse vResponse
      *
      * @apiSuccessExample Success-Response:
@@ -33,8 +32,7 @@ module.exports = function () {
      *         spielzeit: 8,
      *         pausenzeit: 2,
      *         __v: 50,
-     *         ausnahmen: [ [ Object ], [ Object ] ],
-     *         spiele: []
+     *         ausnahmen: [ [ Object ], [ Object ] ]
      *     }]
      **/
     router.get('/', function (req, res) {
