@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.kontakt.ui', [
+        .module('spi.templates.kontakt.ui', [
             'ui.router', 'spi.config'
         ])
         .config(states)

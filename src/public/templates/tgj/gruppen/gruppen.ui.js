@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.tgj.gruppen.ui', [
-            'spi.auth', 'spi.gruppe', 'spi.tgj.gruppe.ui', 'ui.router', 'spi.gruppen.gruppenpanel.ui'
+        .module('spi.templates.tgj.gruppen.ui', [
+            'spi.auth', 'spi.gruppe', 'spi.templates.tgj.gruppe.ui', 'ui.router', 'spi.gruppen.gruppenpanel.ui'
         ])
         .config(states)
         .controller('GruppenController', GruppenController);

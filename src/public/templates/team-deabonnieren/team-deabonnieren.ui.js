@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.team.deabonnieren.ui', [
-            'spi.auth', 'spi.team', 'ui.router'
+        .module('spi.templates.teamdeabonnieren.ui', [
+            'spi.team', 'ui.router', 'spi.email'
         ])
         .config(states)
         .controller('TeamDeabonnierenController', TeamDeabonnierenController);

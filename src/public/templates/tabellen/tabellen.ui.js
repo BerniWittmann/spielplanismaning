@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.tabellen.ui', [
-            'spi.auth', 'spi.jugend', 'ui.router', 'spi.tabelle.ui'
+        .module('spi.templates.tabellen.ui', [
+            'ui.router', 'spi.tabelle.ui', 'spi.jugend'
         ])
         .config(states)
         .controller('TabellenController', TabellenController);

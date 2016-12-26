@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.spiele-druck.ui', [
-            'ui.router', 'spi.spiel'
+        .module('spi.templates.verwaltung.spiele-druck.ui', [
+            'ui.router', 'spi.spiel', 'spi.auth'
         ])
         .config(states)
         .controller('SpieleDruckController', SpieleDruckController);

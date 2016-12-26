@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.login.ui', [
+        .module('spi.templates.login.ui', [
             'spi.auth', 'ui.router', 'spi.config'
         ])
         .config(states)

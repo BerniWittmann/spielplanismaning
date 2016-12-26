@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.home.ui', [
+        .module('spi.templates.home.ui', [
             'ui.router', 'spi.spiel'
         ])
         .config(states)

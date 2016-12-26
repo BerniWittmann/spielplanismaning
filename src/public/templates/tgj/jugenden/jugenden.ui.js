@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.tgj.jugenden.ui', [
-            'spi.jugend', 'ui.router', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.tgj.jugend.ui'
+        .module('spi.templates.tgj.jugenden.ui', [
+            'spi.jugend', 'ui.router', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.templates.tgj.jugend.ui'
         ])
         .config(states)
         .controller('JugendenController', JugendenController);

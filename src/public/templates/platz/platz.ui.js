@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.platz.ui', [
+        .module('spi.templates.platz.ui', [
             'ui.router', 'spi.spiel'
         ])
         .config(states)

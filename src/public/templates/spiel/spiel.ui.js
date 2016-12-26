@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.spiel.ui', [
-            'spi.auth', 'ui.router', 'spi.spiel'
+        .module('spi.templates.spiel.ui', [
+            'ui.router', 'spi.spiel'
         ])
         .config(states)
         .controller('SpielController', SpielController);

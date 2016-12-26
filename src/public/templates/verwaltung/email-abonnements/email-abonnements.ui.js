@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.email-abonnements.ui', [
+        .module('spi.templates.verwaltung.email-abonnements.ui', [
             'ui.router', 'ngTable'
         ])
         .config(states)

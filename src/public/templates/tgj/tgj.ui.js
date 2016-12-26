@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.tgj.ui', [
-            'spi.auth', 'spi.tgj.jugenden.ui', 'spi.tgj.gruppen.ui', 'spi.tgj.teams.ui', 'ui.router'
+        .module('spi.templates.tgj.ui', [
+            'spi.templates.tgj.jugenden.ui', 'spi.templates.tgj.gruppen.ui', 'spi.templates.tgj.teams.ui', 'ui.router'
         ])
         .config(states);
 

@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.teams.ui', [
-            'spi.auth', 'ui.router', 'spi.gruppe', 'spi.jugend', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.spielplan', 'spi.spielplan.ausnahmen.ui'
+        .module('spi.templates.verwaltung.teams.ui', [
+            'spi.auth', 'ui.router', 'spi.team', 'spi.jugend', 'spi.verwaltung.teams.jugendpanel.ui', 'spi.spielplan', 'spi.spielplan.ausnahmen.ui'
         ])
         .config(states)
         .controller('VerwaltungTeamsController', VerwaltungTeamsController);

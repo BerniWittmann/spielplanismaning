@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.tgj.teams.ui', [
-            'spi.auth', 'spi.team', 'spi.tgj.team.ui', 'ui.router', 'ngTable'
+        .module('spi.templates.tgj.teams.ui', [
+            'spi.team', 'spi.templates.tgj.team.ui', 'ui.router', 'ngTable'
         ])
         .config(states)
         .controller('TeamsController', TeamsController);

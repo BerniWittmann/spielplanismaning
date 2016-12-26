@@ -2,10 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.ui', [
-            'spi.auth', 'spi.verwaltung.allgemein.ui', 'spi.verwaltung.teams.ui', 'spi.verwaltung.spiele-druck.ui', 'spi.verwaltung.email-abonnements.ui'
-
-            , 'ui.router'
+        .module('spi.templates.verwaltung.ui', [
+            'spi.templates.verwaltung.allgemein.ui', 'spi.templates.verwaltung.teams.ui', 'spi.templates.verwaltung.spiele-druck.ui', 'spi.templates.verwaltung.email-abonnements.ui', 'ui.router'
         ])
         .config(states);
 

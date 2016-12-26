@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.allgemein.ui', [
-            'spi.auth', 'ui.router', 'spi.spielplan', 'spi.email'
+        .module('spi.templates.verwaltung.allgemein.ui', [
+            'spi.auth', 'ui.router', 'spi.spielplan'
         ])
         .config(states)
         .controller('VerwaltungAllgemeinController', VerwaltungAllgemeinController);
