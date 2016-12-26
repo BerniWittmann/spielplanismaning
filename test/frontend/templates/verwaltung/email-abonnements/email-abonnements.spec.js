@@ -10,7 +10,7 @@
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.verwaltung', {abstract: true});
-        }, 'spi.verwaltung.email-abonnements.ui'));
+        }, 'spi.templates.verwaltung.email-abonnements.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
 

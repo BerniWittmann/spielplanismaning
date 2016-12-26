@@ -41,7 +41,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-        }, 'spi.home.ui'));
+        }, 'spi.templates.home.ui'));
         beforeEach(module('htmlModule'));
 
         function compileRouteTemplateWithController($injector, state) {

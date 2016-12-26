@@ -48,7 +48,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-        }, 'spi.platz.ui'));
+        }, 'spi.templates.platz.ui'));
         beforeEach(module('htmlModule'));
 
         function compileRouteTemplateWithController($injector, state) {

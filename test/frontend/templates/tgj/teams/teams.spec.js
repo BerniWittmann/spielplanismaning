@@ -60,7 +60,7 @@
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
-        }, 'spi.tgj.teams.ui'));
+        }, 'spi.templates.tgj.teams.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
 

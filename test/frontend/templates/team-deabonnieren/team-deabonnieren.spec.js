@@ -36,7 +36,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-        }, 'spi.team.deabonnieren.ui'));
+        }, 'spi.templates.teamdeabonnieren.ui'));
         beforeEach(module('htmlModule'));
 
         function compileRouteTemplateWithController($injector, state) {

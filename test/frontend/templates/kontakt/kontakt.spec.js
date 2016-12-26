@@ -21,7 +21,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-        }, 'spi.kontakt.ui'));
+        }, 'spi.templates.kontakt.ui'));
         beforeEach(module('htmlModule'));
 
         function compileRouteTemplateWithController($injector, state) {

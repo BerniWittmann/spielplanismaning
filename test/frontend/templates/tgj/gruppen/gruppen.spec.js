@@ -33,7 +33,7 @@
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
-        }, 'spi.tgj.gruppen.ui'));
+        }, 'spi.templates.tgj.gruppen.ui'));
         beforeEach(module('htmlModule'));
 
         function compileRouteTemplateWithController($injector, state) {

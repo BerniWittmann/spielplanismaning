@@ -33,7 +33,7 @@
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
-        }, 'spi.tgj.jugenden.ui'));
+        }, 'spi.templates.tgj.jugenden.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
         beforeEach(module('spi.bestaetigen-modal.ui'));

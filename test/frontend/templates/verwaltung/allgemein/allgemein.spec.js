@@ -10,7 +10,7 @@
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.verwaltung', {abstract: true});
-        }, 'spi.verwaltung.allgemein.ui'));
+        }, 'spi.templates.verwaltung.allgemein.ui'));
         beforeEach(module('htmlModule'));
 
         var mockAuth;

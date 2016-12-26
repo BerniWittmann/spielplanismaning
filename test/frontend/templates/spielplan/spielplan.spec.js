@@ -51,7 +51,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-        }, 'spi.spielplan.ui'));
+        }, 'spi.templates.spielplan.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
         beforeEach(module('spi.bestaetigen-modal.ui'));

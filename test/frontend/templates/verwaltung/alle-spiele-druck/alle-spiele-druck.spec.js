@@ -61,7 +61,7 @@
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.verwaltung', {abstract: true});
-        }, 'spi.verwaltung.spiele-druck.ui'));
+        }, 'spi.templates.verwaltung.spiele-druck.ui'));
         beforeEach(module('htmlModule'));
 
         function compileRouteTemplateWithController($injector, state) {
