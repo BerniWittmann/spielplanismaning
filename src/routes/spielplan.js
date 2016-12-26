@@ -10,6 +10,7 @@ module.exports = function () {
     var Spiel = mongoose.model('Spiel');
 
     var messages = require('./messages/messages.js')();
+    var spielplanGenerator = require('./spielplanGenerator/spielplanGenerator')();
 
     /**
      * @api {get} /spielplan Get Spielplan
@@ -46,12 +47,31 @@ module.exports = function () {
     });
 
     /**
+     * @api {Put} /spielplan Update Spielplan
+     * @apiName PutSpielplan
+     * @apiDescription Generiert den Spielplan
+     * @apiGroup Spielplan
+     *
+     * @apiUse SpielplanErstelltMessage
+     **/
+    router.put('/', function (req, res) {
+        spielplanGenerator.generateNew(function (err) {
+            if(err) {
+                return messages.Error(res, err);
+            }
+
+            return messages.SpielplanErstellt(res);
+        });
+    });
+
+
+    /**
      * @api {Put} /spielplan/zeiten Update Spielplan-Zeiten
      * @apiName PutSpielplanZeiten
      * @apiDescription Updatet die Spielplan-Zeiten
      * @apiGroup Spielplan
      *
-     * @apiUse SpielplanErstelltMessage
+     * @apiUse SuccessMessage
      **/
     router.put('/zeiten', function (req, res) {
         Spielplan.findOneAndUpdate({}, req.body, {
@@ -72,7 +92,7 @@ module.exports = function () {
                 }, function (err) {
                     if (err) return messages.Error(res, err);
 
-                    return messages.SpielplanErstellt(res);
+                    return messages.Success(res);
 
                 });
 

@@ -58,6 +58,9 @@
                     }, 0, false);
                 });
             },
+            generateSpielplan: function () {
+                spielplan.createSpielplan();
+            },
             spielplanError: spielplan.error,
             isLoggedIn: auth.canAccess(1),
             farben: [

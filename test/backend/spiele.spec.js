@@ -172,7 +172,7 @@ describe('Route: Spiele', function () {
 
     it('soll alle Spiele speichern können', function (done) {
         return request(server)
-            .post('/api/spiele/alle')
+            .put('/api/spiele/alle')
             .send(alleSpiele)
             .expect(200)
             .set('Accept', 'application/json')

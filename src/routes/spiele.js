@@ -98,15 +98,16 @@ module.exports = function (sendgrid, env, url, disableMails) {
     });
 
     /**
-     * @api {Post} /spiele/alle Create Spielplan
-     * @apiName CreateSpiele
+     * @api {Put} /spiele/alle Update Alle Spiele
+     * @apiName UpdateSpiele
      * @apiDescription Speichert alle Spiele
      * @apiGroup Spiele
+     * TODO Entweder kann das gelöscht werden, oder es kommt später wieder zum Einsatz z.B: beim Verschieben der Spiele
      *
      * @apiUse SpielplanErstelltMessage
      *
      **/
-    router.post('/alle', function (req, res) {
+    router.put('/alle', function (req, res) {
         var spiele = req.body;
         async.eachSeries(spiele, function (singlespiel, asyncdone) {
             var spiel = new Spiel(singlespiel);

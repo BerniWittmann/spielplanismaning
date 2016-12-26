@@ -49,7 +49,7 @@ describe('Route: Spielplan', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body.MESSAGEKEY).to.equal('SPIELPLAN_CREATED_MESSAGE');
+                expect(response.body.MESSAGEKEY).to.equal('SUCCESS_MESSAGE');
                 mongoose.model('Spielplan').findOne().exec(function (err, res) {
                     if (err) throw err;
                     expect(res.startzeit).to.be.equal(spielplan.startzeit);
@@ -91,6 +91,25 @@ describe('Route: Spielplan', function () {
                 expect(response.body).to.have.lengthOf(1);
                 expect(response.body[0]._id).to.be.equal(ausnahme._id);
                 return done();
+            });
+    });
+
+    it('soll den Spielplan generieren', function (done) {
+        return request(server)
+            .put('/api/spielplan')
+            .expect(200)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                expect(response.body.MESSAGEKEY).to.equal('SPIELPLAN_CREATED_MESSAGE');
+                expect(response.body.STATUSCODE).to.equal(200);
+                mongoose.model('Spiel').find().exec(function (err, res) {
+                    if (err) throw err;
+                    expect(res).to.have.lengthOf(9);
+                    return done();
+                });
             });
     });
 

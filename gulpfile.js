@@ -25,7 +25,7 @@ gulp.task('watch-task', function () {
 
 // jshint task
 gulp.task('jshint', function () {
-    return gulp.src(['src/public/**/*.js', '!src/public/bower_components/**'])
+    return gulp.src(['src/public/**/*.js', 'src/routes/**/*.js', '!src/public/bower_components/**'])
         .pipe(jshint({laxcomma: true}))
         .pipe(jshint.reporter('jshint-stylish'));
 });

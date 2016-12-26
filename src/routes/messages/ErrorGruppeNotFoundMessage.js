@@ -21,5 +21,5 @@ module.exports = function (err) {
         STATUSCODE: 500,
         MESSAGEKEY: 'ERROR_GROUP_NOT_FOUND',
         ERROR: err
-    }
+    };
 };
