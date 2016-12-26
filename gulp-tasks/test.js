@@ -13,7 +13,7 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('test:travis', function (done) {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', done);
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'jshint', done);
 });
 
 gulp.task('test:watch', function (done) {
@@ -122,4 +122,11 @@ gulp.task('test:e2e:testing', function (done) {
         .on('end', function () {
             done();
         });
+});
+
+// jshint task
+gulp.task('jshint', function () {
+    return gulp.src(['src/public/**/*.js', 'src/routes/**/*.js', '!src/public/bower_components/**'])
+        .pipe(jshint({laxcomma: true}))
+        .pipe(jshint.reporter('jshint-stylish'));
 });
