@@ -19,7 +19,7 @@
                     jugendPromise: function (jugend) {
                         return jugend.getAll();
                     },
-                    jugendTorePormise: function (jugend) {
+                    jugendTorePromise: function (jugend) {
                         return jugend.getGesamtTore();
                     }
                 }
