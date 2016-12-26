@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.jugenden.jugendlabel.ui', [
-            'spi.auth', 'ui.bootstrap'
+        .module('spi.components.jugendlabel.ui', [
+            'ui.bootstrap'
         ])
         .controller('JugendLabelController', JugendLabelController)
         .component('spiJugendLabel', {

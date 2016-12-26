@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.tabelle.ui', [])
+        .module('spi.components.tabelle.ui', ['spi.components.jugendlabel.ui'])
         .controller('TabelleController', TabelleController)
         .component('spiTabelle', {
             templateUrl: 'components/tabelle/tabelle.html'

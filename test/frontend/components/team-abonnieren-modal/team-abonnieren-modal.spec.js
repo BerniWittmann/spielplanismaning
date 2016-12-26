@@ -19,7 +19,7 @@
     var gewaehltesTeam;
 
     describe('Component: Team-Abonnieren-Modal', function () {
-        beforeEach(module('spi.team-abonnieren-modal.ui'));
+        beforeEach(module('spi.components.team-abonnieren-modal.ui'));
         beforeEach(module('htmlModule'));
         var scope;
         var controller;

@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Jugend-Panel', function () {
-        beforeEach(module('spi.verwaltung.teams.jugendpanel.ui'));
+        beforeEach(module('spi.components.jugendpanel.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

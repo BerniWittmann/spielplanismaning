@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.loader.ui', [])
+        .module('spi.components.loader.ui', [])
         .controller('LoaderController', LoaderController)
         .component('spiLoader', {
             templateUrl: 'components/loader/loader.html'
@@ -13,7 +13,6 @@
             , controllerAs: 'vm'
         });
 
-    function LoaderController() {
-    }
+    function LoaderController() {}
 
 })();

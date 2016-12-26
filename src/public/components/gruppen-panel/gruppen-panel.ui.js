@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.gruppen.gruppenpanel.ui', [
-            'spi.auth', 'ui.bootstrap', 'spi.panel.ui', 'spi.gruppe'
+        .module('spi.components.gruppenpanel.ui', [
+            'ui.bootstrap', 'spi.components.panel.ui'
         ])
         .controller('GruppenPanelController', GruppenPanelController)
         .component('spiGruppenPanel', {

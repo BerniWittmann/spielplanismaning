@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular
-		.module('spi.spielplan.ausnahmen.ui', ['spi.spielplan.ausnahme.single.ui'])
+		.module('spi.components.spielplan.ausnahmen.ui', ['spi.components.spielplan.ausnahme.single.ui'])
 		.controller('SpielplanAusnahmenController', SpielplanAusnahmenController)
 		.component('spiSpielplanAusnahmen', {
 			templateUrl: 'components/spielplan-ausnahmen/spielplan-ausnahmen.html'

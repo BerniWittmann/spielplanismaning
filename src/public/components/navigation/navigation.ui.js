@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.navigation.ui', [
-            'spi.auth', 'ngSanitize'
+        .module('spi.components.navigation.ui', [
+            'spi.auth', 'ngSanitize', 'spi.spielplan'
         ])
         .directive('spiNavigation', spiNavigation)
         .controller('NavigationController', NavigationController);

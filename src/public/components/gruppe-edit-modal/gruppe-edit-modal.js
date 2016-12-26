@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.gruppe-edit-modal.ui', [
-            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.verwaltung.team-edit-modal.ui'
+        .module('spi.components.gruppe-edit-modal.ui', [
+            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.components.team-edit-modal.ui', 'spi.components.bestaetigen-modal.ui'
         ])
         .service('GruppeEditierenDialog', GruppeEditierenDialog)
         .controller('GruppeEditierenController', GruppeEditierenController);

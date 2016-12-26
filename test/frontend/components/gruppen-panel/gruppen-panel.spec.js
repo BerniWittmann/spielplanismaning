@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Gruppen-Panel', function () {
-        beforeEach(module('spi.gruppen.gruppenpanel.ui'));
+        beforeEach(module('spi.components.gruppenpanel.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

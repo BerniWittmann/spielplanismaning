@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.spielplan.ui', [
-            'ui.router', 'spi.spiel', 'spi.spielplan.singlespiel.ui'
+            'ui.router', 'spi.spiel', 'spi.components.spielplan.singlespiel.ui'
         ])
         .config(states)
         .controller('SpielplanController', SpielplanController);

@@ -13,7 +13,7 @@
     var mockTeam;
 
     describe('Component: Team-Edit-Modal', function () {
-        beforeEach(module('spi.verwaltung.team-edit-modal.ui'));
+        beforeEach(module('spi.components.team-edit-modal.ui'));
         beforeEach(module('htmlModule'));
         var scope;
         var controller;

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.panel.ui', [
+        .module('spi.components.panel.ui', [
             'ui.bootstrap'
         ])
         .controller('PanelController', PanelController)
@@ -15,7 +15,5 @@
             , controllerAs: 'vm'
         });
 
-    function PanelController() {
-
-    }
+    function PanelController() {}
 })();

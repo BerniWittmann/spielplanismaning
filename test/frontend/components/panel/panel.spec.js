@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Panel', function () {
-        beforeEach(module('spi.panel.ui'));
+        beforeEach(module('spi.components.panel.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

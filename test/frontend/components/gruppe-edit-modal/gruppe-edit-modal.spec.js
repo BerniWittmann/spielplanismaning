@@ -54,7 +54,7 @@
     var team;
 
     describe('Component: Gruppe-Edit-Modal', function () {
-        beforeEach(module('spi.verwaltung.gruppe-edit-modal.ui'));
+        beforeEach(module('spi.components.gruppe-edit-modal.ui'));
         // beforeEach(module('spi.team'));
         // beforeEach(module('spi.spielplan'));
         // beforeEach(module('spi.verwaltung.team-edit-modal.ui'));
@@ -88,7 +88,6 @@
         }));
 
         it('sollen die vorhandenen Teams geladen werden', function () {
-            console.log(controller);
             scope.$apply();
 
             var result = controller.teams;

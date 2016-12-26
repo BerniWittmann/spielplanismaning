@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tabellen.ui', [
-            'ui.router', 'spi.tabelle.ui', 'spi.jugend'
+            'ui.router', 'spi.components.tabelle.ui', 'spi.jugend'
         ])
         .config(states)
         .controller('TabellenController', TabellenController);

@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Spielplan-Ausnahmen', function () {
-        beforeEach(module('spi.spielplan.ausnahmen.ui'));
+        beforeEach(module('spi.components.spielplan.ausnahme.single.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

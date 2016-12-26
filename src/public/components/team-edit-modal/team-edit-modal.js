@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.team-edit-modal.ui', [
+        .module('spi.components.team-edit-modal.ui', [
             'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal'
         ])
         .service('TeamEditierenDialog', TeamEditierenDialog)
@@ -29,9 +29,7 @@
         }
     }
 
-    function TeamEditierenController(
-        $uibModalInstance, team, gewTeam
-    ) {
+    function TeamEditierenController($uibModalInstance, team, gewTeam) {
         var vm = this;
 
         _.extend(vm, {

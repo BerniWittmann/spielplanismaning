@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.gruppen.ui', [
-            'spi.auth', 'spi.gruppe', 'spi.templates.tgj.gruppe.ui', 'ui.router', 'spi.gruppen.gruppenpanel.ui'
+            'spi.auth', 'spi.gruppe', 'spi.templates.tgj.gruppe.ui', 'ui.router', 'spi.components.gruppenpanel.ui'
         ])
         .config(states)
         .controller('GruppenController', GruppenController);

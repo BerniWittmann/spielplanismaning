@@ -10,7 +10,7 @@
     };
 
     describe('Component: Bestätigen-Modal', function () {
-        beforeEach(module('spi.bestaetigen-modal.ui'));
+        beforeEach(module('spi.components.bestaetigen-modal.ui'));
         beforeEach(module('htmlModule'));
         var scope;
         var controller;

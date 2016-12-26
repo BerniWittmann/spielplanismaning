@@ -54,7 +54,7 @@
         }, 'spi.templates.spielplan.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
-        beforeEach(module('spi.bestaetigen-modal.ui'));
+        beforeEach(module('spi.components.bestaetigen-modal.ui'));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');

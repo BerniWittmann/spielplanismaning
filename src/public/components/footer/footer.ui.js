@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.footer.ui', ['spi.config'])
+        .module('spi.components.footer.ui', ['spi.config'])
         .directive('spiFooter', spiFooter)
         .controller('FooterController', FooterController);
 

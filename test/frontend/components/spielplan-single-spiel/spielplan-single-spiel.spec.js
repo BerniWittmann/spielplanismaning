@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Spielplan Single Spiel', function () {
-        beforeEach(module('spi.spielplan.singlespiel.ui'));
+        beforeEach(module('spi.components.spielplan.singlespiel.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

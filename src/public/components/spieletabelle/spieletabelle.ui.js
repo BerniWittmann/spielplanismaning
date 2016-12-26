@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.spieletabelle.ui', [])
+        .module('spi.components.spieletabelle.ui', ['spi.components.jugendlabel.ui'])
         .controller('SpieleTabellenController', SpieleTabellenController)
         .component('spiSpieleTabelle', {
             templateUrl: 'components/spieletabelle/spieletabelle.html'

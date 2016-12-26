@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Jugend-Label', function () {
-        beforeEach(module('spi.jugenden.jugendlabel.ui'));
+        beforeEach(module('spi.components.jugendlabel.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

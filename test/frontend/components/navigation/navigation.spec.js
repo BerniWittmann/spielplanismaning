@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Component: Navigation', function () {
-        beforeEach(module('spi.navigation.ui'));
+        beforeEach(module('spi.components.navigation.ui'));
         beforeEach(module('htmlModule'));
         var element;
         var scope;

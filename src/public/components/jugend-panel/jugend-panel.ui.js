@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.verwaltung.teams.jugendpanel.ui', [
-            'spi.auth', 'ui.bootstrap', 'spi.jugend', 'spi.gruppe', 'spi.panel.ui', 'spi.verwaltung.gruppe-edit-modal.ui', 'spi.spielplan'
+        .module('spi.components.jugendpanel.ui', [
+            'spi.auth', 'ui.bootstrap', 'spi.jugend', 'spi.gruppe', 'spi.components.panel.ui', 'spi.components.gruppe-edit-modal.ui', 'spi.spielplan', 'spi.components.bestaetigen-modal.ui'
         ])
         .controller('JugendPanelController', JugendPanelController)
         .component('spiJugendPanel', {

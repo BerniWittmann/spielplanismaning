@@ -13,7 +13,7 @@
         }, 'spi.templates.verwaltung.teams.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
-        beforeEach(module('spi.bestaetigen-modal.ui'));
+        beforeEach(module('spi.components.bestaetigen-modal.ui'));
 
         var jugenden = [{
             _id: 'j1',

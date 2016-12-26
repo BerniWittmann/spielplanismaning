@@ -3,7 +3,7 @@
 
     angular
         .module('spi', [
-            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.navigation.ui', 'spi.templates.ui', 'spi.jugenden.jugendlabel.ui', 'spi.footer.ui', 'spi.loader.ui', 'spi.email', 'spi.team-abonnieren-modal.ui', 'spi.bestaetigen-modal.ui'
+            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.components.team-abonnieren-modal.ui', 'spi.components.bestaetigen-modal.ui'
         ])
         .config(states)
         .controller('AppController', AppController)

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.spielplan.ausnahme.single.ui', [])
+        .module('spi.components.spielplan.ausnahme.single.ui', ['spi.components.bestaetigen-modal.ui', 'spi.spielplan'])
         .controller('SpielplanAusnahmeController', SpielplanAusnahmeController)
         .component('spiSpielplanSingleAusnahme', {
             templateUrl: 'components/spielplan-ausnahmen/spielplan-single-ausnahme/spielplan-single-ausnahme.html'

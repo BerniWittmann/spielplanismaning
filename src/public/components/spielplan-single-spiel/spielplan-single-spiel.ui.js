@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.spielplan.singlespiel.ui', [
-            'spi.auth', 'spi.spiel'
+        .module('spi.components.spielplan.singlespiel.ui', [
+            'spi.auth', 'spi.spiel', 'spi.components.bestaetigen-modal.ui'
         ])
         .controller('SpielplanSingleSpielController', SpielplanSingleSpielController)
         .directive('spiSingleSpiel', function () {

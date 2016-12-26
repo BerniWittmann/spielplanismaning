@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.jugend.ui', [
-            'spi.jugend', 'ui.router', 'spi.gruppen.gruppenpanel.ui', 'spi.spiel'
+            'spi.jugend', 'ui.router', 'spi.components.gruppenpanel.ui', 'spi.spiel', 'spi.components.jugendlabel.ui'
         ])
         .config(states)
         .controller('JugendController', JugendController);

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.bestaetigen-modal.ui', [
+        .module('spi.components.bestaetigen-modal.ui', [
             'ui.bootstrap', 'ui.bootstrap.modal'
         ])
         .service('BestaetigenDialog', BestaetigenDialog)
@@ -36,12 +36,7 @@
         }
     }
 
-    function BestaetigenController(
-        $uibModalInstance
-        , message
-        , fction
-        , parameters
-    ) {
+    function BestaetigenController($uibModalInstance, message, fction, parameters) {
         var vm = this;
         vm.loading = true;
 

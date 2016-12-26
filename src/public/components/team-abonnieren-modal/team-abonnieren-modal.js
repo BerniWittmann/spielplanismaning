@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.team-abonnieren-modal.ui', [
-            'ui.bootstrap', 'ui.bootstrap.modal'
+        .module('spi.components.team-abonnieren-modal.ui', [
+            'ui.bootstrap', 'ui.bootstrap.modal', 'spi.email'
         ])
         .service('TeamAbonnierenDialog', TeamAbonnierenDialog)
         .controller('TeamAbonnierenController', TeamAbonnierenController);
