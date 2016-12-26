@@ -66,6 +66,7 @@
     "ejs": "^2.5.5",
     "jasmine-spec-reporter": "^2.7.0",
     "jshint": "^2.9.2",
+    "jshint-stylish": "^2.2.1",
     "karma": "^1.1.1",
     "karma-chai": "^0.1.0",
     "karma-chai-spies": "^0.1.4",

@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var jshint = require('gulp-jshint');
 var runSequence = require('run-sequence');
 var open = require('gulp-open');
 var git = require('gulp-git');

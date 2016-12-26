@@ -6,6 +6,7 @@ var angularProtractor = require('gulp-angular-protractor');
 var mongobackup = require('mongobackup');
 var spawn = require('child_process').spawn;
 var mongoose = require('mongoose');
+var jshint = require('gulp-jshint');
 require('shelljs/global');
 
 gulp.task('test', function (done) {
@@ -128,5 +129,6 @@ gulp.task('test:e2e:testing', function (done) {
 gulp.task('jshint', function () {
     return gulp.src(['src/public/**/*.js', 'src/routes/**/*.js', '!src/public/bower_components/**'])
         .pipe(jshint({laxcomma: true}))
-        .pipe(jshint.reporter('jshint-stylish'));
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(jshint.reporter('fail'));
 });
