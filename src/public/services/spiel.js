@@ -1,76 +1,81 @@
-angular
-    .module('spi.spiel', []).factory('spiel', ['$http', 'Logger', function ($http, Logger) {
+(function () {
+    'use strict';
 
-    var ENDPOINT_URL = '/api/spiele';
+    angular
+        .module('spi.spiel', []).factory('spiel', ['$http', 'Logger', function ($http, Logger) {
 
-    var spiel = {};
+        var ENDPOINT_URL = '/api/spiele';
 
-    spiel.getAll = function () {
-        return $http.get(ENDPOINT_URL).success(function (data) {
-            return data;
-        });
-    };
+        var spiel = {};
 
-    spiel.create = function (spiel) {
-        return $http.post(ENDPOINT_URL, spiel).success(function (data) {
-            Logger.log(data);
-            return data;
-        }).error(function (data) {
-            Logger.log('Error');
-            Logger.log(data);
-            return null;
-        });
-    };
+        spiel.getAll = function () {
+            return $http.get(ENDPOINT_URL).success(function (data) {
+                return data;
+            });
+        };
 
-    spiel.get = function (id) {
-        return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
-            return res.data;
-        });
-    };
+        spiel.create = function (spiel) {
+            return $http.post(ENDPOINT_URL, spiel).success(function (data) {
+                Logger.log(data);
+                return data;
+            }).error(function (data) {
+                Logger.log('Error');
+                Logger.log(data);
+                return null;
+            });
+        };
 
-    spiel.getByGruppe = function (gruppenid) {
-        return $http.get(ENDPOINT_URL + '?gruppe=' + gruppenid).then(function (res) {
-            return res.data;
-        });
-    };
+        spiel.get = function (id) {
+            return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
+                return res.data;
+            });
+        };
 
-    spiel.getByJugend = function (jugendid) {
-        return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
-            return res.data;
-        });
-    };
+        spiel.getByGruppe = function (gruppenid) {
+            return $http.get(ENDPOINT_URL + '?gruppe=' + gruppenid).then(function (res) {
+                return res.data;
+            });
+        };
 
-    spiel.getByTeam = function (teamid) {
-        return $http.get(ENDPOINT_URL + '?team=' + teamid).then(function (res) {
-            return res.data;
-        });
-    };
+        spiel.getByJugend = function (jugendid) {
+            return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
+                return res.data;
+            });
+        };
 
-    spiel.delete = function (spielid) {
-        return $http.delete(ENDPOINT_URL + '?id=' + spielid).then(function (res) {
-            return res;
-        });
-    };
+        spiel.getByTeam = function (teamid) {
+            return $http.get(ENDPOINT_URL + '?team=' + teamid).then(function (res) {
+                return res.data;
+            });
+        };
 
-    spiel.deleteAll = function () {
-        return $http.delete(ENDPOINT_URL + '/alle').then(function (res) {
-            return res;
-        });
-    };
+        spiel.delete = function (spielid) {
+            return $http.delete(ENDPOINT_URL + '?id=' + spielid).then(function (res) {
+                return res;
+            });
+        };
 
-    spiel.updateTore = function (spiel) {
-        Logger.log('Tore für Spiel #' + spiel.nummer + ' geändert!');
-        return $http.put(ENDPOINT_URL + '/tore?id=' + spiel._id, spiel).then(function (res) {
-            Logger.log(res);
-            return res;
-        });
-    };
+        spiel.deleteAll = function () {
+            return $http.delete(ENDPOINT_URL + '/alle').then(function (res) {
+                return res;
+            });
+        };
 
-    spiel.resetSpiel = function (spiel) {
-        return $http.delete(ENDPOINT_URL + '/tore?id=' + spiel._id).then(function (res) {
-            return res;
-        });
-    };
+        spiel.updateTore = function (spiel) {
+            Logger.log('Tore für Spiel #' + spiel.nummer + ' geändert!');
+            return $http.put(ENDPOINT_URL + '/tore?id=' + spiel._id, spiel).then(function (res) {
+                Logger.log(res);
+                return res;
+            });
+        };
 
-    return spiel;
-}]);
+        spiel.resetSpiel = function (spiel) {
+            return $http.delete(ENDPOINT_URL + '/tore?id=' + spiel._id).then(function (res) {
+                return res;
+            });
+        };
+
+        return spiel;
+    }]);
+
+})();

@@ -1,91 +1,94 @@
-angular
-    .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function (
-    $http,
-    $state,
-    $window,
-    Logger
-) {
-    var auth = {};
-    var ENDPOINT_URL = '/api/users';
-    var TOKEN_NAME = 'spielplan-ismaning-token';
+(function () {
+    'use strict';
 
-    auth.saveToken = function (token) {
-        $window.localStorage[TOKEN_NAME] = token;
-    };
+    angular
+        .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function ($http,
+                                                                                                   $state,
+                                                                                                   $window,
+                                                                                                   Logger) {
+        var auth = {};
+        var ENDPOINT_URL = '/api/users';
+        var TOKEN_NAME = 'spielplan-ismaning-token';
 
-    auth.getToken = function () {
-        return $window.localStorage[TOKEN_NAME];
-    };
+        auth.saveToken = function (token) {
+            $window.localStorage[TOKEN_NAME] = token;
+        };
 
-    auth.isLoggedIn = function () {
-        var token = auth.getToken();
+        auth.getToken = function () {
+            return $window.localStorage[TOKEN_NAME];
+        };
 
-        if (token) {
-            var payload = JSON.parse($window.atob(token.split('.')[1]));
-            if (payload.exp > Date.now() / 1000) {
-                Logger.enableLogging();
-                return true;
-            }
-        }
-        Logger.disableLogging();
-        return false;
-    };
-
-    auth.currentUser = function () {
-        if (auth.isLoggedIn()) {
+        auth.isLoggedIn = function () {
             var token = auth.getToken();
-            var payload = JSON.parse($window.atob(token.split('.')[1]));
-            return payload.username;
-        }
-    };
 
-    auth.register = function (user) {
-        return $http.post(ENDPOINT_URL + '/register', user).error(function (err) {
-            return err;
-        }).success(function (data) {
-            return data;
-        });
-    };
+            if (token) {
+                var payload = JSON.parse($window.atob(token.split('.')[1]));
+                if (payload.exp > Date.now() / 1000) {
+                    Logger.enableLogging();
+                    return true;
+                }
+            }
+            Logger.disableLogging();
+            return false;
+        };
 
-    auth.logIn = function (user) {
-        return $http.post(ENDPOINT_URL + '/login', user).success(function (data) {
-            auth.saveToken(data.token);
-        });
-    };
+        auth.currentUser = function () {
+            if (auth.isLoggedIn()) {
+                var token = auth.getToken();
+                var payload = JSON.parse($window.atob(token.split('.')[1]));
+                return payload.username;
+            }
+        };
 
-    auth.deleteUser = function (username) {
-        if (auth.canAccess(1)) {
-            return $http.put(ENDPOINT_URL + '/delete', {
-                username: username
-            }).error(function (err) {
+        auth.register = function (user) {
+            return $http.post(ENDPOINT_URL + '/register', user).error(function (err) {
                 return err;
             }).success(function (data) {
                 return data;
             });
-        } else {
-            return new Error('No Permission');
-        }
-    };
+        };
 
-    auth.logOut = function () {
-        $window.localStorage.removeItem(TOKEN_NAME);
-        $state.go('spi.home');
-    };
+        auth.logIn = function (user) {
+            return $http.post(ENDPOINT_URL + '/login', user).success(function (data) {
+                auth.saveToken(data.token);
+            });
+        };
 
-    auth.canAccess = function (permission) {
-        var token = auth.getToken();
-
-        if (token) {
-            var payload = JSON.parse($window.atob(token.split('.')[1]));
-            if (payload.exp > Date.now() / 1000) {
-                if (_.isUndefined(permission)) {
-                    return true;
-                }
-                return permission <= payload.role.rank;
+        auth.deleteUser = function (username) {
+            if (auth.canAccess(1)) {
+                return $http.put(ENDPOINT_URL + '/delete', {
+                    username: username
+                }).error(function (err) {
+                    return err;
+                }).success(function (data) {
+                    return data;
+                });
+            } else {
+                return new Error('No Permission');
             }
-        }
-        return false;
-    };
+        };
 
-    return auth;
-}]);
+        auth.logOut = function () {
+            $window.localStorage.removeItem(TOKEN_NAME);
+            $state.go('spi.home');
+        };
+
+        auth.canAccess = function (permission) {
+            var token = auth.getToken();
+
+            if (token) {
+                var payload = JSON.parse($window.atob(token.split('.')[1]));
+                if (payload.exp > Date.now() / 1000) {
+                    if (_.isUndefined(permission)) {
+                        return true;
+                    }
+                    return permission <= payload.role.rank;
+                }
+            }
+            return false;
+        };
+
+        return auth;
+    }]);
+
+})();
