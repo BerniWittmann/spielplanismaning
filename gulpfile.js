@@ -64,7 +64,7 @@ gulp.task('open:testing', function () {
 gulp.task('apidoc', function (done) {
     apidoc({
         src: "src/routes",
-        dest: "docs",
+        dest: "docs/api",
         includeFilters: [".*\\.js$"]
     }, done);
 });
