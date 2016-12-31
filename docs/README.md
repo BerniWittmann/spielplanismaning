@@ -26,6 +26,10 @@ Es gibt verschiedene Nutzerrollen, die unterschiedliche Berechtigungen haben.
 
 ---
 
+# API Dokumentation
+
+Eine genaue Dokumentation der API und der Endpoints findet sich in der <a href="./api">API Dokumentation</a>.
+
 # Test Ergebnisse
 
 - <a href="./tests/frontend" style="font-size: 20px;">Frontend</a>

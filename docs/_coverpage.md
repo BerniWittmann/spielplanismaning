@@ -2,7 +2,7 @@
 
 # Spielplan Ismaning <small>1.1.0</small>
 
-> Spielplan und Turnierverwaltung für die Beachturniere in Ismaning
+> Spielplan- und Turnierverwaltung für die Beachturniere in Ismaning
 
 - Kontakt: Bernhard Wittmann [b.wittmann@mail.de](mailto:b.wittmann@mail.de)
 
