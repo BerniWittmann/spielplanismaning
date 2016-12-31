@@ -48,6 +48,12 @@
             access: false,
             canAccess: function () {
                 return authMock.access;
+            },
+            isAdmin: function () {
+                return authMock.access;
+            },
+            isBearbeiter: function () {
+                return authMock.access;
             }
         };
         var mockBestaetigenDialog = {

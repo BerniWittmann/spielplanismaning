@@ -27,6 +27,12 @@
             canAccess: function (n) {
                 return mockAuth.userAccessLevel >= n;
             },
+            isAdmin: function () {
+                return mockAuth.userAccessLevel > 0;
+            },
+            isBearbeiter: function () {
+                return mockAuth.userAccessLevel == 0;
+            },
             currentUser: function () {
                 return 'Berni'
             },

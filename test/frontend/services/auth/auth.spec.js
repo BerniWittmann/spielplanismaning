@@ -154,11 +154,45 @@
         it('soll prüfen ob ein Nutzer auf einen Bereich zugreifen kann', function () {
             window.localStorage[TOKENNAME] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg';
 
-            var result1 = auth.canAccess(1);
-            var result2 = auth.canAccess(99999);
+            var result1 = auth.canAccess('admin');
+            var result2 = auth.canAccess('bearbeiter');
 
             expect(result1).to.be.true;
             expect(result2).not.to.be.true;
+        });
+
+        it('soll die Rolle laden können', function () {
+            window.localStorage[TOKENNAME] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg';
+
+            var role = auth.getRole();
+
+            expect(role).to.deep.equal({rank: 1, name: 'admin'});
+        });
+
+        it('soll ein leeres Rollen Objekt zurückgeben, wenn kein Token gefunden ist', function () {
+            window.localStorage.removeItem(TOKENNAME);
+            expect(auth.getToken()).to.be.undefined;
+
+            var role = auth.getRole();
+
+            expect(role).to.deep.equal({
+                rank: -1,
+                name: undefined
+            });
+        });
+
+        it('soll zurückgeben ob User ein Admin ist', function () {
+            window.localStorage[TOKENNAME] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg';
+
+            expect(auth.isAdmin()).to.be.true;
+            expect(auth.isBearbeiter()).to.be.false;
+        });
+
+        it('soll zurückgeben ob User ein Bearbeiter ist', function () {
+            window.localStorage[TOKENNAME] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjowLCJuYW1lIjoiQmVhcmJlaXRlciJ9LCJleHAiOjk5OTk5OTk5OTksImlhdCI6MTQ2OTQ1MzE0MH0.s-MDlitppMFkKZvAx-NWsQQhPNDJL9a0VI3PYSk7k2w';
+
+            expect(auth.isBearbeiter()).to.be.true;
+            expect(auth.isAdmin()).to.be.false;
         });
 
     });

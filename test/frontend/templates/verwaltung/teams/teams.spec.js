@@ -73,6 +73,9 @@
                 hatZugriff: true,
                 canAccess: function () {
                     return mockAuth.hatZugriff;
+                },
+                isAdmin: function () {
+                    return mockAuth.hatZugriff;
                 }
             };
             mockJugend = {

@@ -78,7 +78,7 @@
         auth.getRole = function () {
             var token = auth.getToken();
 
-            if (token) {
+            if (token && !_.isUndefined(token)) {
                 var payload = JSON.parse($window.atob(token.split('.')[1]));
                 if (payload.exp > Date.now() / 1000) {
                     payload.role.name = payload.role.name.toLowerCase();

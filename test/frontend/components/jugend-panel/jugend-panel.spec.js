@@ -41,6 +41,9 @@
         var mockAuth = {
             canAccess: function (level) {
                 return accessLevel >= level;
+            },
+            isAdmin: function () {
+                return accessLevel > 0;
             }
         };
         var mockGruppeEditierenDialog = {
