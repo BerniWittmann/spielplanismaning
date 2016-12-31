@@ -51,8 +51,7 @@
                 auth.checkRoute($q, $state.current);
                 vm.runBefore = true;
             }
-
-        })
+        });
     }
 
     function checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope) {

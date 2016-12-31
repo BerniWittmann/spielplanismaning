@@ -96,7 +96,7 @@
             var role = auth.getRole();
 
             if (requiredRoles && requiredRoles.length > 0) {
-                return _.includes(requiredRoles, role.name)
+                return _.includes(requiredRoles, role.name);
             }
             return true;
         };
