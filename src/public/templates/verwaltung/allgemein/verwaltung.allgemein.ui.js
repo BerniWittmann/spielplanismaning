@@ -17,24 +17,14 @@
                 controller: VerwaltungAllgemeinController,
                 controllerAs: 'vm',
                 resolve: {
-                    authenticate: authenticate,
                     getZeitenPromise: function (spielplan) {
                         return spielplan.getZeiten();
                     }
+                },
+                data: {
+                    requiredRoles: ['admin']
                 }
             });
-    }
-
-    function authenticate($q, auth, $state, $timeout) {
-        if (auth.canAccess(1)) {
-            return $q.when();
-        } else {
-            $timeout(function () {
-                $state.go('spi.login');
-            });
-
-            return $q.reject();
-        }
     }
 
     function VerwaltungAllgemeinController(auth, spielplan, getZeitenPromise) {

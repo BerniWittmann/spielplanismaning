@@ -17,25 +17,15 @@
                 , controller: EmailAbonnementsContoller
                 , controllerAs: 'vm'
                 , resolve: {
-                    authenticate: authenticate,
                     getSubscribersPromise: function (email) {
                         return email.getSubscribers();
                     }
+                },
+                data: {
+                    requiredRoles: ['admin']
                 }
             });
 
-    }
-
-    function authenticate($q, auth, $state, $timeout) {
-        if (auth.canAccess(1)) {
-            return $q.when();
-        } else {
-            $timeout(function () {
-                $state.go('spi.login');
-            });
-
-            return $q.reject();
-        }
     }
 
     function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, getSubscribersPromise) {

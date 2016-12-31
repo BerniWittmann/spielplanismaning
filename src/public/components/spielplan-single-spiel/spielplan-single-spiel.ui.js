@@ -47,8 +47,8 @@
         var vm = this;
 
         _.extend(vm, {
-            canEdit: auth.canAccess(0),
-            canDelete: auth.canAccess(1),
+            canEdit: auth.isAdmin() || auth.isBearbeiter(),
+            canDelete: auth.isAdmin(),
             spiel: $scope.spiSingleSpiel,
             isEditing: false,
             edit: function () {

@@ -16,25 +16,15 @@
                 , controller: SpieleDruckController
                 , controllerAs: 'vm'
                 , resolve: {
-                    authenticate: authenticate,
                     spielPromise: function (spiel) {
                         return spiel.getAll();
                     }
+                },
+                data: {
+                    requiredRoles: ['bearbeiter', 'admin']
                 }
             });
 
-    }
-
-    function authenticate($q, auth, $state, $timeout) {
-        if (auth.canAccess(0)) {
-            return $q.when();
-        } else {
-            $timeout(function () {
-                $state.go('spi.login');
-            });
-
-            return $q.reject();
-        }
     }
 
     function SpieleDruckController($state, spielPromise) {

@@ -23,8 +23,10 @@
 
         _.extend(vm, {
             isLoggedIn: auth.isLoggedIn,
-            canAccess: function (i) {
-                return auth.canAccess(i);
+            isAdmin: auth.isAdmin,
+            isBearbeiter: auth.isBearbeiter,
+            isBearbeiterOrAdmin: function () {
+                return auth.isBearbeiter() || auth.isAdmin();
             },
             currentUser: auth.currentUser,
             logOut: auth.logOut,

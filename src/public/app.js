@@ -23,7 +23,7 @@
         $locationProvider.html5Mode(true);
     }
 
-    function run($rootScope) {
+    function run($rootScope, $state) {
         $rootScope.onload = function () {
             var page = document.getElementById('page');
             page.className = page.className + " loaded";
@@ -31,15 +31,28 @@
     }
 
     function AppController($q, auth, $state, $timeout, config, $rootScope) {
-        $rootScope.$on('$stateChangeStart', function (event, toState) {
-            checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope);
+        var vm = this;
+        vm.runBefore = false;
 
+        $rootScope.$on('$stateChangeStart', function (event, toState) {
+            if(!_.isEqual(toState.name, 'spi.login')) {
+                checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope);
+                auth.checkRoute($q, toState);
+            }
             $rootScope.loading = true;
         });
 
         $rootScope.$on('$stateChangeSuccess', function () {
             $rootScope.loading = false;
         });
+
+        $rootScope.$on('$viewContentLoading', function () {
+            if(!vm.runBefore) {
+                auth.checkRoute($q, $state.current);
+                vm.runBefore = true;
+            }
+
+        })
     }
 
     function checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope) {

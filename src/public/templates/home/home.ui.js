@@ -19,6 +19,9 @@
                     spielPromise: function (spiel) {
                         return spiel.getAll();
                     }
+                },
+                data: {
+                    requiredRoles: []
                 }
             });
 

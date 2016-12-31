@@ -35,7 +35,7 @@
         vm.loading = false;
 
         function canEdit() {
-            return auth.canAccess(1) && $state.includes('spi.verwaltung');
+            return auth.isAdmin() && $state.includes('spi.verwaltung');
         }
 
         function askDeleteGruppe(gruppe) {

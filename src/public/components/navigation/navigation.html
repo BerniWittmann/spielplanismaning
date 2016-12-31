@@ -55,23 +55,23 @@
                         data-toggle="collapse"
                         data-target=".navbar-collapse.in"><i
                         class="fa fa-table"></i><span class="hidden-sm"> Tabellen</span></a></li>
-                <li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.canAccess(0)"
+                <li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.isLoggedIn()"
                     class="dropdown" id="nav-button-verwaltung">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
-                        <li data-ng-if="vm.canAccess(1)" id="nav-button-verwaltung-allgemein"><a
+                        <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-allgemein"><a
                                 data-ui-sref="spi.verwaltung.allgemein"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Allgemein</a>
                         </li>
-                        <li data-ng-if="vm.canAccess(1)" id="nav-button-verwaltung-teams"><a
+                        <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-teams"><a
                                 data-ui-sref="spi.verwaltung.teams" data-toggle="collapse"
                                 data-target=".navbar-collapse.in">Teams, Gruppen & Jugenden</a></li>
-                        <li data-ng-if="vm.canAccess(0)" id="nav-button-verwaltung-spieledruck"><a
+                        <li data-ng-if="vm.isBearbeiterOrAdmin()" id="nav-button-verwaltung-spieledruck"><a
                                 data-ui-sref="spi.verwaltung.spiele-druck"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Spiele Drucken</a></li>
-                        <li data-ng-if="vm.canAccess(1)" id="nav-button-verwaltung-emails"><a
+                        <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-emails"><a
                                 data-ui-sref="spi.verwaltung.email-abonnements"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Email Abonnements</a></li>
                     </ul>

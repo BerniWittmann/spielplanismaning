@@ -19,23 +19,19 @@
                     lockdown: function (config) {
                         return config.getLockdown();
                     }
+                },
+                params: {
+                    reason: undefined
                 }
             });
 
     }
 
-    function LoginController(auth, $state, lockdown) {
+    function LoginController(auth, $state, lockdown, $stateParams) {
         var vm = this;
         vm.lockdown = lockdown.data;
         vm.user = {};
-        vm.register = function () {
-            vm.user.username = vm.user.username.toLowerCase();
-            auth.register(vm.user).then(function () {
-                $state.go('spi.home');
-            }, function (error) {
-                vm.error = error.data;
-            });
-        };
+        vm.reason = $stateParams.reason;
         vm.login = function () {
             vm.user.username = vm.user.username.toLowerCase();
             auth.logIn(vm.user).then(function () {

@@ -2,10 +2,12 @@
     'use strict';
 
     angular
-        .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', 'Logger', function ($http,
-                                                                                                   $state,
-                                                                                                   $window,
-                                                                                                   Logger) {
+        .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', '$q', '$timeout', 'Logger', function ($http,
+                                                                                                                     $state,
+                                                                                                                     $window,
+                                                                                                                     $q,
+                                                                                                                     $timeout,
+                                                                                                                     Logger) {
         var auth = {};
         var ENDPOINT_URL = '/api/users';
         var TOKEN_NAME = 'spielplan-ismaning-token';
@@ -55,7 +57,7 @@
         };
 
         auth.deleteUser = function (username) {
-            if (auth.canAccess(1)) {
+            if (auth.isAdmin()) {
                 return $http.put(ENDPOINT_URL + '/delete', {
                     username: username
                 }).error(function (err) {
@@ -73,19 +75,54 @@
             $state.go('spi.home');
         };
 
-        auth.canAccess = function (permission) {
+        auth.getRole = function () {
             var token = auth.getToken();
 
             if (token) {
                 var payload = JSON.parse($window.atob(token.split('.')[1]));
                 if (payload.exp > Date.now() / 1000) {
-                    if (_.isUndefined(permission)) {
-                        return true;
-                    }
-                    return permission <= payload.role.rank;
+                    payload.role.name = payload.role.name.toLowerCase();
+                    return payload.role;
                 }
             }
-            return false;
+
+            return {
+                rank: -1,
+                name: undefined
+            };
+        };
+
+        auth.canAccess = function (requiredRoles) {
+            var role = auth.getRole();
+
+            if (requiredRoles && requiredRoles.length > 0) {
+                return _.includes(requiredRoles, role.name)
+            }
+            return true;
+        };
+
+        auth.isAdmin = function () {
+            return auth.canAccess('admin');
+        };
+
+        auth.isBearbeiter = function () {
+            return auth.canAccess('bearbeiter');
+        };
+
+        auth.checkRoute = function ($q, toState) {
+            if (toState && toState.data && toState.data.requiredRoles && toState.data.requiredRoles.length > 0) {
+                if (_.includes(toState.data.requiredRoles, auth.getRole().name)) {
+                    return $q.when();
+                } else {
+                    if (!_.isEqual(toState.name, 'spi.login')) {
+                        $timeout(function () {
+                            $state.go('spi.login', {reason: 'Sie verfügen nicht über genügend Rechte. Bitte melden Sie sich mit einem passenden Account an.'});
+                        });
+                    }
+                    return $q.reject();
+                }
+            }
+            return $q.when();
         };
 
         return auth;

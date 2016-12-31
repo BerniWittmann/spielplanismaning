@@ -16,28 +16,18 @@
                 , controller: VerwaltungTeamsController
                 , controllerAs: 'vm'
                 , resolve: {
-                    authenticate: authenticate,
                     jugendPromise: function (jugend) {
                         return jugend.getAll();
                     },
                     teamPromise: function (team) {
                         return team.getAll();
                     }
+                },
+                data: {
+                    requiredRoles: ['bearbeiter', 'admin']
                 }
             });
 
-    }
-
-    function authenticate($q, auth, $state, $timeout) {
-        if (auth.canAccess(1)) {
-            return $q.when();
-        } else {
-            $timeout(function () {
-                $state.go('spi.login');
-            });
-
-            return $q.reject();
-        }
     }
 
     function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugendPromise, teamPromise) {
@@ -62,7 +52,7 @@
                 spielplan.createSpielplan();
             },
             spielplanError: spielplan.error,
-            isLoggedIn: auth.canAccess(1),
+            isLoggedIn: auth.isAdmin(),
             farben: [
                 {
                     name: 'Grün'
