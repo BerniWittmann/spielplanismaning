@@ -41,7 +41,13 @@ gulp.task('test:backend', function (done) {
 gulp.task('test:backend:withOutWipe', function (done) {
     gulp.src('././test/backend/*.spec.js', {read: false})
         .pipe(mocha({
-            reporter: 'spec',
+            reporter: 'mochawesome',
+            reporterOptions: {
+                reportDir: 'docs/tests/backend',
+                reportFilename: 'index',
+                reportTitle: 'Test-Ergebnisse (Backend)',
+                reportPageTitle: 'Test-Ergebnisse (Backend)'
+            },
             timeout: 5000
         }))
         .on('error', function (error) {

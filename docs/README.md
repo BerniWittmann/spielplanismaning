@@ -26,6 +26,11 @@ Es gibt verschiedene Nutzerrollen, die unterschiedliche Berechtigungen haben.
 
 ---
 
+# Test Ergebnisse
+
+- <a href="./tests/frontend" style="font-size: 20px;">Frontend</a>
+- <a href="./tests/backend" style="font-size: 20px;">Backend</a>
+
 # Kontakt
 
 Bernhard Wittmann

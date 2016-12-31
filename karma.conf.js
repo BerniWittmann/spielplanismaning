@@ -71,9 +71,15 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['mocha'],
+        reporters: ['mocha', 'htmlalt'],
 
+        htmlReporter: {
+            outputFile: '../../docs/tests/frontend/index.html',
 
+            // Optional
+            pageTitle: 'Test-Ergebnisse (Frontend)',
+            subPageTitle: 'Unit-Tests des Frontends'
+        },
 
         // web server port
         port: 9876,
