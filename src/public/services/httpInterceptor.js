@@ -17,10 +17,9 @@
                     }
                     return $q.reject(response);
                 }
-            }
+            };
         }])
         .config(function ($httpProvider) {
             $httpProvider.interceptors.push('httpInterceptor');
         });
-
 })();
