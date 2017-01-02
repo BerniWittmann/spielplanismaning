@@ -79,6 +79,42 @@ describe('Route: Gruppen', function () {
             });
     });
 
+    it('Bei einem leeren Gruppenname soll ein Fehler geworfen werden', function (done) {
+        var gruppe = {};
+        request(server)
+            .post('/api/gruppen?jugend=' + jugendid.toString())
+            .send(gruppe)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('Bei einer nicht vorhandenen Jugend soll ein Fehler geworfen werden', function (done) {
+        var gruppe = {
+            name: 'Ich hab keine Jugend'
+        };
+        request(server)
+            .post('/api/gruppen?jugend=' + undefined)
+            .send(gruppe)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('soll eine Gruppe hinzufügen können', function (done) {
         var gruppe = {
             name: 'Neue Gruppe'
@@ -137,6 +173,34 @@ describe('Route: Gruppen', function () {
                         expect(response.body.MESSAGEKEY).to.be.equal('ERROR_GROUP_MAX_AMOUNT');
                         return done();
                     });
+            });
+    });
+
+    it('wenn die Gruppenid zum löschen fehlt, soll ein Fehler geworfen werden', function (done) {
+        return request(server)
+            .del('/api/gruppen?id=')
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .end(function (err, res) {
+                if (err) throw err;
+                expect(res).not.to.be.unfined;
+                expect(res.statusCode).to.equal(400);
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('wenn die Gruppenid zum löschen falsch ist, soll ein Fehler geworfen werden', function (done) {
+        return request(server)
+            .del('/api/gruppen?id=' + 'iafja1SicherNICHTRICHTIG')
+            .set('Authorization', server.adminToken)
+            .expect(404)
+            .end(function (err, res) {
+                if (err) throw err;
+                expect(res).not.to.be.unfined;
+                expect(res.statusCode).to.equal(404);
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_GROUP_NOT_FOUND');
+                return done();
             });
     });
 

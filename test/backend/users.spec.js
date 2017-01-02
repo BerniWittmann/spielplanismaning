@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 describe('Route: Users', function () {
     before(function (done) {
         server.connectDB(function (err) {
-            if (err) throw err;
+            if (err) return done(err);
             done();
         });
     });
@@ -31,7 +31,7 @@ describe('Route: Users', function () {
                 expect(response.statusCode).to.equal(200);
                 expect(response.body.MESSAGEKEY).to.equal('SUCCESS_MESSAGE');
                 mongoose.model('User').findOne({username: user.username}).exec(function (err, res) {
-                    if (err) throw err;
+                    if (err) return done(err);
                     expect(res.username).to.be.equal(user.username);
                     expect(res.salt).to.exist;
                     expect(res.hash).to.exist;
@@ -48,7 +48,9 @@ describe('Route: Users', function () {
             .send({username: 'test'})
             .expect(400)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(400);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR_FEHLENDE_FELDER');
                 return done();
             });
@@ -61,7 +63,9 @@ describe('Route: Users', function () {
             .send({username: 'test-user', password: 'neuesPW', role: 'Bearbeiter'})
             .expect(500)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(500);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR');
                 expect(res.body.ERROR.code).to.equal(11000);
                 return done();
@@ -74,7 +78,9 @@ describe('Route: Users', function () {
             .send(user)
             .expect(200)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
                 expect(res.body.token).to.exist;
                 return done();
             });
@@ -86,8 +92,10 @@ describe('Route: Users', function () {
             .send({})
             .expect(400)
             .end(function (err, res) {
-                if (err) throw err;
-                expect(res.body.MESSAGEKEY).to.equal('ERROR_FEHLENDE_FELDER');
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(400);
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
                 return done();
             });
     });
@@ -98,7 +106,9 @@ describe('Route: Users', function () {
             .send({username: 'test-user', password: 'bruteforce'})
             .expect(401)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(401);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR_FALSCHE_ANMELDEDATEN');
                 return done();
             });
@@ -110,8 +120,25 @@ describe('Route: Users', function () {
             .send({username: 'test-user2', password: 'bruteforce'})
             .expect(401)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(401);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR_FALSCHE_ANMELDEDATEN');
+                return done();
+            });
+    });
+
+    it('wenn zum Löschen kein Nutzername angegeben ist, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
+            .send({})
+            .expect(400)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(400);
+                expect(res.body.MESSAGEKEY).to.be.equal('ERROR_BAD_REQUEST');
                 return done();
             });
     });
@@ -123,10 +150,12 @@ describe('Route: Users', function () {
             .send({username: 'test-user'})
             .expect(200)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
                 expect(res.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
                 mongoose.model('User').find({username: 'test-user'}).exec(function (err, res) {
-                    if (err) throw err;
+                    if (err) return done(err);
                     expect(res).to.be.empty;
                     return done();
                 });
@@ -140,7 +169,9 @@ describe('Route: Users', function () {
             .send({username: 'tippfehler'})
             .expect(404)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(404);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR_USER_NOT_FOUND');
                 expect(res.body.MESSAGE).to.equal('Benutzer tippfehler wurde nicht gefunden');
                 return done();
@@ -154,7 +185,9 @@ describe('Route: Users', function () {
             .send({username: 'berni'})
             .expect(403)
             .end(function (err, res) {
-                if (err) throw err;
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(403);
                 expect(res.body.MESSAGEKEY).to.be.equal('ERROR_USER_NICHT_LOESCHBAR');
                 return done();
             });

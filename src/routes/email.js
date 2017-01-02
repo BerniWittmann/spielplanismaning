@@ -18,8 +18,13 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiParam {String} text     Text der Email.
      *
      * @apiUse SuccessMessage
+     *
+     * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
+        if (!req.body.subject || !req.body.text) {
+            return messages.ErrorBadRequest(res);
+        }
         Subscriber.find().exec(function (err, subs) {
             var emails = [];
             subs.forEach(function (sub) {
@@ -57,6 +62,8 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse teamID
      * @apiUse vResponse
      *
+     * @apiUse ErrorBadRequest
+     *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     {
@@ -67,6 +74,9 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      *     }
      **/
     router.post('/subscriber', function (req, res) {
+        if (!req.body.team || !req.body.email) {
+            return messages.ErrorBadRequest(res);
+        }
         var subscriber = new Subscriber(req.body);
         subscriber.save(function (err, sub) {
             if (err) {
@@ -86,9 +96,14 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiParam {String} email  Email-Adresse des Abonnenten.
      * @apiParam {String} team ID des Teams.
      *
+     * @apiUse ErrorBadRequest
+     *
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/subscriber', function (req, res) {
+        if (!req.query.email, !req.query.team) {
+            return messages.ErrorBadRequest(res);
+        }
         Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err, sub) {
             if (err) {
                 return messages.Error(res, err);

@@ -15,7 +15,7 @@ describe('Route: Jugenden', function () {
     });
 
     it('soll alle Jugenden laden können', function (done) {
-       request(server)
+        request(server)
             .get('/api/jugenden/')
             .expect(200)
             .set('Accept', 'application/json')
@@ -44,6 +44,23 @@ describe('Route: Jugenden', function () {
             });
     });
 
+    it('wenn kein Name angegeben ist, soll ein Fehler geworfen werden', function (done) {
+        var jugend = {};
+        request(server)
+            .post('/api/jugenden')
+            .send(jugend)
+            .expect(400)
+            .set('Authorization', server.adminToken)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.be.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('soll eine Jugend hinzufügen können und eine Gruppe dafür erstellen', function (done) {
         var jugend = {
             name: 'Neue Jugend'
@@ -63,7 +80,7 @@ describe('Route: Jugenden', function () {
                 neueJugendid = response.body._id;
                 expect(response.body.gruppen).to.have.lengthOf(1);
                 mongoose.model('Jugend').find().exec(function (err, res) {
-                    if (err) throw err;
+                    if (err) return done(err);
                     expect(res).to.have.lengthOf(3);
                     return done();
 
@@ -94,6 +111,35 @@ describe('Route: Jugenden', function () {
                 expect(response.statusCode).to.equal(200);
                 expect(response.body).to.equal(9);
                 done();
+            });
+    });
+
+    it('wenn keine JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .del('/api/jugenden?id=')
+            .expect(400)
+            .set('Authorization', server.adminToken)
+            .end(function (err, response) {
+                if (err) throw err;
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('wenn eine falsche JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .del('/api/jugenden?id=DASgibtsN1cht')
+            .expect(400)
+            .set('Authorization', server.adminToken)
+            .end(function (err, response) {
+                if (err) throw err;
+
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
             });
     });
 

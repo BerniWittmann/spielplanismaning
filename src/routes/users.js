@@ -19,7 +19,7 @@ module.exports = function () {
      *
      * @apiUse ErrorUnbekannteRolle
      *
-     * @apiUse ErrorFehlendeFelder
+     * @apiUse ErrorBadRequest
      *
      * @apiUse SuccessMessage
      **/
@@ -66,7 +66,7 @@ module.exports = function () {
      **/
     router.post('/login', function (req, res, next) {
         if (!req.body.username || !req.body.password) {
-            return messages.ErrorFehlendeFelder(res);
+            return messages.ErrorBadRequest(res);
         }
 
         //noinspection JSUnresolvedFunction
@@ -96,9 +96,14 @@ module.exports = function () {
      *
      * @apiUse ErrorUserNichtLoeschbar
      *
+     * @apiUse ErrorBadRequest
+     *
      * @apiUse SuccessDeleteMessage
      **/
     router.put('/delete', function (req, res) {
+        if (!req.body.username) {
+            return messages.ErrorBadRequest(res);
+        }
         if (req.body.username == 'berni') {
            return messages.ErrorUserNichtLoeschbar(res);
         }

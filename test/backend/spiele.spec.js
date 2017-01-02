@@ -109,6 +109,42 @@ describe('Route: Spiele', function () {
             });
     });
 
+    it('wenn die Gruppe ungültig ist, soll ein Fehler geworfen werden', function (done) {
+        var spiel = {
+            jugend: jugendid
+        };
+        request(server)
+            .post('/api/spiele')
+            .send(spiel)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('wenn die Jugend ungültig ist, soll ein Fehler geworfen werden', function (done) {
+        var spiel = {
+            gruppe: gruppenid
+        };
+        request(server)
+            .post('/api/spiele')
+            .send(spiel)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('soll ein Spiel speichern können', function (done) {
         var spiel = {
             jugend: jugendid,
@@ -131,6 +167,21 @@ describe('Route: Spiele', function () {
                     expect(res).to.have.lengthOf(10);
                     return done();
                 });
+            });
+    });
+
+    it('wenn keine Spielid zum Löschen gesendet wird, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .del('/api/spiele?id=')
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
             });
     });
 
@@ -190,6 +241,21 @@ describe('Route: Spiele', function () {
                     expect(res).to.have.lengthOf(9);
                     return done();
                 });
+            });
+    });
+
+    it('wenn keine Spielid zum Zurücksetzen gesendet wird, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .del('/api/spiele/tore?id=')
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
             });
     });
 

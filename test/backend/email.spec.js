@@ -42,6 +42,42 @@ describe('Route: Email', function () {
             });
     });
 
+    it('Bei leerem Betreff soll ein Fehler geworfen werden', function (done) {
+        var email = {
+            text: 'Test-Email Text'
+        };
+        request(server)
+            .post('/api/email/')
+            .send(email)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('Bei leerem Text soll ein Fehler geworfen werden', function (done) {
+        var email = {
+            betreff: 'Test-Email Betreff'
+        };
+        request(server)
+            .post('/api/email/')
+            .send(email)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('Sendet eine Email an alle Abonennten', function (done) {
         var email = {
             subject: 'Betreff',

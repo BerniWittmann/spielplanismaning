@@ -63,6 +63,8 @@ module.exports = function () {
      * @apiUse vResponse
      * @apiPermission Admin
      *
+     * @apiUse ErrorBadRequest
+     *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     {
@@ -76,6 +78,9 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
+        if (!req.body.name) {
+            return messages.ErrorBadRequest(res);
+        }
         var jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
@@ -118,32 +123,46 @@ module.exports = function () {
      * @apiGroup Jugend
      * @apiPermission Admin
      *
+     * @apiUse ErrorBadRequest
+     *
      * @apiParam {String} id ID der Jugend.
      *
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        Team.remove({
-            "jugend": req.query.id
-        }, function (err) {
+        if (!req.query.id) {
+            return messages.ErrorBadRequest(res);
+        }
+        Jugend.findById(req.query.id, function (err, jgd) {
+            if (!jgd) {
+                return messages.ErrorBadRequest(res);
+            }
             if (err) {
                 return messages.Error(res, err);
             }
 
-            Gruppe.remove({
+            Team.remove({
                 "jugend": req.query.id
             }, function (err) {
                 if (err) {
                     return messages.Error(res, err);
                 }
 
-                Jugend.remove({
-                    "_id": req.query.id
+                Gruppe.remove({
+                    "jugend": req.query.id
                 }, function (err) {
                     if (err) {
                         return messages.Error(res, err);
                     }
-                    return messages.Deleted(res);
+
+                    Jugend.remove({
+                        "_id": req.query.id
+                    }, function (err) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
+                        return messages.Deleted(res);
+                    });
                 });
             });
         });

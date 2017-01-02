@@ -91,16 +91,21 @@ module.exports = function () {
      *
      * @apiUse ErrorMaxZahlGruppe
      * @apiPermission Admin
+     *
+     * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        var gruppe = new Gruppe(req.body);
-        if (!req.query.jugend) {
+        if (!req.query.jugend || !req.body.name) {
             return messages.ErrorBadRequest(res);
         }
+        var gruppe = new Gruppe(req.body);
         gruppe.jugend = req.query.jugend;
         var query = Jugend.findById(gruppe.jugend);
 
         query.exec(function (err, jugend) {
+            if(!jugend) {
+                return messages.ErrorBadRequest(res);
+            }
             if (jugend.gruppen.length >= 4) {
                 return messages.ErrorMaxZahlGruppe(res);
             } else {
@@ -132,15 +137,23 @@ module.exports = function () {
      *
      * @apiUse SuccessMessage
      * @apiPermission Admin
+     *
+     * @apiUse ErrorBadRequest
+     * @apiUse ErrorGruppeNotFound
      **/
     router.delete('/', function (req, res) {
         if (!req.query.id) {
             return messages.ErrorBadRequest(res);
         }
         Gruppe.findById(req.query.id, function (err, gruppe) {
+            if(!gruppe) {
+                return messages.ErrorGruppeNotFound(res, err);
+            }
+
             if (err) {
                 return messages.Error(res, err);
             }
+
             Jugend.findById(gruppe.jugend, function (err, jugend) {
                 if (err) {
                     return messages.Error(res, err);

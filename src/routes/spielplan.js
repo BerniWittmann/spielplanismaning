@@ -74,8 +74,13 @@ module.exports = function () {
      * @apiPermission Admin
      *
      * @apiUse SuccessMessage
+     *
+     * @apiUse ErrorBadRequest
      **/
     router.put('/zeiten', function (req, res) {
+        if (!req.body.startzeit || !req.body.spielzeit || !req.body.pausenzeit) {
+            return messages.ErrorBadRequest(res);
+        }
         Spielplan.findOneAndUpdate({}, req.body, {
             upsert: true
         }, function (err) {

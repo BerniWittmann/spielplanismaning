@@ -61,8 +61,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      * @apiUse spielResponse
      *
+     * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
+        if (!req.body.jugend || !req.body.gruppe) {
+            return messages.ErrorBadRequest(res);
+        }
         var spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
         spiel.gruppe = req.body.gruppe;
@@ -86,8 +90,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiParam {String} id ID des Spiels.
      *
      * @apiUse SuccessDeleteMessage
+     *
+     * @apiUse ErrorBadRequest
      **/
     router.delete('/', function (req, res) {
+        if (!req.query.id) {
+            return messages.ErrorBadRequest(res);
+        }
         Spiel.remove({
             "_id": req.query.id
         }, function (err) {
@@ -153,6 +162,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiParam {String} id ID des Spiels
      *
      * @apiUse spielResponse
+     *
+     * @apiUse ErrorBadRequest
      **/
     router.delete('/tore', function (req, res) {
         if (!req.query.id) {
@@ -213,6 +224,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiParam {String} id ID des Spiels
      *
      * @apiUse spielResponse
+     *
+     * @apiUse ErrorBadRequest
      *
      **/
     router.put('/tore', function (req, res) {

@@ -34,6 +34,66 @@ describe('Route: Spielplan', function () {
             });
     });
 
+    it('wenn keine Startzeit angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        var spielplan = {
+            spielzeit: 6,
+            pausenzeit: 4
+        };
+        request(server)
+            .put('/api/spielplan/zeiten')
+            .set('Authorization', server.adminToken)
+            .send(spielplan)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('wenn keine Spielzeit angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        var spielplan = {
+            startzeit: '10:00',
+            pausenzeit: 4
+        };
+        request(server)
+            .put('/api/spielplan/zeiten')
+            .set('Authorization', server.adminToken)
+            .send(spielplan)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('wenn keine Pausenzeit angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        var spielplan = {
+            startzeit: '10:00',
+            spielzeit: 6
+        };
+        request(server)
+            .put('/api/spielplan/zeiten')
+            .set('Authorization', server.adminToken)
+            .send(spielplan)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('soll die Zeiten updaten können', function (done) {
         var spielplan = {
             startzeit: '10:00',

@@ -71,8 +71,8 @@ module.exports = function () {
                 return roles.split(' ');
             }
 
-            return []
+            return [];
         },
         routes: arr
-    }
+    };
 };

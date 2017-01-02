@@ -82,6 +82,23 @@ describe('Route: Teams', function () {
             });
     });
 
+    it('wenn beim Hinzufügen kein Name angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        var neuesTeam = {};
+        request(server)
+            .post('/api/teams?jugend=' + jugendid + '&gruppe=' + gruppeid)
+            .send(neuesTeam)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('soll ein Team hinzufügen können', function (done) {
         var neuesTeam = {
             name: 'FC Bayern München'
@@ -107,6 +124,25 @@ describe('Route: Teams', function () {
             });
     });
 
+    it('wenn bei der Aktualisierung keine ID angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        var reqbody = {
+            name: 'Neuer Name'
+        };
+        request(server)
+            .put('/api/teams?id=')
+            .send(reqbody)
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
     it('soll den Namen eines Teams aktualisieren können', function (done) {
         var reqbody = {
             name: 'Neuer Name'
@@ -128,6 +164,21 @@ describe('Route: Teams', function () {
                     expect(res.name).to.be.equal(reqbody.name);
                     return done();
                 });
+            });
+    });
+
+    it('wenn beim Löschen keine ID angegeben wird, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .del('/api/teams?id=')
+            .set('Authorization', server.adminToken)
+            .expect(400)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                return done();
             });
     });
 
