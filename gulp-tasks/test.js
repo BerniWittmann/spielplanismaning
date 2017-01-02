@@ -14,7 +14,7 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('test:travis', function (done) {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'jshint', done);
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', done);
 });
 
 gulp.task('test:watch', function (done) {
