@@ -90,6 +90,7 @@ module.exports = function () {
      *     }]
      *
      * @apiUse ErrorMaxZahlGruppe
+     * @apiPermission Admin
      **/
     router.post('/', function (req, res) {
         var gruppe = new Gruppe(req.body);
@@ -130,6 +131,7 @@ module.exports = function () {
      * @apiParam {String} id ID der Gruppe.
      *
      * @apiUse SuccessMessage
+     * @apiPermission Admin
      **/
     router.delete('/', function (req, res) {
         if (!req.query.id) {

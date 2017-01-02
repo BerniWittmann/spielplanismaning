@@ -23,7 +23,7 @@ describe('Route: Gruppen', function () {
     });
 
     it('soll alle Gruppen laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/gruppen/')
             .expect(200)
             .set('Accept', 'application/json')
@@ -41,7 +41,7 @@ describe('Route: Gruppen', function () {
     });
 
     it('soll eine einzelne Gruppe laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/gruppen?id=' + gruppeid)
             .expect(200)
             .set('Accept', 'application/json')
@@ -59,7 +59,7 @@ describe('Route: Gruppen', function () {
     });
 
     it('soll die Gruppen einer Jugend laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/gruppen?jugend=' + jugendid)
             .expect(200)
             .set('Accept', 'application/json')
@@ -83,7 +83,7 @@ describe('Route: Gruppen', function () {
         var gruppe = {
             name: 'Neue Gruppe'
         };
-        return request(server)
+        request(server)
             .post('/api/gruppen?jugend=' + jugendid.toString())
             .send(gruppe)
             .set('Authorization', server.adminToken)
@@ -111,7 +111,7 @@ describe('Route: Gruppen', function () {
         var gruppe = {
             name: 'Gruppe D'
         };
-        return request(server)
+        request(server)
             .post('/api/gruppen?jugend=' + jugendid.toString())
             .set('Authorization', server.adminToken)
             .send(gruppe)
@@ -141,7 +141,7 @@ describe('Route: Gruppen', function () {
     });
 
     it('soll eine Gruppe löschen können und die Teams mitlöschen', function (done) {
-        return request(server)
+        request(server)
             .post('/api/teams?jugend=' + neueGruppeJugend + '&gruppe=' + neueGruppeId)
             .send({name: 'Test Team'})
             .set('Authorization', server.adminToken)

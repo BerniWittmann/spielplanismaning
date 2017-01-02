@@ -15,6 +15,8 @@ module.exports = function () {
      * @apiDescription Registriert einen neuen Benutzer
      * @apiGroup Users
      *
+     * @apiPermission Admin
+     *
      * @apiUse ErrorUnbekannteRolle
      *
      * @apiUse ErrorFehlendeFelder
@@ -88,6 +90,7 @@ module.exports = function () {
      * @apiName UserDelete
      * @apiDescription Löscht einen Benutzer
      * @apiGroup Users
+     * @apiPermission Admin
      *
      * @apiUse ErrorUserNotFound
      *

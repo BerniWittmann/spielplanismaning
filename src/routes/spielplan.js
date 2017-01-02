@@ -51,6 +51,7 @@ module.exports = function () {
      * @apiName PutSpielplan
      * @apiDescription Generiert den Spielplan
      * @apiGroup Spielplan
+     * @apiPermission Admin
      *
      * @apiUse SpielplanErstelltMessage
      **/
@@ -70,6 +71,7 @@ module.exports = function () {
      * @apiName PutSpielplanZeiten
      * @apiDescription Updatet die Spielplan-Zeiten
      * @apiGroup Spielplan
+     * @apiPermission Admin
      *
      * @apiUse SuccessMessage
      **/
@@ -108,6 +110,7 @@ module.exports = function () {
      * @apiName PutSpielplanAusnahmen
      * @apiDescription Updatet die Spielplan-Ausnahmen
      * @apiGroup Spielplan
+     * @apiPermission Admin
      *
      * @apiSuccess {String} _id ID der Ausnahme
      * @apiSuccess {Object} team1 Team-Object des ersten Teams
@@ -146,6 +149,7 @@ module.exports = function () {
      * @apiName GetSpielplanAusnahmen
      * @apiDescription Lädt die Spielplan-Ausnahmen
      * @apiGroup Spielplan
+     * @apiPermission Admin
      *
      * @apiSuccess {String} _id ID der Ausnahme
      * @apiSuccess {Object} team1 Team-Object des ersten Teams

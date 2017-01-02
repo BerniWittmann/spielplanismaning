@@ -30,7 +30,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll alle Spiele laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spiele/')
             .expect(200)
             .set('Accept', 'application/json')
@@ -44,7 +44,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll ein einzelnes Spiel laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spiele?id=' + spielid)
             .expect(200)
             .set('Accept', 'application/json')
@@ -61,7 +61,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll die Spiele einer Gruppe laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spiele?gruppe=' + gruppenid)
             .expect(200)
             .set('Accept', 'application/json')
@@ -77,7 +77,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll die Spiele einer Jugend laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spiele?jugend=' + jugendid)
             .expect(200)
             .set('Accept', 'application/json')
@@ -93,7 +93,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll die Spiele eines Teams laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spiele?team=' + teamid)
             .expect(200)
             .set('Accept', 'application/json')
@@ -114,7 +114,7 @@ describe('Route: Spiele', function () {
             jugend: jugendid,
             gruppe: gruppenid
         };
-        return request(server)
+        request(server)
             .post('/api/spiele')
             .send(spiel)
             .set('Authorization', server.adminToken)
@@ -135,7 +135,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll ein Spiel löschen können', function (done) {
-        return request(server)
+        request(server)
             .del('/api/spiele?id=' + neuesSpielid)
             .set('Authorization', server.adminToken)
             .expect(200)
@@ -155,7 +155,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll alle Spiele löschen können', function (done) {
-        return request(server)
+        request(server)
             .del('/api/spiele/alle')
             .set('Authorization', server.adminToken)
             .expect(200)
@@ -174,7 +174,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll alle Spiele speichern können', function (done) {
-        return request(server)
+        request(server)
             .put('/api/spiele/alle')
             .set('Authorization', server.adminToken)
             .send(alleSpiele)
@@ -194,7 +194,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll die Tore zurücksetzen können', function (done) {
-        return request(server)
+        request(server)
             .del('/api/spiele/tore?id=' + spielid)
             .set('Authorization', server.adminToken)
             .expect(200)
@@ -221,7 +221,7 @@ describe('Route: Spiele', function () {
     });
 
     it('soll das Ergebnis speichern', function (done) {
-        return request(server)
+        request(server)
             .put('/api/spiele/tore?id=' + spielid)
             .set('Authorization', server.adminToken)
             .send({toreA: 5, toreB: 8})
@@ -239,7 +239,7 @@ describe('Route: Spiele', function () {
                 return done();
             });
     });
-    
+
     after(function (done) {
         server.disconnectDB(done);
     });

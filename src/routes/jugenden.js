@@ -61,6 +61,7 @@ module.exports = function () {
      * @apiSuccess {Array} grupppen Gruppen der Jugend
      * @apiSuccess {Array} teams Teams der Jugend
      * @apiUse vResponse
+     * @apiPermission Admin
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -115,6 +116,7 @@ module.exports = function () {
      * @apiName DeleteJugend
      * @apiDescription Löscht eine Jugend
      * @apiGroup Jugend
+     * @apiPermission Admin
      *
      * @apiParam {String} id ID der Jugend.
      *

@@ -41,7 +41,7 @@ describe('API Authorization', function () {
     var ALL_ROLES = ['admin', 'bearbeiter'];
 
     before(function (done) {
-        return server.connectDB(function (err) {
+        server.connectDB(function (err) {
             if (err) throw err;
 
             async.parallel([
@@ -51,7 +51,7 @@ describe('API Authorization', function () {
                         user.setRole(userData.role);
                         user.setPassword(userData.password);
 
-                        return user.save(function (err) {
+                        user.save(function (err) {
                             if (err) {
                                 throw err;
                             }
@@ -67,7 +67,7 @@ describe('API Authorization', function () {
                         user2.setRole(user2Data.role);
                         user2.setPassword(user2Data.password);
 
-                        return user2.save(function (err) {
+                        user2.save(function (err) {
                             if (err) {
                                 throw err;
                             }
@@ -87,7 +87,7 @@ describe('API Authorization', function () {
 
     describe('API Authorization: Es wird keine bestimmte Rolle benötigt', function () {
         it('Der Request soll ausgeführt werden', function (done) {
-            return request(server)
+            request(server)
                 .get('/api/teams/')
                 .set('Authorization', token)
                 .expect(200)
@@ -102,7 +102,7 @@ describe('API Authorization', function () {
 
     describe('API Authorization: Es wird eine bestimmte Rolle benötigt', function () {
         it('wenn kein Token vorhanden ist soll, ein Fehler gemeldet werden', function (done) {
-            return request(server)
+            request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .expect(401)
@@ -116,7 +116,7 @@ describe('API Authorization', function () {
         });
 
         it('wenn ein falscher Token vorhanden ist, soll ein Fehler gemeldet werden', function (done) {
-            return request(server)
+            request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .set('Authorization', jwt.sign(exampleTokenPayload, 'FALSESECRET'))
@@ -131,7 +131,7 @@ describe('API Authorization', function () {
         });
 
         it('wenn der Nutzer nicht in der Datenbank vorhanden ist, soll ein Fehler gemeldet werden', function (done) {
-            return request(server)
+            request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .set('Authorization', jwt.sign(exampleTokenPayload, 'TEST-SECRET'))
@@ -147,7 +147,7 @@ describe('API Authorization', function () {
 
         it('wenn die Rollen nicht übereinstimmen, soll ein Fehler gemeldet werden', function (done) {
             exampleTokenPayload.username = userData.username;
-            return request(server)
+            request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .set('Authorization', jwt.sign(exampleTokenPayload, 'TEST-SECRET'))
@@ -162,7 +162,7 @@ describe('API Authorization', function () {
         });
 
         it('wenn der Nutzer nicht die passende Rolle hat, soll ein Fehler gemeldet werden', function (done) {
-            return request(server)
+            request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .set('Authorization', server.bearbeiterToken)
@@ -177,7 +177,7 @@ describe('API Authorization', function () {
         });
 
         it('wenn der Nutzer eine passende Rolle hat, soll der Request ausgeführt werden', function (done) {
-            return request(server)
+            request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .set('Authorization', server.adminToken)
@@ -218,7 +218,7 @@ describe('API Authorization', function () {
                         var roles = authUtil.getRequiredRoles(routeKey, method);
                         var otherRoles = _.difference(ALL_ROLES, roles);
                         it(method + ' ' + routeKey + ': sollte ohne Authorisierung nicht zugänglich sein', function (done) {
-                            return getRequestByMethod(method, routeKey)
+                            getRequestByMethod(method, routeKey)
                                 .end(function (err, response) {
                                     if (err) return done(err);
                                     expect(response).not.to.be.undefined;
@@ -230,7 +230,7 @@ describe('API Authorization', function () {
 
                         _.forEach(otherRoles, function (falseRole) {
                             it(method + ' ' + routeKey + ': sollte für ' + falseRole + ' nicht zugänglich sein', function (done) {
-                                return getRequestByMethod(method, routeKey)
+                                getRequestByMethod(method, routeKey)
                                     .set('Authorization', roleTokens[falseRole])
                                     .end(function (err, response) {
                                         if (err) return done(err);
@@ -244,7 +244,7 @@ describe('API Authorization', function () {
 
                         _.forEach(roles, function (role) {
                             it(method + ' ' + routeKey + ': sollte für ' + role + ' zugänglich sein', function (done) {
-                                return getRequestByMethod(method, routeKey)
+                                getRequestByMethod(method, routeKey)
                                     .set('Authorization', roleTokens[role])
                                     .end(function (err, response) {
                                         if (err) return done(err);

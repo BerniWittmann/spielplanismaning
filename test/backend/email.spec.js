@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 describe('Route: Email', function () {
     var teamid;
     before(function (done) {
-        return server.connectDB(function (err) {
+        server.connectDB(function (err) {
             if (err) throw err;
             return mongoose.model('Team').find({name: 'Team AA 1'}).exec(function (err, res) {
                 if (err) throw err;
@@ -22,7 +22,7 @@ describe('Route: Email', function () {
             email: 'test@t.de',
             team: teamid
         };
-        return request(server)
+        request(server)
             .post('/api/email/subscriber')
             .send(abonnement)
             .expect(200)
@@ -47,7 +47,7 @@ describe('Route: Email', function () {
             subject: 'Betreff',
             text: 'Test-Email Text'
         };
-        return request(server)
+        request(server)
             .post('/api/email/')
             .send(email)
             .set('Authorization', server.adminToken)
@@ -61,7 +61,7 @@ describe('Route: Email', function () {
     });
 
     it('soll die Abonnenten laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/email/subscriber')
             .set('Authorization', server.adminToken)
             .expect(200)
@@ -76,7 +76,7 @@ describe('Route: Email', function () {
     });
 
     it('soll Abonnenten löschen können', function (done) {
-        return request(server)
+        request(server)
             .del('/api/email/subscriber?email=test@t.de&team=' + teamid)
             .expect(200)
             .end(function (err, response) {

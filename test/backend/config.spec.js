@@ -10,7 +10,7 @@ var server = require('./testserver.js')(env);
 describe('Route: Config', function () {
 
     it('gibt die richtige Versionsnummer zurück', function (done) {
-        return request(server).get('/api/config/version').end(function (err, response) {
+        request(server).get('/api/config/version').end(function (err, response) {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
@@ -20,7 +20,7 @@ describe('Route: Config', function () {
     });
 
     it('gibt den Lockdownmode zurück', function (done) {
-        return request(server).get('/api/config/lockdownmode').end(function (err, response) {
+        request(server).get('/api/config/lockdownmode').end(function (err, response) {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
@@ -30,7 +30,7 @@ describe('Route: Config', function () {
     });
 
     it('gibt die Umgebung zurück', function (done) {
-        return request(server).get('/api/config/env').end(function (err, response) {
+        request(server).get('/api/config/env').end(function (err, response) {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
@@ -40,7 +40,7 @@ describe('Route: Config', function () {
     });
 
     it('gibt die Kontaktangaben zurück', function (done) {
-        return request(server).get('/api/config/kontakt').end(function (err, response) {
+        request(server).get('/api/config/kontakt').end(function (err, response) {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);

@@ -67,6 +67,7 @@ module.exports = function () {
      * @apiName DeleteTeams
      * @apiDescription Löscht ein Team
      * @apiGroup Teams
+     * @apiPermission Admin
      *
      * @apiParam {String} id ID des Teams.
      *
@@ -125,6 +126,7 @@ module.exports = function () {
      * @apiSuccess {Integer} punkte Anzahl Punkte des Teams
      * @apiSuccess {Integer} gpunkte Anzahl Gegenpunkte des Teams
      * @apiUse vResponse
+     * @apiPermission Admin
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -211,6 +213,8 @@ module.exports = function () {
      * @apiSuccess {Integer} gpunkte Anzahl Gegenpunkte des Teams
      * @apiUse vResponse
      *
+     * @apiPermission Admin
+     *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     [{
@@ -246,6 +250,8 @@ module.exports = function () {
      * @apiName ResetTeamErgebnis
      * @apiDescription Setzt die Ergebnisse aller Teams zurück
      * @apiGroup Teams
+     *
+     * @apiPermission Admin
      *
      * @apiUse ResetMessage
      **/

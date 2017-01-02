@@ -15,7 +15,7 @@ describe('Route: Jugenden', function () {
     });
 
     it('soll alle Jugenden laden können', function (done) {
-        return request(server)
+       request(server)
             .get('/api/jugenden/')
             .expect(200)
             .set('Accept', 'application/json')
@@ -30,7 +30,7 @@ describe('Route: Jugenden', function () {
     });
 
     it('soll eine einzelne Jugend laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/jugenden?id=' + jugendid.toString())
             .expect(200)
             .set('Accept', 'application/json')
@@ -48,7 +48,7 @@ describe('Route: Jugenden', function () {
         var jugend = {
             name: 'Neue Jugend'
         };
-        return request(server)
+        request(server)
             .post('/api/jugenden')
             .send(jugend)
             .expect(200)
@@ -72,7 +72,7 @@ describe('Route: Jugenden', function () {
     });
 
     it('soll die Gesamtzahl der Tore laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/jugenden/tore')
             .expect(200)
             .end(function (err, response) {
@@ -85,7 +85,7 @@ describe('Route: Jugenden', function () {
     });
 
     it('soll die Tore für eine einzelne Jugend laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/jugenden/tore?id=' + jugendid.toString())
             .expect(200)
             .end(function (err, response) {
@@ -102,7 +102,7 @@ describe('Route: Jugenden', function () {
         mongoose.model('Gruppe').find().exec(function (err, res) {
             if (err) throw err;
             anzahlGruppenVorher = res.length;
-            return request(server)
+            request(server)
                 .del('/api/jugenden?id=' + neueJugendid)
                 .expect(200)
                 .set('Authorization', server.adminToken)

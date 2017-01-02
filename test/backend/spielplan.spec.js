@@ -15,7 +15,7 @@ describe('Route: Spielplan', function () {
     });
 
     it('soll den Spielplan laden können', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spielplan/')
             .expect(200)
             .set('Accept', 'application/json')
@@ -40,7 +40,7 @@ describe('Route: Spielplan', function () {
             spielzeit: 6,
             pausenzeit: 4
         };
-        return request(server)
+        request(server)
             .put('/api/spielplan/zeiten')
             .set('Authorization', server.adminToken)
             .send(spielplan)
@@ -62,7 +62,7 @@ describe('Route: Spielplan', function () {
     });
 
     it('soll die Ausnahmen speichern', function (done) {
-        return request(server)
+        request(server)
             .put('/api/spielplan/ausnahmen')
             .send(ausnahme)
             .set('Authorization', server.adminToken)
@@ -82,7 +82,7 @@ describe('Route: Spielplan', function () {
     });
 
     it('soll die Ausnahmen laden', function (done) {
-        return request(server)
+        request(server)
             .get('/api/spielplan/ausnahmen')
             .set('Authorization', server.adminToken)
             .expect(200)
@@ -98,7 +98,7 @@ describe('Route: Spielplan', function () {
     });
 
     it('soll den Spielplan generieren', function (done) {
-        return request(server)
+        request(server)
             .put('/api/spielplan')
             .set('Authorization', server.adminToken)
             .expect(200)

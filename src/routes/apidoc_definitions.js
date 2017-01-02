@@ -69,3 +69,18 @@
  *         toreA: 4
  *     }
  */
+
+/**
+ * @apiDefine Admin Admin
+ * Für diese Funktion braucht man Admin-Rechte.
+ */
+
+/**
+ * @apiDefine Bearbeiter Bearbeiter
+ * Für diese Funktion braucht man Bearbeiter-Rechte.
+ */
+
+/**
+ * @apiDefine Admin_Bearbeiter Admin | Bearbeiter
+ * Für diese Funktion braucht man entweder Admin- oder Bearbeiter-Rechte.
+ */

@@ -19,8 +19,9 @@ describe('Route: Users', function () {
     };
 
     it('soll einen Nutzer registrieren können', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/register')
+            .set('Authorization', server.adminToken)
             .send(user)
             .expect(200)
             .set('Accept', 'application/json')
@@ -41,8 +42,9 @@ describe('Route: Users', function () {
     });
 
     it('soll einen Fehler zurückgeben bei fehlenden Feldern', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/register')
+            .set('Authorization', server.adminToken)
             .send({username: 'test'})
             .expect(400)
             .end(function (err, res) {
@@ -53,8 +55,9 @@ describe('Route: Users', function () {
     });
 
     it('soll keine doppelten Nutzernamen geben', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/register')
+            .set('Authorization', server.adminToken)
             .send({username: 'test-user', password: 'neuesPW', role: 'Bearbeiter'})
             .expect(500)
             .end(function (err, res) {
@@ -66,7 +69,7 @@ describe('Route: Users', function () {
     });
 
     it('soll einen Nutzer einloggen können', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/login')
             .send(user)
             .expect(200)
@@ -78,7 +81,7 @@ describe('Route: Users', function () {
     });
 
     it('Bei Fehlenden Feldern soll eine Meldung zurückgegeben werden', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/login')
             .send({})
             .expect(400)
@@ -90,7 +93,7 @@ describe('Route: Users', function () {
     });
 
     it('soll einen Fehler liefern, bei falschem Passwort', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/login')
             .send({username: 'test-user', password: 'bruteforce'})
             .expect(401)
@@ -102,7 +105,7 @@ describe('Route: Users', function () {
     });
 
     it('soll einen Fehler liefern, bei falschem Nutzernamen', function (done) {
-        return request(server)
+        request(server)
             .post('/api/users/login')
             .send({username: 'test-user2', password: 'bruteforce'})
             .expect(401)
@@ -114,7 +117,7 @@ describe('Route: Users', function () {
     });
 
     it('soll einen Nutzer löschen können', function (done) {
-        return request(server)
+        request(server)
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'test-user'})
@@ -131,7 +134,7 @@ describe('Route: Users', function () {
     });
 
     it('Bei falschem Nutzername soll ein Fehler geliefert werden', function (done) {
-        return request(server)
+        request(server)
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'tippfehler'})
@@ -145,7 +148,7 @@ describe('Route: Users', function () {
     });
 
     it('Der Nutzername berni soll nicht gelöscht werden können', function (done) {
-        return request(server)
+        request(server)
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'berni'})

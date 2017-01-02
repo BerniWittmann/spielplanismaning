@@ -37,6 +37,7 @@ module.exports = function () {
             PUT: ['admin']
         },
         '/api/spielplan/ausnahmen': ['admin'],
+        '/api/users/register': ['admin'],
         '/api/users/delete': ['admin']
     };
 

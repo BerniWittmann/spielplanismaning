@@ -57,6 +57,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName CreateSpiel
      * @apiDescription Speichert ein Spiel
      * @apiGroup Spiele
+     * @apiPermission Admin
      *
      * @apiUse spielResponse
      *
@@ -80,6 +81,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName DeleteSpiel
      * @apiDescription Löscht ein Spiel
      * @apiGroup Spiele
+     * @apiPermission Admin
      *
      * @apiParam {String} id ID des Spiels.
      *
@@ -102,12 +104,14 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName UpdateSpiele
      * @apiDescription Speichert alle Spiele
      * @apiGroup Spiele
-     * TODO Entweder kann das gelöscht werden, oder es kommt später wieder zum Einsatz z.B: beim Verschieben der Spiele
+     *
+     * @apiPermission Admin
      *
      * @apiUse SpielplanErstelltMessage
      *
      **/
     router.put('/alle', function (req, res) {
+        //TODO Entweder kann das gelöscht werden, oder es kommt später wieder zum Einsatz z.B: beim Verschieben der Spiele
         var spiele = req.body;
         async.eachSeries(spiele, function (singlespiel, asyncdone) {
             var spiel = new Spiel(singlespiel);
@@ -125,6 +129,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName DeleteAlleSpiel
      * @apiDescription Löscht alle Spiele
      * @apiGroup Spiele
+     * @apiPermission Admin
      *
      * @apiUse SuccessDeleteMessage
      **/
@@ -143,6 +148,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName DeleteSpielErgebnis
      * @apiDescription Löscht die Ergebnisse eines Spiels
      * @apiGroup Spiele
+     * @apiPermission Admin_Bearbeiter
      *
      * @apiParam {String} id ID des Spiels
      *
@@ -202,6 +208,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName UpdateSpielErgebnis
      * @apiDescription Speichert das Ergebnis eines Spiels
      * @apiGroup Spiele
+     * @apiPermission Admin_Bearbeiter
      *
      * @apiParam {String} id ID des Spiels
      *

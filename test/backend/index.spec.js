@@ -5,7 +5,7 @@ var server = require('./testserver.js')(env);
 
 describe('Route: Index', function () {
     it('soll die index.html rendern', function (done) {
-        return request(server)
+        request(server)
             .get('/')
             .expect(200)
             .set('Accept', 'text/html')

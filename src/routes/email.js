@@ -12,6 +12,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiName SendEmail
      * @apiDescription Sendet eine Email an alle Abonnenten
      * @apiGroup Email
+     * @apiPermission Admin
      *
      * @apiParam {String} subject  Betreff der Email.
      * @apiParam {String} text     Text der Email.
@@ -107,6 +108,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiSuccess {String} email Email-Adresse des Abonnenten.
      * @apiUse TeamObject
      * @apiUse vResponse
+     * @apiPermission Admin
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
