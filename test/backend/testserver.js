@@ -40,7 +40,7 @@ module.exports = function (env) {
         require('./../../src/models/Subscriber');
     }
     if (!mongoose.models.User) {
-        require('./../../src/models/Users')((process.env.SECRET || 'SECRET'));
+        require('./../../src/models/Users')(process.env.SECRET);
     }
     require('../../src/config/passport');
 
@@ -61,6 +61,8 @@ module.exports = function (env) {
     app.set('views', homepath + '/src/views');
     app.set('view engine', 'ejs');
 
+    require('../../src/routes/authorization/authorization.js')(app, process.env.SECRET);
+
     app.use('/api/users', users);
     app.use('/api/email', email);
     app.use('/api/gruppen', gruppen);
@@ -75,6 +77,9 @@ module.exports = function (env) {
 
     app.connectDB = databaseSetup.connect;
     app.disconnectDB = databaseSetup.disconnect;
+
+    app.adminToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjoxNDg4NTMyNzY5LCJpYXQiOjE0ODMzNDg3Njl9.wKVynI6UdrerA5HJIjUquk2gVSsoNp3kcJKRNaq4YuY';
+    app.bearbeiterToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODZhMWIzZjU0YzI2MGJlOTE4ZTliYTgiLCJ1c2VybmFtZSI6InRlc3QtdXNlciIsInJvbGUiOnsicmFuayI6MCwibmFtZSI6IkJlYXJiZWl0ZXIifSwiZXhwIjoxNDg4NTMyNzk5LCJpYXQiOjE0ODMzNDg3OTl9.z8NKmUon1DXz8TCLBM2QW8vTpkddC2i4mXUKK1FAK6c';
 
     return app;
 };

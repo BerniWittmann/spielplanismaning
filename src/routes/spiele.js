@@ -149,6 +149,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.delete('/tore', function (req, res) {
+        if (!req.query.id) {
+            return messages.ErrorBadRequest(res);
+        }
         var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
@@ -206,6 +209,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
+        if (!req.query.id) {
+            return messages.ErrorBadRequest(res);
+        }
         var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {

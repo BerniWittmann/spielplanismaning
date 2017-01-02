@@ -117,6 +117,7 @@ describe('Route: Spiele', function () {
         return request(server)
             .post('/api/spiele')
             .send(spiel)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -136,6 +137,7 @@ describe('Route: Spiele', function () {
     it('soll ein Spiel löschen können', function (done) {
         return request(server)
             .del('/api/spiele?id=' + neuesSpielid)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -155,6 +157,7 @@ describe('Route: Spiele', function () {
     it('soll alle Spiele löschen können', function (done) {
         return request(server)
             .del('/api/spiele/alle')
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -173,6 +176,7 @@ describe('Route: Spiele', function () {
     it('soll alle Spiele speichern können', function (done) {
         return request(server)
             .put('/api/spiele/alle')
+            .set('Authorization', server.adminToken)
             .send(alleSpiele)
             .expect(200)
             .set('Accept', 'application/json')
@@ -192,6 +196,7 @@ describe('Route: Spiele', function () {
     it('soll die Tore zurücksetzen können', function (done) {
         return request(server)
             .del('/api/spiele/tore?id=' + spielid)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -218,6 +223,7 @@ describe('Route: Spiele', function () {
     it('soll das Ergebnis speichern', function (done) {
         return request(server)
             .put('/api/spiele/tore?id=' + spielid)
+            .set('Authorization', server.adminToken)
             .send({toreA: 5, toreB: 8})
             .expect(200)
             .set('Accept', 'application/json')

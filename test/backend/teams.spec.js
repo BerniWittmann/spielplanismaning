@@ -89,6 +89,7 @@ describe('Route: Teams', function () {
         return request(server)
             .post('/api/teams?jugend=' + jugendid + '&gruppe=' + gruppeid)
             .send(neuesTeam)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -113,6 +114,7 @@ describe('Route: Teams', function () {
         return request(server)
             .put('/api/teams?id=' + neuesTeamid)
             .send(reqbody)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -132,6 +134,7 @@ describe('Route: Teams', function () {
     it('soll ein Team löschen', function (done) {
         return request(server)
             .del('/api/teams?id=' + neuesTeamid)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -155,6 +158,7 @@ describe('Route: Teams', function () {
     it('soll die Ergebnisse aller Teams zurücksetzen', function (done) {
         return request(server)
             .put('/api/teams/resetErgebnisse')
+            .set('Authorization', server.adminToken)
             .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {

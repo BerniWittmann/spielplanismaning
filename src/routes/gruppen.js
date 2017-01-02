@@ -93,6 +93,9 @@ module.exports = function () {
      **/
     router.post('/', function (req, res) {
         var gruppe = new Gruppe(req.body);
+        if (!req.query.jugend) {
+            return messages.ErrorBadRequest(res);
+        }
         gruppe.jugend = req.query.jugend;
         var query = Jugend.findById(gruppe.jugend);
 
@@ -129,6 +132,9 @@ module.exports = function () {
      * @apiUse SuccessMessage
      **/
     router.delete('/', function (req, res) {
+        if (!req.query.id) {
+            return messages.ErrorBadRequest(res);
+        }
         Gruppe.findById(req.query.id, function (err, gruppe) {
             if (err) {
                 return messages.Error(res, err);

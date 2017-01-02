@@ -30,9 +30,15 @@ describe('Route: Email', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body.email).to.be.equal('test@t.de');
+                expect(response.body.email).to.be.equal(abonnement.email);
                 expect(response.body._id).to.exist;
-                return done();
+                return mongoose.model('Subscriber').findOne({email: abonnement.email}).exec(function (err, res) {
+                    if (err) return done(err);
+
+                    expect(res).not.to.be.undefined;
+                    expect(res.email).to.be.equal(abonnement.email);
+                    return done();
+                });
             });
     });
 
@@ -44,6 +50,7 @@ describe('Route: Email', function () {
         return request(server)
             .post('/api/email/')
             .send(email)
+            .set('Authorization', server.adminToken)
             .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
@@ -56,6 +63,7 @@ describe('Route: Email', function () {
     it('soll die Abonnenten laden', function (done) {
         return request(server)
             .get('/api/email/subscriber')
+            .set('Authorization', server.adminToken)
             .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);

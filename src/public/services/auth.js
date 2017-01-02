@@ -2,23 +2,19 @@
     'use strict';
 
     angular
-        .module('spi.auth', []).factory('auth', ['$http', '$state', '$window', '$q', '$timeout', 'Logger', function ($http,
-                                                                                                                     $state,
-                                                                                                                     $window,
-                                                                                                                     $q,
-                                                                                                                     $timeout,
-                                                                                                                     Logger) {
+        .module('spi.auth', ['spi.auth.token']).factory('auth', ['$http', '$state', 'authToken', '$q', '$window', '$timeout', 'Logger', function ($http,
+                                                                                                                                                  $state,
+                                                                                                                                                  authToken,
+                                                                                                                                                  $q,
+                                                                                                                                                  $window,
+                                                                                                                                                  $timeout,
+                                                                                                                                                  Logger) {
         var auth = {};
         var ENDPOINT_URL = '/api/users';
-        var TOKEN_NAME = 'spielplan-ismaning-token';
 
-        auth.saveToken = function (token) {
-            $window.localStorage[TOKEN_NAME] = token;
-        };
+        auth.saveToken = authToken.saveToken;
 
-        auth.getToken = function () {
-            return $window.localStorage[TOKEN_NAME];
-        };
+        auth.getToken = authToken.getToken;
 
         auth.isLoggedIn = function () {
             var token = auth.getToken();
@@ -71,7 +67,7 @@
         };
 
         auth.logOut = function () {
-            $window.localStorage.removeItem(TOKEN_NAME);
+            authToken.removeToken();
             $state.go('spi.home');
         };
 

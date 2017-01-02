@@ -39,6 +39,15 @@ module.exports = function () {
         },
         ErrorUserNotFound: function (res, username) {
             send(require('./ErrorUserNotFound.js')(username), res);
+        },
+        ErrorForbidden: function (res) {
+            send(require('./ErrorForbiddenMessage.js'), res);
+        },
+        ErrorNotAuthorized: function (res) {
+            send(require('./ErrorNotAuthorizedMessage.js'), res);
+        },
+        ErrorBadRequest: function (res) {
+            send(require('./ErrorBadRequest.js'), res);
         }
     };
 };

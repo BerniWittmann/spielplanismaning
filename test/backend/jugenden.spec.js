@@ -52,6 +52,7 @@ describe('Route: Jugenden', function () {
             .post('/api/jugenden')
             .send(jugend)
             .expect(200)
+            .set('Authorization', server.adminToken)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -104,6 +105,7 @@ describe('Route: Jugenden', function () {
             return request(server)
                 .del('/api/jugenden?id=' + neueJugendid)
                 .expect(200)
+                .set('Authorization', server.adminToken)
                 .end(function (err, res) {
                     if (err) throw err;
 

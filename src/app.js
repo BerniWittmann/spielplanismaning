@@ -9,6 +9,7 @@ var passport = require('passport');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
+var secret = (process.env.SECRET || 'TSV_SECRET');
 var app = express();
 
 require('./models/Gruppen');
@@ -17,7 +18,7 @@ require('./models/Spiele');
 require('./models/Spielplan');
 require('./models/Teams');
 require('./models/Subscriber');
-require('./models/Users')((process.env.SECRET || 'SECRET'));
+require('./models/Users')(secret);
 require('./config/passport');
 
 app.set('ENVIRONMENT', (process.env.NODE_ENV || 'development'));
@@ -58,6 +59,9 @@ app.set('port', (process.env.PORT || 8000));
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
+
+//Setup API Authorization
+require('./routes/authorization/authorization.js')(app, secret);
 
 //Setup Routes
 require('./routes/routes.js')(app, sendgrid);

@@ -3,7 +3,7 @@
 
     angular
         .module('spi', [
-            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.components.team-abonnieren-modal.ui', 'spi.components.bestaetigen-modal.ui'
+            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpRequestInterceptor'
         ])
         .config(states)
         .controller('AppController', AppController)
@@ -23,7 +23,7 @@
         $locationProvider.html5Mode(true);
     }
 
-    function run($rootScope, $state) {
+    function run($rootScope) {
         $rootScope.onload = function () {
             var page = document.getElementById('page');
             page.className = page.className + " loaded";

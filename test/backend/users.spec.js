@@ -116,6 +116,7 @@ describe('Route: Users', function () {
     it('soll einen Nutzer löschen können', function (done) {
         return request(server)
             .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
             .send({username: 'test-user'})
             .expect(200)
             .end(function (err, res) {
@@ -132,6 +133,7 @@ describe('Route: Users', function () {
     it('Bei falschem Nutzername soll ein Fehler geliefert werden', function (done) {
         return request(server)
             .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
             .send({username: 'tippfehler'})
             .expect(404)
             .end(function (err, res) {
@@ -145,6 +147,7 @@ describe('Route: Users', function () {
     it('Der Nutzername berni soll nicht gelöscht werden können', function (done) {
         return request(server)
             .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
             .send({username: 'berni'})
             .expect(403)
             .end(function (err, res) {
