@@ -177,7 +177,7 @@ describe('Route: Gruppen', function () {
     });
 
     it('wenn die Gruppenid zum löschen fehlt, soll ein Fehler geworfen werden', function (done) {
-        return request(server)
+        request(server)
             .del('/api/gruppen?id=')
             .set('Authorization', server.adminToken)
             .expect(400)
@@ -191,7 +191,7 @@ describe('Route: Gruppen', function () {
     });
 
     it('wenn die Gruppenid zum löschen falsch ist, soll ein Fehler geworfen werden', function (done) {
-        return request(server)
+        request(server)
             .del('/api/gruppen?id=' + 'iafja1SicherNICHTRICHTIG')
             .set('Authorization', server.adminToken)
             .expect(404)
