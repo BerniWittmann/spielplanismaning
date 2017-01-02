@@ -3,7 +3,7 @@
 
     angular
         .module('spi', [
-            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpRequestInterceptor'
+            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpInterceptor'
         ])
         .config(states)
         .controller('AppController', AppController)
