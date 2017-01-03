@@ -63,6 +63,7 @@
     "chai": "^3.5.0",
     "chai-jquery": "^2.0.0",
     "chai-spies": "^0.7.1",
+    "changelog.md": "^0.2.0",
     "ejs": "^2.5.5",
     "jasmine-spec-reporter": "^2.7.0",
     "jshint": "^2.9.2",

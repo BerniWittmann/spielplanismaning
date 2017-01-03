@@ -5,6 +5,7 @@ exports.config = {
     capabilities: {
         'browserName': 'firefox'
     },
+    rootElement : 'body',
     onPrepare: function () {
         var SpecReporter = require('jasmine-spec-reporter');
         // add jasmine spec reporter
