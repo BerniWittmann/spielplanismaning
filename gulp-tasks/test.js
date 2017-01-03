@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var Server = require('karma').Server;
 var mocha = require('gulp-mocha');
-var protractor = require("gulp-protractor").protractor;
+var angularProtractor = require('gulp-angular-protractor');
 var mongobackup = require('mongobackup');
 var spawn = require('child_process').spawn;
 var mongoose = require('mongoose');
@@ -13,9 +13,9 @@ gulp.task('test', function (done) {
     return runSequence('test:frontend', 'test:backend', 'test:e2e', done);
 });
 
-gulp.task('test:travis', function (done) {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing',  function (err) {
-        var exitCode;
+gulp.task('test:travis', function () {
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'jshint', function (err) {
+        var exitCode = 0;
         if (err) {
             exitCode = 2;
             console.log('[ERROR] gulp test task failed', err);
@@ -24,9 +24,8 @@ gulp.task('test:travis', function (done) {
         } else {
             exitCode = 0;
             console.log('[SUCCESS] gulp test task succeded - exiting with code ' + exitCode);
-            done();
-            return process.exit(exitCode);
         }
+        return process.exit(exitCode);
     });
 });
 
@@ -115,8 +114,10 @@ gulp.task('test:e2e', function (done) {
 // test e2e local
 gulp.task('test:e2e:local', ['start:server'], function (done) {
     gulp.src(['././test/e2e/*.spec.js'])
-        .pipe(protractor({
-            'configFile': '././test/e2e/protractor.local.config.js'
+        .pipe(angularProtractor({
+            'configFile': '././test/e2e/protractor.local.config.js',
+            'autoStartStopServer': true,
+            'debug': false
         }))
         .on('error', function (error) {
             throw error;
@@ -129,8 +130,10 @@ gulp.task('test:e2e:local', ['start:server'], function (done) {
 // test e2e testing
 gulp.task('test:e2e:testing', function (done) {
     gulp.src(['././test/e2e/*.spec.js'])
-        .pipe(protractor({
-            'configFile': '././test/e2e/protractor.testing.config.js'
+        .pipe(angularProtractor({
+            'configFile': '././test/e2e/protractor.testing.config.js',
+            'autoStartStopServer': true,
+            'debug': false
         }))
         .on('error', function (error) {
             throw error;
