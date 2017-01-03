@@ -1,4 +1,4 @@
-## [Version null](https://github.com/BerniWittmann/spielplanismaning/releases/tag/vnull) (2017-1-3)
+## [Version 1.0.0](https://github.com/BerniWittmann/spielplanismaning/releases/tag/vnull) (2017-1-3)
 
 ### Patches
 
