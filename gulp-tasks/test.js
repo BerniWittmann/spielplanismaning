@@ -13,16 +13,18 @@ gulp.task('test', function (done) {
     return runSequence('test:frontend', 'test:backend', 'test:e2e', done);
 });
 
-gulp.task('test:travis', function (done) {
+gulp.task('test:travis', function () {
     return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing',  function (err) {
+        var exitCode;
         if (err) {
-            var exitCode = 2;
-            console.log('[ERROR] gulp build task failed', err);
-            console.log('[FAIL] gulp build task failed - exiting with code ' + exitCode);
+            exitCode = 2;
+            console.log('[ERROR] gulp test task failed', err);
+            console.log('[FAIL] gulp test task failed - exiting with code ' + exitCode);
             return process.exit(exitCode);
-        }
-        else {
-            return done();
+        } else {
+            exitCode = 0;
+            console.log('[SUCCESS] gulp test task succeded - exiting with code ' + exitCode);
+            return process.exit(exitCode);
         }
     });
 });
