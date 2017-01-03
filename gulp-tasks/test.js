@@ -14,7 +14,17 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('test:travis', function (done) {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', done);
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing',  function (err) {
+        if (err) {
+            var exitCode = 2;
+            console.log('[ERROR] gulp build task failed', err);
+            console.log('[FAIL] gulp build task failed - exiting with code ' + exitCode);
+            return process.exit(exitCode);
+        }
+        else {
+            return done();
+        }
+    });
 });
 
 gulp.task('test:watch', function (done) {
