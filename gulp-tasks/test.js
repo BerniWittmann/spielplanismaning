@@ -14,8 +14,8 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('test:travis', function () {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing',  function (err) {
-        var exitCode;
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'jshint', function (err) {
+        var exitCode = 0;
         if (err) {
             exitCode = 2;
             console.log('[ERROR] gulp test task failed', err);
@@ -24,8 +24,8 @@ gulp.task('test:travis', function () {
         } else {
             exitCode = 0;
             console.log('[SUCCESS] gulp test task succeded - exiting with code ' + exitCode);
-            return process.exit(exitCode);
         }
+        return process.exit(exitCode);
     });
 });
 
