@@ -123,7 +123,6 @@ gulp.task('test:e2e:testing', function (done) {
             throw error;
         })
         .on('end', function () {
-            console.log('END');
             done();
         });
 });

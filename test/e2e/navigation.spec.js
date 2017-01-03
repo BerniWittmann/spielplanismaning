@@ -35,7 +35,7 @@ describe('Navigation', function () {
         return done();
     });
 
-    describe('Teeams, Gruppen & Jugenden Dropdown', function () {
+    describe('Teams, Gruppen & Jugenden Dropdown', function () {
         beforeEach(function (done) {
             navigation.klickeNavElement('tgj');
             expect(navigation.isNavDropdownVisible).toBeTruthy();
