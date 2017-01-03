@@ -13,7 +13,7 @@ gulp.task('test', function (done) {
     return runSequence('test:frontend', 'test:backend', 'test:e2e', done);
 });
 
-gulp.task('test:travis', function () {
+gulp.task('test:travis', function (done) {
     return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing',  function (err) {
         var exitCode;
         if (err) {
@@ -24,6 +24,7 @@ gulp.task('test:travis', function () {
         } else {
             exitCode = 0;
             console.log('[SUCCESS] gulp test task succeded - exiting with code ' + exitCode);
+            done();
             return process.exit(exitCode);
         }
     });
