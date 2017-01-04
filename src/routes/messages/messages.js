@@ -48,6 +48,18 @@ module.exports = function () {
         },
         ErrorBadRequest: function (res) {
             send(require('./ErrorBadRequest.js'), res);
+        },
+        ErrorJugendNotFound: function (res, err) {
+            send(require('./ErrorJugendNotFoundMessage.js')(err), res);
+        },
+        ErrorPlatzNotFound: function (res, err) {
+            send(require('./ErrorPlatzNotFoundMessage.js')(err), res);
+        },
+        ErrorSpielNotFound: function (res, err) {
+            send(require('./ErrorSpielNotFoundMessage.js')(err), res);
+        },
+        ErrorTeamNotFound: function (res, err) {
+            send(require('./ErrorTeamNotFoundMessage.js')(err), res);
         }
     };
 };

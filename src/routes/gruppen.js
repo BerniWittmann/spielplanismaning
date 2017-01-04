@@ -45,7 +45,9 @@ module.exports = function () {
      **/
     router.get('/', function (req, res) {
         var query = Gruppe.find();
+        var searchById = false;
         if (req.query.id) {
+            searchById = true;
             query = Gruppe.findById(req.query.id);
         } else if (req.query.jugend) {
             query = Gruppe.find({
@@ -54,11 +56,11 @@ module.exports = function () {
         }
 
         query.deepPopulate('jugend teams').exec(function (err, gruppe) {
+            if (searchById && !gruppe) {
+                return messages.ErrorGruppeNotFound(res, err);
+            }
             if (err) {
                 return messages.Error(res, err);
-            }
-            if (!gruppe) {
-                return messages.ErrorGruppeNotFound(res, err);
             }
 
             return res.json(gruppe);

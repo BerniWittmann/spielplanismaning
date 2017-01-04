@@ -37,5 +37,6 @@
         ])
         .constant('AUTH_TOKEN_NAME', 'spielplan-ismaning-token')
         .constant('EMAIL_SUBSCRIPTION_TOKEN_NAME', 'spielplan-ismaning-subscriptions')
-        .constant('BUG_REPORT_EMAIL', 'bugreport4+autbfctbcdterjvy8o2t@boards.trello.com');
+        .constant('BUG_REPORT_EMAIL', 'bugreport4+autbfctbcdterjvy8o2t@boards.trello.com')
+        .constant('ANZAHL_PLAETZE', 3);
 })();

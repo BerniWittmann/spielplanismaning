@@ -21,17 +21,22 @@
                     }
                 },
                 params: {
-                    reason: undefined
+                    reason: undefined,
+                    reasonKey: undefined
                 }
             });
 
     }
 
-    function LoginController(auth, $state, lockdown, $stateParams) {
+    function LoginController(auth, $state, lockdown, $stateParams, toastr) {
         var vm = this;
         vm.lockdown = lockdown.data;
         vm.user = {};
         vm.reason = $stateParams.reason;
+
+        if(_.isEqual($stateParams.reasonKey, 'AUTH_ERROR')) {
+            toastr.error('Sie haben keinen Zugriff auf diese Ressource', 'Fehler');
+        }
         vm.login = function () {
             vm.user.username = vm.user.username.toLowerCase();
             auth.logIn(vm.user).then(function () {

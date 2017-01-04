@@ -34,13 +34,20 @@ module.exports = function () {
      *         gruppen: [Object],
      *         __v: 4
      *     }]
+     *
+     * @apiUse ErrorJugendNotFoundMessage
      **/
     router.get('/', function (req, res) {
         var query = Jugend.find();
+        var searchById = false;
         if (req.query.id) {
+            searchById = true;
             query = Jugend.findById(req.query.id);
         }
         query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
+            if(searchById && !jugenden) {
+                return messages.ErrorJugendNotFound(res, err);
+            }
             if (err) {
                 return messages.Error(res, err);
             }

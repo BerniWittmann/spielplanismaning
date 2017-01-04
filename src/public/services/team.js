@@ -3,7 +3,7 @@
 
     angular
         .module('spi.team', [])
-        .factory('team', ['$http', function ($http) {
+        .factory('team', ['$http', 'errorHandler', function ($http, errorHandler) {
 
             var ENDPOINT_URL = '/api/teams';
 
@@ -22,7 +22,9 @@
             };
 
             team.get = function (id) {
-                return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
+                return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
+                    return errorHandler.handleResponseError(err);
+                }).then(function (res) {
                     return _.head(res.data);
                 });
             };

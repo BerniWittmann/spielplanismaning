@@ -3,7 +3,7 @@
 
     angular
         .module('spi.gruppe', [])
-        .factory('gruppe', ['$http', function ($http) {
+        .factory('gruppe', ['$http', 'errorHandler', function ($http, errorHandler) {
 
             var ENDPOINT_URL = '/api/gruppen';
 
@@ -22,7 +22,9 @@
             };
 
             gruppe.get = function (id) {
-                return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
+                return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
+                    return errorHandler.handleResponseError(err);
+                }).then(function (res) {
                     return res.data;
                 });
             };
