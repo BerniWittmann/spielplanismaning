@@ -1,6 +1,6 @@
 ![logo](logo.png)
 
-# Spielplan Ismaning <small>1.1.0</small>
+# Spielplan Ismaning <small>1.0.1</small>
 
 > Spielplan- und Turnierverwaltung für die Beachturniere in Ismaning
 

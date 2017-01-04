@@ -1,6 +1,10 @@
 # spielplanismaning
 Spielplan - System für die Beachturniere in Ismaning
 
+## Dokumentation
+
+Hier findest du die [Dokumentation](https://berniwittmann.github.io/spielplanismaning/#/)
+
 ### Build Status
 
 | Umgebung | Build-Status |

@@ -24,6 +24,10 @@ Es gibt verschiedene Nutzerrollen, die unterschiedliche Berechtigungen haben.
 | Kampfgericht  | Fraglich      |
 | Schiedsrichter| Fraglich      |
 
+# Changelog
+
+Eine Übersicht über die Änderungen finden sich im [Changelog](https://github.com/BerniWittmann/spielplanismaning/releases).
+
 ---
 
 # API Dokumentation
