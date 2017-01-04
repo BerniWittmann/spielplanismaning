@@ -5,6 +5,7 @@
 
     describe('Component: Logger', function () {
         beforeEach(module('spi.logger'));
+        beforeEach(module('spi.constants'));
         var scope;
         var Logger;
 

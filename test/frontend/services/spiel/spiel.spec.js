@@ -9,6 +9,7 @@
             }
         };
         beforeEach(module('spi.spiel'));
+        beforeEach(module('spi.constants'));
         beforeEach(module('spi.logger'), function ($provide) {
             $provide.value('Logger', function () {
                 return mockLogger;

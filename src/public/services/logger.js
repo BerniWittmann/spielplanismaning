@@ -3,12 +3,9 @@
 
     angular
         .module('spi.logger', [])
-        .service('Logger', Logger)
-        .constant('PREFIX', 'Spielplan-Ismaning Log: ')
-        .constant('MAX_STRING_LENGTH', 70);
+        .service('Logger', Logger);
 
-    function Logger(PREFIX,
-                    MAX_STRING_LENGTH) {
+    function Logger(LOG_PREFIX, LOG_MAX_STRING_LENGTH) {
         var LOGGING_ENABLED = false;
 
         return {
@@ -24,10 +21,10 @@
                 if (_.isObject(text)) {
                     text = JSON.stringify(text);
                 }
-                if (text.length > MAX_STRING_LENGTH) {
-                    text = text.substring(0, MAX_STRING_LENGTH) + "...";
+                if (text.length > LOG_MAX_STRING_LENGTH) {
+                    text = text.substring(0, LOG_MAX_STRING_LENGTH) + "...";
                 }
-                console.log(PREFIX + text);
+                console.log(LOG_PREFIX + text);
             }
         }
 

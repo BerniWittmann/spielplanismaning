@@ -5,6 +5,7 @@
 
     describe('Service: Email', function () {
         beforeEach(module('spi.email'));
+        beforeEach(module('spi.constants'));
         var ENDPOINT_BASE_URL = '/api/email';
         var TOKENNAME = 'spielplan-ismaning-subscriptions';
 

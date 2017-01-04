@@ -1,6 +1,6 @@
 {
   "name": "Spielplan-Ismaning API Dokumentation",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Spielplan Verwaltung für die Ismaninger Beachturniere",
   "title": "SPI API Doku",
   "url": "https://spielplanismaning.herokuapp.com/api",

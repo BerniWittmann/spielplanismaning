@@ -4,6 +4,7 @@
     var expect = chai.expect;
 
     describe('Template: Jugenden', function () {
+        beforeEach(module('spi.constants'));
         var URL = '/jugenden';
         var STATE_NAME = 'spi.tgj.jugenden';
 

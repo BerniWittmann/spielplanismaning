@@ -4,6 +4,7 @@
     var expect = chai.expect;
 
     describe('Template: Spielplan', function () {
+        beforeEach(module('spi.constants'));
         var URL = '/spielplan';
         var STATE_NAME = 'spi.spielplan';
 
