@@ -3,8 +3,7 @@
 
     angular
         .module('spi.email', [])
-        .factory('email', ['$http', '$window', function ($http, $window) {
-            var TOKENNAME = 'spielplan-ismaning-subscriptions';
+        .factory('email', ['$http', '$window', 'EMAIL_SUBSCRIPTION_TOKEN_NAME', function ($http, $window, EMAIL_SUBSCRIPTION_TOKEN_NAME) {
             var ENDPOINT_URL = '/api/email';
             var email = {};
 
@@ -27,7 +26,7 @@
                 if (!email.checkSubscription(sub)) {
                     var token = getSubscriptionToken();
                     token.push(sub);
-                    $window.localStorage[TOKENNAME] = JSON.stringify(token);
+                    $window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME] = JSON.stringify(token);
                 }
             };
 
@@ -40,8 +39,8 @@
             };
 
             function getSubscriptionToken() {
-                if (!_.isUndefined($window.localStorage[TOKENNAME])) {
-                    return (JSON.parse($window.localStorage[TOKENNAME]) || []);
+                if (!_.isUndefined($window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME])) {
+                    return (JSON.parse($window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME]) || []);
                 }
                 return [];
             }
@@ -67,7 +66,7 @@
                     console.log(err);
                     return err;
                 }).then(function (res) {
-                    $window.localStorage[TOKENNAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
+                    $window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
                     return res.data;
                 });
             };

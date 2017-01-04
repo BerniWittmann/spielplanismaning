@@ -30,7 +30,7 @@
 
     }
 
-    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugendPromise, teamPromise) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugendPromise, teamPromise, JUGEND_FARBEN) {
         var vm = this;
         vm.loading = true;
 
@@ -53,36 +53,7 @@
             },
             spielplanError: spielplan.error,
             isLoggedIn: auth.isAdmin(),
-            farben: [
-                {
-                    name: 'Grün',
-                    wert: 'gruen'
-                }, {
-                    name: 'Gelb',
-                    wert: 'gelb'
-                }, {
-                    name: 'Rot',
-                    wert: 'rot'
-                }, {
-                    name: 'Blau',
-                    wert: 'blau'
-                }, {
-                    name: 'Orange',
-                    wert: 'orange'
-                }, {
-                    name: 'Lila',
-                    wert: 'lila'
-                }, {
-                    name: 'Hellblau',
-                    wert: 'hellblau'
-                }, {
-                    name: 'Hellgrün',
-                    wert: 'hellgruen'
-                }, {
-                    name: 'Hellrot',
-                    wert: 'hellrot'
-                }
-            ]
+            farben: JUGEND_FARBEN
         });
 
         $scope.$watch(function () {

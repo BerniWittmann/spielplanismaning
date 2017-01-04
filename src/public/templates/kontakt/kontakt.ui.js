@@ -30,7 +30,7 @@
 
     }
 
-    function KontaktController(versionPromise, kontaktPromise, envPromise) {
+    function KontaktController(versionPromise, kontaktPromise, envPromise, BUG_REPORT_EMAIL) {
         var vm = this;
 
         vm.loading = true;
@@ -38,7 +38,8 @@
         _.extend(vm, {
             version: versionPromise.data,
             showBuildStatus: _.isEqual(envPromise.data, 'testing') || _.isEqual(envPromise.data, 'development'),
-            kontakte: kontaktPromise.data
+            kontakte: kontaktPromise.data,
+            bugReportEmailHref: 'mailto:' + BUG_REPORT_EMAIL
         });
         if (_.isEqual(envPromise.data, 'testing')) {
             vm.version += ' TESTUMGEBUNG';
