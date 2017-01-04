@@ -6,6 +6,8 @@ Dieses Projekt soll als Turnier- und Spielplanverwaltung für die Beachturniere 
 
 In diesem Projekt gibt es zwei Umgebungen/Apps: eine Testumgebung und eine Produktionsumgebung, welche später auch wirklich benutzt werden soll.
 
+[![GitHub version](https://badge.fury.io/gh/berniwittmann%2Fspielplanismaning.svg)](https://badge.fury.io/gh/berniwittmann%2Fspielplanismaning)
+
 | Umgebung      | Status        |
 |:-------------:|:-------------:|
 | [Testumgebung](https://spielplanismaning-testing.herokuapp.com) | [![Build Status](https://travis-ci.org/BerniWittmann/spielplanismaning.svg?branch=develop)](https://travis-ci.org/BerniWittmann/spielplanismaning) |
