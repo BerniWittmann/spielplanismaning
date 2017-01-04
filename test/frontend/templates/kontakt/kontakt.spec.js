@@ -4,6 +4,7 @@
     var expect = chai.expect;
 
     describe('Template: Kontakt', function () {
+        beforeEach(module('spi.constants'));
         var URL = '/kontakt';
         var STATE_NAME = 'spi.kontakt';
 

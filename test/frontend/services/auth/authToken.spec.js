@@ -5,6 +5,7 @@
 
     describe('Service: Auth-Token', function () {
         beforeEach(module('spi.auth.token'));
+        beforeEach(module('spi.constants'));
         var TOKENNAME = 'spielplan-ismaning-token';
 
         var window;

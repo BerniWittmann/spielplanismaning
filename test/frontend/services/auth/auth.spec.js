@@ -5,6 +5,7 @@
 
     describe('Service: Auth', function () {
         beforeEach(module('spi.auth'));
+        beforeEach(module('spi.constants'));
         var ENDPOINT_BASE_URL = '/api/users';
         var TOKENNAME = 'spielplan-ismaning-token';
 

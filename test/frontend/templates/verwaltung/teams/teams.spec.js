@@ -4,6 +4,7 @@
     var expect = chai.expect;
 
     describe('Template: Verwaltung Teams', function () {
+        beforeEach(module('spi.constants'));
         var URL = '/teams';
         var STATE_NAME = 'spi.verwaltung.teams';
 
