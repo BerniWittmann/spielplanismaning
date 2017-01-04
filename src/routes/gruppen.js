@@ -139,7 +139,7 @@ module.exports = function () {
      * @apiPermission Admin
      *
      * @apiUse ErrorBadRequest
-     * @apiUse ErrorGruppeNotFound
+     * @apiUse ErrorGruppeNotFoundMessage
      **/
     router.delete('/', function (req, res) {
         if (!req.query.id) {

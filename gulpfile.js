@@ -25,7 +25,7 @@ gulp.task('watch-task', function () {
 // versioning
 function inc(importance) {
     // get all the files to bump version in
-    return gulp.src(['./package.json', './bower.json', './src/routes/apidoc.json'])
+    return gulp.src(['./package.json', './bower.json', './apidoc.json'])
     // bump the version number in those files
         .pipe(bump({type: importance}))
         // save it back to filesystem
@@ -65,6 +65,7 @@ gulp.task('apidoc', function (done) {
     apidoc({
         src: "src/routes",
         dest: "docs/api",
+        config: "./",
         includeFilters: [".*\\.js$"]
     }, done);
 });
