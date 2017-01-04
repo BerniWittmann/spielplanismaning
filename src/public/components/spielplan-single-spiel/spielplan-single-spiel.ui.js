@@ -8,19 +8,19 @@
         .controller('SpielplanSingleSpielController', SpielplanSingleSpielController)
         .directive('spiSingleSpiel', function () {
             return {
-                templateUrl: 'components/spielplan-single-spiel/spielplan-single-spiel.html'
-                , restrict: 'A'
-                , controller: 'SpielplanSingleSpielController'
-                , controllerAs: 'vm'
-                , scope: {
+                templateUrl: 'components/spielplan-single-spiel/spielplan-single-spiel.html',
+                restrict: 'A',
+                controller: 'SpielplanSingleSpielController',
+                controllerAs: 'vm',
+                scope: {
                     'spiSingleSpiel': '='
                 }
             };
         })
         .directive("focusOn", function ($timeout) {
             return {
-                restrict: "A"
-                , link: function (scope, element, attrs) {
+                restrict: "A",
+                link: function (scope, element, attrs) {
                     scope.$on(attrs.focusOn, function () {
                         $timeout((function () {
                             element[0].focus();

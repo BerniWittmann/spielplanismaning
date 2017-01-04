@@ -35,8 +35,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
             mail.setFilters({
                 'templates': {
                     'settings': {
-                        'enable': 1
-                        , 'template_id': '23e8b62c-a7ca-4cfc-b571-e0ea0b9b1cac'
+                        'enable': 1,
+                        'template_id': '23e8b62c-a7ca-4cfc-b571-e0ea0b9b1cac'
                     }
                 }
             });
@@ -75,8 +75,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
             mail.setFilters({
                 'templates': {
                     'settings': {
-                        'enable': 1
-                        , 'template_id': '5f56b047-5a30-4dbd-adf7-75d3d24c920f'
+                        'enable': 1,
+                        'template_id': '5f56b047-5a30-4dbd-adf7-75d3d24c920f'
                     }
                 }
             });
@@ -107,8 +107,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
             mail.setFilters({
                 'templates': {
                     'settings': {
-                        'enable': 1
-                        , 'template_id': '1e4a9e27-027c-46c3-9991-2b999bfd62b5'
+                        'enable': 1,
+                        'template_id': '1e4a9e27-027c-46c3-9991-2b999bfd62b5'
                     }
                 }
             });

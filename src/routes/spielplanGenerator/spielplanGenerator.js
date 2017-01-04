@@ -96,13 +96,13 @@ module.exports = function () {
                                     console.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + zeit.format('HH:mm'));
 
                                     var neuesSpiel = {
-                                        nummer: i
-                                        , platz: platz
-                                        , uhrzeit: zeit.format('HH:mm')
-                                        , gruppe: gruppe._id
-                                        , jugend: gruppe.jugend._id
-                                        , teamA: teamA._id
-                                        , teamB: teamB._id
+                                        nummer: i,
+                                        platz: platz,
+                                        uhrzeit: zeit.format('HH:mm'),
+                                        gruppe: gruppe._id,
+                                        jugend: gruppe.jugend._id,
+                                        teamA: teamA._id,
+                                        teamB: teamB._id
                                     };
                                     spiele.push(neuesSpiel);
                                     console.log('Spielplanerstellung: Spiel Nr.' + i + ' für Gruppe ' + gruppe.name + ' erstellt.');

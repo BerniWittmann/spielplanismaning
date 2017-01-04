@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var GruppenSchema = new mongoose.Schema({
-    name: String
-    , teams: [{type: Schema.ObjectId, ref: 'Team'}]
-    , jugend: {type: Schema.ObjectId, ref: 'Jugend'}
+    name: String,
+    teams: [{type: Schema.ObjectId, ref: 'Team'}],
+    jugend: {type: Schema.ObjectId, ref: 'Jugend'}
 });
 
 GruppenSchema.methods.pushTeams = function (team, cb) {

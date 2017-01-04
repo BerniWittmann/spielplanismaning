@@ -5,14 +5,14 @@
         .module('spi.components.spielplan.ausnahme.single.ui', ['spi.components.bestaetigen-modal.ui', 'spi.spielplan'])
         .controller('SpielplanAusnahmeController', SpielplanAusnahmeController)
         .component('spiSpielplanSingleAusnahme', {
-            templateUrl: 'components/spielplan-ausnahmen/spielplan-single-ausnahme/spielplan-single-ausnahme.html'
-            , bindings: {
-                ausnahme: '='
-                , teams: '<'
-                , ausnahmen: '='
-            }
-            , controller: 'SpielplanAusnahmeController'
-            , controllerAs: 'vm'
+            templateUrl: 'components/spielplan-ausnahmen/spielplan-single-ausnahme/spielplan-single-ausnahme.html',
+            bindings: {
+                ausnahme: '=',
+                teams: '<',
+                ausnahmen: '='
+            },
+            controller: 'SpielplanAusnahmeController',
+            controllerAs: 'vm'
         });
 
     function SpielplanAusnahmeController($scope, BestaetigenDialog, $timeout, $http, spielplan) {
@@ -22,10 +22,10 @@
         _.extend(vm, {
             askDelete: function () {
                 return BestaetigenDialog.open('Wirklich diese Ausnahme löschen?', deleteAusnahme);
-            }
-            , teams2: vm.teams
-            , updateTeams2: updateTeams2
-            , saveAusnahme: saveAusnahme
+            },
+            teams2: vm.teams,
+            updateTeams2: updateTeams2,
+            saveAusnahme: saveAusnahme
         });
 
         $timeout(function () {

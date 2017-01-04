@@ -5,12 +5,12 @@
         .module('spi.components.loader.ui', [])
         .controller('LoaderController', LoaderController)
         .component('spiLoader', {
-            templateUrl: 'components/loader/loader.html'
-            , bindings: {
+            templateUrl: 'components/loader/loader.html',
+            bindings: {
                 loading: '='
-            }
-            , controller: 'LoaderController'
-            , controllerAs: 'vm'
+            },
+            controller: 'LoaderController',
+            controllerAs: 'vm'
         });
 
     function LoaderController() {}

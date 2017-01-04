@@ -12,11 +12,11 @@
         //noinspection JSUnusedGlobalSymbols
         $stateProvider
             .state('spi.verwaltung.email-abonnements', {
-                url: '/email-abonnements'
-                , templateUrl: 'templates/verwaltung/email-abonnements/email-abonnements.html'
-                , controller: EmailAbonnementsContoller
-                , controllerAs: 'vm'
-                , resolve: {
+                url: '/email-abonnements',
+                templateUrl: 'templates/verwaltung/email-abonnements/email-abonnements.html',
+                controller: EmailAbonnementsContoller,
+                controllerAs: 'vm',
+                resolve: {
                     getSubscribersPromise: function (email) {
                         return email.getSubscribers();
                     }
@@ -33,8 +33,8 @@
         vm.loading = true;
 
         var emailBlank = {
-            subject: ''
-            , text: ''
+            subject: '',
+            text: ''
         };
 
         _.extend(vm, {
@@ -43,17 +43,18 @@
                 if (!_.isEqual(vm.email, emailBlank)) {
                     return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
                 }
-            }
-            , gotoTeam: function (team) {
+            },
+            gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {
                     teamid: team._id
                 });
-            }
-            , gotoJugend: function (jugend) {
+            },
+            gotoJugend: function (jugend) {
                 $state.go('spi.tgj.jugend', {
                     jugendid: jugend._id
                 });
-            }, resetForm: resetForm,
+            },
+            resetForm: resetForm,
             email: {}
         });
 
@@ -68,8 +69,8 @@
             tableParams: new NgTableParams({
                 count: 10
             }, {
-                counts: []
-                , data: vm.abonnements
+                counts: [],
+                data: vm.abonnements
             })
         });
 

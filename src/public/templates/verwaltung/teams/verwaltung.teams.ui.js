@@ -11,11 +11,11 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.verwaltung.teams', {
-                url: '/teams'
-                , templateUrl: 'templates/verwaltung/teams/verwaltung.teams.html'
-                , controller: VerwaltungTeamsController
-                , controllerAs: 'vm'
-                , resolve: {
+                url: '/teams',
+                templateUrl: 'templates/verwaltung/teams/verwaltung.teams.html',
+                controller: VerwaltungTeamsController,
+                controllerAs: 'vm',
+                resolve: {
                     jugendPromise: function (jugend) {
                         return jugend.getAll();
                     },
@@ -55,48 +55,32 @@
             isLoggedIn: auth.isAdmin(),
             farben: [
                 {
-                    name: 'Grün'
-                    , wert: 'gruen'
-                }
-
-                , {
-                    name: 'Gelb'
-                    , wert: 'gelb'
-                }
-
-                , {
-                    name: 'Rot'
-                    , wert: 'rot'
-                }
-
-                , {
-                    name: 'Blau'
-                    , wert: 'blau'
-                }
-
-                , {
-                    name: 'Orange'
-                    , wert: 'orange'
-                }
-
-                , {
-                    name: 'Lila'
-                    , wert: 'lila'
-                }
-
-                , {
-                    name: 'Hellblau'
-                    , wert: 'hellblau'
-                }
-
-                , {
-                    name: 'Hellgrün'
-                    , wert: 'hellgruen'
-                }
-
-                , {
-                    name: 'Hellrot'
-                    , wert: 'hellrot'
+                    name: 'Grün',
+                    wert: 'gruen'
+                }, {
+                    name: 'Gelb',
+                    wert: 'gelb'
+                }, {
+                    name: 'Rot',
+                    wert: 'rot'
+                }, {
+                    name: 'Blau',
+                    wert: 'blau'
+                }, {
+                    name: 'Orange',
+                    wert: 'orange'
+                }, {
+                    name: 'Lila',
+                    wert: 'lila'
+                }, {
+                    name: 'Hellblau',
+                    wert: 'hellblau'
+                }, {
+                    name: 'Hellgrün',
+                    wert: 'hellgruen'
+                }, {
+                    name: 'Hellrot',
+                    wert: 'hellrot'
                 }
             ]
         });

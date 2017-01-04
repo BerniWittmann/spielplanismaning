@@ -2,43 +2,44 @@
     'use strict';
 
     angular
-        .module('spi.gruppe', []).factory('gruppe', ['$http', function ($http) {
+        .module('spi.gruppe', [])
+        .factory('gruppe', ['$http', function ($http) {
 
-        var ENDPOINT_URL = '/api/gruppen';
+            var ENDPOINT_URL = '/api/gruppen';
 
-        var gruppe = {};
+            var gruppe = {};
 
-        gruppe.getAll = function () {
-            return $http.get(ENDPOINT_URL).success(function (data) {
-                return data;
-            });
-        };
+            gruppe.getAll = function () {
+                return $http.get(ENDPOINT_URL).success(function (data) {
+                    return data;
+                });
+            };
 
-        gruppe.create = function (jugendId, newgruppe) {
-            return $http.post(ENDPOINT_URL + '?jugend=' + jugendId, newgruppe).success(function (data) {
-                return data;
-            });
-        };
+            gruppe.create = function (jugendId, newgruppe) {
+                return $http.post(ENDPOINT_URL + '?jugend=' + jugendId, newgruppe).success(function (data) {
+                    return data;
+                });
+            };
 
-        gruppe.get = function (id) {
-            return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
-                return res.data;
-            });
-        };
+            gruppe.get = function (id) {
+                return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
+                    return res.data;
+                });
+            };
 
-        gruppe.getByJugend = function (jugendid) {
-            return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
-                return res.data;
-            });
-        };
+            gruppe.getByJugend = function (jugendid) {
+                return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
+                    return res.data;
+                });
+            };
 
-        gruppe.delete = function (id) {
-            return $http.delete(ENDPOINT_URL + '?id=' + id).then(function (res) {
-                return res;
-            });
-        };
+            gruppe.delete = function (id) {
+                return $http.delete(ENDPOINT_URL + '?id=' + id).then(function (res) {
+                    return res;
+                });
+            };
 
-        return gruppe;
-    }]);
+            return gruppe;
+        }]);
 
 })();

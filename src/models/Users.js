@@ -6,20 +6,20 @@ module.exports = function (secret) {
 
     var UserSchema = new mongoose.Schema({
         username: {
-            type: String
-            , lowercase: true
-            , unique: true
-        }
-        , role: {
+            type: String,
+            lowercase: true,
+            unique: true
+        },
+        role: {
             name: {
                 type: String
             },
             rank: {
                 type: Number
             }
-        }
-        , hash: String
-        , salt: String
+        },
+        hash: String,
+        salt: String
     });
 
     UserSchema.methods.generateJWT = function () {

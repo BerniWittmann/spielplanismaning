@@ -2,29 +2,30 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TeamSchema = new mongoose.Schema({
-    name: String
-    , gruppe: {
-        type: Schema.ObjectId
-        , ref: 'Gruppe'
-    }, jugend: {
+    name: String,
+    gruppe: {
+        type: Schema.ObjectId,
+        ref: 'Gruppe'
+    },
+    jugend: {
         type: Schema.ObjectId,
         ref: 'Jugend'
-    }
-    , tore: {
-        type: Number
-        , default: 0
-    }
-    , gtore: {
-        type: Number
-        , default: 0
-    }
-    , punkte: {
-        type: Number
-        , default: 0
-    }
-    , gpunkte: {
-        type: Number
-        , default: 0
+    },
+    tore: {
+        type: Number,
+        default: 0
+    },
+    gtore: {
+        type: Number,
+        default: 0
+    },
+    punkte: {
+        type: Number,
+        default: 0
+    },
+    gpunkte: {
+        type: Number,
+        default: 0
     }
 });
 

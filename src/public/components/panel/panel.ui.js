@@ -7,12 +7,12 @@
         ])
         .controller('PanelController', PanelController)
         .component('spiPanel', {
-            templateUrl: 'components/panel/panel.html'
-            , transclude: {
+            templateUrl: 'components/panel/panel.html',
+            transclude: {
                 titel: 'spiPanelTitel'
-            }
-            , controller: 'PanelController'
-            , controllerAs: 'vm'
+            },
+            controller: 'PanelController',
+            controllerAs: 'vm'
         });
 
     function PanelController() {}

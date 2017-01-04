@@ -7,16 +7,16 @@
         .constant('PREFIX', 'Spielplan-Ismaning Log: ')
         .constant('MAX_STRING_LENGTH', 70);
 
-    function Logger(PREFIX
-        , MAX_STRING_LENGTH) {
+    function Logger(PREFIX,
+                    MAX_STRING_LENGTH) {
         var LOGGING_ENABLED = false;
 
         return {
             log: function (text) {
                 return log(text);
-            }
-            , enableLogging: enableLogging
-            , disableLogging: disableLogging
+            },
+            enableLogging: enableLogging,
+            disableLogging: disableLogging
         };
 
         function log(text) {

@@ -2,19 +2,19 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SpielPlanSchema = new mongoose.Schema({
-    startzeit: String //10:40
-    , spielzeit: Number
-    , pausenzeit: Number
-    , ausnahmen: [
+    startzeit: String, //10:40
+    spielzeit: Number,
+    pausenzeit: Number,
+    ausnahmen: [
         {
             team1: {
-                type: Schema.ObjectId
-                , ref: 'Team'
+                type: Schema.ObjectId,
+                ref: 'Team'
+            },
+            team2: {
+                type: Schema.ObjectId,
+                ref: 'Team'
             }
-            , team2: {
-            type: Schema.ObjectId
-            , ref: 'Team'
-        }
         }
     ]
 });

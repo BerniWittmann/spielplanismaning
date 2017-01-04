@@ -184,7 +184,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     return messages.Error(res, err);
                 }
 
-                //TODO mit async lösen
                 async.parallel([
                     function (cb) {
                         spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {

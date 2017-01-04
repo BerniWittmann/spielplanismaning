@@ -7,12 +7,12 @@
         ])
         .controller('JugendLabelController', JugendLabelController)
         .component('spiJugendLabel', {
-            templateUrl: 'components/jugend-label/jugend-label.html'
-            , bindings: {
+            templateUrl: 'components/jugend-label/jugend-label.html',
+            bindings: {
                 jugend: '='
-            }
-            , controller: 'JugendLabelController'
-            , controllerAs: 'vm'
+            },
+            controller: 'JugendLabelController',
+            controllerAs: 'vm'
         });
 
     function JugendLabelController() {}

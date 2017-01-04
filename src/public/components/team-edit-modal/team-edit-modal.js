@@ -16,15 +16,15 @@
         function open(gewaehltesTeam) {
             return $uibModal
                 .open({
-                    templateUrl: 'components/team-edit-modal/team-edit-modal.html'
-                    , controller: 'TeamEditierenController'
-                    , controllerAs: 'vm'
-                    , resolve: {
+                    templateUrl: 'components/team-edit-modal/team-edit-modal.html',
+                    controller: 'TeamEditierenController',
+                    controllerAs: 'vm',
+                    resolve: {
                         gewTeam: function () {
                             return gewaehltesTeam;
                         }
-                    }
-                    , size: 'sm'
+                    },
+                    size: 'sm'
                 });
         }
     }

@@ -16,15 +16,15 @@
         function open(gewaehltesTeam) {
             return $uibModal
                 .open({
-                    templateUrl: 'components/team-abonnieren-modal/team-abonnieren-modal.html'
-                    , controller: 'TeamAbonnierenController'
-                    , controllerAs: 'vm'
-                    , resolve: {
+                    templateUrl: 'components/team-abonnieren-modal/team-abonnieren-modal.html',
+                    controller: 'TeamAbonnierenController',
+                    controllerAs: 'vm',
+                    resolve: {
                         gewTeam: function () {
                             return gewaehltesTeam;
                         }
-                    }
-                    , size: 'md'
+                    },
+                    size: 'md'
                 });
         }
     }

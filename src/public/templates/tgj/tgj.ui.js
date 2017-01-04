@@ -10,9 +10,9 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tgj', {
-                url: ''
-                , abstract: true
-                , template: '<ui-view></ui-view>'
+                url: '',
+                abstract: true,
+                template: '<ui-view></ui-view>'
             });
     }
 })();

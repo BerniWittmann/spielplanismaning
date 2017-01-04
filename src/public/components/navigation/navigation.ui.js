@@ -10,11 +10,11 @@
 
     function spiNavigation() {
         return {
-            restrict: 'E'
-            , templateUrl: 'components/navigation/navigation.html'
-            , scope: true
-            , controller: NavigationController
-            , controllerAs: 'vm'
+            restrict: 'E',
+            templateUrl: 'components/navigation/navigation.html',
+            scope: true,
+            controller: NavigationController,
+            controllerAs: 'vm'
         };
     }
 

@@ -11,11 +11,11 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.login', {
-                url: '/login'
-                , templateUrl: 'templates/login/login.html'
-                , controller: LoginController
-                , controllerAs: 'vm'
-                , resolve: {
+                url: '/login',
+                templateUrl: 'templates/login/login.html',
+                controller: LoginController,
+                controllerAs: 'vm',
+                resolve: {
                     lockdown: function (config) {
                         return config.getLockdown();
                     }

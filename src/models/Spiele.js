@@ -2,52 +2,52 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SpielSchema = new mongoose.Schema({
-    nummer: Number
-    , platz: Number
-    , uhrzeit: String //10:40
-    , gruppe: {
-        type: Schema.ObjectId
-        , ref: 'Gruppe'
-    }
-    , jugend: {
-        type: Schema.ObjectId
-        , ref: 'Jugend'
-    }
-    , teamA: {
-        type: Schema.ObjectId
-        , ref: 'Team'
-    }
-    , teamB: {
-        type: Schema.ObjectId
-        , ref: 'Team'
-    }
-    , toreA: {
-        type: Number
-        , default: 0
-    }
-    , toreB: {
-        type: Number
-        , default: 0
-    }
-    , punkteA: {
-        type: Number
-        , default: 0
-    }
-    , punkteB: {
-        type: Number
-        , default: 0
-    }
-    , gewinner: {
-        type: Schema.ObjectId
-        , ref: 'Team'
-    }
-    , unentschieden: {
-        type: Boolean
-        , default: false
-    }
-    , beendet: {
-        type: Boolean
-        , default: false
+    nummer: Number,
+    platz: Number,
+    uhrzeit: String, //10:40
+    gruppe: {
+        type: Schema.ObjectId,
+        ref: 'Gruppe'
+    },
+    jugend: {
+        type: Schema.ObjectId,
+        ref: 'Jugend'
+    },
+    teamA: {
+        type: Schema.ObjectId,
+        ref: 'Team'
+    },
+    teamB: {
+        type: Schema.ObjectId,
+        ref: 'Team'
+    },
+    toreA: {
+        type: Number,
+        default: 0
+    },
+    toreB: {
+        type: Number,
+        default: 0
+    },
+    punkteA: {
+        type: Number,
+        default: 0
+    },
+    punkteB: {
+        type: Number,
+        default: 0
+    },
+    gewinner: {
+        type: Schema.ObjectId,
+        ref: 'Team'
+    },
+    unentschieden: {
+        type: Boolean,
+        default: false
+    },
+    beendet: {
+        type: Boolean,
+        default: false
     }
 });
 

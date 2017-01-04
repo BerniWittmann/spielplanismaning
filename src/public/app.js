@@ -14,10 +14,10 @@
 
         $stateProvider
             .state('spi', {
-                url: ''
-                , template: '<ui-view></ui-view>'
-                , abstract: true
-                , controller: AppController
+                url: '',
+                template: '<ui-view></ui-view>',
+                abstract: true,
+                controller: AppController
             });
 
         $locationProvider.html5Mode(true);

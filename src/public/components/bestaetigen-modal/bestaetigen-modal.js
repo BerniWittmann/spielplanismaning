@@ -17,21 +17,21 @@
             //noinspection JSUnusedGlobalSymbols
             return $uibModal
                 .open({
-                    templateUrl: 'components/bestaetigen-modal/bestaetigen-modal.html'
-                    , controller: 'BestaetigenController'
-                    , controllerAs: 'vm'
-                    , resolve: {
+                    templateUrl: 'components/bestaetigen-modal/bestaetigen-modal.html',
+                    controller: 'BestaetigenController',
+                    controllerAs: 'vm',
+                    resolve: {
                         fction: function () {
                             return fction;
-                        }
-                        , message: function () {
+                        },
+                        message: function () {
                             return message;
-                        }
-                        , parameters: function () {
+                        },
+                        parameters: function () {
                             return (parameters || undefined);
                         }
-                    }
-                    , size: 'sm'
+                    },
+                    size: 'sm'
                 });
         }
     }

@@ -5,13 +5,13 @@
         .module('spi.components.tabelle.ui', ['spi.components.jugendlabel.ui'])
         .controller('TabelleController', TabelleController)
         .component('spiTabelle', {
-            templateUrl: 'components/tabelle/tabelle.html'
-            , bindings: {
+            templateUrl: 'components/tabelle/tabelle.html',
+            bindings: {
                 teams: '<',
                 highlightedTeam: '<'
-            }
-            , controller: 'TabelleController'
-            , controllerAs: 'vm'
+            },
+            controller: 'TabelleController',
+            controllerAs: 'vm'
         });
 
     function TabelleController() {

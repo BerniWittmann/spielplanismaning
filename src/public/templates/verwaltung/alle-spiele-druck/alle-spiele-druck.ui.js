@@ -11,11 +11,11 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.verwaltung.spiele-druck', {
-                url: '/spiele-druck'
-                , templateUrl: 'templates/verwaltung/alle-spiele-druck/alle-spiele-druck.html'
-                , controller: SpieleDruckController
-                , controllerAs: 'vm'
-                , resolve: {
+                url: '/spiele-druck',
+                templateUrl: 'templates/verwaltung/alle-spiele-druck/alle-spiele-druck.html',
+                controller: SpieleDruckController,
+                controllerAs: 'vm',
+                resolve: {
                     spielPromise: function (spiel) {
                         return spiel.getAll();
                     }
@@ -39,8 +39,8 @@
                         teamid: gewaehltesteam._id
                     });
                 }
-            }
-            , gotoGruppe: function (gewaehltegruppe) {
+            },
+            gotoGruppe: function (gewaehltegruppe) {
                 if (gewaehltegruppe) {
                     $state.go('spi.tgj.gruppe', {
                         gruppeid: gewaehltegruppe._id

@@ -8,22 +8,15 @@
             var ENDPOINT_URL = '/api/spielplan';
 
             var spielplan = {
-                startzeit: undefined
-                , spielzeit: undefined
-                , pausenzeit: undefined
-                , spiele: []
-                , progress: 0
-                , maxProgress: 0
+                startzeit: undefined,
+                spielzeit: undefined,
+                pausenzeit: undefined,
+                spiele: [],
+                progress: 0,
+                maxProgress: 0
             };
 
-            var lastPlayingTeams;
-            var i;
-            var spieleGesamt;
-            var platz;
-            var plaetze = 3;
             var zeit;
-            var leereSpieleStreak;
-            var maxLeereSpieleStreak = 6;
 
             var spielplanerstellungRunning = false;
 
@@ -46,21 +39,13 @@
             };
 
             spielplan.saveZeiten = function (zeiten) {
-                return $http.put(ENDPOINT_URL + '/zeiten', zeiten, {
-                    headers: {
-                        Authorization: 'Bearer ' + auth.getToken()
-                    }
-                }).success(function (data) {
+                return $http.put(ENDPOINT_URL + '/zeiten', zeiten).success(function (data) {
                     return data;
                 });
             };
 
             spielplan.createSpielplan = function () {
-                return $http.put(ENDPOINT_URL, {
-                    headers: {
-                        Authorization: 'Bearer ' + auth.getToken()
-                    }
-                }).success(function (data) {
+                return $http.put(ENDPOINT_URL).success(function (data) {
                     return data;
                 });
             };

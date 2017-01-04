@@ -7,12 +7,12 @@
         ])
         .controller('JugendPanelController', JugendPanelController)
         .component('spiJugendPanel', {
-            templateUrl: 'components/jugend-panel/jugend-panel.html'
-            , bindings: {
+            templateUrl: 'components/jugend-panel/jugend-panel.html',
+            bindings: {
                 jugend: '='
-            }
-            , controller: 'JugendPanelController'
-            , controllerAs: 'vm'
+            },
+            controller: 'JugendPanelController',
+            controllerAs: 'vm'
         });
 
     function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, BestaetigenDialog) {

@@ -17,18 +17,18 @@
             //noinspection JSUnusedGlobalSymbols
             return $uibModal
                 .open({
-                    templateUrl: 'components/gruppe-edit-modal/gruppe-edit-modal.html'
-                    , controller: 'GruppeEditierenController'
-                    , controllerAs: 'vm'
-                    , resolve: {
+                    templateUrl: 'components/gruppe-edit-modal/gruppe-edit-modal.html',
+                    controller: 'GruppeEditierenController',
+                    controllerAs: 'vm',
+                    resolve: {
                         gewGruppe: function () {
                             return gewaehlteGruppe;
                         },
                         teamPromise: function (team) {
                             return team.getByGruppe(gewaehlteGruppe._id, gewaehlteGruppe.jugend._id);
                         }
-                    }
-                    , size: 'md'
+                    },
+                    size: 'md'
                 });
         }
     }

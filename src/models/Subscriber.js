@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SubscriberSchema = new mongoose.Schema({
-    email: String
-    , team: {
-        type: Schema.ObjectId
-        , ref: 'Team'
+    email: String,
+    team: {
+        type: Schema.ObjectId,
+        ref: 'Team'
     }
 });
 

@@ -11,11 +11,11 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.kontakt', {
-                url: '/kontakt'
-                , templateUrl: 'templates/kontakt/kontakt.html'
-                , controller: KontaktController
-                , controllerAs: 'vm'
-                , resolve: {
+                url: '/kontakt',
+                templateUrl: 'templates/kontakt/kontakt.html',
+                controller: KontaktController,
+                controllerAs: 'vm',
+                resolve: {
                     versionPromise: function (config) {
                         return config.getVersion();
                     },

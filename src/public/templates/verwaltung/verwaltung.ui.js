@@ -10,9 +10,9 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.verwaltung', {
-                url: '/verwaltung'
-                , abstract: true
-                , template: '<ui-view></ui-view>'
+                url: '/verwaltung',
+                abstract: true,
+                template: '<ui-view></ui-view>'
             });
     }
 })();
