@@ -8,6 +8,16 @@
         var URL = '/teams';
         var STATE_NAME = 'spi.verwaltung.teams';
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
+            });
+        });
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.verwaltung', {abstract: true});

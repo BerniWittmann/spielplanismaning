@@ -33,6 +33,16 @@
             gruppe: '4321'
         }];
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
+            });
+        });
+
         beforeEach(inject(function (_team_, $httpBackend) {
             team = _team_;
             httpBackend = $httpBackend;
