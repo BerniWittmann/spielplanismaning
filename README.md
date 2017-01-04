@@ -1,5 +1,7 @@
 # spielplanismaning
-Spielplan - System für die Beachturniere in Ismaning
+[![GitHub version](https://badge.fury.io/gh/berniwittmann%2Fspielplanismaning.svg)](https://badge.fury.io/gh/berniwittmann%2Fspielplanismaning)
+
+Spielplan - System für die Beachturniere in Ismaning 
 
 ## Dokumentation
 
