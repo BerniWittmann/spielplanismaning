@@ -1,7 +1,7 @@
 module.exports = function (app, sendgrid) {
     var routes = require('./index.js')();
-    var users = require('./users.js')();
-    var email = require('./email.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'));
+    var users = require('./users.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+    var email = require('./email.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
     var config = require('./config.js')(process.env);
     var teams = require('./teams.js')();
     var gruppen = require('./gruppen.js')();

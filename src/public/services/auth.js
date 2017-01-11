@@ -122,6 +122,27 @@
                 return $q.when();
             };
 
+            auth.forgotPassword = function (email) {
+                var data = {
+                    email: email
+                };
+
+                return $http.put(ENDPOINT_URL + '/password-forgot', data);
+            };
+
+            auth.checkResetToken = function (token) {
+                return $http.put(ENDPOINT_URL + '/password-reset/check', {'token': token});
+            };
+
+            auth.resetPassword = function (username, token, password) {
+                var data = {
+                    username: username,
+                    token: token,
+                    password: password
+                };
+                return $http.put(ENDPOINT_URL + '/password-reset', data);
+            };
+
             return auth;
         }]);
 })();
