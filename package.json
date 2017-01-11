@@ -1,6 +1,6 @@
 {
   "name": "spielplan-ismaning",
-  "version": "1.0.3",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "start": "bower install && gulp serve:dist"

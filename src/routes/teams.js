@@ -29,6 +29,8 @@ module.exports = function () {
      * @apiSuccess {Integer} gpunkte Anzahl Gegenpunkte des Teams
      * @apiUse vResponse
      *
+     * @apiUse ErrorTeamNotFoundMessage
+     *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     [{
@@ -45,7 +47,9 @@ module.exports = function () {
      **/
     router.get('/', function (req, res) {
         var query = Team.find();
+        var searchById = false;
         if (req.query.id) {
+            searchById = true;
             query = Team.find({_id: req.query.id});
         } else if (req.query.gruppe) {
             query = Team.find({gruppe: req.query.gruppe});
@@ -54,6 +58,10 @@ module.exports = function () {
         }
 
         query.deepPopulate('gruppe jugend').exec(function (err, teams) {
+            if (searchById && !teams) {
+                return messages.ErrorTeamNotFound(res, err);
+            }
+
             if (err) {
                 return messages.Error(res, err);
             }

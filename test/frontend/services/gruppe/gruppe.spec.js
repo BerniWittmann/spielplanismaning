@@ -29,6 +29,16 @@
             jugend: '321'
         }];
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
+            });
+        });
+
         beforeEach(inject(function (_gruppe_, $httpBackend) {
             gruppe = _gruppe_;
             httpBackend = $httpBackend;

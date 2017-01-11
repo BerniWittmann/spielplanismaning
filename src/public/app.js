@@ -3,9 +3,10 @@
 
     angular
         .module('spi', [
-            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpInterceptor', 'spi.constants'
+            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpInterceptor', 'spi.constants', 'spi.errorHandler', 'toastr'
         ])
         .config(states)
+        .config(toastr)
         .controller('AppController', AppController)
         .run(run);
 
@@ -23,6 +24,15 @@
         $locationProvider.html5Mode(true);
     }
 
+    function toastr(toastrConfig) {
+        angular.extend(toastrConfig, {
+            autoDismiss: true,
+            preventOpenDuplicates: true,
+            closeButton: true,
+            progressBar: true
+        });
+    }
+
     function run($rootScope) {
         $rootScope.onload = function () {
             var page = document.getElementById('page');
@@ -35,7 +45,7 @@
         vm.runBefore = false;
 
         $rootScope.$on('$stateChangeStart', function (event, toState) {
-            if(!_.isEqual(toState.name, 'spi.login')) {
+            if (!_.isEqual(toState.name, 'spi.login')) {
                 checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope);
                 auth.checkRoute($q, toState);
             }
@@ -47,7 +57,7 @@
         });
 
         $rootScope.$on('$viewContentLoading', function () {
-            if(!vm.runBefore) {
+            if (!vm.runBefore) {
                 auth.checkRoute($q, $state.current);
                 vm.runBefore = true;
             }

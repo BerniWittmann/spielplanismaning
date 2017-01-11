@@ -23,11 +23,14 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiParam {String} [team]  Optionale ID des Teams.
      *
      *
+     * @apiUse ErrorSpielNotFoundMessage
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
         var query = Spiel.find();
+        var searchById = false;
         if (req.query.id) {
+            searchById = true;
             query = Spiel.findById(req.query.id);
         } else if (req.query.team) {
             //noinspection JSUnresolvedFunction
@@ -44,6 +47,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
         }
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
+            if (searchById && !spiele) {
+                return messages.ErrorSpielNotFound(res, err);
+            }
             if (err) {
                 return messages.Error(res, err);
             }

@@ -23,9 +23,17 @@
             });
     }
 
-    function PlatzController(spielPromise, $stateParams) {
+    function PlatzController(spielPromise, $stateParams, errorHandler, ANZAHL_PLAETZE) {
         var vm = this;
         vm.loading = true;
+
+        if (!$stateParams.platznummer || $stateParams.platznummer > ANZAHL_PLAETZE || $stateParams.platznummer <= 0) {
+            return errorHandler.handleResponseError({
+                MESSAGE: 'Platz nicht gefunden',
+                STATUSCODE: 404,
+                MESSAGEKEY: 'ERROR_PLATZ_NOT_FOUND'
+            });
+        }
 
         _.extend(vm, {
             platz: $stateParams.platznummer,

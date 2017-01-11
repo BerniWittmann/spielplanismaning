@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.team.ui', [
-            'spi.email', 'spi.team', 'ui.router', 'spi.spiel'
+            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui'
         ])
         .config(states)
         .controller('TeamController', TeamController);
@@ -30,6 +30,8 @@
     function TeamController(teamPromise, spielPromise, TeamAbonnierenDialog, email, team) {
         var vm = this;
         vm.loading = true;
+
+        console.log(teamPromise);
 
         _.extend(vm, {
             team: teamPromise,

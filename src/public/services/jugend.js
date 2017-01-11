@@ -3,7 +3,7 @@
 
     angular
         .module('spi.jugend', [])
-        .factory('jugend', ['$http', function ($http) {
+        .factory('jugend', ['$http', 'errorHandler', function ($http, errorHandler) {
 
             var ENDPOINT_URL = '/api/jugenden';
 
@@ -16,7 +16,9 @@
             };
 
             jugend.get = function (id) {
-                return $http.get(ENDPOINT_URL + '?id=' + id).then(function (res) {
+                return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
+                    return errorHandler.handleResponseError(err);
+                }).then(function (res) {
                     return res.data;
                 });
             };

@@ -8,11 +8,22 @@
             log: function () {
             }
         };
+
         beforeEach(module('spi.spiel'));
         beforeEach(module('spi.constants'));
         beforeEach(module('spi.logger'), function ($provide) {
             $provide.value('Logger', function () {
                 return mockLogger;
+            });
+            $provide.value('errorHandler', mockErrorHandler)
+        });
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
             });
         });
         var ENDPOINT_BASE_URL = '/api/spiele';

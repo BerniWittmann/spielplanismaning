@@ -1,1 +1,1 @@
-web: gulp serve:dist
+web: bower install && gulp serve:dist

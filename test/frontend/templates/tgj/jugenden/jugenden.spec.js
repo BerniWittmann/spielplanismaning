@@ -31,6 +31,16 @@
             gruppen: []
         }];
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
+            });
+        });
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
@@ -52,7 +62,8 @@
             $httpBackend = $injector.get('$httpBackend');
 
             var ctrl = scope.vm = $controller('JugendenController', {
-                jugendPromise: {data: jugenden}
+                jugendPromise: {data: jugenden},
+                errorHandler: mockErrorHandler
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

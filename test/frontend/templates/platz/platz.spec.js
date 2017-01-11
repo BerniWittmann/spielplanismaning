@@ -46,6 +46,10 @@
             platznummer: 1
         };
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.platz.ui'));
@@ -66,7 +70,9 @@
             var ctrl = scope.vm = $controller('PlatzController', {
                 spielPromise: {data: spiele},
                 $state: mockState,
-                $stateParams: mockStateParams
+                $stateParams: mockStateParams,
+                errorHandler: mockErrorHandler,
+                ANZAHL_PLAETZE: 3
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

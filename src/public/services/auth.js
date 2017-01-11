@@ -113,7 +113,7 @@
                     } else {
                         if (!_.isEqual(toState.name, 'spi.login')) {
                             $timeout(function () {
-                                $state.go('spi.login', {reason: 'Sie verfügen nicht über genügend Rechte. Bitte melden Sie sich mit einem passenden Account an.'});
+                                $state.go('spi.login', {next: toState.name, reasonKey: 'AUTH_ERROR', reason: 'Sie verfügen nicht über genügend Rechte. Bitte melden Sie sich mit einem passenden Account an.'});
                             });
                         }
                         return $q.reject();

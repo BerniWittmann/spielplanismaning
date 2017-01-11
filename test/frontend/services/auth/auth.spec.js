@@ -196,6 +196,116 @@
             expect(auth.isAdmin()).to.be.false;
         });
 
+        describe('soll prüfen ob eine Route zugänglich ist', function () {
+            var toState = {
+                name: 'toStateName',
+                data: {
+                    requiredRoles: ['admin']
+                }
+            };
+
+            var q = {
+                when: function () {},
+                reject: function () {}
+            };
+            before(function () {
+                window.localStorage[TOKENNAME] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg';
+            });
+
+            it('wenn keine State-Daten angegeben sind, soll die Route zugänglich sein', function () {
+                toState.data = undefined;
+                var spyState = chai.spy.on(mockState, 'go');
+                var spyResolve = chai.spy.on(q, 'when');
+                var spyReject = chai.spy.on(q, 'reject');
+
+                auth.checkRoute(q, toState);
+
+                expect(spyState).not.to.have.been.called();
+                expect(spyReject).not.to.have.been.called();
+                expect(spyResolve).to.have.been.called();
+            });
+
+            it('wenn keine benötigten Rollen angegeben sind, soll die Route zugänglich sein', function () {
+                toState.data = {
+                    requiredRoles: undefined
+                };
+                var spyState = chai.spy.on(mockState, 'go');
+                var spyResolve = chai.spy.on(q, 'when');
+                var spyReject = chai.spy.on(q, 'reject');
+
+                auth.checkRoute(q, toState);
+
+                expect(spyState).not.to.have.been.called();
+                expect(spyReject).not.to.have.been.called();
+                expect(spyResolve).to.have.been.called();
+            });
+
+            it('wenn ein leeres Feld von benötigten Rollen angegeben sind, soll die Route zugänglich sein', function () {
+                toState.data = {
+                    requiredRoles: []
+                };
+                var spyState = chai.spy.on(mockState, 'go');
+                var spyResolve = chai.spy.on(q, 'when');
+                var spyReject = chai.spy.on(q, 'reject');
+
+                auth.checkRoute(q, toState);
+
+                expect(spyState).not.to.have.been.called();
+                expect(spyReject).not.to.have.been.called();
+                expect(spyResolve).to.have.been.called();
+            });
+
+            it('wenn die benötigte Rolle in einem Array angegeben ist, soll die Route zugänglich sein', function () {
+                toState.data = {
+                    requiredRoles: ['admin']
+                };
+                var spyState = chai.spy.on(mockState, 'go');
+                var spyResolve = chai.spy.on(q, 'when');
+                var spyReject = chai.spy.on(q, 'reject');
+
+                auth.checkRoute(q, toState);
+
+                expect(spyState).not.to.have.been.called();
+                expect(spyReject).not.to.have.been.called();
+                expect(spyResolve).to.have.been.called();
+            });
+
+            it('wenn die benötigte Rolle nicht erfüllt ist, soll die Route nicht zugänglich sein', inject(function($timeout) {
+                toState.data = {
+                    requiredRoles: ['bearbeiter']
+                };
+
+                var spyState = chai.spy.on(mockState, 'go');
+                var spyResolve = chai.spy.on(q, 'when');
+                var spyReject = chai.spy.on(q, 'reject');
+
+                auth.checkRoute(q, toState);
+
+                $timeout.flush();
+
+                expect(spyState).to.have.been.called();
+                expect(spyReject).to.have.been.called();
+                expect(spyResolve).not.to.have.been.called();
+            }));
+
+            it('wenn Nutzer gar keine Rolle hat, soll die Route nicht zugänglich sein', inject(function($timeout) {
+                toState.data = {
+                    requiredRoles: ['bearbeiter']
+                };
+
+                var spyState = chai.spy.on(mockState, 'go');
+                var spyResolve = chai.spy.on(q, 'when');
+                var spyReject = chai.spy.on(q, 'reject');
+
+                auth.checkRoute(q, toState);
+
+                $timeout.flush();
+
+                expect(spyState).to.have.been.called();
+                expect(spyReject).to.have.been.called();
+                expect(spyResolve).not.to.have.been.called();
+            }));
+        });
     });
 
 }());

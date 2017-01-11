@@ -17,6 +17,9 @@
             go: function () {
             }
         };
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
         beforeEach(module('spi.spielplan'));
 
         var ENDPOINT_BASE_URL = '/api/spielplan';
@@ -30,6 +33,7 @@
                 $provide.value('$state', mockState);
                 $provide.value('auth', mockAuth);
                 $provide.value('Logger', mockLogger);
+                $provide.value('errorHandler', mockErrorHandler);
             });
         });
 

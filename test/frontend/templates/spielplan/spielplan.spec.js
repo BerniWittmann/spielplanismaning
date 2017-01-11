@@ -50,6 +50,15 @@
             }
         };
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
+            });
+        });
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.spielplan.ui'));
@@ -71,7 +80,8 @@
 
             var ctrl = scope.vm = $controller('SpielplanController', {
                 spielPromise: {data: spiele},
-                $state: mockState
+                $state: mockState,
+                errorHandler: mockErrorHandler
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

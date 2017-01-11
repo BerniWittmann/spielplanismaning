@@ -25,6 +25,16 @@
             gruppen: ['312', '123']
         }];
 
+        var mockErrorHandler = {
+            handleResponseError: function () {}
+        };
+
+        beforeEach(function () {
+            module(function ($provide) {
+                $provide.value('errorHandler', mockErrorHandler);
+            });
+        });
+
         beforeEach(inject(function (_jugend_, $httpBackend) {
             jugend = _jugend_;
             httpBackend = $httpBackend;

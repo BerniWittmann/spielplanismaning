@@ -12,6 +12,9 @@
             go: function () {
             }
         };
+        var mockToastr = {
+            error: function () {}
+        };
 
         var lockdown = false;
 
@@ -48,7 +51,8 @@
             var ctrl = scope.vm = $controller('LoginController', {
                 auth: mockAuth,
                 $state: mockState,
-                lockdown: {data: (lockdown || false)}
+                lockdown: {data: (lockdown || false)},
+                toastr: mockToastr
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
