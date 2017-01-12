@@ -1,4 +1,5 @@
 module.exports = function (sendgrid, env, url, disableMails) {
+    var _ = require('lodash');
     var mailGenerator = {};
 
     mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
@@ -152,7 +153,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
             });
 
-            sendgrid.send(mail, cb);
+            sendMail(mail, cb, true);
         } else {
             return cb(null, {});
         }
@@ -188,15 +189,19 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
             });
 
-            sendgrid.send(mail, cb);
+            sendMail(mail, cb, true);
         } else {
             return cb(null, {});
         }
     };
 
-    function sendMail(mail, cb) {
+    function sendMail(mail, cb, ignoreEnvironment) {
+        if (_.isUndefined(ignoreEnvironment) || _.isNull(ignoreEnvironment)) {
+            ignoreEnvironment = false;
+        }
+
         if (disableMails != 'true') {
-            if (env !== 'production') {
+            if (ignoreEnvironment || env !== 'production') {
                 mail.setTos(['kinderbeach.ismaning@byom.com']);
                 mail.setSmtpapiTos(['kinderbeach.ismaning@byom.com']);
             }
