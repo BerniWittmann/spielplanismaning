@@ -144,7 +144,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      **/
     router.put('/password-forgot', function (req, res) {
         if (!req.body.email) {
-            return messages.ErrorBadRequest(res)
+            return messages.ErrorBadRequest(res);
         }
 
         var email = req.body.email;
@@ -190,7 +190,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      **/
     router.put('/password-reset/check', function (req, res) {
         if (!req.body.token) {
-            return messages.ErrorBadRequest(res)
+            return messages.ErrorBadRequest(res);
         }
 
         User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
@@ -224,7 +224,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      **/
     router.put('/password-reset', function (req, res) {
         if (!req.body.token || !req.body.username || !req.body.password) {
-            return messages.ErrorBadRequest(res)
+            return messages.ErrorBadRequest(res);
         }
         User.findOne({'username': req.body.username}).exec(function (err, user) {
             if (!user) {

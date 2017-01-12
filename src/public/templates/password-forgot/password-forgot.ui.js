@@ -29,7 +29,7 @@
         vm.forgotPassword = function () {
             if(vm.email) {
                 auth.forgotPassword(vm.email).then(function () {
-                    toastr.success('Wir haben eine Email mit weiteren Infos an ' + vm.email + ' versendet.', 'Email versendet')
+                    toastr.success('Wir haben eine Email mit weiteren Infos an ' + vm.email + ' versendet.', 'Email versendet');
                 }, function (error) {
                     console.log(error);
                     toastr.error(error.data.MESSAGE, 'Fehler');

@@ -35,7 +35,7 @@
             user: userDetails.data,
             resetPassword: function () {
                 auth.forgotPassword(email).then(function () {
-                    toastr.success('Wir haben eine Email mit weiteren Infos an ' + email + ' versendet.', 'Email versendet')
+                    toastr.success('Wir haben eine Email mit weiteren Infos an ' + email + ' versendet.', 'Email versendet');
                 }, function (error) {
                     console.log(error);
                     toastr.error(error.data.MESSAGE, 'Fehler');
@@ -44,12 +44,12 @@
             changeUserDetails: function () {
                 auth.setUserDetails(vm.user).then(function (response) {
                     auth.saveToken(response.data.token);
-                    toastr.success('Wir haben deine Daten gespeichert', 'Gespeichert')
+                    toastr.success('Wir haben deine Daten gespeichert', 'Gespeichert');
                 }, function (error) {
                     console.log(error);
                     toastr.error(error.data.MESSAGE, 'Fehler');
                 });
             }
-        })
+        });
     }
 })();
