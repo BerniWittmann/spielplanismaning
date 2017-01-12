@@ -1,4 +1,4 @@
-module.exports = function (sendgrid, env, url, disableEmails) {
+module.exports = function (sendgrid, env, url, disableEmails, secret) {
     var express = require('express');
     var router = express.Router();
 
@@ -6,6 +6,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
     var User = mongoose.model('User');
     var passport = require('passport');
     var jwt = require('express-jwt');
+    var jsonwebtoken = require('jsonwebtoken');
 
     var messages = require('./messages/messages.js')();
     var mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
@@ -107,7 +108,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
             return messages.ErrorBadRequest(res);
         }
         if (req.body.username == 'berni') {
-           return messages.ErrorUserNichtLoeschbar(res);
+            return messages.ErrorUserNichtLoeschbar(res);
         }
         User.find({
             username: req.body.username
@@ -140,13 +141,12 @@ module.exports = function (sendgrid, env, url, disableEmails) {
 
         var email = req.body.email;
 
-        User.findOne({ $or:[ {'username':email}, {'email':email} ]}).exec(function (err, user) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
+        User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
             if (!user) {
                 return messages.Success(res);
+            }
+            if (err) {
+                return messages.Error(res, err);
             }
 
             user.generateResetToken();
@@ -242,6 +242,128 @@ module.exports = function (sendgrid, env, url, disableEmails) {
             }
         });
 
+    });
+
+    /**
+     * @api {get} /users/userDetails Lädt die NutzerDetails
+     * @apiName UserDetailsLoad
+     * @apiDescription Lädt die NutzerDetails des Users
+     * @apiGroup Users
+     * @apiPermission Admin_Bearbeiter
+     *
+     * @apiUse ErrorForbiddenMessage
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         _id: '57cffb4055a8d45fc084c107',
+     *         username: 'Username',
+     *         email: 'test@email.de',
+     *         role: {
+     *             name: 'Bearbeiter',
+     *             rank: 0,
+     *         }
+     *     }
+     **/
+    router.get('/user-details', function (req, res) {
+        var user;
+        try {
+            user = jsonwebtoken.verify(req.get('Authorization'), secret);
+        } catch (err) {
+            return messages.ErrorForbidden(res);
+        }
+
+        if (!user || !user._id) {
+            return messages.ErrorForbidden(res);
+        }
+
+        User.findOne({username: user.username}).exec(function (err, userDB) {
+            if (err || !userDB) {
+                return messages.ErrorForbidden(res);
+            }
+
+            var result = {
+                _id: userDB._id,
+                username: userDB.username,
+                email: userDB.email,
+                role: userDB.role
+            };
+            return res.send(result);
+        });
+    });
+
+    /**
+     * @api {put} /users/userDetails Updated die NutzerDetails
+     * @apiName UserDetailsUpdate
+     * @apiDescription Speichert die NutzerDetails des Users
+     * @apiGroup Users
+     * @apiPermission Admin_Bearbeiter
+     *
+     * @apiUse ErrorUserNotFound
+     *
+     * @apiUse ErrorForbiddenMessage
+     * @apiUse ErrorBadRequest
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *         _id: '57cffb4055a8d45fc084c107',
+     *         username: 'Username',
+     *         email: 'test@email.de',
+     *         role: {
+     *             name: 'Bearbeiter',
+     *             rank: 0,
+     *         },
+     *         token: 'jwtToken'
+     *     }
+     **/
+    router.put('/user-details', function (req, res) {
+        if (!req.body.email && !req.body.username) {
+            return messages.ErrorBadRequest(res);
+        }
+
+        var user;
+        try {
+            user = jsonwebtoken.verify(req.get('Authorization'), secret);
+        } catch (err) {
+            return messages.ErrorForbidden(res);
+        }
+
+        if (!user || !user._id) {
+            return messages.ErrorForbidden(res);
+        }
+
+        User.findOne({username: user.username}).exec(function (err, userDB) {
+            if (err || !userDB) {
+                return messages.ErrorForbidden(res);
+            }
+
+            var username = userDB.username;
+            if (req.body.username) {
+                username = req.body.username.toLowerCase();
+            }
+
+            var email = (userDB.email || "");
+            if (req.body.email) {
+                email = req.body.email;
+            }
+
+            return User.findOneAndUpdate({username: userDB.username}, { $set: { username: username, email: email }}, {runValidators: true, new: true}, function (err, userNew) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
+
+                var result = {
+                    _id: userNew._id,
+                    username: userNew.username,
+                    email: userNew.email,
+                    role: userNew.role,
+                    token: userNew.generateJWT()
+                };
+
+                return res.json(result);
+            });
+        });
     });
 
     return router;

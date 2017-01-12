@@ -91,6 +91,14 @@ module.exports = function (secret) {
         return false;
     };
 
+    UserSchema.methods.setUsername = function (username) {
+        this.username = username;
+    };
+
+    UserSchema.methods.setEmail = function (email) {
+        this.email = email;
+    };
+
     var deepPopulate = require('mongoose-deep-populate')(mongoose);
     UserSchema.plugin(deepPopulate, {});
 

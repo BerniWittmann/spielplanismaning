@@ -143,6 +143,14 @@
                 return $http.put(ENDPOINT_URL + '/password-reset', data);
             };
 
+            auth.getUserDetails = function () {
+                return $http.get(ENDPOINT_URL + '/user-details');
+            };
+
+            auth.setUserDetails = function (data) {
+                return $http.put(ENDPOINT_URL + '/user-details', data);
+            };
+
             return auth;
         }]);
 })();

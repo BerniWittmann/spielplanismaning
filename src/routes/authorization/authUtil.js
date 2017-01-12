@@ -38,7 +38,8 @@ module.exports = function () {
         },
         '/api/spielplan/ausnahmen': ['admin'],
         '/api/users/register': ['admin'],
-        '/api/users/delete': ['admin']
+        '/api/users/delete': ['admin'],
+        '/api/users/userDetails': ['bearbeiter', 'admin']
     };
 
     return {

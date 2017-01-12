@@ -14,7 +14,10 @@
                 url: '/forgot-password',
                 templateUrl: 'templates/password-forgot/password-forgot.html',
                 controller: PasswordForgotController,
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                data: {
+                    requiredRoles: []
+                }
             });
 
     }

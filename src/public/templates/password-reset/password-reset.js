@@ -17,6 +17,9 @@
                 controllerAs: 'vm',
                 resolve: {
                     isValidToken: isValidToken
+                },
+                data: {
+                    requiredRoles: []
                 }
             });
 
