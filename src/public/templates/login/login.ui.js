@@ -24,6 +24,9 @@
                     reason: undefined,
                     reasonKey: undefined,
                     next: undefined
+                },
+                data: {
+                    requiredRoles: []
                 }
             });
 

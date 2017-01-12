@@ -64,7 +64,7 @@ app.listen(app.get('port'), function () {
 require('./routes/authorization/authorization.js')(app, secret);
 
 //Setup Routes
-require('./routes/routes.js')(app, sendgrid);
+require('./routes/routes.js')(app, sendgrid, secret);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

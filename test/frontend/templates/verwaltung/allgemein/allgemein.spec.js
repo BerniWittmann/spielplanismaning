@@ -133,7 +133,7 @@
             render();
             ctrl.user = {
                 username: 'Test',
-                password: '12345',
+                email: 'test1234@byom.de',
                 role: 'Bearbeiter'
             };
             var spy = chai.spy.on(mockAuth, 'register');
@@ -152,7 +152,7 @@
             render();
             ctrl.user = {
                 username: 'Test',
-                password: '12345',
+                email: 'test123@byom.de',
                 role: 'Bearbeiter'
             };
 
@@ -161,7 +161,7 @@
 
             var result = element.find('.alert-danger');
             expect(result).to.exist;
-            expect(result.text()).to.contain('Dieser Username existiert bereits');
+            expect(result.text()).to.contain('Dieser Username oder diese Email existiert bereits');
         });
 
         it('soll einen Nutzer löschen können', function () {

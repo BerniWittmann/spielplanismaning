@@ -14,9 +14,15 @@ describe('Route: Users', function () {
 
     var user = {
         username: 'test-user',
+        email: 'test@byom.de',
         password: '1337-5P34K',
-        role: 'Bearbeiter'
+        role: 'Bearbeiter',
+        token: undefined
     };
+
+    var resetToken;
+    var hashBefore;
+    var username;
 
     it('soll einen Nutzer registrieren können', function (done) {
         request(server)
@@ -35,6 +41,8 @@ describe('Route: Users', function () {
                     expect(res.username).to.be.equal(user.username);
                     expect(res.salt).to.exist;
                     expect(res.hash).to.exist;
+                    expect(res.resetToken).to.exist;
+                    token = res.generateJWT();
                     return done();
                 });
 
@@ -60,7 +68,7 @@ describe('Route: Users', function () {
         request(server)
             .post('/api/users/register')
             .set('Authorization', server.adminToken)
-            .send({username: 'test-user', password: 'neuesPW', role: 'Bearbeiter'})
+            .send({username: 'test-user', email: 'test2@byom.de', role: 'Bearbeiter'})
             .expect(500)
             .end(function (err, res) {
                 if (err) return done(err);
@@ -73,17 +81,29 @@ describe('Route: Users', function () {
     });
 
     it('soll einen Nutzer einloggen können', function (done) {
-        request(server)
-            .post('/api/users/login')
-            .send(user)
-            .expect(200)
-            .end(function (err, res) {
+        mongoose.model('User').findOne({username: user.username}).exec(function (err, usr) {
+            if (err) return done(err);
+
+            usr.setPassword(user.password);
+
+            usr.save(function (err, res) {
                 if (err) return done(err);
-                expect(res).not.to.be.undefined;
-                expect(res.statusCode).to.equal(200);
-                expect(res.body.token).to.exist;
-                return done();
+
+                request(server)
+                    .post('/api/users/login')
+                    .send(user)
+                    .expect(200)
+                    .end(function (err, res) {
+                        if (err) return done(err);
+                        expect(res).not.to.be.undefined;
+                        expect(res.statusCode).to.equal(200);
+                        expect(res.body.token).to.exist;
+                        user.token = res.body.token;
+                        return done();
+                    });
             });
+        });
+
     });
 
     it('Bei Fehlenden Feldern soll eine Meldung zurückgegeben werden', function (done) {
@@ -128,40 +148,6 @@ describe('Route: Users', function () {
             });
     });
 
-    it('wenn zum Löschen kein Nutzername angegeben ist, soll ein Fehler geworfen werden', function (done) {
-        request(server)
-            .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
-            .send({})
-            .expect(400)
-            .end(function (err, res) {
-                if (err) return done(err);
-                expect(res).not.to.be.undefined;
-                expect(res.statusCode).to.equal(400);
-                expect(res.body.MESSAGEKEY).to.be.equal('ERROR_BAD_REQUEST');
-                return done();
-            });
-    });
-
-    it('soll einen Nutzer löschen können', function (done) {
-        request(server)
-            .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
-            .send({username: 'test-user'})
-            .expect(200)
-            .end(function (err, res) {
-                if (err) return done(err);
-                expect(res).not.to.be.undefined;
-                expect(res.statusCode).to.equal(200);
-                expect(res.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
-                mongoose.model('User').find({username: 'test-user'}).exec(function (err, res) {
-                    if (err) return done(err);
-                    expect(res).to.be.empty;
-                    return done();
-                });
-            });
-    });
-
     it('Bei falschem Nutzername soll ein Fehler geliefert werden', function (done) {
         request(server)
             .put('/api/users/delete')
@@ -190,6 +176,160 @@ describe('Route: Users', function () {
                 expect(res.statusCode).to.equal(403);
                 expect(res.body.MESSAGEKEY).to.be.equal('ERROR_USER_NICHT_LOESCHBAR');
                 return done();
+            });
+    });
+
+    it('Ein Nutzer soll den Nutzernamen ändern können', function (done) {
+        request(server)
+            .put('/api/users/user-details')
+            .set('Authorization', user.token)
+            .send({username: 'testuser'})
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.username).to.equal('testuser');
+                user.token = res.body.token;
+                return done();
+            });
+    });
+
+    it('Ein Nutzer soll ein neues Passwort anfordern können', function (done) {
+        request(server)
+            .put('/api/users/password-forgot')
+            .set('Authorization', server.bearbeiterToken)
+            .send({email: 'test@byom.de'})
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.MESSAGEKEY).to.be.equal('SUCCESS_MESSAGE');
+                return done();
+            });
+    });
+
+    it('soll prüfen können ob ein ResetToken gültig ist', function (done) {
+        mongoose.model('User').findOne({email: 'test@byom.de'}).exec(function (err, usr) {
+            if (err) return done(err);
+
+            resetToken = usr.resetToken;
+            hashBefore = usr.hash;
+            username = usr.username;
+            request(server)
+                .put('/api/users/password-reset/check')
+                .send({token: resetToken})
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) return done(err);
+                    expect(res).not.to.be.undefined;
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.body.MESSAGEKEY).to.equal('SUCCESS_MESSAGE');
+                    return done();
+                });
+        });
+    });
+
+    it('soll ein neues Passwort speichern', function (done) {
+        request(server)
+            .put('/api/users/password-reset')
+            .send({token: resetToken, username: username, password: 'allesneumachtdermai'})
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.MESSAGEKEY).to.equal('SUCCESS_MESSAGE');
+                return mongoose.model('User').findOne({username: username}).exec(function (err, usr) {
+                    if(err) return done(err);
+
+                    expect(usr.hash).not.to.be.equal(hashBefore);
+                    expect(usr.resetToken).not.to.exist;
+
+                    return done();
+                });
+            });
+    });
+
+    it('Ein Nutzer soll die Email ändern können', function (done) {
+        request(server)
+            .put('/api/users/user-details')
+            .set('Authorization', user.token)
+            .send({email: 'test1@byom.de'})
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.email).to.equal('test1@byom.de');
+                user.token = res.body.token;
+                return done();
+            });
+    });
+
+    it('Ein Nutzer soll seine eigenen NutzerDetails laden können', function (done) {
+        request(server)
+            .get('/api/users/user-details')
+            .set('Authorization', user.token)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.email).to.equal('test1@byom.de');
+                expect(res.body.username).to.equal('testuser');
+                expect(res.body.role.name).to.equal('Bearbeiter');
+                return done();
+            });
+    });
+
+    it('wenn zum Löschen kein Nutzername angegeben ist, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
+            .send({})
+            .expect(400)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(400);
+                expect(res.body.MESSAGEKEY).to.be.equal('ERROR_BAD_REQUEST');
+                return done();
+            });
+    });
+
+    it('wenn der Nutzername nicht gefunden Wird, soll ein Fehler geworfen werden', function (done) {
+        request(server)
+            .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
+            .send({username: 'wrongname'})
+            .expect(404)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(404);
+                expect(res.body.MESSAGEKEY).to.be.equal('ERROR_USER_NOT_FOUND');
+                return done();
+            });
+    });
+
+    it('soll einen Nutzer löschen können', function (done) {
+        request(server)
+            .put('/api/users/delete')
+            .set('Authorization', server.adminToken)
+            .send({username: 'testuser'})
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                expect(res).not.to.be.undefined;
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
+                mongoose.model('User').find({username: 'test-user'}).exec(function (err, res) {
+                    if (err) return done(err);
+                    expect(res).to.be.empty;
+                    return done();
+                });
             });
     });
 
