@@ -52,6 +52,10 @@ module.exports = function (secret) {
         this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
     };
 
+    UserSchema.methods.setRandomPassword = function () {
+        this.setPassword(tokenGenerator.generate());
+    };
+
     UserSchema.methods.setRole = function (rolename) {
         if (roles.indexOf(rolename) >= 0) {
             this.role = {name: rolename, rank: roles.indexOf(rolename)};

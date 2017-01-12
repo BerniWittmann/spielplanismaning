@@ -26,7 +26,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.post('/register', function (req, res) {
-        if (!req.body.username || !req.body.password || !req.body.email) {
+        if (!req.body.username || !req.body.email || !req.body.role) {
             return messages.ErrorFehlendeFelder(res);
         }
 
@@ -38,14 +38,22 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
             return messages.ErrorUnbekannteRolle(res);
         }
 
-        user.setPassword(req.body.password);
+        user.setRandomPassword();
+        user.generateResetToken();
 
-        user.save(function (err) {
+        return user.save(function (err) {
             if (err) {
                 return messages.Error(res, err);
             }
 
-            return messages.Success(res);
+            return mailGenerator.registerMail(user, function (err) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
+
+                return messages.Success(res);
+            });
+
         });
     });
 

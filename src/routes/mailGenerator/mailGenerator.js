@@ -119,6 +119,45 @@ module.exports = function (sendgrid, env, url, disableMails) {
         }
     };
 
+    mailGenerator.registerMail = function (user, cb) {
+        if (user) {
+            var email;
+            if(!user.email) {
+                email = user.username;
+            } else {
+                email = user.email;
+            }
+            var mail = new sendgrid.Email();
+            mail.setTos(email);
+            mail.setSmtpapiTos(email);
+            mail.setFrom('mail@spielplanismaning.herokuapp.com');
+            mail.setFromName('Beachturnier Ismaning');
+            mail.setSubject('Account-Freischaltung');
+            mail.setText('Account-Freischaltung');
+            mail.setHtml('<p>Account freischalten</p>');
+            mail.replyto = 'kinderbeach.ismaning@mail.com';
+
+            mail.addSubstitution('-resetUrl-', url + 'reset-password?token=' + user.resetToken);
+            mail.addSubstitution('-kontaktUrl-', url + 'kontakt');
+            mail.addSubstitution('-username-', user.username);
+            mail.addSubstitution('-userEmail-', email);
+            mail.addSubstitution('-baseUrl', url);
+
+            mail.setFilters({
+                'templates': {
+                    'settings': {
+                        'enable': 1,
+                        'template_id': '3b025968-9909-4fc3-90e2-76b98b83a14d'
+                    }
+                }
+            });
+
+            sendgrid.send(mail, cb);
+        } else {
+            return cb(null, {});
+        }
+    };
+
     mailGenerator.passwordForgotMail = function (user, cb) {
         if (user) {
             var email;
