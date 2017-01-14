@@ -1,5 +1,7 @@
 # spielplanismaning
 [![GitHub version](https://badge.fury.io/gh/berniwittmann%2Fspielplanismaning.svg)](https://badge.fury.io/gh/berniwittmann%2Fspielplanismaning)
+[![Code Climate](https://codeclimate.com/github/BerniWittmann/spielplanismaning/badges/gpa.svg)](https://codeclimate.com/github/BerniWittmann/spielplanismaning)
+[![Test Coverage](https://codeclimate.com/github/BerniWittmann/spielplanismaning/badges/coverage.svg)](https://codeclimate.com/github/BerniWittmann/spielplanismaning/coverage)
 
 Spielplan - System für die Beachturniere in Ismaning 
 
