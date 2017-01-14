@@ -10,8 +10,6 @@ engines:
     enabled: true
   golint: 
     enabled: true
-  rubocop: 
-    enabled: false
 exclude_paths: 
   - test/**/*
   - node_modules/**/*
