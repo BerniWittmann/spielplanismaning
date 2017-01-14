@@ -96,16 +96,3 @@
         <!-- /.navbar-collapse -->
     </div>
 </nav>
-
-<div class="row">
-    <div class="col-md-10 col-md-offset-1" data-ng-if="vm.isLoggedIn() && vm.prog > 0 && vm.progMax > 0">
-        <div class="alert alert-{{vm.type}} alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>
-            <span data-ng-bind-html="vm.message"></span>
-            <br><br>
-            <uib-progressbar max="vm.progMax" value="vm.prog"><span style="color:white; white-space:nowrap;">Spielplanerstellung: {{vm.progDisplay}}</span>
-            </uib-progressbar>
-        </div>
-    </div>
-</div>
