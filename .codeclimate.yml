@@ -6,6 +6,9 @@ engines:
     config:
       languages:
         - javascript
+    checks:
+      Similar code:
+        enabled: false
   eslint: 
     enabled: true
   golint: 
