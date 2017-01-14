@@ -108,6 +108,9 @@ module.exports = function () {
             if(!jugend) {
                 return messages.ErrorBadRequest(res);
             }
+            if (err) {
+                return messages.Error(res, err);
+            }
             if (jugend.gruppen.length >= 4) {
                 return messages.ErrorMaxZahlGruppe(res);
             } else {

@@ -8,7 +8,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (spiel.unentschieden) {
                 spielausgang = 'Unentschieden gespielt.';
             } else {
-                if (spiel.gewinner._id == team._id) {
+                if (spiel.gewinner._id === team._id) {
                     spielausgang = 'gewonnen.';
                 } else {
                     spielausgang = 'verloren.';
@@ -62,7 +62,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
             mail.addSubstitution('-teamname-', team.name);
             var teambname;
-            if (team._id == spiel.teamA._id) {
+            if (team._id === spiel.teamA._id) {
                 teambname = spiel.teamB.name;
             } else {
                 teambname = spiel.teamA.name;
@@ -200,7 +200,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             ignoreEnvironment = false;
         }
 
-        if (disableMails != 'true') {
+        if (disableMails === 'true') {
             if (ignoreEnvironment || env !== 'production') {
                 mail.setTos(['kinderbeach.ismaning@byom.com']);
                 mail.setSmtpapiTos(['kinderbeach.ismaning@byom.com']);

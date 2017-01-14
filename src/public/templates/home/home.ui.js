@@ -44,9 +44,9 @@
             while (n < allespiele.length && _.isUndefined(spiele[n].jugend)) {
                 n++;
             }
-            if (spiele[n].platz == 3) {
+            if (spiele[n].platz === 3) {
                 aktuellesSpielIndex = n - 2;
-            } else if (spiele[n].platz == 2) {
+            } else if (spiele[n].platz === 2) {
                 aktuellesSpielIndex = n - 1;
             } else {
                 aktuellesSpielIndex = n;

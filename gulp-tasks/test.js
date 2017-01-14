@@ -6,7 +6,7 @@ var angularProtractor = require('gulp-angular-protractor');
 var mongobackup = require('mongobackup');
 var spawn = require('child_process').spawn;
 var mongoose = require('mongoose');
-var jshint = require('gulp-jshint');
+var eslint = require('gulp-eslint');
 require('shelljs/global');
 
 gulp.task('test', function (done) {
@@ -14,7 +14,7 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('test:travis', function () {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'jshint', function (err) {
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'lint', function (err) {
         var exitCode = 0;
         if (err) {
             exitCode = 2;
@@ -143,10 +143,12 @@ gulp.task('test:e2e:testing', function (done) {
         });
 });
 
-// jshint task
-gulp.task('jshint', function () {
-    return gulp.src(['src/public/**/*.js', 'src/routes/**/*.js', '!src/public/bower_components/**'])
-        .pipe(jshint({laxcomma: true}))
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(jshint.reporter('fail'));
+// lint
+gulp.task('lint', function () {
+    return gulp.src(['src/public/**/*.js', 'src/app.js', 'src/public/app.js', 'src/routes/**/*.js', '!src/public/bower_components/**', '!src/coverage/**'])
+        .pipe(eslint({
+            configFile: '.eslintrc'
+        }))
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 });

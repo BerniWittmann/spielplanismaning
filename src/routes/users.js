@@ -115,7 +115,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         if (!req.body.username) {
             return messages.ErrorBadRequest(res);
         }
-        if (req.body.username == 'berni') {
+        if (req.body.username === 'berni') {
             return messages.ErrorUserNichtLoeschbar(res);
         }
         User.find({

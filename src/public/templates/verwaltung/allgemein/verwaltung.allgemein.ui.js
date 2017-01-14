@@ -51,8 +51,8 @@
 
         if (!_.isUndefined(getZeitenPromise.data) && !_.isNull(getZeitenPromise.data)) {
             var date = new Date();
-            date.setHours(parseInt(getZeitenPromise.data.startzeit.substring(0, 2)));
-            date.setMinutes(parseInt(getZeitenPromise.data.startzeit.substring(3, 5)));
+            date.setHours(parseInt(getZeitenPromise.data.startzeit.substring(0, 2), 10));
+            date.setMinutes(parseInt(getZeitenPromise.data.startzeit.substring(3, 5), 10));
             vm.startzeit = date;
             vm.spielzeit = getZeitenPromise.data.spielzeit;
             vm.pausenzeit = getZeitenPromise.data.pausenzeit;
@@ -73,7 +73,7 @@
                 vm.registerMsg = vm.user.username + ' wurde registriert.';
                 vm.user = {};
             }, function (error) {
-                if (error.data.ERROR.code == 11000) {
+                if (error.data.ERROR.code === 11000) {
                     vm.registerErr = 'Dieser Username oder diese Email existiert bereits';
                 } else {
                     vm.registerErr = error;
@@ -82,7 +82,7 @@
         }
 
         function deleteUser() {
-            if (auth.currentUser() == vm.username) {
+            if (auth.currentUser() === vm.username) {
                 vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
                 return vm.delErr;
             }

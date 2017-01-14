@@ -242,6 +242,10 @@ module.exports = function () {
             return messages.ErrorBadRequest(res);
         }
         Team.findById(req.query.id, function (err, team) {
+            if (err) {
+                return messages.Error(res, err);
+            }
+
             team.name = req.body.name;
             team.save(function (err, team) {
                 if (err) {

@@ -1,4 +1,5 @@
 module.exports = function () {
+    /* eslint no-loop-func: 0 */
 
     var moment = require('moment');
     var async = require('async');
@@ -122,7 +123,7 @@ module.exports = function () {
                             leerdurchgelaufeneGruppen++;
                         }
                     });
-                    if(leerdurchgelaufeneGruppen == gruppen.length) {
+                    if(leerdurchgelaufeneGruppen === gruppen.length) {
                         leeresSpiel();
                     }
                 }

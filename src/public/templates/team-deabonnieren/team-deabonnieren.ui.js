@@ -33,7 +33,7 @@
             team: vm.team._id,
             email: ''
         };
-        if (email.getSubscriptionByTeam({team: vm.team._id}).length == 1) {
+        if (email.getSubscriptionByTeam({team: vm.team._id}).length === 1) {
             vm.sub.email = _.head(email.getSubscriptionByTeam({team: vm.team._id})).email;
         }
 

@@ -26,6 +26,10 @@ module.exports = function (sendgrid, env, url, disableEmails) {
             return messages.ErrorBadRequest(res);
         }
         Subscriber.find().exec(function (err, subs) {
+            if (err) {
+                return messages.Error(res, err);
+            }
+
             var emails = [];
             subs.forEach(function (sub) {
                 emails.push(sub.email);

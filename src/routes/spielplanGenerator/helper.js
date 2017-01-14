@@ -94,7 +94,7 @@ function addLastTeam(team, geradeSpielendeTeams) {
 }
 
 function calcZeit(platz, zeit, spielplan, spielnr) {
-    if (spielnr > 1 && platz == 1) {
+    if (spielnr > 1 && platz === 1) {
         zeit = zeit.add(spielplan.spielzeit + spielplan.pausenzeit, 'm');
     }
     return zeit;

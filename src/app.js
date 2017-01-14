@@ -22,7 +22,7 @@ require('./models/Users')(secret);
 require('./config/passport');
 
 app.set('ENVIRONMENT', (process.env.NODE_ENV || 'development'));
-if (app.get('ENVIRONMENT') == 'development') {
+if (app.get('ENVIRONMENT') === 'development') {
     app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
 } else {
     app.set('MONGODB_URI', process.env.MONGODB_URI);
@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //noinspection JSUnresolvedFunction
 app.use(passport.initialize());
 //noinspection JSCheckFunctionSignatures
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 
 app.set('port', (process.env.PORT || 8000));
 

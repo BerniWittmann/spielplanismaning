@@ -310,7 +310,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                             });
                         }
 
-                        if (disableMails != 'true') {
+                        if (disableMails === 'true') {
                             return sendNextSpielUpdates(function (err) {
                                 if (err) {
                                     return messages.Error(res, err);

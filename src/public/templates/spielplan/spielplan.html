@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-12 table-responsive">
-        <div data-ng-if="!vm.loading && vm.spiele.length == 0" class="alert alert-info">Keine Spiele gefunden.</div>
+        <div data-ng-if="!vm.loading && vm.spiele.length === 0" class="alert alert-info">Keine Spiele gefunden.</div>
         <table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading && vm.spiele.length > 0" id="spielplan">
             <thead>
             <tr>

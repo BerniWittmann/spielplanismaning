@@ -37,7 +37,7 @@
 
         _.extend(vm, {
             platz: $stateParams.platznummer,
-            spiele: _.sortBy(_.filter(spielPromise.data, {platz: parseInt($stateParams.platznummer)}), ['nummer'])
+            spiele: _.sortBy(_.filter(spielPromise.data, {platz: parseInt($stateParams.platznummer, 10)}), ['nummer'])
         });
         vm.loading = false;
     }
