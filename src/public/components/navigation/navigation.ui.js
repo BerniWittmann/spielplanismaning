@@ -3,7 +3,7 @@
 
     angular
         .module('spi.components.navigation.ui', [
-            'spi.auth', 'ngSanitize', 'spi.spielplan'
+            'spi.auth', 'ngSanitize'
         ])
         .directive('spiNavigation', spiNavigation)
         .controller('NavigationController', NavigationController);
@@ -18,7 +18,7 @@
         };
     }
 
-    function NavigationController($state, $scope, auth, spielplan) {
+    function NavigationController($state, $scope, auth) {
         var vm = this;
 
         _.extend(vm, {
@@ -32,34 +32,6 @@
             logOut: auth.logOut,
             isAktiv: function (name) {
                 return $state.includes(name);
-            },
-            prog: spielplan.progress,
-            progMax: spielplan.maxProgress,
-            progDisplay: "",
-            message: "<strong>Achtung!</strong> Spielplan wird gerade erstellt.",
-            type: 'info'
-        });
-
-        $scope.$watch(function () {
-            return spielplan.progress;
-        }, function () {
-            vm.prog = spielplan.progress;
-            vm.progMax = spielplan.maxProgress;
-            if (vm.prog > 0 && vm.progMax > 0) {
-                vm.progDisplay = Math.floor(vm.prog / vm.progMax * 100) + '%';
-
-                if (_.isEqual(vm.prog, vm.progMax)) {
-                    vm.message = "Spielplan wurde erfolgreich erstellt.";
-                    vm.type = "success";
-                    setTimeout(function () {
-                        vm.prog = 0;
-                        vm.progMax = 0;
-                        vm.progDisplay = "";
-                        vm.message = "<strong>Achtung!<!strong> Spielplan wird gerade erstellt.";
-                        vm.type = "info";
-                        $scope.$apply();
-                    }, 10000);
-                }
             }
         });
     }
