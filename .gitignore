@@ -4,3 +4,4 @@
 /src/public/bower_components/
 /spielplanismaning.iml
 node_modules/
+/src/public/coverage/

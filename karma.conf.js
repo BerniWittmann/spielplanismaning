@@ -39,7 +39,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            '{components,templates}/**/*.html': ['ng-html2js']
+            '{components,templates}/**/*.html': ['ng-html2js'],
+            '{{components,templates,services}/**/*.js, app.js}': ['coverage']
         },
 
         ngHtml2JsPreprocessor: {
@@ -71,7 +72,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['mocha', 'htmlalt'],
+        reporters: ['mocha', 'htmlalt', 'coverage'],
 
         htmlReporter: {
             outputFile: '../../docs/tests/frontend/index.html',
@@ -79,6 +80,11 @@ module.exports = function (config) {
             // Optional
             pageTitle: 'Test-Ergebnisse (Frontend)',
             subPageTitle: 'Unit-Tests des Frontends'
+        },
+
+        coverageReporter: {
+            type : 'lcov',
+            dir : 'coverage/'
         },
 
         // web server port
