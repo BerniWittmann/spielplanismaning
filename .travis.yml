@@ -8,11 +8,16 @@ before_script:
 - mongo --version
 - mongorestore --db spielplan-test --drop test/backend/database-setup/data/spielplan
 script: gulp test:travis
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate-test-reporter < lcov.info
 addons:
   sauce_connect:
     username: "BerniWittmann"
   jwt:
     secure: "XHQdTn6IRmAZzbcnkL0EYu8HvL8HSeDPLUqRcCLHXY/+hJTEbKCJJkZaublLwtsOrX9PQkV0Bg4tr16+BbeRX65jeDxPRm4sEXa3Z2E/i2zbwHTNf38DctHR2kqpIUWTKsy3NkJl2ayYk1Je4QcJKKFlSrSbfDgH0wUSo/9Mi57HkmGf7q+fewtcIrGzT4i3GFXd6cf+K8+lzOIHZUc0TPsxCcW6dJvWDU72Y6OftCWzxIgzUDd+/seAQe2kC1meMDtI9A9x1oBJeIxCfhr3KPpHZTrwzE4a0P6uWaDkKo+h8dFJcHU9j0DTfHeyQjqX2yd47NfwD/UUTTi790RgtByUY5YRN7shPwFZwrz3UeD4ps1tTmR+duKmJw8TROLWnNyuneKAIKPjh6/LkTG7b+VFxpkF7L5rK2/7cj5H46sq9KzNyhTH4xS2imKO+HfZt3tAsU0TmPv0lflrBQwPjhgOq3Gr26RxuQxZjQS+IZFNSEGkj82P98iuqsv0iQ8ENz1l22g0Wr41LqAwon2XsgnV1u0ow7yo3JKzEHriwqyS9vr3zI0mM7BP4yZNvuUw0Mg7vAgCuPygCrBeSHUSWJJzWawVEGhPfVIlFVv/V7OqJc9Pfl1MSHscw6yjPk2rw3BiTVTBNbhBPhBzSv5B6lLF64kBWdpDtcU6fJzYqhg="
+  code_climate:
+    repo_token: "78b2ef44b209e261840b5013783d07b61f367884a3adb33406a0256e57412e22"
 branches:
   only:
   - master
