@@ -306,6 +306,65 @@
                 expect(spyResolve).not.to.have.been.called();
             }));
         });
+
+        it('soll ein neues Passwort anfordern können', function () {
+            var email = 'test@byom.de';
+            var response = 'SUCCESS';
+            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/password-forgot', {email: email}).respond(201, response);
+
+            auth.forgotPassword(email).then(function (res) {
+                responseTest = res.data;
+                expect(_.isEqual(res.data, response)).to.be.true;
+            });
+        });
+
+        it('soll prüfen ob ein ResetToken zum Passwort Zurücksetzen gültig ist', function () {
+            var token = '1234abcd';
+            var response = 'SUCCESS';
+            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/password-forgot/check', {token: token}).respond(201, response);
+
+            auth.checkResetToken(token).then(function (res) {
+                responseTest = res.data;
+                expect(_.isEqual(res.data, response)).to.be.true;
+            });
+        });
+
+        it('soll ein Passwort zurücksetzen können', function () {
+            var username = 'username';
+            var password = 'password';
+            var token = '123abc';
+            var response = 'SUCCESS';
+            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/password-reset', {username: username, password: password, token: token}).respond(201, response);
+
+            auth.resetPassword(username, token, password).then(function (res) {
+                responseTest = res.data;
+                expect(_.isEqual(res.data, response)).to.be.true;
+            });
+        });
+
+        it('soll die Nutzerdetails laden', function () {
+            var response = 'SUCCESS';
+            httpBackend.expectGET(ENDPOINT_BASE_URL + '/user-details').respond(201, response);
+
+            auth.getUserDetails().then(function (res) {
+                responseTest = res.data;
+                expect(_.isEqual(res.data, response)).to.be.true;
+            });
+        });
+
+        it('soll die Nutzerdetails setzen können', function () {
+            var data = {
+                username: 'test',
+                email: 'test@byom.de'
+            };
+            var response = 'SUCCESS';
+            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/user-details', data).respond(201, response);
+
+            auth.setUserDetails(data).then(function (res) {
+                responseTest = res.data;
+                expect(_.isEqual(res.data, response)).to.be.true;
+            });
+        });
     });
 
 }());

@@ -211,3 +211,7 @@ body {
 .page-header {
     margin-top: 0;
 }
+
+a {
+    cursor: pointer;
+}

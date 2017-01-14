@@ -32,6 +32,7 @@
 
 .navbar-spi .navbar-text {
     color: white !important;
+    margin: 0;
 }
 
 .navbar-spi .navbar-toggle .icon-bar {

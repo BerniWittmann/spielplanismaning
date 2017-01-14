@@ -45,7 +45,7 @@ module.exports = function (env) {
     require('../../src/config/passport');
 
     var routes = require('../../src/routes/index')();
-    var users = require('../../src/routes/users')();
+    var users = require('../../src/routes/users')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS, process.env.SECRET);
     var email = require('../../src/routes/email')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
     var config = require('../../src/routes/config')(process.env);
     var gruppen = require('../../src/routes/gruppen')();

@@ -1,4 +1,5 @@
 module.exports = function (sendgrid, env, url, disableMails) {
+    var _ = require('lodash');
     var mailGenerator = {};
 
     mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
@@ -119,11 +120,90 @@ module.exports = function (sendgrid, env, url, disableMails) {
         }
     };
 
-    function sendMail(mail, cb) {
+    mailGenerator.registerMail = function (user, cb) {
+        if (user) {
+            var email;
+            if(!user.email) {
+                email = user.username;
+            } else {
+                email = user.email;
+            }
+            var mail = new sendgrid.Email();
+            mail.setTos(email);
+            mail.setSmtpapiTos(email);
+            mail.setFrom('mail@spielplanismaning.herokuapp.com');
+            mail.setFromName('Beachturnier Ismaning');
+            mail.setSubject('Account-Freischaltung');
+            mail.setText('Account-Freischaltung');
+            mail.setHtml('<p>Account freischalten</p>');
+            mail.replyto = 'kinderbeach.ismaning@mail.com';
+
+            mail.addSubstitution('-resetUrl-', url + 'reset-password?token=' + user.resetToken);
+            mail.addSubstitution('-kontaktUrl-', url + 'kontakt');
+            mail.addSubstitution('-username-', user.username);
+            mail.addSubstitution('-userEmail-', email);
+            mail.addSubstitution('-baseUrl', url);
+
+            mail.setFilters({
+                'templates': {
+                    'settings': {
+                        'enable': 1,
+                        'template_id': '3b025968-9909-4fc3-90e2-76b98b83a14d'
+                    }
+                }
+            });
+
+            sendMail(mail, cb, true);
+        } else {
+            return cb(null, {});
+        }
+    };
+
+    mailGenerator.passwordForgotMail = function (user, cb) {
+        if (user) {
+            var email;
+            if(!user.email) {
+                email = user.username;
+            } else {
+                email = user.email;
+            }
+            var mail = new sendgrid.Email();
+            mail.setTos(email);
+            mail.setSmtpapiTos(email);
+            mail.setFrom('mail@spielplanismaning.herokuapp.com');
+            mail.setFromName('Beachturnier Ismaning');
+            mail.setSubject('Passwort zurücksetzen');
+            mail.setText('Passwort zurücksetzen');
+            mail.setHtml('<p>Passwort zurücksetzen</p>');
+            mail.replyto = 'kinderbeach.ismaning@mail.com';
+
+            mail.addSubstitution('-resetUrl-', url + 'reset-password?token=' + user.resetToken);
+            mail.addSubstitution('-kontaktUrl-', url + 'kontakt');
+
+            mail.setFilters({
+                'templates': {
+                    'settings': {
+                        'enable': 1,
+                        'template_id': '2574c091-af4e-4922-9721-c926ca2885fd'
+                    }
+                }
+            });
+
+            sendMail(mail, cb, true);
+        } else {
+            return cb(null, {});
+        }
+    };
+
+    function sendMail(mail, cb, ignoreEnvironment) {
+        if (_.isUndefined(ignoreEnvironment) || _.isNull(ignoreEnvironment)) {
+            ignoreEnvironment = false;
+        }
+
         if (disableMails != 'true') {
-            if (env !== 'production') {
-                mail.setTos(['kinderbeach.ismaning@mail.com']);
-                mail.setSmtpapiTos(['kinderbeach.ismaning@mail.com']);
+            if (ignoreEnvironment || env !== 'production') {
+                mail.setTos(['kinderbeach.ismaning@byom.com']);
+                mail.setSmtpapiTos(['kinderbeach.ismaning@byom.com']);
             }
             sendgrid.send(mail, cb);
         } else {

@@ -74,7 +74,7 @@
                 vm.user = {};
             }, function (error) {
                 if (error.data.ERROR.code == 11000) {
-                    vm.registerErr = 'Dieser Username existiert bereits';
+                    vm.registerErr = 'Dieser Username oder diese Email existiert bereits';
                 } else {
                     vm.registerErr = error;
                 }

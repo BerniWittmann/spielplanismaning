@@ -60,6 +60,9 @@ module.exports = function () {
         },
         ErrorTeamNotFound: function (res, err) {
             send(require('./ErrorTeamNotFoundMessage.js')(err), res);
+        },
+        ErrorInvalidToken: function (res) {
+            send(require('./ErrorInvalidToken.js'), res);
         }
     };
 };
