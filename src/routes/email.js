@@ -6,6 +6,8 @@ module.exports = function (sendgrid, env, url, disableEmails) {
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {post} /email Send Email
@@ -43,11 +45,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
 
             //noinspection JSUnresolvedFunction
             MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return messages.Success(res);
+                return handler.handleErrorAndSuccess(err, res);
             });
         });
     });
@@ -83,11 +81,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
         }
         var subscriber = new Subscriber(req.body);
         subscriber.save(function (err, sub) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(sub);
+            return handler.handleErrorAndResponse(err, res, sub);
         });
     });
 
@@ -105,15 +99,11 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/subscriber', function (req, res) {
-        if (!req.query.email, !req.query.team) {
+        if (!req.query.email || !req.query.team) {
             return messages.ErrorBadRequest(res);
         }
-        Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err, sub) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return messages.Deleted(res);
+        Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err) {
+            return handler.handleErrorAndDeleted(err, res)
         });
     });
 
@@ -158,11 +148,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
     router.get('/subscriber', function (req, res) {
         var query = Subscriber.find();
         query.deepPopulate('team team.jugend').exec(function (err, subs) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(subs);
+            return handler.handleErrorAndResponse(err, res, subs);
         });
     });
 

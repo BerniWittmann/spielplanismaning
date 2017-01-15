@@ -11,6 +11,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     var messages = require('./messages/messages.js')();
     var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     function notifySubscribers(spiel, fn, callback) {
         async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
@@ -53,7 +54,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
         var searchById = data.searchById;
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
-            return helpers.handleQueryResponse(err, spiele, res, searchById, messages.ErrorSpielNotFound);
+            return handler.handleQueryResponse(err, spiele, res, searchById, messages.ErrorSpielNotFound);
         });
     });
 
@@ -77,11 +78,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
         spiel.gruppe = req.body.gruppe;
 
         spiel.save(function (err, spiel) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(spiel);
+            return handler.handleErrorAndResponse(err, res, spiel);
         });
     });
 
@@ -105,11 +102,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
         Spiel.remove({
             "_id": req.query.id
         }, function (err) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return messages.Deleted(res);
+            return handler.handleErrorAndDeleted(err, res);
         });
     });
 
@@ -133,8 +126,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             spiel.gruppe = singlespiel.gruppe;
             spiel.save(asyncdone);
         }, function (err) {
-            if (err) return messages.Error(res, err);
-            return messages.SpielplanErstellt(res);
+            return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });
 
@@ -149,11 +141,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.delete('/alle', function (req, res) {
         Spiel.remove({}, function (err) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return messages.Deleted(res);
+            return handler.handleErrorAndDeleted(err, res);
         });
     });
 
@@ -199,11 +187,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         helpers.resetErgebnis(res, spiel, oldData, 'teamB', cb);
                     }
                 ], function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    res.json(spiel);
+                    handler.handleErrorAndResponse(err, res, spiel);
                 });
             });
         });
@@ -242,19 +226,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
 
                 //Set Ergebnis Team A
-                spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (
-                    err,
-                    teamA
-                ) {
+                spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (err,
+                                                                                                                                                            teamA) {
                     if (err) {
                         return messages.Error(res, err);
                     }
 
                     //Set Ergebnis Team B
-                    spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (
-                        err,
-                        teamB
-                    ) {
+                    spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err,
+                                                                                                                                                                teamB) {
                         if (err) {
                             return messages.Error(res, err);
                         }
@@ -286,8 +266,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                 }
 
                                 notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
-                                    if (err) return messages.Error(res, err);
-                                    return res.json(spiel);
+                                    return handler.handleErrorAndResponse(err, res, spiel);
                                 });
                             });
                         } else {

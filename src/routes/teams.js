@@ -9,6 +9,7 @@ module.exports = function () {
 
     var messages = require('./messages/messages.js')();
     var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {get} /teams Get Team
@@ -52,7 +53,7 @@ module.exports = function () {
         var searchById = data.searchById;
 
         query.deepPopulate('gruppe jugend').exec(function (err, teams) {
-            return helpers.handleQueryResponse(err, teams, res, searchById, messages.ErrorTeamNotFound);
+            return handler.handleQueryResponse(err, teams, res, searchById, messages.ErrorTeamNotFound);
         });
     });
 
@@ -91,11 +92,7 @@ module.exports = function () {
                     Team.remove({
                         "_id": team
                     }, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        return messages.Deleted(res);
+                        return handler.handleErrorAndDeleted(err, res);
                     });
                 });
             });
@@ -180,11 +177,7 @@ module.exports = function () {
                     });
                 }
             ], function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return res.json(team);
+                return handler.handleErrorAndResponse(err, res, team);
             });
         });
     });
@@ -234,11 +227,7 @@ module.exports = function () {
 
             team.name = req.body.name;
             team.save(function (err, team) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return res.json(team);
+                return handler.handleErrorAndResponse(err, res, team);
             });
         });
     });
@@ -269,11 +258,7 @@ module.exports = function () {
                     return cb();
                 });
             }, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return messages.Reset(res);
+                return handler.handleErrorAndMessage(err, res, messages.Reset);
             });
         });
     });

@@ -9,6 +9,7 @@ module.exports = function () {
 
     var messages = require('./messages/messages.js')();
     var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {get} /jugenden Get Jugenden
@@ -44,7 +45,7 @@ module.exports = function () {
         var searchById = data.searchById;
 
         query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
-            return helpers.handleQueryResponse(err, jugenden, res, searchById, messages.ErrorJugendNotFound);
+            return handler.handleQueryResponse(err, jugenden, res, searchById, messages.ErrorJugendNotFound);
 
         });
     });
@@ -105,11 +106,7 @@ module.exports = function () {
                     }
 
                     jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        return res.json(jgd);
+                        return handler.handleErrorAndResponse(err, res, jgd);
                     });
                 });
             });
@@ -158,10 +155,7 @@ module.exports = function () {
                     Jugend.remove({
                         "_id": req.query.id
                     }, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-                        return messages.Deleted(res);
+                        return handler.handleErrorAndDeleted(err, res);
                     });
                 });
             });

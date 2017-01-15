@@ -10,6 +10,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
     var messages = require('./messages/messages.js')();
     var mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {post} /users/register Register User
@@ -47,11 +49,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
             }
 
             return mailGenerator.registerMail(user, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return messages.Success(res);
+                return handler.handleErrorAndSuccess(err, res);
             });
 
         });
@@ -165,11 +163,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 }
 
                 return mailGenerator.passwordForgotMail(user, function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    return messages.Success(res);
+                    return handler.handleErrorAndSuccess(err, res);
                 });
 
             });
@@ -239,11 +233,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 user.removeResetToken();
 
                 return user.save(function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    return messages.Success(res);
+                    return handler.handleErrorAndSuccess(err, res);
                 });
             } else {
                 return messages.ErrorInvalidToken(res);

@@ -11,6 +11,7 @@ module.exports = function () {
 
     var messages = require('./messages/messages.js')();
     var spielplanGenerator = require('./spielplanGenerator/spielplanGenerator')();
+    var handler = require('./handler.js');
 
     /**
      * @api {get} /spielplan Get Spielplan
@@ -39,10 +40,7 @@ module.exports = function () {
     router.get('/', function (req, res) {
         var query = Spielplan.findOne({});
         query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-            return res.json(spielplan);
+            return handler.handleErrorAndResponse(err, res, spielplan);
         });
     });
 
@@ -57,11 +55,7 @@ module.exports = function () {
      **/
     router.put('/', function (req, res) {
         spielplanGenerator.generateNew(function (err) {
-            if(err) {
-                return messages.Error(res, err);
-            }
-
-            return messages.SpielplanErstellt(res);
+            return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });
 
@@ -97,9 +91,7 @@ module.exports = function () {
                     singlespiel.uhrzeit = zeit.format('HH:mm');
                     singlespiel.save(asyncdone);
                 }, function (err) {
-                    if (err) return messages.Error(res, err);
-
-                    return messages.Success(res);
+                    return handler.handleErrorAndSuccess(err, res);
 
                 });
 
@@ -140,11 +132,7 @@ module.exports = function () {
             }
 
             spielplan.setAusnahmen(req.body, function (err, spielplan) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return res.json(spielplan.ausnahmen);
+                return handler.handleErrorAndResponse(err, res, spielplan.ausnahmen);
             });
         });
     });
@@ -174,11 +162,7 @@ module.exports = function () {
      **/
     router.get('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(spielplan.ausnahmen);
+            return handler.handleErrorAndResponse(err, res, spielplan.ausnahmen);
         });
     });
 

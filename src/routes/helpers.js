@@ -26,17 +26,6 @@ function getEntityQuery(model, req) {
     }
 }
 
-function handleQueryResponse(err, data, res, searchById, notFoundError) {
-    if(searchById && !data) {
-        return notFoundError(res, err);
-    }
-    if (err) {
-        return messages.Error(res, err);
-    }
-
-    return res.json(data);
-}
-
 function resetErgebnis(res, spiel, oldData, team, cb) {
     var callback = function (err) {
         if (err) {
@@ -53,6 +42,5 @@ function resetErgebnis(res, spiel, oldData, team, cb) {
 
 module.exports = {
     getEntityQuery: getEntityQuery,
-    handleQueryResponse: handleQueryResponse,
     resetErgebnis: resetErgebnis
 };
