@@ -48,8 +48,21 @@ function getEntity(model, population, notFoundMessage, res) {
     });
 }
 
+function removeEntityBy(model, by, value, res, cb) {
+    var query = {};
+    query[by] = value;
+    return model.remove(query, function (err) {
+        if (err) {
+            return messages.Error(res, err);
+        }
+
+        return cb(null);
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     resetErgebnis: resetErgebnis,
-    getEntity: getEntity
+    getEntity: getEntity,
+    removeEntityBy: removeEntityBy
 };

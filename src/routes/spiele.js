@@ -93,9 +93,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
         if (!req.query.id) {
             return messages.ErrorBadRequest(res);
         }
-        Spiel.remove({
-            "_id": req.query.id
-        }, function (err) {
+
+        return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
             return handler.handleErrorAndDeleted(err, res);
         });
     });

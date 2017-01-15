@@ -147,18 +147,10 @@ module.exports = function () {
                         return messages.Error(res, err);
                     }
 
-                    Team.remove({
-                        "gruppe": gruppe
-                    }, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        Gruppe.remove({
-                            "_id": gruppe
-                        }, function (err) {
+                    return helpers.removeEntityBy(Team, 'gruppe', gruppe, res, function () {
+                        return helpers.removeEntityBy(Gruppe, '_id', gruppe, res, function (err) {
                             return handler.handleErrorAndDeleted(err, res);
-                        });
+                        })
                     });
                 });
             });

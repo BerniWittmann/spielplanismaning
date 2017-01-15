@@ -83,9 +83,7 @@ module.exports = function () {
                         return messages.Error(res, err);
                     }
 
-                    Team.remove({
-                        "_id": team
-                    }, function (err) {
+                    return helpers.removeEntityBy(Team, '_id', team, res, function (err) {
                         return handler.handleErrorAndDeleted(err, res);
                     });
                 });

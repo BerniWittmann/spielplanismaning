@@ -131,23 +131,9 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            Team.remove({
-                "jugend": req.query.id
-            }, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                Gruppe.remove({
-                    "jugend": req.query.id
-                }, function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    Jugend.remove({
-                        "_id": req.query.id
-                    }, function (err) {
+            return helpers.removeEntityBy(Team, 'jugend', req.query.id, res, function () {
+                return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, res, function () {
+                    return helpers.removeEntityBy(Jugend, '_id', req.query.id, res, function (err) {
                         return handler.handleErrorAndDeleted(err, res);
                     });
                 });
