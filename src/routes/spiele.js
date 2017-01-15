@@ -11,6 +11,26 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     var messages = require('./messages/messages.js')();
 
+    function notifySubscribers(spiel, fn, callback) {
+        async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+            Subscriber.getByTeam(team._id).then(function (mails) {
+                var emails = [];
+                mails.forEach(function (mail) {
+                    emails.push(mail.email);
+                });
+                if (emails.length > 0) {
+                    fn(team, spiel, emails, asyncdone);
+                } else {
+                    return asyncdone(null, {});
+                }
+
+            });
+        }, function (err) {
+            if (err) return messages.Error(res, err);
+            return callback(null, {});
+        });
+    }
+
     /**
      * @api {get} /spiele Get Spiele
      * @apiName GetSpiele
@@ -278,28 +298,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                 }
                                 if (nextspiel) {
                                     if (!nextspiel.beendet) {
-                                        async.eachSeries([nextspiel.teamA, nextspiel.teamB], function (
-                                            team,
-                                            asyncdone
-                                        ) {
-                                            Subscriber.getByTeam(team._id).then(function (mails) {
-                                                var emails = [];
-                                                mails.forEach(function (mail) {
-                                                    emails.push(mail.email);
-                                                });
-                                                if (emails.length > 0) {
-                                                    //noinspection JSUnresolvedFunction
-                                                    MailGenerator.sendSpielReminder(team, nextspiel, emails, asyncdone);
-                                                } else {
-                                                    return asyncdone(null, {});
-                                                }
-                                            });
-                                        }, function (err) {
-                                            if (err) {
-                                                return messages.Error(res, err);
-                                            }
-                                            return cb(null, {});
-                                        });
+                                        notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
                                     } else {
                                         return cb(null, {});
                                     }
@@ -316,21 +315,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                     return messages.Error(res, err);
                                 }
 
-                                async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
-                                    Subscriber.getByTeam(team._id).then(function (mails) {
-                                        var emails = [];
-                                        mails.forEach(function (mail) {
-                                            emails.push(mail.email);
-                                        });
-                                        if (emails.length > 0) {
-                                            //noinspection JSUnresolvedFunction
-                                            MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
-                                        } else {
-                                            return asyncdone(null, {});
-                                        }
-
-                                    });
-                                }, function (err) {
+                                notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
                                     if (err) return messages.Error(res, err);
                                     return res.json(spiel);
                                 });
