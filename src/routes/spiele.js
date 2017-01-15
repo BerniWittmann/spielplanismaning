@@ -49,9 +49,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
-        var data = helpers.getEntityQuery(Spiel, req);
-        var query = data.query;
-        var searchById = data.searchById;
+        var {query, searchById} = helpers.getEntityQuery(Spiel, req);
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
             return handler.handleQueryResponse(err, spiele, res, searchById, messages.ErrorSpielNotFound);

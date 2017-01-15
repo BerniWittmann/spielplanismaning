@@ -46,9 +46,7 @@ module.exports = function () {
      *     }]
      **/
     router.get('/', function (req, res) {
-        var data = helpers.getEntityQuery(Gruppe, req);
-        var query = data.query;
-        var searchById = data.searchById;
+        var {query, searchById} = helpers.getEntityQuery(Gruppe, req);
 
         query.deepPopulate('jugend teams').exec(function (err, gruppe) {
             return handler.handleQueryResponse(err, gruppe, res, searchById, messages.ErrorGruppeNotFound);
