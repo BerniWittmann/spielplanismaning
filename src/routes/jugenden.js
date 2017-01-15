@@ -40,12 +40,7 @@ module.exports = function () {
      * @apiUse ErrorJugendNotFoundMessage
      **/
     router.get('/', function (req, res) {
-        var {query, searchById} = helpers.getEntityQuery(Jugend, req);
-
-        query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
-            return handler.handleQueryResponse(err, jugenden, res, searchById, messages.ErrorJugendNotFound);
-
-        });
+        return getEntity(Jugend, 'gruppen teams gruppen.teams', messages.ErrorJugendNotFound, res);
     });
 
     /**

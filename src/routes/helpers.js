@@ -1,5 +1,6 @@
 var messages = require('./messages/messages.js')();
 var _ = require('lodash');
+var handler = require('./handler.js');
 
 function getEntityQuery(model, req) {
     var query = model.find();
@@ -40,7 +41,15 @@ function resetErgebnis(res, spiel, oldData, team, cb) {
     }
 }
 
+function getEntity(model, population, notFoundMessage, res) {
+    var {query, searchById} = helpers.getEntityQuery(model, req);
+    query.deepPopulate(population).exec(function (err, data) {
+        return handler.handleQueryResponse(err, data, res, searchById, notFoundMessage);
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
-    resetErgebnis: resetErgebnis
+    resetErgebnis: resetErgebnis,
+    getEntity: getEntity
 };

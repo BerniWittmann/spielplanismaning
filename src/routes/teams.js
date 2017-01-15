@@ -48,10 +48,7 @@ module.exports = function () {
      *     }
      **/
     router.get('/', function (req, res) {
-        var {query, searchById} = helpers.getEntityQuery(Team, req);
-        query.deepPopulate('gruppe jugend').exec(function (err, teams) {
-            return handler.handleQueryResponse(err, teams, res, searchById, messages.ErrorTeamNotFound);
-        });
+        return getEntity(Team, 'gruppe jugend', messages.ErrorTeamNotFound, res);
     });
 
     /**
