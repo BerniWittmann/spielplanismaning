@@ -79,9 +79,9 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        if (!req.query.jugend || !req.body.name) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleQueryBadRequest(res, req, ['jugend']);
+        handler.handleBodyBadRequest(res, req, ['name']);
+
         var gruppe = new Gruppe(req.body);
         gruppe.jugend = req.query.jugend;
         var query = Jugend.findById(gruppe.jugend);
@@ -125,9 +125,8 @@ module.exports = function () {
      * @apiUse ErrorGruppeNotFoundMessage
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleQueryBadRequest(res, req, ['id']);
+
         Gruppe.findById(req.query.id, function (err, gruppe) {
             if(!gruppe) {
                 return messages.ErrorGruppeNotFound(res, err);

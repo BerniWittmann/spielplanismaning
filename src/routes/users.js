@@ -74,9 +74,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.post('/login', function (req, res, next) {
-        if (!req.body.username || !req.body.password) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['username', 'password']);
 
         //noinspection JSUnresolvedFunction
         passport.authenticate('local', function (err, user) {
@@ -110,9 +108,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessDeleteMessage
      **/
     router.put('/delete', function (req, res) {
-        if (!req.body.username) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['username']);
         if (req.body.username === 'berni') {
             return messages.ErrorUserNichtLoeschbar(res);
         }
@@ -141,9 +137,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-forgot', function (req, res) {
-        if (!req.body.email) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['email']);
 
         var email = req.body.email;
 
@@ -183,9 +177,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset/check', function (req, res) {
-        if (!req.body.token) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['token']);
 
         User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
             if (!user) {
@@ -217,9 +209,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset', function (req, res) {
-        if (!req.body.token || !req.body.username || !req.body.password) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['token', 'username', 'password']);
+
         User.findOne({'username': req.body.username}).exec(function (err, user) {
             if (!user) {
                 return messages.ErrorUserNotFound(res, req.body.username);
@@ -316,9 +307,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.put('/user-details', function (req, res) {
-        if (!req.body.email && !req.body.username) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['email', 'username']);
 
         var user;
         try {

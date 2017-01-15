@@ -36,10 +36,31 @@ function handleQueryResponse(err, data, res, searchById, notFoundError) {
     return res.json(data);
 }
 
+
+function handleBadRequest(res, keys, requiredKeys) {
+    requiredKeys = _.pullAll(requiredKeys, keys);
+    if(requiredKeys.length === 0) {
+        return messages.ErrorBadRequest(res);
+    }
+}
+
+function handleBodyBadRequest(res, req, requiredKeys) {
+    requiredKeys = _.pullAll(requiredKeys, req.body.keys);
+    handleBadRequest(res, req.body.keys, requiredKeys);
+}
+
+
+function handleQueryBadRequest(res, req, requiredKeys) {
+    requiredKeys = _.pullAll(requiredKeys, req.query.keys);
+    handleBadRequest(res, req.body.keys, requiredKeys);
+}
+
 module.exports = {
     handleErrorAndResponse: handleErrorAndResponse,
     handleErrorAndSuccess: handleErrorAndSuccess,
     handleErrorAndDeleted: handleErrorAndDeleted,
     handleErrorAndMessage: handleErrorAndMessage,
-    handleQueryResponse: handleQueryResponse
+    handleQueryResponse: handleQueryResponse,
+    handleBodyBadRequest: handleBodyBadRequest,
+    handleQueryBadRequest: handleQueryBadRequest
 };

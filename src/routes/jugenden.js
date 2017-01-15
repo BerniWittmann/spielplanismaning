@@ -72,9 +72,8 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
-        if (!req.body.name) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleBodyBadRequest(res, req, ['name']);
+
         var jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
@@ -120,9 +119,8 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleQueryBadRequest(res, req, ['id']);
+
         Jugend.findById(req.query.id, function (err, jgd) {
             if (!jgd) {
                 return messages.ErrorBadRequest(res);

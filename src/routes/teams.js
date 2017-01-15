@@ -63,9 +63,8 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleQueryBadRequest(res, req, ['id']);
+
         var query = Team.findById(req.query.id);
         query.deepPopulate('gruppe, jugend').exec(function (err, team) {
             if (err) {
@@ -126,9 +125,9 @@ module.exports = function () {
      *     }]
      **/
     router.post('/', function (req, res) {
-        if (!req.query.jugend || !req.query.gruppe || !req.body.name) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleQueryBadRequest(res, req, ['jugend', 'gruppe']);
+        handler.handleBodyBadRequest(res, req, ['name']);
+
         var team = new Team(req.body);
         team.jugend = req.query.jugend;
         team.gruppe = req.query.gruppe;
@@ -209,9 +208,8 @@ module.exports = function () {
      *     }]
      **/
     router.put('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
+        handler.handleQueryBadRequest(res, req, ['id']);
+
         Team.findById(req.query.id, function (err, team) {
             if (err) {
                 return messages.Error(res, err);
