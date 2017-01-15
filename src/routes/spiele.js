@@ -53,14 +53,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
         var searchById = data.searchById;
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
-            if (searchById && !spiele) {
-                return messages.ErrorSpielNotFound(res, err);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(spiele);
+            return helpers.handleQueryResponse(err, spiele, res, searchById, messages.ErrorSpielNotFound);
         });
     });
 

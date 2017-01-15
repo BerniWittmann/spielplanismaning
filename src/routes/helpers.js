@@ -1,3 +1,5 @@
+var messages = require('./messages/messages.js')();
+
 function getEntityQuery(model, req) {
     var query = model.find();
     var searchById = false;
@@ -23,6 +25,18 @@ function getEntityQuery(model, req) {
     }
 }
 
+function handleQueryResponse(err, data, res, searchById, notFoundError) {
+    if(searchById && !data) {
+        return notFoundError(res, err);
+    }
+    if (err) {
+        return messages.Error(res, err);
+    }
+
+    return res.json(data);
+}
+
 module.exports = {
-    getEntityQuery: getEntityQuery
+    getEntityQuery: getEntityQuery,
+    handleQueryResponse: handleQueryResponse
 };

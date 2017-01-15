@@ -50,14 +50,7 @@ module.exports = function () {
         var searchById = data.searchById;
 
         query.deepPopulate('jugend teams').exec(function (err, gruppe) {
-            if (searchById && !gruppe) {
-                return messages.ErrorGruppeNotFound(res, err);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(gruppe);
+            return helpers.handleQueryResponse(err, gruppe, res, searchById, messages.ErrorGruppeNotFound);
         });
     });
 
