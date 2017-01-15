@@ -6,9 +6,6 @@ engines:
     config:
       languages:
         - javascript
-    checks:
-      Similar code:
-        enabled: false
   eslint: 
     enabled: true
   golint: 
@@ -28,3 +25,4 @@ ratings:
     - src/public/services/**/*
     - src/public/templates/**/*
     - src/public/app.js
+    - src/app.js
