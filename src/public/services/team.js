@@ -25,7 +25,7 @@
                 return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
                     return errorHandler.handleResponseError(err);
                 }).then(function (res) {
-                    return _.head(res.data);
+                    return res.data;
                 });
             };
 

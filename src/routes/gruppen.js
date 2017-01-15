@@ -8,6 +8,7 @@ module.exports = function () {
     var Team = mongoose.model('Team');
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
 
     /**
      * @api {get} /gruppen Get Gruppen
@@ -44,16 +45,9 @@ module.exports = function () {
      *     }]
      **/
     router.get('/', function (req, res) {
-        var query = Gruppe.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Gruppe.findById(req.query.id);
-        } else if (req.query.jugend) {
-            query = Gruppe.find({
-                "jugend": req.query.jugend
-            });
-        }
+        var data = helpers.getEntityQuery(Gruppe, req);
+        var query = data.query;
+        var searchById = data.searchById;
 
         query.deepPopulate('jugend teams').exec(function (err, gruppe) {
             if (searchById && !gruppe) {

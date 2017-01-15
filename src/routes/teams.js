@@ -8,6 +8,7 @@ module.exports = function () {
     var async = require('async');
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
 
     /**
      * @api {get} /teams Get Team
@@ -33,7 +34,7 @@ module.exports = function () {
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
-     *     [{
+     *     {
      *         _id: '57cffb4055a8d45fc084c108',
      *         name: 'Team A1',
      *         jugend: [ Object ],
@@ -43,19 +44,12 @@ module.exports = function () {
      *         punkte: 2,
      *         gpunkte: 0
      *         __v: 3
-     *     }]
+     *     }
      **/
     router.get('/', function (req, res) {
-        var query = Team.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Team.find({_id: req.query.id});
-        } else if (req.query.gruppe) {
-            query = Team.find({gruppe: req.query.gruppe});
-        } else if (req.query.jugend) {
-            query = Team.find({jugend: req.query.jugend});
-        }
+        var data = helpers.getEntityQuery(Team, req);
+        var query = data.query;
+        var searchById = data.searchById;
 
         query.deepPopulate('gruppe jugend').exec(function (err, teams) {
             if (searchById && !teams) {

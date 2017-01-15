@@ -8,6 +8,7 @@ module.exports = function () {
     var Team = mongoose.model('Team');
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
 
     /**
      * @api {get} /jugenden Get Jugenden
@@ -38,12 +39,10 @@ module.exports = function () {
      * @apiUse ErrorJugendNotFoundMessage
      **/
     router.get('/', function (req, res) {
-        var query = Jugend.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Jugend.findById(req.query.id);
-        }
+        var data = helpers.getEntityQuery(Jugend, req);
+        var query = data.query;
+        var searchById = data.searchById;
+
         query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
             if(searchById && !jugenden) {
                 return messages.ErrorJugendNotFound(res, err);

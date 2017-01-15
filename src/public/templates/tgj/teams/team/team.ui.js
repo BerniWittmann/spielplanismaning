@@ -31,8 +31,6 @@
         var vm = this;
         vm.loading = true;
 
-        console.log(teamPromise);
-
         _.extend(vm, {
             team: teamPromise,
             bereitsAbonniert: email.checkSubscription({

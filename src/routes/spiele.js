@@ -10,6 +10,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
 
     function notifySubscribers(spiel, fn, callback) {
         async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
@@ -47,24 +48,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
-        var query = Spiel.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Spiel.findById(req.query.id);
-        } else if (req.query.team) {
-            //noinspection JSUnresolvedFunction
-            query = Spiel.find({}).or([{
-                teamA: req.query.team
-            }, {
-                teamB: req.query.team
-            }]);
-        } else if (req.query.gruppe) {
-            query = Spiel.find({gruppe: req.query.gruppe});
-        }
-        else if (req.query.jugend) {
-            query = Spiel.find({jugend: req.query.jugend});
-        }
+        var data = helpers.getEntityQuery(Spiel, req);
+        var query = data.query;
+        var searchById = data.searchById;
 
         query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
             if (searchById && !spiele) {
