@@ -180,10 +180,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 return messages.Error(res, err);
             }
 
-            var toreAOld = spiel.toreA;
-            var toreBOld = spiel.toreB;
-            var punkteAOld = spiel.punkteA;
-            var punkteBOld = spiel.punkteB;
+            var oldData = {
+                toreA: spiel.toreA,
+                toreB: spiel.toreB,
+                punkteA: spiel.punkteA,
+                punkteB: spiel.punkteB
+            };
             spiel.reset(function (err, spiel) {
                 if (err) {
                     return messages.Error(res, err);
@@ -191,21 +193,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
                 async.parallel([
                     function (cb) {
-                        spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-                            return cb();
-                        });
+                        helpers.resetErgebnis(res, spiel, oldData, 'teamA', cb);
                     },
                     function (cb) {
-                        spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return cb();
-                        });
+                        helpers.resetErgebnis(res, spiel, oldData, 'teamB', cb);
                     }
                 ], function (err) {
                     if (err) {
