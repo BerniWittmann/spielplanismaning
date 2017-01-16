@@ -5,10 +5,16 @@ engines:
     enabled: true
     config:
       languages:
-        - javascript
+        javascript:
+          mass_threshold: 40
     exclude_fingerprints:
       - d1f6e82231068d565aa0b72941818070
       - 5488f48e2a975964f74089b29a23ea07
+      - d2ed94a169ea923a91272f53ad02bc98
+      - 170b391dd44adbcee9ed162c4025af0f
+      - ac4937000975301ed27290591ddf3136
+      - a8aee5dcc3ebbabe4199ae857eff3e3d
+      - 03d7b34f542f5310ccaf59f263fe39f5
   eslint: 
     enabled: true
   golint: 
