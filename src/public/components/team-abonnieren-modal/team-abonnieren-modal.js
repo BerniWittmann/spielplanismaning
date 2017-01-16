@@ -94,9 +94,7 @@
                 type: 'info',
                 text: vm.team.name + ' ist bereits abonniert!'
             };
-            vm.abonnent.email = _.head(email.getSubscriptionByTeam({
-                team: vm.team._id
-            })).email;
+            vm.abonnent.email =  email.getEmailSubscriptionByTeam(vm.team._id);
             vm.bereitsabonniert = true;
         }
         vm.loading = false;

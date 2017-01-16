@@ -61,7 +61,10 @@
                     var deferred = $q.defer();
                     deferred.resolve();
                     return deferred.promise;
-                }
+                },
+                getEmailSubscriptionByTeam: function () {
+                    return abonnement[0].email;
+                },
             };
 
             var ctrl = scope.vm = $controller('TeamDeabonnierenController', {

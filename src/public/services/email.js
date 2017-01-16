@@ -46,6 +46,12 @@
                 });
             };
 
+            email.getEmailSubscriptionByTeam = function (id) {
+                return _.head(email.getSubscriptionByTeam({
+                    team: id
+                })).email;
+            };
+
             email.checkSubscription = function (sub) {
                 var result = false;
                 _.forEach(getSubscriptionToken(), function (s) {

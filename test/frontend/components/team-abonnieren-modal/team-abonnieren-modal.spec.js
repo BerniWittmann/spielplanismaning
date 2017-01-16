@@ -40,6 +40,9 @@
                 getSubscriptionByTeam: function () {
                     return [{team: '1', email: 'test@test.de'}];
                 },
+                getEmailSubscriptionByTeam: function () {
+                    return 'test@test.de';
+                },
                 addSubscriber: function () {
                     return $q.when();
                 }

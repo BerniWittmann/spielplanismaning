@@ -1,6 +1,9 @@
 engines:
   csslint: 
     enabled: true
+    exclude_fingerprints:
+      - 37dd32f7d1ed309ee32af4dc4b935489
+      - 37dd32f7d1ed309ee32af4dc4b935489
   duplication:
     enabled: true
     config:
@@ -79,6 +82,7 @@ exclude_paths:
   - docs/**/*
   - gulp-tasks/*
   - src/public/bower_components/**/*
+  - gulpfile.js
 ratings: 
   paths: 
     - src/routes/**/*
