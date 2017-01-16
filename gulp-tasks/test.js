@@ -51,7 +51,7 @@ gulp.task('test:backend', function (done) {
 });
 
 gulp.task('test:backend:withOutWipe', function (done) {
-    gulp.src('././test/backend/**/*.spec.js', {read: false})
+    gulp.src('././test/backend/**/helpers.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
             reporterOptions: {
@@ -71,7 +71,7 @@ gulp.task('test:backend:withOutWipe', function (done) {
 });
 
 gulp.task('test:backend:watch', function (done) {
-    return gulp.watch(['././src/{models,routes,test/backend}/**'], ['test:backend'], done);
+    return gulp.watch(['././src/{models,routes,test/backend}/**', '././test/backend/*.spec.js', '././test/backend/**/*.spec.js'], ['test:backend'], done);
 });
 
 // test DB

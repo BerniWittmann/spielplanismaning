@@ -30,7 +30,7 @@ module.exports = function (config) {
             '{components,templates}/**/*.html',
             '{components,templates}/**/*.html.ext',
             //include spec files
-            '../../test/frontend/**/routes.spec.js'
+            '../../test/frontend/**/*.spec.js'
 
         ],
 
