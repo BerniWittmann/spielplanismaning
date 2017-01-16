@@ -59,6 +59,7 @@ nav.navbar.navbar-spi .navbar-toggle:focus, .navbar-spi .navbar-toggle:hover {
         border-right: 7px solid transparent;
         border-bottom: 7px solid #ccc;
         border-left: 7px solid transparent;
+        border-bottom-color: #000;
         border-bottom-color: rgba(0, 0, 0, 0.2);
         content: '';
     }
@@ -87,6 +88,7 @@ nav.navbar.navbar-spi .navbar-toggle:focus, .navbar-spi .navbar-toggle:hover {
 
     nav.navbar.navbar-spi .navbar-collapse {
         border-color: transparent;
+        -moz-box-shadow: none;
         -webkit-box-shadow: none;
         box-shadow: none;
     }

@@ -1,18 +1,20 @@
 @font-face {
     font-family: "DIGITAL";
     /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
-    src: url("/stylesheets/fonts/digital.ttf");
+    src: url("/stylesheets/fonts/digital.ttf?#iefix");
 }
 
 @font-face {
     font-family: "Roboto";
     /*noinspection CssUnknownTarget,CssUnknownTarget,CssUnknownTarget*/
-    src: url("/stylesheets/fonts/Roboto-Thin.ttf");
+    src: url("/stylesheets/fonts/Roboto-Thin.ttf?#iefix");
 }
 
 ul {
     list-style-type: none;
+    -moz-margin-start: 0;
     -webkit-margin-before: 0;
+    -moz-padding-start: 0;
     -webkit-padding-start: 0;
 }
 
@@ -72,6 +74,10 @@ input[type=number]::-webkit-outer-spin-button {
     -moz-appearance: none;
     appearance: none;
     margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 .jugend-label {
@@ -194,12 +200,14 @@ body {
 
 .has-error {
     border-color: #a94442;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
 .has-error {
     border-color: #843534;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
 }
