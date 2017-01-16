@@ -15,6 +15,25 @@ engines:
       - ac4937000975301ed27290591ddf3136
       - a8aee5dcc3ebbabe4199ae857eff3e3d
       - 03d7b34f542f5310ccaf59f263fe39f5
+      - d6023b6bf97101f6f6b205bc24c592a0
+      - 0b17d807271af7951ec942d612c60e5c
+      - c7ecb50ced8d42386ab5e416e1803f3c
+      - 0de3e576cc5bc61f1c2abd56dbfcda9f
+      - c5b720482375682844b1ff05c1320aa8
+      - 1fb6a6d0ed38e6e24bfb0cc1fbf8fb2f
+      - cfffefd756794793c13c580b360452b1
+      - 2411e2e864b29dad76e55573ca938ca3
+      - dd65f4c269563778447b6e0a32018538
+      - d353c42136bad8da93b73e31f3239c53
+      - f7669c8eb80173c32bdaa89a40a53f61
+      - 7c050b27712250d08e9771ddb3c020ff
+      - 235ab865ad26764333f255be24c326f9
+      - 59536cfeb606ce28c50517c678339fb2
+      - 144648d6a8aa29326bbd002414fbb7f0
+      - 911377321ebd55695b0d93efb8f0af22
+      - 5711924400a8bdeeca8506097ffcb560
+      - bf09700061ba838c8712bad54aafab87
+      - 6c5dfb0bbaa22af519f00d8ca5c3b497
   eslint: 
     enabled: true
   golint: 
