@@ -37,19 +37,27 @@
             vm.sub.email = _.head(email.getSubscriptionByTeam({team: vm.team._id})).email;
         }
 
-        vm.abbrechen = function () {
+        function abbrechen() {
             vm.message = undefined;
             vm.abgemeldet = false;
             vm.abgebrochen = true;
+        }
+
+        function success() {
+            vm.message = undefined;
+            vm.abgemeldet = true;
+            vm.abgebrochen = false;
+        }
+
+        vm.abbrechen = function () {
+            abbrechen();
             redirect();
         };
 
         vm.abbestellen = function () {
             if (email.checkSubscription(vm.sub)) {
                 email.removeSubscription(vm.sub).then(function () {
-                    vm.message = undefined;
-                    vm.abgebrochen = false;
-                    vm.abgemeldet = true;
+                    success();
                     redirect();
                 }, function (err) {
                     console.log(err);

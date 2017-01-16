@@ -42,7 +42,7 @@ module.exports = function (secret) {
             username: this.username,
             email: this.email,
             role: this.role,
-            exp: parseInt(exp.getTime() / 1000)
+            exp: parseInt(exp.getTime() / 1000, 10)
         }, secret);
     };
 
