@@ -38,16 +38,16 @@
                     toastr.success('Wir haben eine Email mit weiteren Infos an ' + email + ' versendet.', 'Email versendet');
                 }, function (error) {
                     console.log(error);
-                    toastr.error(error.data.MESSAGE, 'Fehler');
+                    toastr.error(error.MESSAGE, 'Fehler');
                 });
             },
             changeUserDetails: function () {
                 auth.setUserDetails(vm.user).then(function (response) {
-                    auth.saveToken(response.data.token);
+                    auth.saveToken(response.token);
                     toastr.success('Wir haben deine Daten gespeichert', 'Gespeichert');
                 }, function (error) {
                     console.log(error);
-                    toastr.error(error.data.MESSAGE, 'Fehler');
+                    toastr.error(error.MESSAGE, 'Fehler');
                 });
             }
         });

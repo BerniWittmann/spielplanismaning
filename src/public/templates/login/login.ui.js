@@ -51,7 +51,7 @@
                 }
             }, function (error) {
                 console.log(error);
-                vm.error = error.data;
+                vm.error = error;
             });
         };
         vm.resetErr = function () {

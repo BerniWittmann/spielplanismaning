@@ -87,7 +87,7 @@
                     vm.loading = false;
                 }).then(function (res) {
                     spielplan.createSpielplan();
-                    vm.gruppen.push(res.data);
+                    vm.gruppen.push(res);
                     vm.gruppe = {};
                     vm.showMinZahlGruppen = false;
                     vm.loading = false;

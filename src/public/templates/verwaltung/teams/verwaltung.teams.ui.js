@@ -42,7 +42,7 @@
                 jugend.create(vm.jugend).then(function (res) {
                     spielplan.createSpielplan();
                     vm.jugend = {};
-                    vm.jugenden.push(res.data);
+                    vm.jugenden.push(res);
                     $timeout(function () {
                         $scope.$apply();
                     }, 0, false);

@@ -67,7 +67,7 @@
             save: saveSpiel,
             deleteSpiel: function () {
                 return spiel.resetSpiel(vm.spiel).then(function (res) {
-                    vm.spiel = res.data;
+                    vm.spiel = res;
                     _.extend(vm.spiel, {
                         toreA: undefined
                         , toreB: undefined
@@ -120,9 +120,9 @@
             if (!_.isUndefined(vm.spiel.toreA) && !_.isUndefined(vm.spiel.toreB) && !_.isNull(vm.spiel.toreA) && !_.isNull(vm.spiel.toreB) && (!_.isEqual(altToreA, vm.spiel.toreA) || !_.isEqual(altToreB, vm.spiel.toreB))) {
                 spiel.updateTore(vm.spiel).then(function (res) {
                     //Logger.log(res);
-                    altToreA = res.data.toreA;
-                    altToreB = res.data.toreB;
-                    vm.spiel = res.data;
+                    altToreA = res.toreA;
+                    altToreB = res.toreB;
+                    vm.spiel = res;
                     vm.isEditing = false;
                 });
             }

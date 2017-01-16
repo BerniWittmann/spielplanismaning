@@ -60,7 +60,7 @@
                     $state.go('spi.login');
                 }, function (error) {
                     console.log(error);
-                    toastr.error(error.data.MESSAGE, 'Fehler');
+                    toastr.error(error.MESSAGE, 'Fehler');
                 });
             }else if (!_.isEqual(vm.password, vm.passwordCheck)) {
                 toastr.error('Die Passwörter müssen übereinstimmen.', 'Unterschiedliche Passwörter');

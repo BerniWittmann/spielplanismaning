@@ -95,7 +95,7 @@
                 });
                 return team.create(vm.team).then(function (res) {
                     spielplan.createSpielplan();
-                    vm.teams.push(res.data);
+                    vm.teams.push(res);
                     vm.team = {};
                     vm.loading = false;
                     return vm.teams;

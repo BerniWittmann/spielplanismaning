@@ -22,7 +22,7 @@
 
         config.getEnv().then(function (res) {
             _.extend(vm, {
-                showBuildStatus: _.isEqual(res.data, 'testing') || _.isEqual(res.data, 'development')
+                showBuildStatus: _.isEqual(res, 'testing') || _.isEqual(res, 'development')
             });
         });
     }

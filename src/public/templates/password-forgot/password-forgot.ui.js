@@ -32,7 +32,7 @@
                     toastr.success('Wir haben eine Email mit weiteren Infos an ' + vm.email + ' versendet.', 'Email versendet');
                 }, function (error) {
                     console.log(error);
-                    toastr.error(error.data.MESSAGE, 'Fehler');
+                    toastr.error(error.MESSAGE, 'Fehler');
                 });
             }
         };

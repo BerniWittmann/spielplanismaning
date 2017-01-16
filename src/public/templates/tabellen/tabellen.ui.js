@@ -39,8 +39,8 @@
         _.forEach(vm.jugenden, function (jgd) {
             if (!_.isUndefined(jgd) && !_.isNull(jgd)) {
                 jugend.getTore(jgd._id).then(function (res) {
-                    if (res.data >= 0) {
-                        jgd.tore = res.data;
+                    if (res >= 0) {
+                        jgd.tore = res;
                     } else {
                         jgd.tore = 0;
                     }
