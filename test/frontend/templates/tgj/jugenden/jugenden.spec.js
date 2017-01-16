@@ -62,7 +62,7 @@
             $httpBackend = $injector.get('$httpBackend');
 
             var ctrl = scope.vm = $controller('JugendenController', {
-                jugendPromise: {data: jugenden},
+                jugenden: jugenden,
                 errorHandler: mockErrorHandler
             });
             $rootScope.$digest();

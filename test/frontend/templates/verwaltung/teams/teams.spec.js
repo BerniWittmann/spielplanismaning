@@ -117,10 +117,10 @@
                 auth: mockAuth,
                 jugend: mockJugend,
                 spielplan: mockSpielplan,
-                teamPromise: {data: teams},
+                teams: teams,
                 $timeout: mockTimeout,
                 $window: mockWindow,
-                jugendPromise: {data: jugenden}
+                jugenden: jugenden
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

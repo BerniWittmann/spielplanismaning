@@ -74,8 +74,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
             spiel.getAll().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -84,8 +84,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL, mockSpiele[0]).respond(201, response);
 
             spiel.create(response).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -126,8 +126,8 @@
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             spiel.delete('1').then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -136,8 +136,8 @@
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '/alle').respond(201, response);
 
             spiel.deleteAll().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -156,8 +156,8 @@
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '/tore?id=1', response).respond(201, response);
 
             spiel.updateTore(game).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -168,8 +168,8 @@
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '/tore?id=1').respond(201, response);
 
             spiel.resetSpiel(response).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
     });

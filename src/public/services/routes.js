@@ -94,7 +94,7 @@
                         return ENDPOINT_BASE + '/teams';
                     },
                     resetErgebnisse: function () {
-                        return ENDPOINT_BASE + '/resetErgebnisse';
+                        return ENDPOINT_BASE + '/teams/resetErgebnisse';
                     }
                 }
             };

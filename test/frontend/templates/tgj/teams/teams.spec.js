@@ -77,7 +77,7 @@
 
             var ctrl = scope.vm = $controller('TeamsController', {
                 $state: mockState,
-                teamPromise: {data: teams}
+                teams: teams
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

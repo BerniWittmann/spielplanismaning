@@ -68,8 +68,8 @@
             };
 
             var ctrl = scope.vm = $controller('GruppeController', {
-                gruppePromise: gruppe,
-                spiel: mockSpiel
+                aktiveGruppe: gruppe,
+                spiele: spiele
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

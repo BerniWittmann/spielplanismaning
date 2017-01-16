@@ -71,7 +71,7 @@
             var ctrl = scope.vm = $controller('VerwaltungAllgemeinController', {
                 auth: mockAuth,
                 spielplan: mockSpielplan,
-                getZeitenPromise: {data: mockSpielplan.zeiten}
+                zeiten: mockSpielplan.zeiten
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

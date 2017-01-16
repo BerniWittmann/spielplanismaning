@@ -57,7 +57,7 @@
             var $q = $injector.get('$q');
 
             var ctrl = scope.vm = $controller('HomeController', {
-                spielPromise: {data: spiele}
+                spiele: spiele
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

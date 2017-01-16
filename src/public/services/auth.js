@@ -4,12 +4,12 @@
     angular
         .module('spi.auth', ['spi.auth.token', 'spi.routes'])
         .factory('auth', ['routes', '$state', 'authToken', '$q', '$window', '$timeout', 'Logger', function (routes,
-                                                                                                           $state,
-                                                                                                           authToken,
-                                                                                                           $q,
-                                                                                                           $window,
-                                                                                                           $timeout,
-                                                                                                           Logger) {
+                                                                                                            $state,
+                                                                                                            authToken,
+                                                                                                            $q,
+                                                                                                            $window,
+                                                                                                            $timeout,
+                                                                                                            Logger) {
             var auth = {};
             auth.saveToken = authToken.saveToken;
 
@@ -42,15 +42,23 @@
             };
 
             auth.logIn = function (user) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.users.login(), data: user}).then(function (res) {
-                    console.log(res);
+                return routes.request({
+                    method: routes.methods.POST,
+                    url: routes.urls.users.login(),
+                    data: user
+                }).then(function (res) {
                     auth.saveToken(res.token);
+                    return res;
                 });
             };
 
             auth.deleteUser = function (username) {
                 if (auth.isAdmin()) {
-                    return routes.request({method: routes.methods.PUT, url: routes.urls.users.delete(), data: {username, username}});
+                    return routes.request({
+                        method: routes.methods.PUT,
+                        url: routes.urls.users.delete(),
+                        data: {username: username}
+                    });
                 } else {
                     return new Error('No Permission');
                 }
@@ -102,7 +110,11 @@
                     } else {
                         if (!_.isEqual(toState.name, 'spi.login')) {
                             $timeout(function () {
-                                $state.go('spi.login', {next: toState.name, reasonKey: 'AUTH_ERROR', reason: 'Sie verfügen nicht über genügend Rechte. Bitte melden Sie sich mit einem passenden Account an.'});
+                                $state.go('spi.login', {
+                                    next: toState.name,
+                                    reasonKey: 'AUTH_ERROR',
+                                    reason: 'Sie verfügen nicht über genügend Rechte. Bitte melden Sie sich mit einem passenden Account an.'
+                                });
                             });
                         }
                         return $q.reject();
@@ -116,11 +128,19 @@
                     email: email
                 };
 
-                return routes.request({method: routes.methods.PUT, url: routes.urls.users.forgotPassword(), data: data});
+                return routes.request({
+                    method: routes.methods.PUT,
+                    url: routes.urls.users.forgotPassword(),
+                    data: data
+                });
             };
 
             auth.checkResetToken = function (token) {
-                return routes.request({method: routes.methods.PUT, url: routes.urls.users.resetPasswordCheck(), data: {token: token}});
+                return routes.request({
+                    method: routes.methods.PUT,
+                    url: routes.urls.users.resetPasswordCheck(),
+                    data: {token: token}
+                });
             };
 
             auth.resetPassword = function (username, token, password) {

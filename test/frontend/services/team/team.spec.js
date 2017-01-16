@@ -63,8 +63,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
             team.getAll().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -73,14 +73,14 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL + '?jugend=123&gruppe=1234', mockTeams[0]).respond(201, response);
 
             team.create(response).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
         it('soll ein bestimmtes Team laden', function () {
             response = mockTeams[0];
-            httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, [response]);
+            httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             team.get('1').then(function (res) {
                 responseTest = res;
@@ -104,8 +104,8 @@
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             team.delete('1').then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -114,8 +114,8 @@
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '/resetErgebnisse').respond(201, response);
 
             team.resetErgebnisse().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -126,8 +126,8 @@
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '?id=1', neuesTeam).respond(201, response);
 
             team.updateName(response, 'Neuer Name').then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
     });

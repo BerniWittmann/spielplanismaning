@@ -81,7 +81,7 @@
                 email: mockEmail,
                 $state: mockState,
                 BestaetigenDialog: mockBestaetigenDialog,
-                getSubscribersPromise: {data: abonnements}
+                subscribers: abonnements
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

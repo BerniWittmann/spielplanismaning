@@ -16,7 +16,7 @@
                 controller: SpielController,
                 controllerAs: 'vm',
                 resolve: {
-                    spiel: function (spiel, $stateParams) {
+                    aktivesSpiel: function (spiel, $stateParams) {
                         return spiel.get($stateParams.spielid);
                     }
                 }
@@ -24,12 +24,12 @@
 
     }
 
-    function SpielController($state, spiel) {
+    function SpielController($state, aktivesSpiel) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            spiel: spiel,
+            spiel: aktivesSpiel,
             gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {
                     teamid: team._id

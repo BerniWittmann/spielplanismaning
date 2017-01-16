@@ -68,7 +68,7 @@
             var $q = $injector.get('$q');
 
             var ctrl = scope.vm = $controller('PlatzController', {
-                spielPromise: {data: spiele},
+                spiele: spiele,
                 $state: mockState,
                 $stateParams: mockStateParams,
                 errorHandler: mockErrorHandler,

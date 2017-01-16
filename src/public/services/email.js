@@ -15,8 +15,9 @@
                     method: routes.methods.POST,
                     url: routes.urls.email.subscriber(),
                     data: abonnent
-                }).then(function () {
+                }).then(function (res) {
                     email.addSubscriptionToken(abonnent);
+                    return res;
                 });
             };
 
@@ -57,11 +58,12 @@
 
             email.removeSubscription = function (sub) {
                 return routes.request({
-                    method: routes.methods.POST,
+                    method: routes.methods.DELETE,
                     url: routes.urls.email.subscriber(),
                     params: {email: sub.email, team: sub.team}
-                }).then(function () {
+                }).then(function (res) {
                     $window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
+                    return res;
                 });
             };
 

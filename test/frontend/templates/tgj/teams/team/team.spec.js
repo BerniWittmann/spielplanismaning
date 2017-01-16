@@ -89,8 +89,8 @@
             var ctrl = scope.vm = $controller('TeamController', {
                 team: mockTeam,
                 $stateParams: mockStateParams,
-                spielPromise: spiele,
-                teamPromise: team,
+                spiele: spiele,
+                aktivesTeam: team,
                 TeamAbonnierenDialog: mockTeamAbonnierenDialog,
                 email: mockEmail
             });

@@ -65,7 +65,7 @@
             };
 
             var ctrl = scope.vm = $controller('TeamDeabonnierenController', {
-                teamPromise: team,
+                aktivesTeam: team,
                 $state: mockState,
                 email: mockEmail,
                 $timeout: mockTimeout,

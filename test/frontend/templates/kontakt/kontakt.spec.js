@@ -37,9 +37,9 @@
             var html = $templateCache.get(stateDetails.templateUrl);
 
             var ctrl = scope.vm = $controller('KontaktController', {
-                versionPromise: {data: '0.0.0'},
-                kontaktPromise: {data: mockKontakte},
-                envPromise: {data: (env || 'development')}
+                version: '0.0.0',
+                kontakt: mockKontakte,
+                env: (env || 'development')
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
