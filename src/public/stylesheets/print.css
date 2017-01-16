@@ -5,29 +5,36 @@
     }
 
     .label {
-        border: none !important;
+        border: none;
         font-weight: normal;
+    }
+
+    a[href]:after {
+        content: "";
     }
 
     input {
         border: none;
-        outline: none;
         background-color: transparent;
         font-family: inherit;
         font-size: inherit;
     }
 
+    input:focus {
+        outline: none;
+    }
+
+    div.spiel-print {
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
     .platz3 > td {
-        border-bottom: 2px solid #605f5f !important;
+        border-bottom: 2px solid #605f5f;
     }
 
     #spielplan > thead > tr > th {
-        border-bottom: 2px solid #605f5f !important;
-    }
-
-    .page-break {
-        display: block;
-        page-break-after: always;
+        border-bottom: 2px solid #605f5f;
     }
 
     .alle-spiele-divider {
@@ -43,11 +50,11 @@
         margin-right: 10px;
     }
 
-    .valign {
+    .valign, table tr > td.valign, table tr > th.valign {
         height: 50px;
         line-height: 50px;
-        vertical-align: top !important;
-        padding-top: 5px !important;
-        font-size: 16px !important;
+        vertical-align: top;
+        padding-top: 5px;
+        font-size: 16px;
     }
 }

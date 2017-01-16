@@ -84,7 +84,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .platz3 > td {
-    border-bottom: 2px solid #ddd !important;
+    border-bottom: 2px solid #ddd;
 }
 
 .spielplannumberinput {
@@ -98,7 +98,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .highlightTeam {
-    background-color: #E8E8E8 !important;
+    background-color: #E8E8E8;
 }
 
 .highlightTeamName {
@@ -164,28 +164,28 @@ body {
     margin-top: 0;
 }
 
-.brand-image {
+.navbar-spi .navbar-header > .navbar-brand > .brand-image {
     margin-top: -6px;
 }
 
-.brand-image-normal {
-    display: block !important;
+.navbar-spi .navbar-header > .navbar-brand > .brand-image > .brand-image-normal {
+    display: block;
 }
 
-.brand-image-hover {
-    display: none !important;
+.navbar-spi .navbar-header > .navbar-brand > .brand-image > .brand-image-hover {
+    display: none;
 }
 
-.brand-image:hover .brand-image-normal {
-    display: none !important;
+.navbar-spi .navbar-header > .navbar-brand > .brand-image:hover .brand-image-normal {
+    display: none;
 }
 
-.brand-image:hover .brand-image-hover {
-    display: block !important;
+.navbar-spi .navbar-header > .navbar-brand > .brand-image:hover .brand-image-hover {
+    display: block;
 }
 
-.valign {
-    vertical-align: middle !important;
+.valign, table tr > td.valign, table tr > th.valign {
+    vertical-align: middle;
 }
 
 .width-100 {

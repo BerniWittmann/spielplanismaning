@@ -32,7 +32,9 @@
         vm.loading = true;
 
         _.extend(vm, {
-            spiele: _.sortBy(spiele, ['platz', 'nummer']),
+            spiele: _.sortBy(_.filter(spiele, function (spiel) {
+                return !_.isUndefined(spiel.teamA) && !_.isUndefined(spiel.teamB);
+            }), ['platz', 'nummer']),
             gotoTeam: function (gewaehltesteam) {
                 if (gewaehltesteam) {
                     $state.go('spi.tgj.team', {

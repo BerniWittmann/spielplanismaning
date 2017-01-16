@@ -135,13 +135,13 @@ SpielSchema.methods.setPunkte = function (punkteA, punkteB, cb) {
                 throw err;
             }
 
-            if (spiel.punkteA == 2 && spiel.punkteB == 0) {
+            if (spiel.punkteA === 2 && spiel.punkteB === 0) {
                 spiel.unentschieden = false;
                 spiel.gewinner = spiel.teamA;
-            } else if (spiel.punkteA == 0 && spiel.punkteB == 2) {
+            } else if (spiel.punkteA === 0 && spiel.punkteB === 2) {
                 spiel.unentschieden = false;
                 spiel.gewinner = spiel.teamB;
-            } else if (spiel.punkteA == 1 && spiel.punkteB == 1) {
+            } else if (spiel.punkteA === 1 && spiel.punkteB === 1) {
                 spiel.unentschieden = true;
             }
             spiel.beendet = true;
