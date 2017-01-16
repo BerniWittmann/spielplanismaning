@@ -28,10 +28,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.post('/register', function (req, res) {
-        if (!req.body.username || !req.body.email || !req.body.role) {
-            return messages.ErrorFehlendeFelder(res);
-        }
-
         var user = new User();
 
         user.username = req.body.username;
@@ -74,8 +70,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.post('/login', function (req, res, next) {
-        handler.handleBodyBadRequest(res, req, ['username', 'password']);
-
         //noinspection JSUnresolvedFunction
         passport.authenticate('local', function (err, user) {
             if (err) {
@@ -108,7 +102,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessDeleteMessage
      **/
     router.put('/delete', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['username']);
         if (req.body.username === 'berni') {
             return messages.ErrorUserNichtLoeschbar(res);
         }
@@ -137,8 +130,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-forgot', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['email']);
-
         var email = req.body.email;
 
         User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
@@ -177,8 +168,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset/check', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['token']);
-
         User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
             if (!user) {
                 return messages.ErrorInvalidToken(res);
@@ -209,8 +198,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['token', 'username', 'password']);
-
         User.findOne({'username': req.body.username}).exec(function (err, user) {
             if (!user) {
                 return messages.ErrorUserNotFound(res, req.body.username);
@@ -307,8 +294,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.put('/user-details', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['email', 'username']);
-
         var user;
         try {
             user = jsonwebtoken.verify(req.get('Authorization'), secret);

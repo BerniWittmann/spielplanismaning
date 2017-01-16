@@ -61,7 +61,10 @@ app.listen(app.get('port'), function () {
 });
 
 //Setup API Authorization
-require('./routes/authorization/authorization.js')(app, secret);
+require('./routes/middleware/authorization.js')(app, secret);
+
+//Setup BadRequest Handler
+require('./routes/middleware/badRequestHandler.js')(app);
 
 //Setup Routes
 require('./routes/routes.js')(app, sendgrid, secret);

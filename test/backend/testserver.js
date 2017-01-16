@@ -61,7 +61,8 @@ module.exports = function (env) {
     app.set('views', homepath + '/src/views');
     app.set('view engine', 'ejs');
 
-    require('../../src/routes/authorization/authorization.js')(app, process.env.SECRET);
+    require('../../src/routes/middleware/authorization.js')(app, process.env.SECRET);
+    require('../../src/routes/middleware/badRequestHandler.js')(app);
 
     app.use('/api/users', users);
     app.use('/api/email', email);

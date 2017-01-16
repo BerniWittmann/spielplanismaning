@@ -46,7 +46,7 @@ module.exports = function () {
      *     }]
      **/
     router.get('/', function (req, res) {
-        return getEntity(Gruppe, 'jugend teams', messages.ErrorGruppeNotFound, res);
+        return helpers.getEntity(Gruppe, 'jugend teams', messages.ErrorGruppeNotFound, res, req);
     });
 
     /**
@@ -79,9 +79,6 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['jugend']);
-        handler.handleBodyBadRequest(res, req, ['name']);
-
         var gruppe = new Gruppe(req.body);
         gruppe.jugend = req.query.jugend;
         var query = Jugend.findById(gruppe.jugend);
@@ -125,8 +122,6 @@ module.exports = function () {
      * @apiUse ErrorGruppeNotFoundMessage
      **/
     router.delete('/', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['id']);
-
         Gruppe.findById(req.query.id, function (err, gruppe) {
             if(!gruppe) {
                 return messages.ErrorGruppeNotFound(res, err);

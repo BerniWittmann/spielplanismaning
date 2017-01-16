@@ -1,5 +1,6 @@
 module.exports = function () {
     var _ = require('lodash');
+    var helpers = require('../helpers.js');
     var arr = {
         '/api/email': {
             POST: ['admin']
@@ -44,10 +45,7 @@ module.exports = function () {
 
     return {
         getRequiredRoles: function (path, method) {
-            //Cut off slash at the end
-            if(_.isEqual(path.slice(-1), '/')) {
-                path = path.substring(0, path.length - 1);
-            }
+            path = helpers.removeLastSlashFromPath(path);
             var route = arr[path];
 
             if (_.isArray(route)) {

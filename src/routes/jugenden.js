@@ -40,7 +40,7 @@ module.exports = function () {
      * @apiUse ErrorJugendNotFoundMessage
      **/
     router.get('/', function (req, res) {
-        return getEntity(Jugend, 'gruppen teams gruppen.teams', messages.ErrorJugendNotFound, res);
+        return helpers.getEntity(Jugend, 'gruppen teams gruppen.teams', messages.ErrorJugendNotFound, res, req);
     });
 
     /**
@@ -72,8 +72,6 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['name']);
-
         var jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
@@ -119,8 +117,6 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['id']);
-
         Jugend.findById(req.query.id, function (err, jgd) {
             if (!jgd) {
                 return messages.ErrorBadRequest(res);

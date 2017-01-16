@@ -41,8 +41,8 @@ function resetErgebnis(res, spiel, oldData, team, cb) {
     }
 }
 
-function getEntity(model, population, notFoundMessage, res) {
-    var {query, searchById} = helpers.getEntityQuery(model, req);
+function getEntity(model, population, notFoundMessage, res, req) {
+    var {query, searchById} = getEntityQuery(model, req);
     query.deepPopulate(population).exec(function (err, data) {
         return handler.handleQueryResponse(err, data, res, searchById, notFoundMessage);
     });
@@ -60,9 +60,18 @@ function removeEntityBy(model, by, value, res, cb) {
     });
 }
 
+function removeLastSlashFromPath(path) {
+    //Cut off slash at the end
+    if(_.isEqual(path.slice(-1), '/')) {
+        path = path.substring(0, path.length - 1);
+    }
+    return path;
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     resetErgebnis: resetErgebnis,
     getEntity: getEntity,
-    removeEntityBy: removeEntityBy
+    removeEntityBy: removeEntityBy,
+    removeLastSlashFromPath: removeLastSlashFromPath
 };

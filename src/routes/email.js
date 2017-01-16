@@ -24,8 +24,6 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['subject', 'text']);
-
         Subscriber.find().exec(function (err, subs) {
             if (err) {
                 return messages.Error(res, err);
@@ -75,8 +73,6 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      *     }
      **/
     router.post('/subscriber', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['team', 'email']);
-
         var subscriber = new Subscriber(req.body);
         subscriber.save(function (err, sub) {
             return handler.handleErrorAndResponse(err, res, sub);
@@ -97,8 +93,6 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/subscriber', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['email', 'team']);
-
         Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err) {
             return handler.handleErrorAndDeleted(err, res)
         });

@@ -49,7 +49,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
-        return getEntity(Spiel, 'gruppe jugend teamA teamB gewinner', messages.ErrorSpielNotFound, res);
+        return helpers.getEntity(Spiel, 'gruppe jugend teamA teamB gewinner', messages.ErrorSpielNotFound, res, req);
     });
 
     /**
@@ -64,8 +64,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        handler.handleBodyBadRequest(res, req, ['jugend', 'gruppe']);
-
         var spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
         spiel.gruppe = req.body.gruppe;
@@ -89,8 +87,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['id']);
-
         return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
             return handler.handleErrorAndDeleted(err, res);
         });
@@ -149,8 +145,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/tore', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['id']);
-
         var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
@@ -197,8 +191,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
-        handler.handleQueryBadRequest(res, req, ['id']);
-
         var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {

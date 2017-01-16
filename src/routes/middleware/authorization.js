@@ -30,7 +30,7 @@ module.exports = function (app, secret) {
             return messages.ErrorForbidden(res);
         }
 
-        User.findOne({username: user.username}).exec(function (err, userDB) {
+        return User.findOne({username: user.username}).exec(function (err, userDB) {
             if (err || !userDB) {
                 return messages.ErrorForbidden(res);
             }
@@ -45,7 +45,9 @@ module.exports = function (app, secret) {
                 return messages.ErrorForbidden(res);
             }
 
-            return next();
+            if(!res.headersSent) {
+                return next();
+            }
         });
     };
 
