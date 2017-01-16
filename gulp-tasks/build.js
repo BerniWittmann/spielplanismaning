@@ -4,6 +4,7 @@ var concatCss = require('gulp-concat-css');
 var clean = require('gulp-clean');
 var cleanCss = require('gulp-clean-css');
 var gp_uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
 var imagemin = require('gulp-imagemin');
 var concatJs = require('gulp-concat');
 var templateCache = require('gulp-angular-templatecache');
@@ -64,6 +65,9 @@ gulp.task('build:js', function (done) {
 gulp.task('build:js:angular', function () {
     if (uglify) {
         return gulp.src(['./tmp/app.js', './src/public/**/*.js', '!./src/public/bower_components/**', '!./src/public/app.js'])
+            .pipe(babel({
+                presets: ['es2015']
+            }))
             .pipe(ngAnnotate())
             .pipe(concatJs('app.js'))
             .pipe(gp_uglify())
@@ -78,6 +82,9 @@ gulp.task('build:js:angular', function () {
 gulp.task('build:js:nodeApp', function () {
     if (uglify) {
         return gulp.src(['./src/**/*.js', '!./src/public/**/*.js', '!./src/public/*.js'])
+            .pipe(babel({
+                presets: ['es2015']
+            }))
             .pipe(gp_uglify())
             .pipe(gulp.dest('./dist'));
     } else {
