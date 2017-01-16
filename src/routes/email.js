@@ -6,7 +6,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
     var Subscriber = mongoose.model('Subscriber');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
     var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js');
+    var helpers = require('./helpers.js')();
     var handler = require('./handler.js');
 
     /**

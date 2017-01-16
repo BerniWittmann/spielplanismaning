@@ -1,6 +1,6 @@
 module.exports = function () {
     var _ = require('lodash');
-    var helpers = require('../helpers.js');
+    var helpers = require('../helpers.js')();
     var arr = {
         '/api/email': {
             POST: ['admin']

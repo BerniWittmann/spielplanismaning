@@ -5,7 +5,7 @@ module.exports = function (app, secret) {
     var _ = require('lodash');
     var mongoose = require('mongoose');
     var User = mongoose.model('User');
-    var helpers = require('../helpers.js');
+    var helpers = require('../helpers.js')();
 
     var authenticate = function (req, res, next) {
         var requiredRoles = authUtil.getRequiredRoles(req.path, req.method);

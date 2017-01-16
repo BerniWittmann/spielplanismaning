@@ -8,7 +8,7 @@ module.exports = function () {
     var async = require('async');
 
     var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js');
+    var helpers = require('./helpers.js')();
     var handler = require('./handler.js');
 
     /**

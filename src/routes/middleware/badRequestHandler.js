@@ -1,7 +1,7 @@
 module.exports = function (app) {
     var messages = require('./../messages/messages.js')();
     var _ = require('lodash');
-    var helpers = require('./../helpers.js');
+    var helpers = require('./../helpers.js')();
 
     var arr = {
         '/api/email': {

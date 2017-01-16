@@ -10,7 +10,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
     var messages = require('./messages/messages.js')();
     var mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
-    var helpers = require('./helpers.js');
+    var helpers = require('./helpers.js')();
     var handler = require('./handler.js');
 
     /**
