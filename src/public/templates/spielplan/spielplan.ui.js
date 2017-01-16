@@ -16,7 +16,7 @@
                 controller: SpielplanController,
                 controllerAs: 'vm',
                 resolve: {
-                    spielPromise: function (spiel) {
+                    spiele: function (spiel) {
                         return spiel.getAll();
                     }
                 }
@@ -24,12 +24,12 @@
 
     }
 
-    function SpielplanController($state, spielPromise) {
+    function SpielplanController($state, spiele) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            spiele: _.sortBy(spielPromise.data, ['nummer']),
+            spiele: _.sortBy(spiele, ['nummer']),
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
                     $state.go('spi.spiel', {

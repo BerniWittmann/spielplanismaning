@@ -62,8 +62,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
             spielplan.getZeiten().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -77,8 +77,8 @@
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '/zeiten').respond(201, response);
 
             spielplan.saveZeiten(response).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
     });

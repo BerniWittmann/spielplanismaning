@@ -2,33 +2,23 @@
     'use strict';
 
     angular
-        .module('spi.config', [])
-        .factory('config', ['$http', function ($http) {
-
-            var ENDPOINT_URL = '/api/config';
+        .module('spi.config', ['spi.routes'])
+        .factory('config', ['routes', function (routes) {
 
             function getEnv() {
-                return $http.get(ENDPOINT_URL + '/env').success(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.config.env()});
             }
 
             function getVersion() {
-                return $http.get(ENDPOINT_URL + '/version').success(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.config.version()});
             }
 
             function getKontakte() {
-                return $http.get(ENDPOINT_URL + '/kontakt').success(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.config.kontakt()});
             }
 
             function getLockdown() {
-                return $http.get(ENDPOINT_URL + '/lockdownmode').success(function (res) {
-                    return res;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.config.lockdownMode()});
             }
 
             return {

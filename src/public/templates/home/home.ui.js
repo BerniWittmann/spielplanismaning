@@ -16,7 +16,7 @@
                 controller: HomeController,
                 controllerAs: 'vm',
                 resolve: {
-                    spielPromise: function (spiel) {
+                    spiele: function (spiel) {
                         return spiel.getAll();
                     }
                 },
@@ -27,12 +27,12 @@
 
     }
 
-    function HomeController(spielPromise) {
+    function HomeController(spiele) {
         var vm = this;
 
         vm.loading = true;
-        var allespiele = _.sortBy(spielPromise.data, ['nummer']);
-        var spiele = [];
+        var allespiele = _.sortBy(spiele, ['nummer']);
+        spiele = [];
         _.extend(spiele, allespiele);
 
         var n = _.findIndex(spiele, function (o) {

@@ -2,80 +2,65 @@
     'use strict';
 
     angular
-        .module('spi.spiel', [])
-        .factory('spiel', ['$http', 'Logger', 'errorHandler', function ($http, Logger, errorHandler) {
-
-            var ENDPOINT_URL = '/api/spiele';
+        .module('spi.spiel', ['spi.routes'])
+        .factory('spiel', ['Logger', 'routes', function (Logger, routes) {
 
             var spiel = {};
 
             spiel.getAll = function () {
-                return $http.get(ENDPOINT_URL).success(function (data) {
-                    return data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.spiele.base()});
             };
 
             spiel.create = function (spiel) {
-                return $http.post(ENDPOINT_URL, spiel).success(function (data) {
-                    Logger.log(data);
-                    return data;
-                }).error(function (data) {
-                    Logger.log('Error');
-                    Logger.log(data);
-                    return null;
-                });
+                return routes.request({method: routes.methods.POST, url: routes.urls.spiele.base(), data: spiel});
             };
 
+            function getByParam(param, id) {
+                var params = {};
+                params[param] = id;
+                return routes.request({method: routes.methods.GET, url: routes.urls.spiele.base(), params: params});
+            }
+
             spiel.get = function (id) {
-                return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
-                    return errorHandler.handleResponseError(err);
-                }).then(function (res) {
-                    return res.data;
-                });
+                return getByParam('id', id);
             };
 
             spiel.getByGruppe = function (gruppenid) {
-                return $http.get(ENDPOINT_URL + '?gruppe=' + gruppenid).then(function (res) {
-                    return res.data;
-                });
+                return getByParam('gruppe', gruppenid);
             };
 
             spiel.getByJugend = function (jugendid) {
-                return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
-                    return res.data;
-                });
+                return getByParam('jugend', jugendid);
             };
 
             spiel.getByTeam = function (teamid) {
-                return $http.get(ENDPOINT_URL + '?team=' + teamid).then(function (res) {
-                    return res.data;
-                });
+                return getByParam('team', teamid);
             };
 
             spiel.delete = function (spielid) {
-                return $http.delete(ENDPOINT_URL + '?id=' + spielid).then(function (res) {
-                    return res;
+                return routes.request({
+                    method: routes.methods.DELETE,
+                    url: routes.urls.spiele.base(),
+                    params: {id: spielid}
                 });
             };
 
             spiel.deleteAll = function () {
-                return $http.delete(ENDPOINT_URL + '/alle').then(function (res) {
-                    return res;
-                });
+                return routes.request({method: routes.methods.DELETE, url: routes.urls.spiele.alle()});
             };
 
             spiel.updateTore = function (spiel) {
                 Logger.log('Tore für Spiel #' + spiel.nummer + ' geändert!');
-                return $http.put(ENDPOINT_URL + '/tore?id=' + spiel._id, spiel).then(function (res) {
-                    Logger.log(res);
-                    return res;
+                return routes.request({
+                    method: routes.methods.PUT,
+                    url: routes.urls.spiele.tore(),
+                    params: {id: spiel._id},
+                    data: spiel
                 });
             };
 
             spiel.resetSpiel = function (spiel) {
-                return $http.delete(ENDPOINT_URL + '/tore?id=' + spiel._id).then(function (res) {
-                    return res;
-                });
+                return routes.request({method: routes.methods.DELETE, url: routes.urls.spiele.tore(), params: {id: spiel._id}});
             };
 
             return spiel;

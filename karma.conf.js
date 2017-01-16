@@ -22,6 +22,7 @@ module.exports = function (config) {
             'bower_components/angular-sanitize/angular-sanitize.js',
             'bower_components/moment/moment.js',
             'bower_components/lodash/lodash.js',
+            'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
             '../../node_modules/chai-jquery/chai-jquery.js',
             'bower_components/ng-table/dist/ng-table.js',
             //include src files

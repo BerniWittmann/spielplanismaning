@@ -4,6 +4,7 @@
     var expect = chai.expect;
 
     describe('Service: Email', function () {
+        beforeEach(module('ui.router'));
         beforeEach(module('spi.email'));
         beforeEach(module('spi.constants'));
         var ENDPOINT_BASE_URL = '/api/email';
@@ -50,8 +51,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL, mail).respond(201, response);
 
             email.send(mail).then(function (res) {
-                responseTest = res.data;
-                expect(res.data).to.be.equal(response);
+                responseTest = res;
+                expect(res).to.be.equal(response);
             });
         });
 
@@ -65,8 +66,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL + '/subscriber', abonnent).respond(201, response);
 
             email.addSubscriber(abonnent).then(function (res) {
-                responseTest = res.data;
-                expect(res.data).to.be.equal(response);
+                responseTest = res;
+                expect(res).to.be.equal(response);
                 expect(spy).to.have.been.called();
             });
         });
@@ -81,8 +82,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL + '/subscriber', abonnent).respond(201, response);
 
             email.addSubscriber(abonnent).then(function (res) {
-                responseTest = res.data;
-                expect(res.data).to.be.equal(response);
+                responseTest = res;
+                expect(res).to.be.equal(response);
                 expect(spy).to.have.been.called();
             });
         });
@@ -109,8 +110,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/subscriber').respond(201, response);
 
             email.getSubscribers().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 

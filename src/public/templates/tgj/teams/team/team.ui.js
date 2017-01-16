@@ -16,10 +16,10 @@
                 controller: TeamController,
                 controllerAs: 'vm',
                 resolve: {
-                    teamPromise: function (team, $stateParams) {
+                    aktivesTeam: function (team, $stateParams) {
                         return team.get($stateParams.teamid);
                     },
-                    spielPromise: function (spiel, $stateParams) {
+                    spiele: function (spiel, $stateParams) {
                         return spiel.getByTeam($stateParams.teamid);
                     }
                 }
@@ -27,18 +27,16 @@
 
     }
 
-    function TeamController(teamPromise, spielPromise, TeamAbonnierenDialog, email, team) {
+    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, team) {
         var vm = this;
         vm.loading = true;
 
-        console.log(teamPromise);
-
         _.extend(vm, {
-            team: teamPromise,
+            team: aktivesTeam,
             bereitsAbonniert: email.checkSubscription({
-                team: teamPromise._id
+                team: aktivesTeam._id
             }),
-            spiele: _.sortBy(spielPromise, ['nummer']),
+            spiele: _.sortBy(spiele, ['nummer']),
             abonnieren: abonnieren
         });
         team.getByGruppe(vm.team.gruppe._id, vm.team.jugend._id).then(function (res) {

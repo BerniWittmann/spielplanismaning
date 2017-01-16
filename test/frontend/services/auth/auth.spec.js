@@ -104,8 +104,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL + '/register', user).respond(201, response);
 
             auth.register(user).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -119,8 +119,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL + '/login', user).respond(201, response);
 
             auth.logIn(user).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
                 expect(window.localStorage[TOKENNAME]).to.be.equal('sillyToken123');
             });
         });

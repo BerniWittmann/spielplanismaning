@@ -55,7 +55,7 @@
 
             var ctrl = scope.vm = $controller('AccountController', {
                 auth: mockAuth,
-                userDetails: {data: user},
+                userDetails: user,
                 toastr: mockToastr
             });
             $rootScope.$digest();

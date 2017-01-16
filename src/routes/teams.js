@@ -8,6 +8,8 @@ module.exports = function () {
     var async = require('async');
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {get} /teams Get Team
@@ -33,7 +35,7 @@ module.exports = function () {
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
-     *     [{
+     *     {
      *         _id: '57cffb4055a8d45fc084c108',
      *         name: 'Team A1',
      *         jugend: [ Object ],
@@ -43,31 +45,10 @@ module.exports = function () {
      *         punkte: 2,
      *         gpunkte: 0
      *         __v: 3
-     *     }]
+     *     }
      **/
     router.get('/', function (req, res) {
-        var query = Team.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Team.find({_id: req.query.id});
-        } else if (req.query.gruppe) {
-            query = Team.find({gruppe: req.query.gruppe});
-        } else if (req.query.jugend) {
-            query = Team.find({jugend: req.query.jugend});
-        }
-
-        query.deepPopulate('gruppe jugend').exec(function (err, teams) {
-            if (searchById && !teams) {
-                return messages.ErrorTeamNotFound(res, err);
-            }
-
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(teams);
-        });
+        return helpers.getEntity(Team, 'gruppe jugend', messages.ErrorTeamNotFound, res, req);
     });
 
     /**
@@ -82,9 +63,6 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
         var query = Team.findById(req.query.id);
         query.deepPopulate('gruppe, jugend').exec(function (err, team) {
             if (err) {
@@ -102,14 +80,8 @@ module.exports = function () {
                         return messages.Error(res, err);
                     }
 
-                    Team.remove({
-                        "_id": team
-                    }, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        return messages.Deleted(res);
+                    return helpers.removeEntityBy(Team, '_id', team, res, function (err) {
+                        return handler.handleErrorAndDeleted(err, res);
                     });
                 });
             });
@@ -151,9 +123,6 @@ module.exports = function () {
      *     }]
      **/
     router.post('/', function (req, res) {
-        if (!req.query.jugend || !req.query.gruppe || !req.body.name) {
-            return messages.ErrorBadRequest(res);
-        }
         var team = new Team(req.body);
         team.jugend = req.query.jugend;
         team.gruppe = req.query.gruppe;
@@ -165,40 +134,13 @@ module.exports = function () {
 
             async.parallel([
                 function (cb) {
-                    Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-                        gruppe.pushTeams(team, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return cb();
-                        });
-                    });
+                    return helpers.findEntityAndPushTeam(Gruppe, team.gruppe, team, res, cb);
                 },
                 function (cb) {
-                    Jugend.findById(team.jugend).exec(function (err, jugend) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        jugend.pushTeams(team, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return cb();
-                        });
-                    });
+                    return helpers.findEntityAndPushTeam(Jugend, team.jugend, team, res, cb);
                 }
             ], function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return res.json(team);
+                return handler.handleErrorAndResponse(err, res, team);
             });
         });
     });
@@ -238,9 +180,6 @@ module.exports = function () {
      *     }]
      **/
     router.put('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
         Team.findById(req.query.id, function (err, team) {
             if (err) {
                 return messages.Error(res, err);
@@ -248,11 +187,7 @@ module.exports = function () {
 
             team.name = req.body.name;
             team.save(function (err, team) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return res.json(team);
+                return handler.handleErrorAndResponse(err, res, team);
             });
         });
     });
@@ -283,11 +218,7 @@ module.exports = function () {
                     return cb();
                 });
             }, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return messages.Reset(res);
+                return handler.handleErrorAndMessage(err, res, messages.Reset);
             });
         });
     });

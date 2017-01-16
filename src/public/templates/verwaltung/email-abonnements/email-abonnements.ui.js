@@ -17,7 +17,7 @@
                 controller: EmailAbonnementsContoller,
                 controllerAs: 'vm',
                 resolve: {
-                    getSubscribersPromise: function (email) {
+                    subscribers: function (email) {
                         return email.getSubscribers();
                     }
                 },
@@ -28,7 +28,7 @@
 
     }
 
-    function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, getSubscribersPromise) {
+    function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, subscribers) {
         var vm = this;
         vm.loading = true;
 
@@ -38,7 +38,7 @@
         };
 
         _.extend(vm, {
-            abonnements: (getSubscribersPromise.data || []),
+            abonnements: (subscribers || []),
             send: function () {
                 if (!_.isEqual(vm.email, emailBlank)) {
                     return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);

@@ -79,7 +79,7 @@
             var $q = $injector.get('$q');
 
             var ctrl = scope.vm = $controller('SpielplanController', {
-                spielPromise: {data: spiele},
+                spiele: spiele,
                 $state: mockState,
                 errorHandler: mockErrorHandler
             });

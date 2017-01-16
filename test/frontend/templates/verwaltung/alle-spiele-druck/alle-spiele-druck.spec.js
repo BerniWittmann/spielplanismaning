@@ -78,7 +78,7 @@
             $httpBackend = $injector.get('$httpBackend');
 
             var ctrl = scope.vm = $controller('SpieleDruckController', {
-                spielPromise: {data: spiele},
+                spiele: spiele,
                 $state: mockState
             });
             $rootScope.$digest();

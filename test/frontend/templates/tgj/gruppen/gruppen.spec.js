@@ -49,7 +49,7 @@
             var $q = $injector.get('$q');
 
             var ctrl = scope.vm = $controller('GruppenController', {
-                gruppePromise: {data: gruppen}
+                gruppen: gruppen
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

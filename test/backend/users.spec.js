@@ -59,7 +59,7 @@ describe('Route: Users', function () {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
                 expect(res.statusCode).to.equal(400);
-                expect(res.body.MESSAGEKEY).to.equal('ERROR_FEHLENDE_FELDER');
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
                 return done();
             });
     });
@@ -183,7 +183,7 @@ describe('Route: Users', function () {
         request(server)
             .put('/api/users/user-details')
             .set('Authorization', user.token)
-            .send({username: 'testuser'})
+            .send({username: 'testuser', email: 'test@byom.de'})
             .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
@@ -256,7 +256,7 @@ describe('Route: Users', function () {
         request(server)
             .put('/api/users/user-details')
             .set('Authorization', user.token)
-            .send({email: 'test1@byom.de'})
+            .send({username: 'testuser', email: 'test1@byom.de'})
             .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);

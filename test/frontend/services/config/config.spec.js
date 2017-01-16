@@ -4,6 +4,7 @@
     var expect = chai.expect;
 
     describe('Service: Config', function () {
+        beforeEach(module('ui.router'));
         beforeEach(module('spi.config'));
         var ENDPOINT_BASE_URL = '/api/config';
 
@@ -27,7 +28,7 @@
                 httpBackend.flush();
                 httpBackend.verifyNoOutstandingExpectation();
                 httpBackend.verifyNoOutstandingRequest();
-                expect(_.isEqual(responseTest, response)).to.be.true;
+                expect(_.isEqual(responseTest, response)).to.equal(true);
             }
         });
 
@@ -36,8 +37,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/env').respond(201, response);
 
             config.getEnv().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -46,8 +47,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/version').respond(201, response);
 
             config.getVersion().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -56,8 +57,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/kontakt').respond(201, response);
 
             config.getKontakte().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -66,8 +67,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/lockdownmode').respond(201, response);
 
             config.getLockdown().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
     });

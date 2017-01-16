@@ -16,7 +16,7 @@
                 controller: 'JugendenController',
                 controllerAs: 'vm',
                 resolve: {
-                    jugendPromise: function (jugend) {
+                    jugenden: function (jugend) {
                         return jugend.getAll();
                     }
                 }
@@ -24,12 +24,12 @@
 
     }
 
-    function JugendenController(jugendPromise) {
+    function JugendenController(jugenden) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            jugenden: jugendPromise.data
+            jugenden: jugenden
         });
 
         vm.loading = false;

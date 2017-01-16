@@ -59,8 +59,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
             gruppe.getAll().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -69,8 +69,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL + '?jugend=123', mockGruppen[0]).respond(201, response);
 
             gruppe.create(response.jugend, response).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -99,8 +99,8 @@
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             gruppe.delete('1').then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
     });

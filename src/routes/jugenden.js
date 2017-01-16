@@ -8,6 +8,8 @@ module.exports = function () {
     var Team = mongoose.model('Team');
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {get} /jugenden Get Jugenden
@@ -38,22 +40,7 @@ module.exports = function () {
      * @apiUse ErrorJugendNotFoundMessage
      **/
     router.get('/', function (req, res) {
-        var query = Jugend.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Jugend.findById(req.query.id);
-        }
-        query.deepPopulate('gruppen teams gruppen.teams').exec(function (err, jugenden) {
-            if(searchById && !jugenden) {
-                return messages.ErrorJugendNotFound(res, err);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(jugenden);
-        });
+        return helpers.getEntity(Jugend, 'gruppen teams gruppen.teams', messages.ErrorJugendNotFound, res, req);
     });
 
     /**
@@ -85,9 +72,6 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
-        if (!req.body.name) {
-            return messages.ErrorBadRequest(res);
-        }
         var jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
@@ -112,11 +96,7 @@ module.exports = function () {
                     }
 
                     jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        return res.json(jgd);
+                        return handler.handleErrorAndResponse(err, res, jgd);
                     });
                 });
             });
@@ -137,9 +117,6 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
         Jugend.findById(req.query.id, function (err, jgd) {
             if (!jgd) {
                 return messages.ErrorBadRequest(res);
@@ -148,27 +125,10 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            Team.remove({
-                "jugend": req.query.id
-            }, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                Gruppe.remove({
-                    "jugend": req.query.id
-                }, function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    Jugend.remove({
-                        "_id": req.query.id
-                    }, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-                        return messages.Deleted(res);
+            return helpers.removeEntityBy(Team, 'jugend', req.query.id, res, function () {
+                return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, res, function () {
+                    return helpers.removeEntityBy(Jugend, '_id', req.query.id, res, function (err) {
+                        return handler.handleErrorAndDeleted(err, res);
                     });
                 });
             });

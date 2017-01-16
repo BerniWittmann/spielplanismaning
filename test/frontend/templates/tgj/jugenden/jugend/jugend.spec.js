@@ -63,8 +63,8 @@
             $httpBackend = $injector.get('$httpBackend');
 
             var ctrl = scope.vm = $controller('JugendController', {
-                jugendPromise: jugend,
-                spielPromise: spiele
+                aktiveJugend: jugend,
+                spiele: spiele
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

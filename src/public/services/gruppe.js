@@ -2,43 +2,34 @@
     'use strict';
 
     angular
-        .module('spi.gruppe', [])
-        .factory('gruppe', ['$http', 'errorHandler', function ($http, errorHandler) {
-
-            var ENDPOINT_URL = '/api/gruppen';
+        .module('spi.gruppe', ['spi.routes'])
+        .factory('gruppe', ['routes', function (routes) {
 
             var gruppe = {};
 
             gruppe.getAll = function () {
-                return $http.get(ENDPOINT_URL).success(function (data) {
-                    return data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.gruppen.base()});
             };
 
-            gruppe.create = function (jugendId, newgruppe) {
-                return $http.post(ENDPOINT_URL + '?jugend=' + jugendId, newgruppe).success(function (data) {
-                    return data;
+            gruppe.create = function (jugendId, newGruppe) {
+                return routes.request({
+                    method: routes.methods.POST,
+                    url: routes.urls.gruppen.base(),
+                    params: {jugend: jugendId},
+                    data: newGruppe
                 });
             };
 
             gruppe.get = function (id) {
-                return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
-                    return errorHandler.handleResponseError(err);
-                }).then(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.gruppen.base(), params: {id: id}});
             };
 
             gruppe.getByJugend = function (jugendid) {
-                return $http.get(ENDPOINT_URL + '?jugend=' + jugendid).then(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.gruppen.base(), params: {jugend: jugendid}});
             };
 
             gruppe.delete = function (id) {
-                return $http.delete(ENDPOINT_URL + '?id=' + id).then(function (res) {
-                    return res;
-                });
+                return routes.request({method: routes.methods.DELETE, url: routes.urls.gruppen.base(), params: {id: id}});
             };
 
             return gruppe;

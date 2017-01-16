@@ -16,7 +16,7 @@
                 controller: TeamDeabonnierenController,
                 controllerAs: 'vm',
                 resolve: {
-                    teamPromise: function (team, $stateParams) {
+                    aktivesTeam: function (team, $stateParams) {
                         return team.get($stateParams.teamid);
                     }
                 }
@@ -24,11 +24,11 @@
 
     }
 
-    function TeamDeabonnierenController(teamPromise, email, $state, $timeout) {
+    function TeamDeabonnierenController(aktivesTeam, email, $state, $timeout) {
         var vm = this;
         vm.loading = true;
 
-        vm.team = teamPromise;
+        vm.team = aktivesTeam;
         vm.sub = {
             team: vm.team._id,
             email: ''

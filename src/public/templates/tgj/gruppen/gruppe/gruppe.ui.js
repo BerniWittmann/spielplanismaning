@@ -16,23 +16,25 @@
                 controller: GruppeController,
                 controllerAs: 'vm',
                 resolve: {
-                    gruppePromise: function (gruppe, $stateParams) {
+                    aktiveGruppe: function (gruppe, $stateParams) {
                         return gruppe.get($stateParams.gruppeid);
+                    },
+                    spiele: function (spiel, aktiveGruppe) {
+                        return spiel.getByGruppe(aktiveGruppe._id, aktiveGruppe.jugend._id);
                     }
                 }
             });
     }
 
-    function GruppeController(gruppePromise, spiel) {
+    function GruppeController(aktiveGruppe, spiele) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            gruppe: gruppePromise
+            gruppe: aktiveGruppe
         });
-        spiel.getByGruppe(vm.gruppe._id, vm.gruppe.jugend._id).then(function (res) {
-            vm.spiele = _.sortBy(res, ['nummer']);
-            vm.loading = false;
-        });
+
+        vm.spiele = _.sortBy(spiele, ['nummer']);
+        vm.loading = false;
     }
 })();

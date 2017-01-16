@@ -68,8 +68,8 @@
 
             var ctrl = scope.vm = $controller('TabellenController', {
                 jugend: mockJugend,
-                jugendPromise: {data: jugenden},
-                jugendTorePromise: {data: 18}
+                jugenden: jugenden,
+                jugendTore: 18
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

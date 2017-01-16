@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.errorHandler', [])
+        .module('spi.errorHandler', ['toastr'])
         .factory('errorHandler', ['$state', 'toastr', function ($state, toastr) {
             var errorHandler = {};
 

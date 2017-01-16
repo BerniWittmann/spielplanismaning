@@ -29,10 +29,10 @@
 
     function AccountController(userDetails, auth, toastr) {
         var vm = this;
-        var email = userDetails.data.email;
+        var email = userDetails.email;
 
         _.extend(vm, {
-            user: userDetails.data,
+            user: userDetails,
             resetPassword: function () {
                 auth.forgotPassword(email).then(function () {
                     toastr.success('Wir haben eine Email mit weiteren Infos an ' + email + ' versendet.', 'Email versendet');

@@ -16,10 +16,10 @@
                 controller: JugendController,
                 controllerAs: 'vm',
                 resolve: {
-                    jugendPromise: function (jugend, $stateParams) {
+                    aktiveJugend: function (jugend, $stateParams) {
                         return jugend.get($stateParams.jugendid);
                     },
-                    spielPromise: function (spiel, $stateParams) {
+                    spiele: function (spiel, $stateParams) {
                         return spiel.getByJugend($stateParams.jugendid);
                     }
                 }
@@ -27,13 +27,13 @@
 
     }
 
-    function JugendController(jugendPromise, spielPromise) {
+    function JugendController(aktiveJugend, spiele) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            jugend: jugendPromise,
-            spiele: _.sortBy(spielPromise, ['nummer'])
+            jugend: aktiveJugend,
+            spiele: _.sortBy(spiele, ['nummer'])
         });
 
         vm.loading = false;

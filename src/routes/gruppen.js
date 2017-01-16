@@ -8,6 +8,8 @@ module.exports = function () {
     var Team = mongoose.model('Team');
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {get} /gruppen Get Gruppen
@@ -44,27 +46,7 @@ module.exports = function () {
      *     }]
      **/
     router.get('/', function (req, res) {
-        var query = Gruppe.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Gruppe.findById(req.query.id);
-        } else if (req.query.jugend) {
-            query = Gruppe.find({
-                "jugend": req.query.jugend
-            });
-        }
-
-        query.deepPopulate('jugend teams').exec(function (err, gruppe) {
-            if (searchById && !gruppe) {
-                return messages.ErrorGruppeNotFound(res, err);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(gruppe);
-        });
+        return helpers.getEntity(Gruppe, 'jugend teams', messages.ErrorGruppeNotFound, res, req);
     });
 
     /**
@@ -97,9 +79,6 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        if (!req.query.jugend || !req.body.name) {
-            return messages.ErrorBadRequest(res);
-        }
         var gruppe = new Gruppe(req.body);
         gruppe.jugend = req.query.jugend;
         var query = Jugend.findById(gruppe.jugend);
@@ -120,11 +99,7 @@ module.exports = function () {
                     }
 
                     jugend.pushGruppe(gruppe, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        return res.json(gruppe);
+                        return handler.handleErrorAndResponse(err, res, gruppe);
                     });
                 });
             }
@@ -147,9 +122,6 @@ module.exports = function () {
      * @apiUse ErrorGruppeNotFoundMessage
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
         Gruppe.findById(req.query.id, function (err, gruppe) {
             if(!gruppe) {
                 return messages.ErrorGruppeNotFound(res, err);
@@ -169,22 +141,10 @@ module.exports = function () {
                         return messages.Error(res, err);
                     }
 
-                    Team.remove({
-                        "gruppe": gruppe
-                    }, function (err) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        Gruppe.remove({
-                            "_id": gruppe
-                        }, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return messages.Deleted(res);
-                        });
+                    return helpers.removeEntityBy(Team, 'gruppe', gruppe, res, function () {
+                        return helpers.removeEntityBy(Gruppe, '_id', gruppe, res, function (err) {
+                            return handler.handleErrorAndDeleted(err, res);
+                        })
                     });
                 });
             });

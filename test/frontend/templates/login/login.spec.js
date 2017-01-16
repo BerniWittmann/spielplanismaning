@@ -51,7 +51,7 @@
             var ctrl = scope.vm = $controller('LoginController', {
                 auth: mockAuth,
                 $state: mockState,
-                lockdown: {data: (lockdown || false)},
+                lockdown: (lockdown || false),
                 toastr: mockToastr
             });
             $rootScope.$digest();

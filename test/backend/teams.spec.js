@@ -45,9 +45,8 @@ describe('Route: Teams', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.have.lengthOf(1);
-                expect(response.body[0]._id).to.be.equal(teamid);
-                expect(response.body[0].name).to.be.equal('Team BA 1');
+                expect(response.body._id).to.be.equal(teamid);
+                expect(response.body.name).to.be.equal('Team BA 1');
                 return done();
             });
     });

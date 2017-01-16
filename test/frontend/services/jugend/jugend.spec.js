@@ -55,8 +55,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
             jugend.getAll().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -75,8 +75,8 @@
             httpBackend.expectPOST(ENDPOINT_BASE_URL, mockJugenden[0]).respond(201, response);
 
             jugend.create(response).then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -85,8 +85,8 @@
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             jugend.delete('1').then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             });
         });
 
@@ -118,8 +118,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/tore?id=1').respond(201, response);
 
             jugend.getTore('1').then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             })
         });
 
@@ -128,8 +128,8 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/tore').respond(201, response);
 
             jugend.getGesamtTore().then(function (res) {
-                responseTest = res.data;
-                expect(_.isEqual(res.data, response)).to.be.true;
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
             })
         });
     });

@@ -10,6 +10,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
     var messages = require('./messages/messages.js')();
     var mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
 
     /**
      * @api {post} /users/register Register User
@@ -26,10 +28,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.post('/register', function (req, res) {
-        if (!req.body.username || !req.body.email || !req.body.role) {
-            return messages.ErrorFehlendeFelder(res);
-        }
-
         var user = new User();
 
         user.username = req.body.username;
@@ -41,20 +39,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         user.setRandomPassword();
         user.generateResetToken();
 
-        return user.save(function (err) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return mailGenerator.registerMail(user, function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return messages.Success(res);
-            });
-
-        });
+        return helpers.saveUserAndSendMail(user, res, mailGenerator.registerMail);
     });
 
     /**
@@ -76,10 +61,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.post('/login', function (req, res, next) {
-        if (!req.body.username || !req.body.password) {
-            return messages.ErrorBadRequest(res);
-        }
-
         //noinspection JSUnresolvedFunction
         passport.authenticate('local', function (err, user) {
             if (err) {
@@ -112,9 +93,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessDeleteMessage
      **/
     router.put('/delete', function (req, res) {
-        if (!req.body.username) {
-            return messages.ErrorBadRequest(res);
-        }
         if (req.body.username === 'berni') {
             return messages.ErrorUserNichtLoeschbar(res);
         }
@@ -143,10 +121,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-forgot', function (req, res) {
-        if (!req.body.email) {
-            return messages.ErrorBadRequest(res);
-        }
-
         var email = req.body.email;
 
         User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
@@ -159,20 +133,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
             user.generateResetToken();
 
-            return user.save(function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return mailGenerator.passwordForgotMail(user, function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    return messages.Success(res);
-                });
-
-            });
+            return helpers.saveUserAndSendMail(user, res, mailGenerator.passwordForgotMail);
         });
     });
 
@@ -189,10 +150,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset/check', function (req, res) {
-        if (!req.body.token) {
-            return messages.ErrorBadRequest(res);
-        }
-
         User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
             if (!user) {
                 return messages.ErrorInvalidToken(res);
@@ -223,9 +180,6 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset', function (req, res) {
-        if (!req.body.token || !req.body.username || !req.body.password) {
-            return messages.ErrorBadRequest(res);
-        }
         User.findOne({'username': req.body.username}).exec(function (err, user) {
             if (!user) {
                 return messages.ErrorUserNotFound(res, req.body.username);
@@ -239,11 +193,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 user.removeResetToken();
 
                 return user.save(function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    return messages.Success(res);
+                    return handler.handleErrorAndSuccess(err, res);
                 });
             } else {
                 return messages.ErrorInvalidToken(res);
@@ -274,12 +224,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.get('/user-details', function (req, res) {
-        var user;
-        try {
-            user = jsonwebtoken.verify(req.get('Authorization'), secret);
-        } catch (err) {
-            return messages.ErrorForbidden(res);
-        }
+        var user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id) {
             return messages.ErrorForbidden(res);
@@ -326,16 +271,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.put('/user-details', function (req, res) {
-        if (!req.body.email && !req.body.username) {
-            return messages.ErrorBadRequest(res);
-        }
-
-        var user;
-        try {
-            user = jsonwebtoken.verify(req.get('Authorization'), secret);
-        } catch (err) {
-            return messages.ErrorForbidden(res);
-        }
+        var user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id) {
             return messages.ErrorForbidden(res);

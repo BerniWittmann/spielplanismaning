@@ -10,6 +10,28 @@ module.exports = function (sendgrid, env, url, disableMails) {
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
     var messages = require('./messages/messages.js')();
+    var helpers = require('./helpers.js');
+    var handler = require('./handler.js');
+
+    function notifySubscribers(spiel, fn, callback) {
+        async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+            Subscriber.getByTeam(team._id).then(function (mails) {
+                var emails = [];
+                mails.forEach(function (mail) {
+                    emails.push(mail.email);
+                });
+                if (emails.length > 0) {
+                    fn(team, spiel, emails, asyncdone);
+                } else {
+                    return asyncdone(null, {});
+                }
+
+            });
+        }, function (err) {
+            if (err) return messages.Error(res, err);
+            return callback(null, {});
+        });
+    }
 
     /**
      * @api {get} /spiele Get Spiele
@@ -27,35 +49,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
-        var query = Spiel.find();
-        var searchById = false;
-        if (req.query.id) {
-            searchById = true;
-            query = Spiel.findById(req.query.id);
-        } else if (req.query.team) {
-            //noinspection JSUnresolvedFunction
-            query = Spiel.find({}).or([{
-                teamA: req.query.team
-            }, {
-                teamB: req.query.team
-            }]);
-        } else if (req.query.gruppe) {
-            query = Spiel.find({gruppe: req.query.gruppe});
-        }
-        else if (req.query.jugend) {
-            query = Spiel.find({jugend: req.query.jugend});
-        }
-
-        query.deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, spiele) {
-            if (searchById && !spiele) {
-                return messages.ErrorSpielNotFound(res, err);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(spiele);
-        });
+        return helpers.getEntity(Spiel, 'gruppe jugend teamA teamB gewinner', messages.ErrorSpielNotFound, res, req);
     });
 
     /**
@@ -70,19 +64,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        if (!req.body.jugend || !req.body.gruppe) {
-            return messages.ErrorBadRequest(res);
-        }
         var spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
         spiel.gruppe = req.body.gruppe;
 
         spiel.save(function (err, spiel) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return res.json(spiel);
+            return handler.handleErrorAndResponse(err, res, spiel);
         });
     });
 
@@ -100,17 +87,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
-        Spiel.remove({
-            "_id": req.query.id
-        }, function (err) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return messages.Deleted(res);
+        return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
+            return handler.handleErrorAndDeleted(err, res);
         });
     });
 
@@ -134,8 +112,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             spiel.gruppe = singlespiel.gruppe;
             spiel.save(asyncdone);
         }, function (err) {
-            if (err) return messages.Error(res, err);
-            return messages.SpielplanErstellt(res);
+            return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });
 
@@ -150,11 +127,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.delete('/alle', function (req, res) {
         Spiel.remove({}, function (err) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return messages.Deleted(res);
+            return handler.handleErrorAndDeleted(err, res);
         });
     });
 
@@ -172,19 +145,18 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/tore', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
         var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
             }
 
-            var toreAOld = spiel.toreA;
-            var toreBOld = spiel.toreB;
-            var punkteAOld = spiel.punkteA;
-            var punkteBOld = spiel.punkteB;
+            var oldData = {
+                toreA: spiel.toreA,
+                toreB: spiel.toreB,
+                punkteA: spiel.punkteA,
+                punkteB: spiel.punkteB
+            };
             spiel.reset(function (err, spiel) {
                 if (err) {
                     return messages.Error(res, err);
@@ -192,28 +164,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
                 async.parallel([
                     function (cb) {
-                        spiel.teamA.setErgebnis(0, toreAOld, 0, toreBOld, 0, punkteAOld, 0, punkteBOld, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-                            return cb();
-                        });
+                        helpers.resetErgebnis(res, spiel, oldData, 'teamA', cb);
                     },
                     function (cb) {
-                        spiel.teamB.setErgebnis(0, toreBOld, 0, toreAOld, 0, punkteBOld, 0, punkteAOld, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return cb();
-                        });
+                        helpers.resetErgebnis(res, spiel, oldData, 'teamB', cb);
                     }
                 ], function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    res.json(spiel);
+                    handler.handleErrorAndResponse(err, res, spiel);
                 });
             });
         });
@@ -234,9 +191,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
-        if (!req.query.id) {
-            return messages.ErrorBadRequest(res);
-        }
         var query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
@@ -252,19 +206,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
 
                 //Set Ergebnis Team A
-                spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (
-                    err,
-                    teamA
-                ) {
+                spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (err,
+                                                                                                                                                            teamA) {
                     if (err) {
                         return messages.Error(res, err);
                     }
 
                     //Set Ergebnis Team B
-                    spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (
-                        err,
-                        teamB
-                    ) {
+                    spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err,
+                                                                                                                                                                teamB) {
                         if (err) {
                             return messages.Error(res, err);
                         }
@@ -278,28 +228,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                 }
                                 if (nextspiel) {
                                     if (!nextspiel.beendet) {
-                                        async.eachSeries([nextspiel.teamA, nextspiel.teamB], function (
-                                            team,
-                                            asyncdone
-                                        ) {
-                                            Subscriber.getByTeam(team._id).then(function (mails) {
-                                                var emails = [];
-                                                mails.forEach(function (mail) {
-                                                    emails.push(mail.email);
-                                                });
-                                                if (emails.length > 0) {
-                                                    //noinspection JSUnresolvedFunction
-                                                    MailGenerator.sendSpielReminder(team, nextspiel, emails, asyncdone);
-                                                } else {
-                                                    return asyncdone(null, {});
-                                                }
-                                            });
-                                        }, function (err) {
-                                            if (err) {
-                                                return messages.Error(res, err);
-                                            }
-                                            return cb(null, {});
-                                        });
+                                        notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
                                     } else {
                                         return cb(null, {});
                                     }
@@ -316,23 +245,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                     return messages.Error(res, err);
                                 }
 
-                                async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
-                                    Subscriber.getByTeam(team._id).then(function (mails) {
-                                        var emails = [];
-                                        mails.forEach(function (mail) {
-                                            emails.push(mail.email);
-                                        });
-                                        if (emails.length > 0) {
-                                            //noinspection JSUnresolvedFunction
-                                            MailGenerator.sendErgebnisUpdate(team, spiel, emails, asyncdone);
-                                        } else {
-                                            return asyncdone(null, {});
-                                        }
-
-                                    });
-                                }, function (err) {
-                                    if (err) return messages.Error(res, err);
-                                    return res.json(spiel);
+                                notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
+                                    return handler.handleErrorAndResponse(err, res, spiel);
                                 });
                             });
                         } else {
