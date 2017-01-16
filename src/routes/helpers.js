@@ -29,12 +29,12 @@ function getEntityQuery(model, req) {
 }
 
 function resetErgebnis(res, spiel, oldData, team, cb) {
-    var callback = function (err) {
+    function callback(err) {
         if (err) {
             return messages.Error(res, err);
         }
         return cb();
-    };
+    }
     if(_.isEqual(team, 'teamA')) {
         return spiel.teamA.setErgebnis(0, oldData.toreA, 0, oldData.toreB, 0, oldData.punkteA, 0, oldData.punkteB, callback);
     } else if(_.isEqual(team, 'teamB')) {
