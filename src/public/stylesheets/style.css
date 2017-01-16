@@ -12,7 +12,6 @@
 
 ul {
     list-style-type: none;
-    -moz-margin-start: 0;
     -webkit-margin-before: 0;
     -moz-padding-start: 0;
     -webkit-padding-start: 0;
@@ -77,6 +76,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=number] {
+    -webkit-appearance: textfield;
     -moz-appearance: textfield;
 }
 
