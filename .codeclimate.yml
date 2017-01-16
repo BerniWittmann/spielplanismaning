@@ -38,6 +38,8 @@ engines:
       - 7eb61edefe5c1e6bc14559e2378f3b90
       - 49778682e34d225bc3a8b0f3d157e122
       - 3a352ace6d341a1dde5fd77f673cf258
+      - 21bfbbd84216874bf58a800d56def42f
+      - 3300aa66adbb59afd754d305b8cbc2a5
   eslint: 
     enabled: true
   golint: 
