@@ -125,6 +125,14 @@
             expect(_.isEqual(result[1], array[1])).to.be.true;
         });
 
+        it('soll die Email des ersten Abonnenten nach Teams gefiltert laden', function () {
+            window.localStorage[TOKENNAME] = JSON.stringify(array);
+
+            var result = email.getEmailSubscriptionByTeam('123');
+
+            expect(result).to.equal('Test');
+        });
+
         it('soll geprüft werden können ob das Team bereits abonniert ist', function () {
             window.localStorage[TOKENNAME] = JSON.stringify(array);
             var abonnent1 = {email: 'Test', team: '123'};
