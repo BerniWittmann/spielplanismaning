@@ -242,12 +242,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.get('/user-details', function (req, res) {
-        var user;
-        try {
-            user = jsonwebtoken.verify(req.get('Authorization'), secret);
-        } catch (err) {
-            return messages.ErrorForbidden(res);
-        }
+        var user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id) {
             return messages.ErrorForbidden(res);
@@ -294,12 +289,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.put('/user-details', function (req, res) {
-        var user;
-        try {
-            user = jsonwebtoken.verify(req.get('Authorization'), secret);
-        } catch (err) {
-            return messages.ErrorForbidden(res);
-        }
+        var user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id) {
             return messages.ErrorForbidden(res);

@@ -5,6 +5,7 @@ module.exports = function (app, secret) {
     var _ = require('lodash');
     var mongoose = require('mongoose');
     var User = mongoose.model('User');
+    var helpers = require('../helpers.js');
 
     var authenticate = function (req, res, next) {
         var requiredRoles = authUtil.getRequiredRoles(req.path, req.method);
@@ -19,12 +20,7 @@ module.exports = function (app, secret) {
             return messages.ErrorNotAuthorized(res);
         }
 
-        var user;
-        try {
-            user = jwt.verify(req.get('Authorization'), secret);
-        } catch (err) {
-            return messages.ErrorForbidden(res);
-        }
+        var user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id || !user.role) {
             return messages.ErrorForbidden(res);

@@ -1,6 +1,7 @@
 var messages = require('./messages/messages.js')();
 var _ = require('lodash');
 var handler = require('./handler.js');
+var jsonwebtoken = require('jsonwebtoken');
 
 function getEntityQuery(model, req) {
     var query = model.find();
@@ -68,10 +69,19 @@ function removeLastSlashFromPath(path) {
     return path;
 }
 
+function verifyToken(req, secret) {
+    try {
+        return jsonwebtoken.verify(req.get('Authorization'), secret);
+    } catch (err) {
+        return undefined;
+    }
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     resetErgebnis: resetErgebnis,
     getEntity: getEntity,
     removeEntityBy: removeEntityBy,
-    removeLastSlashFromPath: removeLastSlashFromPath
+    removeLastSlashFromPath: removeLastSlashFromPath,
+    verifyToken: verifyToken
 };
