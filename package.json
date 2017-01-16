@@ -91,5 +91,6 @@
   "keywords": [],
   "author": "BerniWittmann",
   "license": "ISC",
-  "description": "Tournament Administration App"
+  "description": "Tournament Administration App",
+  "cacheDirectories": ["node_modules", "src/public/bower_components"]
 }
