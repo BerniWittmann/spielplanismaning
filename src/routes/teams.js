@@ -134,33 +134,10 @@ module.exports = function () {
 
             async.parallel([
                 function (cb) {
-                    Gruppe.findById(team.gruppe).exec(function (err, gruppe) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-                        gruppe.pushTeams(team, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return cb();
-                        });
-                    });
+                    return helpers.findEntityAndPushTeam(Gruppe, team.gruppe, team, res, cb);
                 },
                 function (cb) {
-                    Jugend.findById(team.jugend).exec(function (err, jugend) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        jugend.pushTeams(team, function (err) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-
-                            return cb();
-                        });
-                    });
+                    return helpers.findEntityAndPushTeam(Jugend, team.jugend, team, res, cb);
                 }
             ], function (err) {
                 return handler.handleErrorAndResponse(err, res, team);

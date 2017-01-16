@@ -49,6 +49,21 @@ function getEntity(model, population, notFoundMessage, res, req) {
     });
 }
 
+function findEntityAndPushTeam(model, id, team, res, callback) {
+    return model.findById(id).exec(function (err, data) {
+        if (err) {
+            return messages.Error(res, err);
+        }
+        return data.pushTeams(team, function (err) {
+            if (err) {
+                return messages.Error(res, err);
+            }
+
+            return callback();
+        });
+    });
+}
+
 function removeEntityBy(model, by, value, res, cb) {
     var query = {};
     query[by] = value;
@@ -97,5 +112,6 @@ module.exports = {
     removeEntityBy: removeEntityBy,
     removeLastSlashFromPath: removeLastSlashFromPath,
     verifyToken: verifyToken,
-    saveUserAndSendMail: saveUserAndSendMail
+    saveUserAndSendMail: saveUserAndSendMail,
+    findEntityAndPushTeam: findEntityAndPushTeam
 };
