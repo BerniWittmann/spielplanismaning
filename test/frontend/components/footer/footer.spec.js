@@ -23,7 +23,7 @@
                 return {
                     getEnv: function () {
                         var deferred = $q.defer();
-                        deferred.resolve({data: env});
+                        deferred.resolve(env);
                         return deferred.promise;
                     }
                 };

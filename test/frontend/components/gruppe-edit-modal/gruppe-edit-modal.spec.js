@@ -67,10 +67,10 @@
 
             team = {
                 create: function (team) {
-                    return $q.when({data: team});
+                    return $q.when(team);
                 },
                 delete: function (team) {
-                    return $q.when({data: team});
+                    return $q.when(team);
                 }
             };
 

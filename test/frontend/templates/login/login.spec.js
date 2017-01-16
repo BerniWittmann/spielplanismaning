@@ -42,7 +42,7 @@
                     if (_.isEqual(user.username, 'berni') && _.isEqual(user.password, '12345')) {
                         deferred.resolve();
                     } else {
-                        deferred.reject({data: {MESSAGE: 'Falscher Username/Passwort'}});
+                        deferred.reject({MESSAGE: 'Falscher Username/Passwort'});
                     }
                     return deferred.promise;
                 }

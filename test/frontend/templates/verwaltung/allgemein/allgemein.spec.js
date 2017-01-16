@@ -39,7 +39,7 @@
                 register: function () {
                     var deferred = $q.defer();
                     if (mockAuth.bereitsRegistriert) {
-                        deferred.reject({data: {ERROR: {code: 11000}}});
+                        deferred.reject({ERROR: {code: 11000}});
                     } else {
                         deferred.resolve();
                     }
@@ -57,7 +57,7 @@
             _.extend(mockSpielplan, {
                 getZeiten: function () {
                     var deferred = $q.defer();
-                    deferred.resolve({data: mockSpielplan.zeiten});
+                    deferred.resolve(mockSpielplan.zeiten);
                     return deferred.promise;
                 },
                 saveZeiten: function (zeiten) {

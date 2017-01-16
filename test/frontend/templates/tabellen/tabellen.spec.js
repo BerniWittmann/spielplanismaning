@@ -61,7 +61,7 @@
             mockJugend = {
                 getTore: function (id) {
                     var deferred = $q.defer();
-                    deferred.resolve({data: parseInt(id) * 3});
+                    deferred.resolve(parseInt(id) * 3);
                     return deferred.promise;
                 }
             };
