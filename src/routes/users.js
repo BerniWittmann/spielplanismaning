@@ -39,16 +39,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         user.setRandomPassword();
         user.generateResetToken();
 
-        return user.save(function (err) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            return mailGenerator.registerMail(user, function (err) {
-                return handler.handleErrorAndSuccess(err, res);
-            });
-
-        });
+        return helpers.saveUserAndSendMail(user, res, mailGenerator.registerMail);
     });
 
     /**
@@ -142,16 +133,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
             user.generateResetToken();
 
-            return user.save(function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                return mailGenerator.passwordForgotMail(user, function (err) {
-                    return handler.handleErrorAndSuccess(err, res);
-                });
-
-            });
+            return helpers.saveUserAndSendMail(user, res, mailGenerator.passwordForgotMail);
         });
     });
 

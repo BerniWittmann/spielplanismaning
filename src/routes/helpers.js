@@ -77,11 +77,25 @@ function verifyToken(req, secret) {
     }
 }
 
+function saveUserAndSendMail(user, res, mail) {
+    return user.save(function (err) {
+        if (err) {
+            return messages.Error(res, err);
+        }
+
+        return mail(user, function (err) {
+            return handler.handleErrorAndSuccess(err, res);
+        });
+
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     resetErgebnis: resetErgebnis,
     getEntity: getEntity,
     removeEntityBy: removeEntityBy,
     removeLastSlashFromPath: removeLastSlashFromPath,
-    verifyToken: verifyToken
+    verifyToken: verifyToken,
+    saveUserAndSendMail: saveUserAndSendMail
 };
