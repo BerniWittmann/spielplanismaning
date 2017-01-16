@@ -2,55 +2,55 @@
     'use strict';
 
     angular
-        .module('spi.team', [])
-        .factory('team', ['$http', 'errorHandler', function ($http, errorHandler) {
-
-            var ENDPOINT_URL = '/api/teams';
+        .module('spi.team', ['spi.routes'])
+        .factory('team', ['routes', function (routes) {
 
             var team = {};
 
             team.getAll = function () {
-                return $http.get(ENDPOINT_URL).success(function (data) {
-                    return data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.team.base()});
             };
 
             team.create = function (team) {
-                return $http.post(ENDPOINT_URL + '?jugend=' + team.jugend + '&gruppe=' + team.gruppe, team).success(function (data) {
-                    return data;
+                return routes.request({
+                    method: routes.methods.POST,
+                    url: routes.urls.team.base(),
+                    params: {jugend: team.jugend, gruppe: team.gruppe},
+                    data: team
                 });
             };
 
             team.get = function (id) {
-                return $http.get(ENDPOINT_URL + '?id=' + id).error(function (err) {
-                    return errorHandler.handleResponseError(err);
-                }).then(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.team.base(), params: {id: id}});
             };
 
             team.getByGruppe = function (gruppenid) {
-                return $http.get(ENDPOINT_URL + '?gruppe=' + gruppenid).then(function (res) {
-                    return res.data;
+                return routes.request({
+                    method: routes.methods.GET,
+                    url: routes.urls.team.base(),
+                    params: {gruppe: gruppenid}
                 });
             };
 
             team.delete = function (teamid) {
-                return $http.delete(ENDPOINT_URL + '?id=' + teamid).then(function (res) {
-                    return res;
+                return routes.request({
+                    method: routes.methods.DELETE,
+                    url: routes.urls.team.base(),
+                    params: {id: teamid}
                 });
             };
 
             team.resetErgebnisse = function () {
-                return $http.put(ENDPOINT_URL + '/resetErgebnisse').then(function (res) {
-                    return res;
-                });
+                return routes.request({method: routes.methods.PUT, url: routes.urls.team.resetErgebnisse()});
             };
 
             team.updateName = function (team, name) {
                 team.name = name;
-                return $http.put(ENDPOINT_URL + '?id=' + team._id, team).then(function (res) {
-                    return res;
+                return routes.request({
+                    method: routes.methods.PUT,
+                    url: routes.urls.team.base(),
+                    params: {id: team._id},
+                    data: team
                 });
             };
 

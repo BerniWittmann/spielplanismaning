@@ -2,23 +2,21 @@
     'use strict';
 
     angular
-        .module('spi.email', [])
-        .factory('email', ['$http', '$window', 'EMAIL_SUBSCRIPTION_TOKEN_NAME', function ($http, $window, EMAIL_SUBSCRIPTION_TOKEN_NAME) {
-            var ENDPOINT_URL = '/api/email';
+        .module('spi.email', ['spi.routes'])
+        .factory('email', ['routes', '$window', 'EMAIL_SUBSCRIPTION_TOKEN_NAME', function (routes, $window, EMAIL_SUBSCRIPTION_TOKEN_NAME) {
             var email = {};
 
             email.send = function (email) {
-                return $http.post(ENDPOINT_URL, email).success(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.POST, url: routes.urls.email.base(), data: email});
             };
 
             email.addSubscriber = function (abonnent) {
-                return $http.post(ENDPOINT_URL + '/subscriber', abonnent).error(function (err) {
-                    return err;
-                }).success(function (res) {
+                return routes.request({
+                    method: routes.methods.POST,
+                    url: routes.urls.email.subscriber(),
+                    data: abonnent
+                }).then(function () {
                     email.addSubscriptionToken(abonnent);
-                    return res.data;
                 });
             };
 
@@ -31,11 +29,7 @@
             };
 
             email.getSubscribers = function () {
-                return $http.get(ENDPOINT_URL + '/subscriber').error(function (err) {
-                    return err;
-                }).success(function (res) {
-                    return res.data;
-                });
+                return routes.request({method: routes.methods.GET, url: routes.urls.email.subscriber()});
             };
 
             function getSubscriptionToken() {
@@ -62,12 +56,12 @@
             };
 
             email.removeSubscription = function (sub) {
-                return $http.delete(ENDPOINT_URL + '/subscriber?email=' + sub.email + '&team=' + sub.team).error(function (err) {
-                    console.log(err);
-                    return err;
-                }).then(function (res) {
+                return routes.request({
+                    method: routes.methods.POST,
+                    url: routes.urls.email.subscriber(),
+                    params: {email: sub.email, team: sub.team}
+                }).then(function () {
                     $window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
-                    return res.data;
                 });
             };
 

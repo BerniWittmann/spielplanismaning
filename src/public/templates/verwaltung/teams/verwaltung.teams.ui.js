@@ -16,10 +16,10 @@
                 controller: VerwaltungTeamsController,
                 controllerAs: 'vm',
                 resolve: {
-                    jugendPromise: function (jugend) {
+                    jugenden: function (jugend) {
                         return jugend.getAll();
                     },
-                    teamPromise: function (team) {
+                    teams: function (team) {
                         return team.getAll();
                     }
                 },
@@ -30,14 +30,14 @@
 
     }
 
-    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugendPromise, teamPromise, JUGEND_FARBEN) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugenden, teams, JUGEND_FARBEN) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
             jugend: {},
-            jugenden: jugendPromise.data,
-            teams: teamPromise.data,
+            jugenden: jugenden,
+            teams: teams,
             addJugend: function () {
                 jugend.create(vm.jugend).then(function (res) {
                     spielplan.createSpielplan();

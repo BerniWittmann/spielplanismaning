@@ -16,10 +16,10 @@
                 controller: TabellenController,
                 controllerAs: 'vm',
                 resolve: {
-                    jugendPromise: function (jugend) {
+                    jugenden: function (jugend) {
                         return jugend.getAll();
                     },
-                    jugendTorePromise: function (jugend) {
+                    jugendTore: function (jugend) {
                         return jugend.getGesamtTore();
                     }
                 }
@@ -27,14 +27,15 @@
 
     }
 
-    function TabellenController(jugend, jugendPromise, jugendTorePromise) {
+    function TabellenController(jugend, jugenden, jugendTore) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            gesamt: jugendTorePromise.data,
-            jugenden: jugendPromise.data
+            gesamt: jugendTore,
+            jugenden: jugenden
         });
+
         _.forEach(vm.jugenden, function (jgd) {
             if (!_.isUndefined(jgd) && !_.isNull(jgd)) {
                 jugend.getTore(jgd._id).then(function (res) {

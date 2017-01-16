@@ -16,14 +16,14 @@
                 controller: PlatzController,
                 controllerAs: 'vm',
                 resolve: {
-                    spielPromise: function (spiel) {
+                    spiele: function (spiel) {
                         return spiel.getAll();
                     }
                 }
             });
     }
 
-    function PlatzController(spielPromise, $stateParams, errorHandler, ANZAHL_PLAETZE) {
+    function PlatzController(spiele, $stateParams, errorHandler, ANZAHL_PLAETZE) {
         var vm = this;
         vm.loading = true;
 
@@ -37,7 +37,7 @@
 
         _.extend(vm, {
             platz: $stateParams.platznummer,
-            spiele: _.sortBy(_.filter(spielPromise.data, {platz: parseInt($stateParams.platznummer, 10)}), ['nummer'])
+            spiele: _.sortBy(_.filter(spiele, {platz: parseInt($stateParams.platznummer, 10)}), ['nummer'])
         });
         vm.loading = false;
     }

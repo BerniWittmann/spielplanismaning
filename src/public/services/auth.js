@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.auth', ['spi.auth.token'])
-        .factory('auth', ['$http', '$state', 'authToken', '$q', '$window', '$timeout', 'Logger', function ($http,
+        .module('spi.auth', ['spi.auth.token', 'spi.routes'])
+        .factory('auth', ['routes', '$state', 'authToken', '$q', '$window', '$timeout', 'Logger', function (routes,
                                                                                                            $state,
                                                                                                            authToken,
                                                                                                            $q,
@@ -11,8 +11,6 @@
                                                                                                            $timeout,
                                                                                                            Logger) {
             var auth = {};
-            var ENDPOINT_URL = '/api/users';
-
             auth.saveToken = authToken.saveToken;
 
             auth.getToken = authToken.getToken;
@@ -40,28 +38,19 @@
             };
 
             auth.register = function (user) {
-                return $http.post(ENDPOINT_URL + '/register', user).error(function (err) {
-                    return err;
-                }).success(function (data) {
-                    return data;
-                });
+                return routes.request({method: routes.methods.POST, url: routes.urls.users.register(), data: user});
             };
 
             auth.logIn = function (user) {
-                return $http.post(ENDPOINT_URL + '/login', user).success(function (data) {
-                    auth.saveToken(data.token);
+                return routes.request({method: routes.methods.POST, url: routes.urls.users.login(), data: user}).then(function (res) {
+                    console.log(res);
+                    auth.saveToken(res.token);
                 });
             };
 
             auth.deleteUser = function (username) {
                 if (auth.isAdmin()) {
-                    return $http.put(ENDPOINT_URL + '/delete', {
-                        username: username
-                    }).error(function (err) {
-                        return err;
-                    }).success(function (data) {
-                        return data;
-                    });
+                    return routes.request({method: routes.methods.PUT, url: routes.urls.users.delete(), data: {username, username}});
                 } else {
                     return new Error('No Permission');
                 }
@@ -127,11 +116,11 @@
                     email: email
                 };
 
-                return $http.put(ENDPOINT_URL + '/password-forgot', data);
+                return routes.request({method: routes.methods.PUT, url: routes.urls.users.forgotPassword(), data: data});
             };
 
             auth.checkResetToken = function (token) {
-                return $http.put(ENDPOINT_URL + '/password-reset/check', {'token': token});
+                return routes.request({method: routes.methods.PUT, url: routes.urls.users.resetPasswordCheck(), data: {token: token}});
             };
 
             auth.resetPassword = function (username, token, password) {
@@ -140,15 +129,15 @@
                     token: token,
                     password: password
                 };
-                return $http.put(ENDPOINT_URL + '/password-reset', data);
+                return routes.request({method: routes.methods.PUT, url: routes.urls.users.resetPassword(), data: data});
             };
 
             auth.getUserDetails = function () {
-                return $http.get(ENDPOINT_URL + '/user-details');
+                return routes.request({method: routes.methods.GET, url: routes.urls.users.userDetails()});
             };
 
             auth.setUserDetails = function (data) {
-                return $http.put(ENDPOINT_URL + '/user-details', data);
+                return routes.request({method: routes.methods.PUT, url: routes.urls.users.userDetails(), data: data});
             };
 
             return auth;

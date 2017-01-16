@@ -16,7 +16,7 @@
                 controller: TeamsController,
                 controllerAs: 'vm',
                 resolve: {
-                    teamPromise: function (team) {
+                    teams: function (team) {
                         return team.getAll();
                     }
                 }
@@ -24,11 +24,11 @@
 
     }
 
-    function TeamsController($state, teamPromise, NgTableParams) {
+    function TeamsController($state, teams, NgTableParams) {
         var vm = this;
         vm.loading = true;
         _.extend(vm, {
-            teams: teamPromise.data,
+            teams: teams,
             gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {
                     teamid: team._id

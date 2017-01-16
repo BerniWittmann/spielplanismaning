@@ -17,7 +17,7 @@
                 controller: VerwaltungAllgemeinController,
                 controllerAs: 'vm',
                 resolve: {
-                    getZeitenPromise: function (spielplan) {
+                    zeiten: function (spielplan) {
                         return spielplan.getZeiten();
                     }
                 },
@@ -27,7 +27,7 @@
             });
     }
 
-    function VerwaltungAllgemeinController(auth, spielplan, getZeitenPromise) {
+    function VerwaltungAllgemeinController(auth, spielplan, zeiten) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
@@ -49,13 +49,13 @@
             decrement: decrement
         });
 
-        if (!_.isUndefined(getZeitenPromise.data) && !_.isNull(getZeitenPromise.data)) {
+        if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
             var date = new Date();
-            date.setHours(parseInt(getZeitenPromise.data.startzeit.substring(0, 2), 10));
-            date.setMinutes(parseInt(getZeitenPromise.data.startzeit.substring(3, 5), 10));
+            date.setHours(parseInt(zeiten.startzeit.substring(0, 2), 10));
+            date.setMinutes(parseInt(zeiten.startzeit.substring(3, 5), 10));
             vm.startzeit = date;
-            vm.spielzeit = getZeitenPromise.data.spielzeit;
-            vm.pausenzeit = getZeitenPromise.data.pausenzeit;
+            vm.spielzeit = zeiten.spielzeit;
+            vm.pausenzeit = zeiten.pausenzeit;
         }
 
         function resetDeleteForm() {

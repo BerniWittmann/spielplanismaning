@@ -16,7 +16,7 @@
                 controller: SpieleDruckController,
                 controllerAs: 'vm',
                 resolve: {
-                    spielPromise: function (spiel) {
+                    spiele: function (spiel) {
                         return spiel.getAll();
                     }
                 },
@@ -27,12 +27,12 @@
 
     }
 
-    function SpieleDruckController($state, spielPromise) {
+    function SpieleDruckController($state, spiele) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            spiele: _.sortBy(spielPromise.data, ['platz', 'nummer']),
+            spiele: _.sortBy(spiele, ['platz', 'nummer']),
             gotoTeam: function (gewaehltesteam) {
                 if (gewaehltesteam) {
                     $state.go('spi.tgj.team', {

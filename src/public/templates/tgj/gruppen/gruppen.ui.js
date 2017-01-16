@@ -17,7 +17,7 @@
                 controller: GruppenController,
                 controllerAs: 'vm',
                 resolve: {
-                    gruppePromise: function (gruppe) {
+                    gruppen: function (gruppe) {
                         return gruppe.getAll();
                     }
                 }
@@ -25,12 +25,12 @@
 
     }
 
-    function GruppenController(gruppePromise) {
+    function GruppenController(gruppen) {
         var vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            gruppen: gruppePromise.data
+            gruppen: gruppen
         });
 
         vm.loading = false;

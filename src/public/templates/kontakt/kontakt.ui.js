@@ -16,13 +16,13 @@
                 controller: KontaktController,
                 controllerAs: 'vm',
                 resolve: {
-                    versionPromise: function (config) {
+                    version: function (config) {
                         return config.getVersion();
                     },
-                    kontaktPromise: function (config) {
+                    kontakt: function (config) {
                         return config.getKontakte();
                     },
-                    envPromise: function (config) {
+                    env: function (config) {
                         return config.getEnv();
                     }
                 }
@@ -30,18 +30,18 @@
 
     }
 
-    function KontaktController(versionPromise, kontaktPromise, envPromise, BUG_REPORT_EMAIL) {
+    function KontaktController(version, kontakt, env, BUG_REPORT_EMAIL) {
         var vm = this;
 
         vm.loading = true;
 
         _.extend(vm, {
-            version: versionPromise.data,
-            showBuildStatus: _.isEqual(envPromise.data, 'testing') || _.isEqual(envPromise.data, 'development'),
-            kontakte: kontaktPromise.data,
+            version: version,
+            showBuildStatus: _.isEqual(env, 'testing') || _.isEqual(env, 'development'),
+            kontakte: kontakt,
             bugReportEmailHref: 'mailto:' + BUG_REPORT_EMAIL
         });
-        if (_.isEqual(envPromise.data, 'testing')) {
+        if (_.isEqual(env, 'testing')) {
             vm.version += ' TESTUMGEBUNG';
         }
         vm.loading = false;
