@@ -143,5 +143,22 @@ module.exports = function (sendgrid, env, url, disableEmails) {
         });
     });
 
+    /**
+     * @api {post} /email/bug Send Bug-Report-Email
+     * @apiName SendBugEmail
+     * @apiDescription Sendet eine Email mit einem BugReport
+     * @apiGroup Email
+     * @apiPermission Admin
+     *
+     * @apiUse SuccessMessage
+     *
+     * @apiUse ErrorBadRequest
+     **/
+    router.post('/bug', function (req, res) {
+        MailGenerator.bugReportMail(req.body, function (err) {
+            return handler.handleErrorAndSuccess(err, res);
+        });
+    });
+
     return router;
 };

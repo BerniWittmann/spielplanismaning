@@ -11,6 +11,9 @@ module.exports = function (app) {
             POST: ['body.team', 'body.email'],
             DELETE: ['query.team', 'query.email']
         },
+        '/api/email/bug': {
+            POST: ['body.email']
+        },
         '/api/gruppen': {
             POST: ['query.jugend', 'body.name'],
             DELETE: ['query.id']

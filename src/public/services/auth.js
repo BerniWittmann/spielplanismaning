@@ -35,6 +35,7 @@
                     var payload = JSON.parse($window.atob(token.split('.')[1]));
                     return payload.username;
                 }
+                return undefined;
             };
 
             auth.register = function (user) {

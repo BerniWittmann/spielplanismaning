@@ -223,3 +223,7 @@ body {
 a {
     cursor: pointer;
 }
+
+textarea {
+    max-width: 100%;
+}

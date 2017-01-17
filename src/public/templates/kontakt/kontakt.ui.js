@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.kontakt.ui', [
-            'ui.router', 'spi.config'
+            'ui.router', 'spi.config', 'spi.components.bug-modal.ui'
         ])
         .config(states)
         .controller('KontaktController', KontaktController);
@@ -30,7 +30,7 @@
 
     }
 
-    function KontaktController(version, kontakt, env, BUG_REPORT_EMAIL) {
+    function KontaktController(version, kontakt, env, BUG_REPORT_EMAIL, BugDialog) {
         var vm = this;
 
         vm.loading = true;
@@ -39,7 +39,10 @@
             version: version,
             showBuildStatus: _.isEqual(env, 'testing') || _.isEqual(env, 'development'),
             kontakte: kontakt,
-            bugReportEmailHref: 'mailto:' + BUG_REPORT_EMAIL
+            bugReportEmailHref: 'mailto:' + BUG_REPORT_EMAIL,
+            openBugReport: function () {
+                BugDialog.open();
+            }
         });
         if (_.isEqual(env, 'testing')) {
             vm.version += ' TESTUMGEBUNG';
