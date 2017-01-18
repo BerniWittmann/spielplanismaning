@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.auth', ['spi.auth.token', 'spi.routes'])
+        .module('spi.auth', ['spi.auth.token', 'spi.routes', 'spi.logger'])
         .factory('auth', ['routes', '$state', 'authToken', '$q', '$window', '$timeout', 'Logger', function (routes,
                                                                                                             $state,
                                                                                                             authToken,

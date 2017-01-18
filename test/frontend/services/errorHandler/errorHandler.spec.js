@@ -3,7 +3,7 @@
 
     var expect = chai.expect;
 
-    describe('Service: Config', function () {
+    describe('Service: ErrorHandler', function () {
         beforeEach(module('spi.errorHandler'));
 
         var errorHandler;
@@ -29,14 +29,6 @@
         beforeEach(inject(function (_errorHandler_) {
             errorHandler = _errorHandler_;
         }));
-
-        it('den State wechseln', function () {
-            var spy_stateGo = chai.spy.on(mockState, 'go');
-
-            errorHandler.handleResponseError(error);
-
-            expect(spy_stateGo).to.have.been.called();
-        });
 
         it('soll eine Notification anzeigen', function () {
             var spy_toastr = chai.spy.on(mockToastr, 'error');
