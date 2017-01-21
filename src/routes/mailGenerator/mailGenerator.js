@@ -1,5 +1,6 @@
 module.exports = function (sendgrid, env, url, disableMails) {
     var _ = require('lodash');
+    var constants = require('./constants.js');
     var mailGenerator = {};
 
     mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
@@ -123,7 +124,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     mailGenerator.registerMail = function (user, cb) {
         if (user) {
             var email;
-            if(!user.email) {
+            if (!user.email) {
                 email = user.username;
             } else {
                 email = user.email;
@@ -162,7 +163,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     mailGenerator.passwordForgotMail = function (user, cb) {
         if (user) {
             var email;
-            if(!user.email) {
+            if (!user.email) {
                 email = user.username;
             } else {
                 email = user.email;
@@ -195,13 +196,51 @@ module.exports = function (sendgrid, env, url, disableMails) {
         }
     };
 
+    mailGenerator.bugReportMail = function (data, cb) {
+        var mail = new sendgrid.Email();
+        mail.setTos(constants.BUG_REPORT_EMAIL_TO);
+        mail.setSmtpapiTos(constants.BUG_REPORT_EMAIL_TO);
+        mail.setFrom(data.email);
+        mail.setFromName(data.name);
+        var subject = constants.BUG_REPORT_EMAIL_SUBJECT_PREFIX + ' ' + data.title + ' ' + constants.BUG_REPORT_EMAIL_LABEL + ' ' + constants.BUG_REPORT_EMAIL_MEMBER;
+        mail.setSubject(subject);
+        mail.setText('Bug-Report');
+        mail.setHtml('<p>Bug-Report</p>');
+        mail.replyto = data.email;
+
+        mail.addSubstitution('-email-', data.email);
+        mail.addSubstitution('-name-', data.name);
+        mail.addSubstitution('-vorname-', data.vorname);
+        mail.addSubstitution('-nachname-', data.nachname);
+        mail.addSubstitution('-title-', data.title);
+        mail.addSubstitution('-subject-', subject);
+        mail.addSubstitution('-text-', data.text);
+        mail.addSubstitution('-rolle-', data.rolle);
+        mail.addSubstitution('-username-', data.username);
+        mail.addSubstitution('-email-', data.email);
+        mail.addSubstitution('-env-', data.env);
+        mail.addSubstitution('-version-', data.version);
+        mail.addSubstitution('-datetime-', data.datetime);
+
+        mail.setFilters({
+            'templates': {
+                'settings': {
+                    'enable': 1,
+                    'template_id': '3f12d76a-8fc0-4910-a917-1c80adc9c388'
+                }
+            }
+        });
+
+        sendMail(mail, cb, true);
+    };
+
     function sendMail(mail, cb, ignoreEnvironment) {
         if (_.isUndefined(ignoreEnvironment) || _.isNull(ignoreEnvironment)) {
             ignoreEnvironment = false;
         }
 
         if (disableMails === 'true') {
-            if (ignoreEnvironment || env !== 'production') {
+            if (!ignoreEnvironment && env !== 'production') {
                 mail.setTos(['kinderbeach.ismaning@byom.com']);
                 mail.setSmtpapiTos(['kinderbeach.ismaning@byom.com']);
             }

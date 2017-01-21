@@ -61,12 +61,15 @@ gulp.task('open:testing', function () {
 });
 
 // api doc
-gulp.task('apidoc', function (done) {
+gulp.task('apidoc', function () {
     apidoc({
         src: "src/routes",
         dest: "docs/api",
         config: "./",
         includeFilters: [".*\\.js$"]
-    }, done);
+    }, function () {
+        gulp.src('docs/api/*')
+            .pipe(git.commit('updated apidoc'));
+    });
 });
 

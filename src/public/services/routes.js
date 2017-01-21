@@ -55,6 +55,9 @@
                     },
                     subscriber: function () {
                         return ENDPOINT_BASE + '/email/subscriber';
+                    },
+                    bug: function () {
+                        return ENDPOINT_BASE + '/email/bug';
                     }
                 },
                 gruppen: {

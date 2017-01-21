@@ -160,6 +160,21 @@
                 expect(_.isEqual(result[1], array[2])).to.be.true;
             });
         });
+
+        it('soll einen Bug-Report senden können', function () {
+            var mail = {
+                text: 'Test',
+                email: 'Test@t.de',
+                title: 'Juhuu'
+            };
+            response = 'Email sent';
+            httpBackend.expectPOST(ENDPOINT_BASE_URL + '/bug', mail).respond(201, response);
+
+            email.sendBugReport(mail).then(function (res) {
+                responseTest = res;
+                expect(res).to.be.equal(response);
+            });
+        });
     });
 
 }());

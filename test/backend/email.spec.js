@@ -129,6 +129,32 @@ describe('Route: Email', function () {
             });
     });
 
+    it('Sendet einen Bug-Report', function (done) {
+        var email = {
+            name: 'Vorname Nachname',
+            vorname: 'Vorname',
+            nachname: 'Nachname',
+            text: 'Text',
+            title: 'Title',
+            env: 'testing',
+            version: '0.0.0',
+            rolle: 'Admin',
+            username: 'username',
+            email: 'test@byom.de',
+            datetime: '14.01.2017 09:41'
+        };
+        request(server)
+            .post('/api/email/bug')
+            .send(email)
+            .expect(200)
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                return done();
+            });
+    });
+
     after(function (done) {
         server.disconnectDB(done);
     });

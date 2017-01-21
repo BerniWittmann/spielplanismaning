@@ -10,6 +10,10 @@
                 return routes.request({method: routes.methods.POST, url: routes.urls.email.base(), data: email});
             };
 
+            email.sendBugReport = function (data) {
+                return routes.request({method: routes.methods.POST, url: routes.urls.email.bug(), data: data});
+            };
+
             email.addSubscriber = function (abonnent) {
                 return routes.request({
                     method: routes.methods.POST,

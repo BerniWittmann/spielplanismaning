@@ -20,6 +20,10 @@
 
         var env;
 
+        var mockBugDialog = {
+            open: function () {}
+        };
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.kontakt.ui'));
@@ -39,7 +43,8 @@
             var ctrl = scope.vm = $controller('KontaktController', {
                 version: '0.0.0',
                 kontakt: mockKontakte,
-                env: (env || 'development')
+                env: (env || 'development'),
+                BugDialog: mockBugDialog
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -127,6 +132,17 @@
                 expect(version.text()).not.to.contain('Test');
                 expect(version.text()).not.to.contain('test');
             });
+        });
+
+        it('das Bug-Report Modal soll sich öffnen', function () {
+            render();
+            var bugReportLink = angular.element(element[0].querySelector('#bug-report-link'));
+            var spy = chai.spy.on(mockBugDialog, 'open');
+            expect(bugReportLink).to.exist;
+
+            bugReportLink.triggerHandler('click');
+
+            expect(spy).to.have.been.called();
         });
 
     });

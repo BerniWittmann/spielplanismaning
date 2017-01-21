@@ -7,7 +7,6 @@
             var errorHandler = {};
 
             errorHandler.handleResponseError = function (err) {
-                $state.go('spi.home');
                 toastr.error(err.MESSAGE, 'Fehler');
             };
 

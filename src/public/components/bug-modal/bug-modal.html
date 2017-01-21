@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h3 class="modal-title">Fehler melden</h3>
+</div>
+<div class="modal-body">
+    <div class="row" data-ng-if="!vm.sent && !vm.error">
+        <div class="col-md-12">
+            <form data-ng-submit="vm.send()" style="margin-top:30px;">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Vorname" data-ng-model="vm.mail.vorname">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nachname" data-ng-model="vm.mail.nachname">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="E-Mail" data-ng-model="vm.mail.email"
+                           required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Betreff" data-ng-model="vm.mail.title"
+                           required>
+                    <p>Ein kurzer Titel, der das Problem benennt.</p>
+                </div>
+                <div class="form-group">
+                    <textarea rows="3" class="form-control" placeholder="Beschreibung"
+                              data-ng-model="vm.mail.text"></textarea>
+                    <p>Eine detaillerte Beschreibung des Problems. Je detaillierter, umso besser können wir das Problem
+                        nachvollziehen.</p>
+                </div>
+                <button type="submit" class="btn btn-success">Senden</button>
+            </form>
+        </div>
+    </div>
+    <div class="row" data-ng-if="vm.sent">
+        <div class="col-md-12">
+            <h4>Die E-Mail wurde versendet. Vielen Dank für deine Mithilfe.</h4>
+        </div>
+    </div>
+    <div class="row" data-ng-if="vm.error">
+        <div class="col-md-12">
+            <h4>Ein Fehler ist aufgetreten. Eine kurze <a href="mailto:b.wittmann@mail.de">E-Mail <i
+                    class="fa fa-envelope"></i></a> und wir helfen weiter.</h4>
+            <p>vm.error.MESSAGE</p>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" type="button" data-ng-click="vm.abbrechen()">Schließen</button>
+</div>
