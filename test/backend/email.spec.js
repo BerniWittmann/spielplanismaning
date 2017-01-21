@@ -25,7 +25,6 @@ describe('Route: Email', function () {
         request(server)
             .post('/api/email/subscriber')
             .send(abonnement)
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -50,7 +49,6 @@ describe('Route: Email', function () {
             .post('/api/email/')
             .send(email)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -68,7 +66,6 @@ describe('Route: Email', function () {
             .post('/api/email/')
             .send(email)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -87,7 +84,6 @@ describe('Route: Email', function () {
             .post('/api/email/')
             .send(email)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -100,7 +96,6 @@ describe('Route: Email', function () {
         request(server)
             .get('/api/email/subscriber')
             .set('Authorization', server.adminToken)
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -114,7 +109,6 @@ describe('Route: Email', function () {
     it('soll Abonnenten löschen können', function (done) {
         request(server)
             .del('/api/email/subscriber?email=test@t.de&team=' + teamid)
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;

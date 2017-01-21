@@ -17,7 +17,6 @@ describe('Route: Jugenden', function () {
     it('soll alle Jugenden laden können', function (done) {
         request(server)
             .get('/api/jugenden/')
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -32,7 +31,6 @@ describe('Route: Jugenden', function () {
     it('soll eine einzelne Jugend laden können', function (done) {
         request(server)
             .get('/api/jugenden?id=' + jugendid.toString())
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -49,7 +47,6 @@ describe('Route: Jugenden', function () {
         request(server)
             .post('/api/jugenden')
             .send(jugend)
-            .expect(400)
             .set('Authorization', server.adminToken)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -68,7 +65,6 @@ describe('Route: Jugenden', function () {
         request(server)
             .post('/api/jugenden')
             .send(jugend)
-            .expect(200)
             .set('Authorization', server.adminToken)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -91,7 +87,6 @@ describe('Route: Jugenden', function () {
     it('soll die Gesamtzahl der Tore laden', function (done) {
         request(server)
             .get('/api/jugenden/tore')
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -104,7 +99,6 @@ describe('Route: Jugenden', function () {
     it('soll die Tore für eine einzelne Jugend laden', function (done) {
         request(server)
             .get('/api/jugenden/tore?id=' + jugendid.toString())
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -117,7 +111,6 @@ describe('Route: Jugenden', function () {
     it('wenn keine JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .del('/api/jugenden?id=')
-            .expect(400)
             .set('Authorization', server.adminToken)
             .end(function (err, response) {
                 if (err) throw err;
@@ -131,7 +124,6 @@ describe('Route: Jugenden', function () {
     it('wenn eine falsche JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .del('/api/jugenden?id=DASgibtsN1cht')
-            .expect(400)
             .set('Authorization', server.adminToken)
             .end(function (err, response) {
                 if (err) throw err;
@@ -150,11 +142,10 @@ describe('Route: Jugenden', function () {
             anzahlGruppenVorher = res.length;
             request(server)
                 .del('/api/jugenden?id=' + neueJugendid)
-                .expect(200)
                 .set('Authorization', server.adminToken)
                 .end(function (err, res) {
                     if (err) throw err;
-
+                    expect(res.statusCode).to.equal(200);
                     expect(res.body.MESSAGEKEY).to.equal('SUCCESS_DELETE_MESSAGE');
                     mongoose.model('Jugend').findById(neueJugendid).exec(function (err, res) {
                         if (err) throw err;

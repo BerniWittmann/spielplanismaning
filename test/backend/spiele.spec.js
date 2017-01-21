@@ -32,7 +32,6 @@ describe('Route: Spiele', function () {
     it('soll alle Spiele laden können', function (done) {
         request(server)
             .get('/api/spiele/')
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -46,7 +45,6 @@ describe('Route: Spiele', function () {
     it('soll ein einzelnes Spiel laden können', function (done) {
         request(server)
             .get('/api/spiele?id=' + spielid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -63,7 +61,6 @@ describe('Route: Spiele', function () {
     it('soll die Spiele einer Gruppe laden', function (done) {
         request(server)
             .get('/api/spiele?gruppe=' + gruppenid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -79,7 +76,6 @@ describe('Route: Spiele', function () {
     it('soll die Spiele einer Jugend laden', function (done) {
         request(server)
             .get('/api/spiele?jugend=' + jugendid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -95,7 +91,6 @@ describe('Route: Spiele', function () {
     it('soll die Spiele eines Teams laden', function (done) {
         request(server)
             .get('/api/spiele?team=' + teamid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -117,7 +112,6 @@ describe('Route: Spiele', function () {
             .post('/api/spiele')
             .send(spiel)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -135,7 +129,6 @@ describe('Route: Spiele', function () {
             .post('/api/spiele')
             .send(spiel)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -154,7 +147,6 @@ describe('Route: Spiele', function () {
             .post('/api/spiele')
             .send(spiel)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -174,7 +166,6 @@ describe('Route: Spiele', function () {
         request(server)
             .del('/api/spiele?id=')
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -189,7 +180,6 @@ describe('Route: Spiele', function () {
         request(server)
             .del('/api/spiele?id=' + neuesSpielid)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -209,7 +199,6 @@ describe('Route: Spiele', function () {
         request(server)
             .del('/api/spiele/alle')
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -229,7 +218,6 @@ describe('Route: Spiele', function () {
             .put('/api/spiele/alle')
             .set('Authorization', server.adminToken)
             .send(alleSpiele)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -248,7 +236,6 @@ describe('Route: Spiele', function () {
         request(server)
             .del('/api/spiele/tore?id=')
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -263,7 +250,6 @@ describe('Route: Spiele', function () {
         request(server)
             .del('/api/spiele/tore?id=' + spielid)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -291,7 +277,6 @@ describe('Route: Spiele', function () {
             .put('/api/spiele/tore?id=' + spielid)
             .set('Authorization', server.adminToken)
             .send({toreA: 5, toreB: 8})
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);

@@ -51,7 +51,7 @@ gulp.task('test:backend', function (done) {
 });
 
 gulp.task('test:backend:withOutWipe', function (done) {
-    gulp.src('././test/backend/**/helpers.spec.js', {read: false})
+    gulp.src('././test/backend/**/*.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
             reporterOptions: {
