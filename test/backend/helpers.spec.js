@@ -1,6 +1,7 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 var helpers = require('../../src/routes/helpers.js')();
+var server = require('./testserver.js')({});
 
 describe('Helpers', function () {
     describe('soll die Datenbank query basierend auf Parametern laden', function () {
@@ -107,18 +108,97 @@ describe('Helpers', function () {
         });
     });
 
-    it('soll einem Entity ein Team hinzufügen');
-
-    it('soll ein Entity anhand eines Parameters enfernen');
-
-    describe('soll den letzten Slash bei einem Pfad entfernen können', function () {
-        it('wenn der Pfad einen Slash am Ende hat, soll er abgeschnitten werden');
-
-        it('wenn der Pfad keinen Slash am Ende hat, soll er unverändert bleiben');
+    it('soll einem Entity ein Team hinzufügen', function () {
+        var data = {
+            pushTeams: function (team, cb) {
+                data.pushed = team;
+                return cb();
+            },
+            callback: function () {
+                data.callbacked = true;
+            },
+            pushed: undefined,
+            callbacked: false
+        };
+        var model = {
+            findById: function () {
+                return {
+                    exec: function (cb) {
+                        return cb(null, data)
+                    }
+                }
+            }
+        }
+        var team = {id: '123', name: 'test'};
+        helpers.findEntityAndPushTeam(model, '123', team, {}, data.callback);
+        expect(data.pushed).to.deep.equal(team);
+        expect(data.callbacked).to.be.true;
     });
 
-    it('soll einen Token validieren');
+    it('soll ein Entity anhand eines Parameters enfernen', function () {
+        var model = {
+            remove: function (query, cb) {
+                model.query = query;
+                return cb();
+            },
+            query: undefined
+        };
+        var query = {
+            id: '1234'
+        };
 
-    it('soll einen User speichern und eine Email schicken');
+        helpers.removeEntityBy(model, 'id', '1234', {}, function (){});
+        expect(model.query).to.deep.equal(query);
+    });
+
+    describe('soll den letzten Slash bei einem Pfad entfernen können', function () {
+        it('wenn der Pfad einen Slash am Ende hat, soll er abgeschnitten werden', function () {
+            var path = '/test/path/';
+            var result = helpers.removeLastSlashFromPath(path);
+            expect(result).to.equal('/test/path');
+        });
+
+        it('wenn der Pfad keinen Slash am Ende hat, soll er unverändert bleiben', function () {
+            var path = '/test/path';
+            var result = helpers.removeLastSlashFromPath(path);
+            expect(result).to.equal(path);
+        });
+    });
+
+    it('soll einen Token validieren', function () {
+        var token = server.adminToken;
+        var req = {
+            get: function (text) {
+                if (text === 'Authorization') {
+                    return token;
+                }
+                return undefined;
+            }
+        };
+        var result = helpers.verifyToken(req, 'TEST-SECRET');
+        expect(result).not.to.be.undefined;
+        expect(result.username).to.equal('berni');
+    });
+
+    it('soll einen User speichern und eine Email schicken', function () {
+        var user = {
+            save: function (cb) {
+                user.saved = true;
+                return cb();
+            },
+            saved: false
+        };
+
+        var email = {
+            mail: function () {
+                email.sent = true
+            },
+            sent: false
+        };
+
+        helpers.saveUserAndSendMail(user, {}, email.mail);
+        expect(user.saved).to.be.true;
+        expect(email.sent).to.be.true;
+    });
 });
 
