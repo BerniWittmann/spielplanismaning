@@ -28,7 +28,7 @@ gulp.task('build:dist', function (done) {
 });
 
 gulp.task('build:sequence', function (done) {
-    return runSequence('clean:build', ['build:css', 'build:js', 'build:images', 'build:favicon', 'build:html', 'build:bower'], 'inject', 'build:views', 'clean:tmp', done);
+    return runSequence('clean:build', ['build:css', 'build:js', 'build:images', 'build:favicon', 'build:html', 'build:bower', 'build:etc'], 'inject', 'build:views', 'clean:tmp', done);
 });
 
 // clean dist
@@ -134,4 +134,10 @@ gulp.task('build:favicon', function () {
     return gulp.src(['./src/public/favicon.png', './src/public/favicon.ico'])
         .pipe(imagemin())
         .pipe(gulp.dest('./dist/public'));
+});
+
+// build etc
+gulp.task('build:etc', function () {
+    return gulp.src(['./src/**/*.json'])
+        .pipe(gulp.dest('./dist'));
 });
