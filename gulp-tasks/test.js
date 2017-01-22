@@ -13,6 +13,10 @@ gulp.task('test', function (done) {
     return runSequence('test:frontend', 'test:backend', 'test:e2e', done);
 });
 
+gulp.task('test:precommit', function (done) {
+   return runSequence('lint', done);
+});
+
 gulp.task('test:travis', function () {
     return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'lint', function (err) {
         var exitCode = 0;

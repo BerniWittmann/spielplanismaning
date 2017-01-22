@@ -73,3 +73,5 @@ gulp.task('apidoc', function () {
     });
 });
 
+gulp.task('pre-commit', ['test:precommit']);
+
