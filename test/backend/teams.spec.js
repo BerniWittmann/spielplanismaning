@@ -24,7 +24,6 @@ describe('Route: Teams', function () {
     it('soll alle Teams laden können', function (done) {
         request(server)
             .get('/api/teams/')
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -39,7 +38,6 @@ describe('Route: Teams', function () {
     it('soll ein einzelnes Team laden können', function (done) {
         request(server)
             .get('/api/teams?id=' + teamid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -54,7 +52,6 @@ describe('Route: Teams', function () {
     it('soll die Teams einer Jugend laden können', function (done) {
         request(server)
             .get('/api/teams?jugend=' + jugendid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -69,7 +66,6 @@ describe('Route: Teams', function () {
     it('soll die Teams einer Gruppe laden können', function (done) {
         request(server)
             .get('/api/teams?gruppe=' + gruppeid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -87,7 +83,6 @@ describe('Route: Teams', function () {
             .post('/api/teams?jugend=' + jugendid + '&gruppe=' + gruppeid)
             .send(neuesTeam)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -106,7 +101,6 @@ describe('Route: Teams', function () {
             .post('/api/teams?jugend=' + jugendid + '&gruppe=' + gruppeid)
             .send(neuesTeam)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -131,7 +125,6 @@ describe('Route: Teams', function () {
             .put('/api/teams?id=')
             .send(reqbody)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -150,7 +143,6 @@ describe('Route: Teams', function () {
             .put('/api/teams?id=' + neuesTeamid)
             .send(reqbody)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -170,7 +162,6 @@ describe('Route: Teams', function () {
         request(server)
             .del('/api/teams?id=')
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -185,7 +176,6 @@ describe('Route: Teams', function () {
         request(server)
             .del('/api/teams?id=' + neuesTeamid)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -209,7 +199,6 @@ describe('Route: Teams', function () {
         request(server)
             .put('/api/teams/resetErgebnisse')
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);

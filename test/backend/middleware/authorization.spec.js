@@ -260,5 +260,9 @@ describe('API Authorization', function () {
             });
         });
     });
+
+    after(function (done) {
+        server.disconnectDB(done);
+    });
 });
 

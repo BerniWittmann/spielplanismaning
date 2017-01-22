@@ -17,7 +17,6 @@ describe('Route: Spielplan', function () {
     it('soll den Spielplan laden können', function (done) {
         request(server)
             .get('/api/spielplan/')
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -43,7 +42,6 @@ describe('Route: Spielplan', function () {
             .put('/api/spielplan/zeiten')
             .set('Authorization', server.adminToken)
             .send(spielplan)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -63,7 +61,6 @@ describe('Route: Spielplan', function () {
             .put('/api/spielplan/zeiten')
             .set('Authorization', server.adminToken)
             .send(spielplan)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -83,7 +80,6 @@ describe('Route: Spielplan', function () {
             .put('/api/spielplan/zeiten')
             .set('Authorization', server.adminToken)
             .send(spielplan)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -104,7 +100,6 @@ describe('Route: Spielplan', function () {
             .put('/api/spielplan/zeiten')
             .set('Authorization', server.adminToken)
             .send(spielplan)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -126,7 +121,6 @@ describe('Route: Spielplan', function () {
             .put('/api/spielplan/ausnahmen')
             .send(ausnahme)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -145,7 +139,6 @@ describe('Route: Spielplan', function () {
         request(server)
             .get('/api/spielplan/ausnahmen')
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -161,7 +154,6 @@ describe('Route: Spielplan', function () {
         request(server)
             .put('/api/spielplan')
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);

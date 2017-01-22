@@ -29,7 +29,6 @@ describe('Route: Users', function () {
             .post('/api/users/register')
             .set('Authorization', server.adminToken)
             .send(user)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -54,7 +53,6 @@ describe('Route: Users', function () {
             .post('/api/users/register')
             .set('Authorization', server.adminToken)
             .send({username: 'test'})
-            .expect(400)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -69,7 +67,6 @@ describe('Route: Users', function () {
             .post('/api/users/register')
             .set('Authorization', server.adminToken)
             .send({username: 'test-user', email: 'test2@byom.de', role: 'Bearbeiter'})
-            .expect(500)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -92,7 +89,6 @@ describe('Route: Users', function () {
                 request(server)
                     .post('/api/users/login')
                     .send(user)
-                    .expect(200)
                     .end(function (err, res) {
                         if (err) return done(err);
                         expect(res).not.to.be.undefined;
@@ -110,7 +106,6 @@ describe('Route: Users', function () {
         request(server)
             .post('/api/users/login')
             .send({})
-            .expect(400)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -124,7 +119,6 @@ describe('Route: Users', function () {
         request(server)
             .post('/api/users/login')
             .send({username: 'test-user', password: 'bruteforce'})
-            .expect(401)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -138,7 +132,6 @@ describe('Route: Users', function () {
         request(server)
             .post('/api/users/login')
             .send({username: 'test-user2', password: 'bruteforce'})
-            .expect(401)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -153,7 +146,6 @@ describe('Route: Users', function () {
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'tippfehler'})
-            .expect(404)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -169,7 +161,6 @@ describe('Route: Users', function () {
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'berni'})
-            .expect(403)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -184,7 +175,6 @@ describe('Route: Users', function () {
             .put('/api/users/user-details')
             .set('Authorization', user.token)
             .send({username: 'testuser', email: 'test@byom.de'})
-            .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -200,7 +190,6 @@ describe('Route: Users', function () {
             .put('/api/users/password-forgot')
             .set('Authorization', server.bearbeiterToken)
             .send({email: 'test@byom.de'})
-            .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -220,7 +209,6 @@ describe('Route: Users', function () {
             request(server)
                 .put('/api/users/password-reset/check')
                 .send({token: resetToken})
-                .expect(200)
                 .end(function (err, res) {
                     if (err) return done(err);
                     expect(res).not.to.be.undefined;
@@ -235,7 +223,6 @@ describe('Route: Users', function () {
         request(server)
             .put('/api/users/password-reset')
             .send({token: resetToken, username: username, password: 'allesneumachtdermai'})
-            .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -257,7 +244,6 @@ describe('Route: Users', function () {
             .put('/api/users/user-details')
             .set('Authorization', user.token)
             .send({username: 'testuser', email: 'test1@byom.de'})
-            .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -272,7 +258,6 @@ describe('Route: Users', function () {
         request(server)
             .get('/api/users/user-details')
             .set('Authorization', user.token)
-            .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -289,7 +274,6 @@ describe('Route: Users', function () {
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({})
-            .expect(400)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -304,7 +288,6 @@ describe('Route: Users', function () {
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'wrongname'})
-            .expect(404)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
@@ -319,7 +302,6 @@ describe('Route: Users', function () {
             .put('/api/users/delete')
             .set('Authorization', server.adminToken)
             .send({username: 'testuser'})
-            .expect(200)
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;

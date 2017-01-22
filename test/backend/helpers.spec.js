@@ -1,0 +1,204 @@
+var expect = require('chai').expect;
+var _ = require('lodash');
+var helpers = require('../../src/routes/helpers.js')();
+var server = require('./testserver.js')({});
+
+describe('Helpers', function () {
+    describe('soll die Datenbank query basierend auf Parametern laden', function () {
+        var model = {
+            find: function (object) {
+                if (_.isUndefined(object)) {
+                    return 'all';
+                } else if (_.isEmpty(object)) {
+                    return {
+                        or: function () {
+                            return 'team';
+                        }
+                    };
+                } else if (_.isEqual(_.keys(object)[0], 'gruppe')) {
+                    return 'gruppe';
+                } else if (_.isEqual(_.keys(object)[0], 'jugend')) {
+                    return 'jugend';
+                } else {
+                    return 'query';
+                }
+            },
+            findById: function () {
+                return 'id';
+            }
+        };
+
+        it('soll das Query für alle Entities zurückgegeben', function () {
+            var req = {query: {}, body: {}};
+            var data = helpers.getEntityQuery(model, req);
+            expect(data.searchById).to.be.false;
+            expect(data.query).to.equal('all');
+        });
+
+        it('soll das Query für ein einzelnes Entity zurückgegeben', function () {
+            var req = {query: {id: '1234'}, body: {}};
+            var data = helpers.getEntityQuery(model, req);
+            expect(data.searchById).to.be.true;
+            expect(data.query).to.equal('id');
+        });
+
+        it('soll das Query für ein Entity gefiltert nach Team zurückgegeben', function () {
+            var req = {query: {team: '1234'}, body: {}};
+            var data = helpers.getEntityQuery(model, req);
+            expect(data.searchById).to.be.false;
+            expect(data.query).to.equal('team');
+        });
+
+        it('soll das Query für ein Entity gefiltert nach Gruppe zurückgegeben', function () {
+            var req = {query: {gruppe: '1234'}, body: {}};
+            var data = helpers.getEntityQuery(model, req);
+            expect(data.searchById).to.be.false;
+            expect(data.query).to.equal('gruppe');
+        });
+
+        it('soll das Query für ein Entity gefiltert nach Jugend zurückgegeben', function () {
+            var req = {query: {jugend: '1234'}, body: {}};
+            var data = helpers.getEntityQuery(model, req);
+            expect(data.searchById).to.be.false;
+            expect(data.query).to.equal('jugend');
+        });
+    });
+
+    describe('soll das Team-Ergebnis zurücksetzen können', function () {
+        function resetErgebnisTest(tA, tAo, tB, tBo, pA, pAo, pB, pBo, callback) {
+            expect(tA).to.equal(0);
+            expect(tB).to.equal(0);
+            expect(pA).to.equal(0);
+            expect(pB).to.equal(0);
+            expect(tAo).to.be.above(0);
+            expect(tBo).to.be.above(0);
+            expect(pAo).to.be.above(0);
+            expect(pBo).to.be.above(0);
+            callback();
+        }
+
+        var spiel = {
+            teamA: {
+                setErgebnis: resetErgebnisTest
+            },
+            teamB: {
+                setErgebnis: resetErgebnisTest
+            }
+        };
+        var mock = {
+            callback: function () {
+                mock.called = true;
+            },
+            called: false
+        };
+        var oldData = {
+            toreA: 5,
+            toreB: 5,
+            punkteA: 1,
+            punkteB: 1
+        };
+        it('soll das Ergebnis für Team A zurücksetzen', function () {
+            helpers.resetErgebnis({}, spiel, oldData, 'teamA', mock.callback);
+            expect(mock.called).to.be.true;
+        });
+
+        it('soll das Ergebnis für Team B zurücksetzen', function () {
+            helpers.resetErgebnis({}, spiel, oldData, 'teamB', mock.callback);
+            expect(mock.called).to.be.true;
+        });
+    });
+
+    it('soll einem Entity ein Team hinzufügen', function () {
+        var data = {
+            pushTeams: function (team, cb) {
+                data.pushed = team;
+                return cb();
+            },
+            callback: function () {
+                data.callbacked = true;
+            },
+            pushed: undefined,
+            callbacked: false
+        };
+        var model = {
+            findById: function () {
+                return {
+                    exec: function (cb) {
+                        return cb(null, data)
+                    }
+                }
+            }
+        }
+        var team = {id: '123', name: 'test'};
+        helpers.findEntityAndPushTeam(model, '123', team, {}, data.callback);
+        expect(data.pushed).to.deep.equal(team);
+        expect(data.callbacked).to.be.true;
+    });
+
+    it('soll ein Entity anhand eines Parameters enfernen', function () {
+        var model = {
+            remove: function (query, cb) {
+                model.query = query;
+                return cb();
+            },
+            query: undefined
+        };
+        var query = {
+            id: '1234'
+        };
+
+        helpers.removeEntityBy(model, 'id', '1234', {}, function (){});
+        expect(model.query).to.deep.equal(query);
+    });
+
+    describe('soll den letzten Slash bei einem Pfad entfernen können', function () {
+        it('wenn der Pfad einen Slash am Ende hat, soll er abgeschnitten werden', function () {
+            var path = '/test/path/';
+            var result = helpers.removeLastSlashFromPath(path);
+            expect(result).to.equal('/test/path');
+        });
+
+        it('wenn der Pfad keinen Slash am Ende hat, soll er unverändert bleiben', function () {
+            var path = '/test/path';
+            var result = helpers.removeLastSlashFromPath(path);
+            expect(result).to.equal(path);
+        });
+    });
+
+    it('soll einen Token validieren', function () {
+        var token = server.adminToken;
+        var req = {
+            get: function (text) {
+                if (text === 'Authorization') {
+                    return token;
+                }
+                return undefined;
+            }
+        };
+        var result = helpers.verifyToken(req, 'TEST-SECRET');
+        expect(result).not.to.be.undefined;
+        expect(result.username).to.equal('berni');
+    });
+
+    it('soll einen User speichern und eine Email schicken', function () {
+        var user = {
+            save: function (cb) {
+                user.saved = true;
+                return cb();
+            },
+            saved: false
+        };
+
+        var email = {
+            mail: function () {
+                email.sent = true
+            },
+            sent: false
+        };
+
+        helpers.saveUserAndSendMail(user, {}, email.mail);
+        expect(user.saved).to.be.true;
+        expect(email.sent).to.be.true;
+    });
+});
+

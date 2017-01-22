@@ -25,7 +25,6 @@ describe('Route: Gruppen', function () {
     it('soll alle Gruppen laden können', function (done) {
         request(server)
             .get('/api/gruppen/')
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -43,7 +42,6 @@ describe('Route: Gruppen', function () {
     it('soll eine einzelne Gruppe laden können', function (done) {
         request(server)
             .get('/api/gruppen?id=' + gruppeid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -61,7 +59,6 @@ describe('Route: Gruppen', function () {
     it('soll die Gruppen einer Jugend laden können', function (done) {
         request(server)
             .get('/api/gruppen?jugend=' + jugendid)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -85,7 +82,6 @@ describe('Route: Gruppen', function () {
             .post('/api/gruppen?jugend=' + jugendid.toString())
             .send(gruppe)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -104,7 +100,6 @@ describe('Route: Gruppen', function () {
             .post('/api/gruppen?jugend=' + undefined)
             .send(gruppe)
             .set('Authorization', server.adminToken)
-            .expect(400)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -123,7 +118,6 @@ describe('Route: Gruppen', function () {
             .post('/api/gruppen?jugend=' + jugendid.toString())
             .send(gruppe)
             .set('Authorization', server.adminToken)
-            .expect(200)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -163,7 +157,6 @@ describe('Route: Gruppen', function () {
                     .post('/api/gruppen?jugend=' + jugendid.toString())
                     .send(gruppe)
                     .set('Authorization', server.adminToken)
-                    .expect(418)
                     .set('Accept', 'application/json')
                     .end(function (err, response) {
                         if (err) return done(err);
@@ -180,7 +173,6 @@ describe('Route: Gruppen', function () {
         request(server)
             .del('/api/gruppen?id=')
             .set('Authorization', server.adminToken)
-            .expect(400)
             .end(function (err, res) {
                 if (err) throw err;
                 expect(res).not.to.be.unfined;
@@ -194,7 +186,6 @@ describe('Route: Gruppen', function () {
         request(server)
             .del('/api/gruppen?id=' + 'iafja1SicherNICHTRICHTIG')
             .set('Authorization', server.adminToken)
-            .expect(404)
             .end(function (err, res) {
                 if (err) throw err;
                 expect(res).not.to.be.unfined;
@@ -209,7 +200,6 @@ describe('Route: Gruppen', function () {
             .post('/api/teams?jugend=' + neueGruppeJugend + '&gruppe=' + neueGruppeId)
             .send({name: 'Test Team'})
             .set('Authorization', server.adminToken)
-            .expect(200)
             .end(function (err) {
                 if (err) throw err;
                 var anzahlTeamsVorher;

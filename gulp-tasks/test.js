@@ -71,7 +71,7 @@ gulp.task('test:backend:withOutWipe', function (done) {
 });
 
 gulp.task('test:backend:watch', function (done) {
-    return gulp.watch(['././src/{models,routes,test/backend}/**'], ['test:backend'], done);
+    return gulp.watch(['././src/{models,routes,test/backend}/**', '././test/backend/*.spec.js', '././test/backend/**/*.spec.js'], ['test:backend'], done);
 });
 
 // test DB
