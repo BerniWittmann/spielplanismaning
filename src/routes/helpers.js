@@ -108,6 +108,41 @@ module.exports = function () {
         });
     }
 
+    function getRequiredRouteConfig(routes, path, method, configKey) {
+        path = removeLastSlashFromPath(path);
+        var route = routes[path];
+
+        if (_.isUndefined(route) || _.isNull(route)) {
+            return []
+        }
+
+        route = _.cloneDeep(route[configKey]);
+
+        if (_.isArray(route)) {
+            return route;
+        }
+
+        if (_.isString(route)) {
+            return route.split(' ');
+        }
+
+        if (_.isUndefined(route) || _.isNull(route)) {
+            return [];
+        }
+
+        var routeconfig = route[method];
+
+        if (_.isArray(routeconfig)) {
+            return routeconfig;
+        }
+
+        if (_.isString(routeconfig)) {
+            return routeconfig.split(' ');
+        }
+
+        return [];
+    }
+
     return {
         getEntityQuery: getEntityQuery,
         resetErgebnis: resetErgebnis,
@@ -116,6 +151,7 @@ module.exports = function () {
         removeLastSlashFromPath: removeLastSlashFromPath,
         verifyToken: verifyToken,
         saveUserAndSendMail: saveUserAndSendMail,
-        findEntityAndPushTeam: findEntityAndPushTeam
+        findEntityAndPushTeam: findEntityAndPushTeam,
+        getRequiredRouteConfig: getRequiredRouteConfig
     }
 };

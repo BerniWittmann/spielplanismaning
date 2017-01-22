@@ -4,10 +4,13 @@ var mongoose = require('mongoose');
 var env = {};
 var server = require('../testserver.js')(env);
 var request = require('supertest');
-var authUtil = require('../../../src/routes/middleware/authUtil.js')();
 var User = mongoose.model('User');
 var _ = require('lodash');
 var async = require('async');
+var path = require('path');
+var helpers = require('../../../src/routes/helpers.js')();
+var fs = require('fs');
+var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/../../../src/routes/middleware/routeConfig.json'), 'utf8'));
 
 describe('API Authorization', function () {
     var token;
@@ -205,59 +208,59 @@ describe('API Authorization', function () {
     }
 
     describe('Prüfung der Routen', function () {
-        var routes = authUtil.routes;
         _.forEach(Object.keys(routes), function (routeKey) {
-            describe('die Route ' + routeKey + ' soll geschützt sein', function () {
-                var route = routes[routeKey];
-                var isCompletelyProtected = _.isArray(route) || _.isString(route);
+            if (!_.isUndefined(routes[routeKey].AUTH) && !_.isNull(routes[routeKey].AUTH)) {
+                describe('die Route ' + routeKey + ' soll geschützt sein', function () {
+                    var route = routes[routeKey].AUTH;
+                    var isCompletelyProtected = _.isArray(route) || _.isString(route);
 
-                var methods = ['GET', 'POST', 'PUT', 'DELETE'];
+                    var methods = ['GET', 'POST', 'PUT', 'DELETE'];
+                    _.forEach(methods, function (method) {
+                        if (isCompletelyProtected || route[method]) {
+                            var roles = helpers.getRequiredRouteConfig(routes, routeKey, method, 'AUTH');
+                            var otherRoles = _.difference(ALL_ROLES, roles);
+                            it(method + ' ' + routeKey + ': sollte ohne Authorisierung nicht zugänglich sein', function (done) {
+                                getRequestByMethod(method, routeKey)
+                                    .end(function (err, response) {
+                                        if (err) return done(err);
+                                        expect(response).not.to.be.undefined;
+                                        expect(response.statusCode).to.equal(401);
+                                        expect(response.body.MESSAGEKEY).to.be.equal('ERROR_NOT_AUTHORIZED');
+                                        return done();
+                                    });
+                            });
 
-                _.forEach(methods, function (method) {
-                    if (route[method] || isCompletelyProtected) {
-                        var roles = authUtil.getRequiredRoles(routeKey, method);
-                        var otherRoles = _.difference(ALL_ROLES, roles);
-                        it(method + ' ' + routeKey + ': sollte ohne Authorisierung nicht zugänglich sein', function (done) {
-                            getRequestByMethod(method, routeKey)
-                                .end(function (err, response) {
-                                    if (err) return done(err);
-                                    expect(response).not.to.be.undefined;
-                                    expect(response.statusCode).to.equal(401);
-                                    expect(response.body.MESSAGEKEY).to.be.equal('ERROR_NOT_AUTHORIZED');
-                                    return done();
+                            _.forEach(otherRoles, function (falseRole) {
+                                it(method + ' ' + routeKey + ': sollte für ' + falseRole + ' nicht zugänglich sein', function (done) {
+                                    getRequestByMethod(method, routeKey)
+                                        .set('Authorization', roleTokens[falseRole])
+                                        .end(function (err, response) {
+                                            if (err) return done(err);
+                                            expect(response).not.to.be.undefined;
+                                            expect(response.statusCode).to.equal(403);
+                                            expect(response.body.MESSAGEKEY).to.be.equal('ERROR_FORBIDDEN');
+                                            return done();
+                                        });
                                 });
-                        });
-
-                        _.forEach(otherRoles, function (falseRole) {
-                            it(method + ' ' + routeKey + ': sollte für ' + falseRole + ' nicht zugänglich sein', function (done) {
-                                getRequestByMethod(method, routeKey)
-                                    .set('Authorization', roleTokens[falseRole])
-                                    .end(function (err, response) {
-                                        if (err) return done(err);
-                                        expect(response).not.to.be.undefined;
-                                        expect(response.statusCode).to.equal(403);
-                                        expect(response.body.MESSAGEKEY).to.be.equal('ERROR_FORBIDDEN');
-                                        return done();
-                                    });
                             });
-                        });
 
-                        _.forEach(roles, function (role) {
-                            it(method + ' ' + routeKey + ': sollte für ' + role + ' zugänglich sein', function (done) {
-                                getRequestByMethod(method, routeKey)
-                                    .set('Authorization', roleTokens[role])
-                                    .end(function (err, response) {
-                                        if (err) return done(err);
-                                        expect(response).not.to.be.undefined;
-                                        expect(response.statusCode).not.to.be.equal(403);
-                                        expect(response.statusCode).not.to.be.equal(401);
-                                        return done();
-                                    });
+                            _.forEach(roles, function (role) {
+                                it(method + ' ' + routeKey + ': sollte für ' + role + ' zugänglich sein', function (done) {
+                                    getRequestByMethod(method, routeKey)
+                                        .set('Authorization', roleTokens[role])
+                                        .end(function (err, response) {
+                                            if (err) return done(err);
+                                            expect(response).not.to.be.undefined;
+                                            expect(response.statusCode).not.to.be.equal(403);
+                                            expect(response.statusCode).not.to.be.equal(401);
+                                            return done();
+                                        });
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 });
-            });
+            }
         });
     });
 
