@@ -140,7 +140,6 @@ describe('Route: Email', function () {
         request(server)
             .post('/api/email/bug')
             .send(email)
-            .expect(200)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
