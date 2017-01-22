@@ -10,7 +10,7 @@ module.exports = function (app, secret) {
     var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/routeConfig.json'), 'utf8'));
 
     var authenticate = function (req, res, next) {
-        var requiredRoles = helpers.getRequiredRoles(routes, req.path, req.method);
+        var requiredRoles = helpers.getRequiredRouteConfig(routes, req.path, req.method, 'AUTH');
 
         var authNeeded = requiredRoles && requiredRoles.length > 0;
 

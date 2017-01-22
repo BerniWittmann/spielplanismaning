@@ -4,12 +4,35 @@
       "POST": [
         "admin"
       ]
+    },
+    "PARAMS": {
+      "POST": [
+        "body.subject",
+        "body.text"
+      ]
     }
   },
   "/api/email/subscriber": {
     "AUTH": {
       "GET": [
         "admin"
+      ]
+    },
+    "PARAMS": {
+      "POST": [
+        "body.team",
+        "body.email"
+      ],
+      "DELETE": [
+        "query.team",
+        "query.email"
+      ]
+    }
+  },
+  "/api/email/bug": {
+    "PARAMS": {
+      "POST": [
+        "body.email"
       ]
     }
   },
@@ -20,6 +43,15 @@
       ],
       "DELETE": [
         "admin"
+      ]
+    },
+    "PARAMS": {
+      "POST": [
+        "query.jugend",
+        "body.name"
+      ],
+      "DELETE": [
+        "query.id"
       ]
     }
   },
@@ -33,6 +65,19 @@
       ],
       "PUT": [
         "admin"
+      ]
+    },
+    "PARAMS": {
+      "POST": [
+        "query.jugend",
+        "query.gruppe",
+        "body.name"
+      ],
+      "DELETE": [
+        "query.id"
+      ],
+      "PUT": [
+        "query.id"
       ]
     }
   },
@@ -49,6 +94,14 @@
       "DELETE": [
         "admin"
       ]
+    },
+    "PARAMS": {
+      "POST": [
+        "body.name"
+      ],
+      "DELETE": [
+        "query.id"
+      ]
     }
   },
   "/api/spiele": {
@@ -58,6 +111,15 @@
       ],
       "DELETE": [
         "admin"
+      ]
+    },
+    "PARAMS": {
+      "POST": [
+        "body.jugend",
+        "body.gruppe"
+      ],
+      "DELETE": [
+        "query.id"
       ]
     }
   },
@@ -76,6 +138,14 @@
         "bearbeiter",
         "admin"
       ]
+    },
+    "PARAMS": {
+      "PUT": [
+        "query.id"
+      ],
+      "DELETE": [
+        "query.id"
+      ]
     }
   },
   "/api/spielplan": {
@@ -90,6 +160,13 @@
       "PUT": [
         "admin"
       ]
+    },
+    "PARAMS": {
+      "PUT": [
+        "body.startzeit",
+        "body.spielzeit",
+        "body.pausenzeit"
+      ]
     }
   },
   "/api/spielplan/ausnahmen": {
@@ -100,17 +177,66 @@
   "/api/users/register": {
     "AUTH": [
       "admin"
-    ]
+    ],
+    "PARAMS": {
+      "POST": [
+        "body.username",
+        "body.email",
+        "body.role"
+      ]
+    }
+  },
+  "/api/users/login": {
+    "PARAMS": {
+      "POST": [
+        "body.username",
+        "body.password"
+      ]
+    }
   },
   "/api/users/delete": {
     "AUTH": [
       "admin"
-    ]
+    ],
+    "PARAMS": {
+      "PUT": [
+        "body.username"
+      ]
+    }
+  },
+  "/api/users/password-forgot": {
+    "PARAMS": {
+      "PUT": [
+        "body.email"
+      ]
+    }
+  },
+  "/api/users/password-reset/check": {
+    "PARAMS": {
+      "PUT": [
+        "body.token"
+      ]
+    }
+  },
+  "/api/users/password-reset": {
+    "PARAMS": {
+      "PUT": [
+        "body.token",
+        "body.username",
+        "body.password"
+      ]
+    }
   },
   "/api/users/userDetails": {
     "AUTH": [
       "bearbeiter",
       "admin"
-    ]
+    ],
+    "PARAMS": {
+      "PUT": [
+        "body.email",
+        "body.username"
+      ]
+    }
   }
 }

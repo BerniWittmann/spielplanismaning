@@ -147,7 +147,8 @@ describe('Helpers', function () {
             id: '1234'
         };
 
-        helpers.removeEntityBy(model, 'id', '1234', {}, function (){});
+        helpers.removeEntityBy(model, 'id', '1234', {}, function () {
+        });
         expect(model.query).to.deep.equal(query);
     });
 
@@ -199,6 +200,75 @@ describe('Helpers', function () {
         helpers.saveUserAndSendMail(user, {}, email.mail);
         expect(user.saved).to.be.true;
         expect(email.sent).to.be.true;
+    });
+
+    describe('soll die Route-Konfiguration laden', function () {
+        var routes = {
+            'test/route/all': {
+                'AUTH': ['test', 'test2'],
+                'PARAMS': ['test', 'test2']
+            },
+            'test/route/all/string': {
+                'AUTH': 'test test2',
+                'PARAMS': 'test test2'
+            },
+            'test/route/method': {
+                'AUTH': {
+                    'GET': ['test', 'test2'],
+                    'PUT': 'test test2'
+                },
+                'PARAMS': {
+                    'GET': ['test', 'test2'],
+                    'PUT': 'test test2'
+                }
+            }
+        };
+        var data = ['test', 'test2'];
+
+        it('soll einen AUTH-Rolle laden', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'GET', 'AUTH');
+            expect(result).to.deep.equal(data);
+        });
+
+        it('soll eine benötigten Request PARAMS laden', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'GET', 'PARAMS');
+            expect(result).to.deep.equal(data);
+        });
+
+        it('soll ein Array verwalten können', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/all', 'GET', 'AUTH');
+            expect(result).to.deep.equal(data);
+        });
+
+        it('soll einen String verwalten können', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/all/string', 'GET', 'AUTH');
+            expect(result).to.deep.equal(data);
+        });
+
+        it('soll einzelne Methoden verwalten', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'PUT', 'PARAMS');
+            expect(result).to.deep.equal(data);
+        });
+
+        it('soll bei einer falschen Methode ein leeres Array zurückgeben', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'POST', 'AUTH');
+            expect(result).to.deep.equal([]);
+        });
+
+        it('soll bei einer falschen Route ein leeres Array zurückgeben', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/false', 'GET', 'AUTH');
+            expect(result).to.deep.equal([]);
+        });
+
+        it('soll bei einem falschen KEY ein leeres Array zurückgeben', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'GET', 'WRONG');
+            expect(result).to.deep.equal([]);
+        });
+
+        it('soll einn zusätzlichen String am Ende des Pfads handlen', function () {
+            var result = helpers.getRequiredRouteConfig(routes, 'test/route/method/', 'GET', 'AUTH');
+            expect(result).to.deep.equal(data);
+        });
     });
 });
 

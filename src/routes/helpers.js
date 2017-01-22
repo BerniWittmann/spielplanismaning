@@ -108,7 +108,7 @@ module.exports = function () {
         });
     }
 
-    function getRequiredRoles(routes, path, method) {
+    function getRequiredRouteConfig(routes, path, method, configKey) {
         path = removeLastSlashFromPath(path);
         var route = routes[path];
 
@@ -116,7 +116,7 @@ module.exports = function () {
             return []
         }
 
-        route = route.AUTH;
+        route = _.cloneDeep(route[configKey]);
 
         if (_.isArray(route)) {
             return route;
@@ -130,14 +130,14 @@ module.exports = function () {
             return [];
         }
 
-        var roles = route[method];
+        var routeconfig = route[method];
 
-        if (_.isArray(roles)) {
-            return roles;
+        if (_.isArray(routeconfig)) {
+            return routeconfig;
         }
 
-        if (_.isString(roles)) {
-            return roles.split(' ');
+        if (_.isString(routeconfig)) {
+            return routeconfig.split(' ');
         }
 
         return [];
@@ -152,6 +152,6 @@ module.exports = function () {
         verifyToken: verifyToken,
         saveUserAndSendMail: saveUserAndSendMail,
         findEntityAndPushTeam: findEntityAndPushTeam,
-        getRequiredRoles: getRequiredRoles
+        getRequiredRouteConfig: getRequiredRouteConfig
     }
 };

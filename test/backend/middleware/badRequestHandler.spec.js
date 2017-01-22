@@ -4,6 +4,11 @@ var env = {};
 var server = require('../testserver.js')(env);
 var request = require('supertest');
 var User = mongoose.model('User');
+var fs = require('fs');
+var path = require('path');
+var _ = require('lodash');
+var helpers = require('../../../src/routes/helpers.js')();
+var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/../../../src/routes/middleware/routeConfig.json'), 'utf8'));
 
 describe('Bad Request Handler', function () {
     var token;
@@ -39,7 +44,6 @@ describe('Bad Request Handler', function () {
                 .post('/api/email/')
                 .set('Authorization', token)
                 .send({subject: 'Test', text: 'test'})
-                .expect(200)
                 .end(function (err, response) {
                     if (err) return done(err);
                     expect(response).not.to.be.undefined;
@@ -53,7 +57,6 @@ describe('Bad Request Handler', function () {
                 .post('/api/email/')
                 .set('Authorization', token)
                 .send({})
-                .expect(400)
                 .end(function (err, response) {
                     if (err) return done(err);
                     expect(response).not.to.be.undefined;
@@ -68,7 +71,6 @@ describe('Bad Request Handler', function () {
                 .post('/api/email/')
                 .set('Authorization', token)
                 .send({subject: 'Test'})
-                .expect(400)
                 .end(function (err, response) {
                     if (err) return done(err);
                     expect(response).not.to.be.undefined;
@@ -76,6 +78,57 @@ describe('Bad Request Handler', function () {
                     expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
                     return done();
                 });
+        });
+    });
+
+    function getRequestByMethod(method, route) {
+        if (method == 'GET') {
+            return request(server).get(route)
+        } else if (method == 'POST') {
+            return request(server).post(route)
+        } else if (method == 'PUT') {
+            return request(server).put(route)
+        } else if (method == 'DELETE') {
+            return request(server).delete(route)
+        }
+    }
+
+    describe('Prüfung der Routen', function () {
+        _.forEach(Object.keys(routes), function (routeKey) {
+            if (!_.isUndefined(routes[routeKey].PARAMS) && !_.isNull(routes[routeKey].PARAMS)) {
+                describe('die Route ' + routeKey + ' hat benötigte Request-Parameter', function () {
+                    var route = routes[routeKey].PARAMS;
+
+                    var methods = ['GET', 'POST', 'PUT', 'DELETE'];
+                    _.forEach(methods, function (method) {
+                        if (route[method]) {
+                            var requiredKeys = helpers.getRequiredRouteConfig(routes, routeKey, method, 'PARAMS');
+                            var sample = {};
+                            _.forEach(requiredKeys, function (key) {
+                                sample = _.set(sample, key, 'test_' + key);
+                            });
+                            _.forEach(requiredKeys, function (key) {
+                                var object = _.cloneDeep(sample);
+                                _.unset(object, key);
+
+                                it(method + ' ' + routeKey + ': benötigt den Key \"' + key + '\"', function (done) {
+                                    getRequestByMethod(method, routeKey)
+                                        .query(object.query)
+                                        .set('Authorization', token)
+                                        .send(object.body)
+                                        .end(function (err, response) {
+                                            if (err) return done(err);
+                                            expect(response).not.to.be.undefined;
+                                            expect(response.statusCode).to.equal(400);
+                                            expect(response.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
+                                            return done();
+                                        });
+                                });
+                            });
+                        }
+                    });
+                });
+            }
         });
     });
 
