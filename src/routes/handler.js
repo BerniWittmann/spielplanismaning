@@ -6,7 +6,7 @@ function handleErrorAndResponse(err, res, data) {
         return messages.Error(res, err);
     }
 
-    return res.json(data);
+    return res.status(200).json(data);
 }
 
 function handleErrorAndMessage(err, res, message) {
@@ -33,7 +33,7 @@ function handleQueryResponse(err, data, res, searchById, notFoundError) {
         return messages.Error(res, err);
     }
 
-    return res.json(data);
+    return res.status(200).json(data);
 }
 
 module.exports = {
