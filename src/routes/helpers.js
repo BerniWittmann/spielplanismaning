@@ -108,6 +108,41 @@ module.exports = function () {
         });
     }
 
+    function getRequiredRoles(routes, path, method) {
+        path = removeLastSlashFromPath(path);
+        var route = routes[path];
+
+        if (_.isUndefined(route) || _.isNull(route)) {
+            return []
+        }
+
+        route = route.AUTH;
+
+        if (_.isArray(route)) {
+            return route;
+        }
+
+        if (_.isString(route)) {
+            return route.split(' ');
+        }
+
+        if (_.isUndefined(route) || _.isNull(route)) {
+            return [];
+        }
+
+        var roles = route[method];
+
+        if (_.isArray(roles)) {
+            return roles;
+        }
+
+        if (_.isString(roles)) {
+            return roles.split(' ');
+        }
+
+        return [];
+    }
+
     return {
         getEntityQuery: getEntityQuery,
         resetErgebnis: resetErgebnis,
@@ -116,6 +151,7 @@ module.exports = function () {
         removeLastSlashFromPath: removeLastSlashFromPath,
         verifyToken: verifyToken,
         saveUserAndSendMail: saveUserAndSendMail,
-        findEntityAndPushTeam: findEntityAndPushTeam
+        findEntityAndPushTeam: findEntityAndPushTeam,
+        getRequiredRoles: getRequiredRoles
     }
 };

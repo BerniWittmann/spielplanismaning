@@ -1,14 +1,16 @@
 module.exports = function (app, secret) {
     var messages = require('./../messages/messages.js')();
     var jwt = require('jsonwebtoken');
-    var authUtil = require('./authUtil.js')();
     var _ = require('lodash');
     var mongoose = require('mongoose');
     var User = mongoose.model('User');
     var helpers = require('../helpers.js')();
+    var fs = require('fs');
+    var path = require('path');
+    var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/routeConfig.json'), 'utf8'));
 
     var authenticate = function (req, res, next) {
-        var requiredRoles = authUtil.getRequiredRoles(req.path, req.method);
+        var requiredRoles = helpers.getRequiredRoles(routes, req.path, req.method);
 
         var authNeeded = requiredRoles && requiredRoles.length > 0;
 
@@ -41,7 +43,7 @@ module.exports = function (app, secret) {
                 return messages.ErrorForbidden(res);
             }
 
-            if(!res.headersSent) {
+            if (!res.headersSent) {
                 return next();
             }
         });

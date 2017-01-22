@@ -1,0 +1,116 @@
+{
+  "/api/email": {
+    "AUTH": {
+      "POST": [
+        "admin"
+      ]
+    }
+  },
+  "/api/email/subscriber": {
+    "AUTH": {
+      "GET": [
+        "admin"
+      ]
+    }
+  },
+  "/api/gruppen": {
+    "AUTH": {
+      "POST": [
+        "admin"
+      ],
+      "DELETE": [
+        "admin"
+      ]
+    }
+  },
+  "/api/teams": {
+    "AUTH": {
+      "POST": [
+        "admin"
+      ],
+      "DELETE": [
+        "admin"
+      ],
+      "PUT": [
+        "admin"
+      ]
+    }
+  },
+  "/api/teams/resetErgebnisse": {
+    "AUTH": [
+      "admin"
+    ]
+  },
+  "/api/jugenden": {
+    "AUTH": {
+      "POST": [
+        "admin"
+      ],
+      "DELETE": [
+        "admin"
+      ]
+    }
+  },
+  "/api/spiele": {
+    "AUTH": {
+      "POST": [
+        "admin"
+      ],
+      "DELETE": [
+        "admin"
+      ]
+    }
+  },
+  "/api/spiele/alle": {
+    "AUTH": [
+      "admin"
+    ]
+  },
+  "/api/spiele/tore": {
+    "AUTH": {
+      "PUT": [
+        "bearbeiter",
+        "admin"
+      ],
+      "DELETE": [
+        "bearbeiter",
+        "admin"
+      ]
+    }
+  },
+  "/api/spielplan": {
+    "AUTH": {
+      "PUT": [
+        "admin"
+      ]
+    }
+  },
+  "/api/spielplan/zeiten": {
+    "AUTH": {
+      "PUT": [
+        "admin"
+      ]
+    }
+  },
+  "/api/spielplan/ausnahmen": {
+    "AUTH": [
+      "admin"
+    ]
+  },
+  "/api/users/register": {
+    "AUTH": [
+      "admin"
+    ]
+  },
+  "/api/users/delete": {
+    "AUTH": [
+      "admin"
+    ]
+  },
+  "/api/users/userDetails": {
+    "AUTH": [
+      "bearbeiter",
+      "admin"
+    ]
+  }
+}

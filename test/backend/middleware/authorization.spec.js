@@ -4,10 +4,13 @@ var mongoose = require('mongoose');
 var env = {};
 var server = require('../testserver.js')(env);
 var request = require('supertest');
-var authUtil = require('../../../src/routes/middleware/authUtil.js')();
 var User = mongoose.model('User');
 var _ = require('lodash');
 var async = require('async');
+var path = require('path');
+var helpers = require('../../../src/routes/helpers.js')();
+var fs = require('fs');
+var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/../../../src/routes/middleware/routeConfig.json'), 'utf8'));
 
 describe('API Authorization', function () {
     var token;
@@ -205,17 +208,16 @@ describe('API Authorization', function () {
     }
 
     describe('Prüfung der Routen', function () {
-        var routes = authUtil.routes;
         _.forEach(Object.keys(routes), function (routeKey) {
             describe('die Route ' + routeKey + ' soll geschützt sein', function () {
-                var route = routes[routeKey];
+                var route = routes[routeKey].AUTH;
                 var isCompletelyProtected = _.isArray(route) || _.isString(route);
 
                 var methods = ['GET', 'POST', 'PUT', 'DELETE'];
 
                 _.forEach(methods, function (method) {
                     if (route[method] || isCompletelyProtected) {
-                        var roles = authUtil.getRequiredRoles(routeKey, method);
+                        var roles = helpers.getRequiredRoles(routes, routeKey, method);
                         var otherRoles = _.difference(ALL_ROLES, roles);
                         it(method + ' ' + routeKey + ': sollte ohne Authorisierung nicht zugänglich sein', function (done) {
                             getRequestByMethod(method, routeKey)
