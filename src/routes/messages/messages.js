@@ -63,6 +63,9 @@ module.exports = function () {
         },
         ErrorInvalidToken: function (res) {
             send(require('./ErrorInvalidToken.js'), res);
+        },
+        ErrorAnsprechpartnerNotFound: function (res, err) {
+            send(require('./ErrorAnsprechpartnerNotFound.js')(err), res);
         }
     };
 };
