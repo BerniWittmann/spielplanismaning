@@ -12,6 +12,11 @@
                 DELETE: 'DELETE'
             };
             var urls = {
+                ansprechpartner: {
+                    base: function () {
+                        return ENDPOINT_BASE + '/ansprechpartner';
+                    }
+                },
                 users: {
                     register: function () {
                         return ENDPOINT_BASE + '/users/register';
