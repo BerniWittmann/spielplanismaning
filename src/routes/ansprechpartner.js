@@ -106,9 +106,14 @@ module.exports = function () {
      * @apiParam {String} id ID des Ansprechpartners.
      *
      * @apiUse SuccessDeleteMessage
+     * @apiUse ErrorAnsprechpartnerNotFoundMessage
      **/
     router.put('/', function (req, res) {
         Ansprechpartner.findById(req.query.id, function (err, ansprechpartner) {
+            if (!ansprechpartner) {
+                return messages.ErrorAnsprechpartnerNotFound(res, err);
+            }
+
             if (err) {
                 return messages.Error(res, err);
             }

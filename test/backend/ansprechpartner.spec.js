@@ -199,6 +199,25 @@ describe('Route: Ansprechpartner', function () {
                     });
                 });
         });
+
+        it('wenn der Ansprechpartner nicht gefunden wird, soll ein passender Fehler geworfen werden', function (done) {
+            var data = {
+                name: 'Neu'
+            };
+            request(server)
+                .put('/api/ansprechpartner')
+                .query({id: 'completelyWrongID'})
+                .send(data)
+                .set('Authorization', server.adminToken)
+                .set('Accept', 'application/json')
+                .end(function (err, response) {
+                    if (err) return done(err);
+                    expect(response).not.to.be.undefined;
+                    expect(response.statusCode).to.equal(404);
+                    expect(response.body.MESSAGEKEY).to.be.equal('ERROR_ANSPRECHPARTNER_NOT_FOUND');
+                    return done();
+                });
+        });
     });
 
     it('soll einen Ansprechpartner löschen können', function (done) {
