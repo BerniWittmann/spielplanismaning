@@ -19,8 +19,8 @@
                     version: function (config) {
                         return config.getVersion();
                     },
-                    kontakt: function (config) {
-                        return config.getKontakte();
+                    kontakt: function (ansprechpartner) {
+                        return ansprechpartner.getAll();
                     },
                     env: function (config) {
                         return config.getEnv();
