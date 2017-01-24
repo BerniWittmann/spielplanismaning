@@ -227,3 +227,7 @@ a {
 textarea {
     max-width: 100%;
 }
+
+td .form-group {
+    margin-bottom: 0;
+}

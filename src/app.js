@@ -19,6 +19,7 @@ require('./models/Spielplan');
 require('./models/Teams');
 require('./models/Subscriber');
 require('./models/Users')(secret);
+require('./models/Ansprechpartner');
 require('./config/passport');
 
 app.set('ENVIRONMENT', (process.env.NODE_ENV || 'development'));
