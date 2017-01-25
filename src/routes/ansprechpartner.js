@@ -68,11 +68,7 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
-        var ansprechpartner = new Ansprechpartner(req.body);
-
-        ansprechpartner.save(function (err, ansprechpartner) {
-            return handler.handleErrorAndResponse(err, res, ansprechpartner);
-        });
+        helpers.addEntity(Ansprechpartner, req, res);
     });
 
     /**
