@@ -107,6 +107,14 @@
             expect(result).to.have.lengthOf(3);
         });
 
+        it('wenn ein Ansprechpartner gelöscht wurde, sollen die Ansprechpartner neu geladen werden', function () {
+            var spy = chai.spy.on(mockAnsprechpartner, 'getAll');
+
+            scope.$emit('ansprechpartnerDeleted');
+
+            expect(spy).to.have.been.called();
+        });
+
         describe('Angenommen es sind keine Abonnements vorhanden', function () {
             before(function () {
                 ansprechpartner = [];
