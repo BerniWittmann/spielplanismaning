@@ -10,7 +10,6 @@ module.exports = function (env) {
     process.env.DISABLEEMAIL = env.DISABLEEMAIL || process.env.DISABLEEMAIL || 'true';
     process.env.VERSION = env.VERSION || process.env.VERSION || 'vtag';
     process.env.LOCKDOWNMODE = env.LOCKDOWNMODE || process.env.LOCKDOWNMODE || 'false';
-    process.env.KONTAKE = process.env.KONTAKTE || '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
     process.env.DISABLE_EMAILS = process.env.DISABLE_EMAILS || 'true';
     process.env.MONGO_DB_URI = env.MONGO_DB_URI || process.env.MONGO_DB_URI || 'mongodb://localhost/spielplan-test';
 
