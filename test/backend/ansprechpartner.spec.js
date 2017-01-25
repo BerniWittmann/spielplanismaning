@@ -47,7 +47,7 @@ describe('Route: Ansprechpartner', function () {
                 expect(response.body.email).to.be.equal(ansprechpartner.email);
                 expect(response.body.turnier).to.be.equal(ansprechpartner.turnier);
                 expect(response.body._id).not.to.be.undefined;
-                var neuerAnsprechpartnerId = response.body._id;
+                neuerAnsprechpartnerId = response.body._id;
                 mongoose.model('Ansprechpartner').findById(neuerAnsprechpartnerId).exec(function (err, res) {
                     if (err) throw err;
                     expect(res).not.to.be.undefined
