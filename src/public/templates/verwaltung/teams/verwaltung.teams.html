@@ -19,17 +19,24 @@
 
 <div data-ng-if="vm.isLoggedIn" class="row">
     <div class="col-md-4 col-md-offset-4">
-        <form data-ng-submit="vm.addJugend()" style="margin-top:30px;">
+        <form data-ng-submit="vm.addJugend()" style="margin-top:30px;" name="jugendForm" novalidate>
             <h4 class="width-100 text-center">Jugend hinzufügen</h4>
 
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Name" data-ng-model="vm.jugend.name" required>
+            <div class="form-group" data-ng-class="{ 'has-error': jugendForm.name.$touched && jugendForm.name.$invalid }">
+                <input type="text" class="form-control" placeholder="Name" data-ng-model="vm.jugend.name" name="name" required data-ng-minlength="2">
+                <span class="help-block" data-ng-messages="jugendForm.name.$error" data-ng-if="jugendForm.name.$touched">
+                    <p data-ng-message="required">Name ist ein Pflichtfeld</p>
+                    <p data-ng-message="minlength">Name ist zu kurz</p>
+                </span>
             </div>
-            <div class="form-group">
-                <select class="form-control" data-ng-model="vm.jugend.color" required title="farbe">
+            <div class="form-group" data-ng-class="{ 'has-error': jugendForm.farbe.$touched && jugendForm.farbe.$invalid }">
+                <select class="form-control" data-ng-model="vm.jugend.color" required title="farbe" name="farbe">
                     <option value="" selected>Farbe wählen...</option>
                     <option data-ng-repeat="farbe in vm.farben" value="{{farbe.wert}}">{{farbe.name}}</option>
                 </select>
+                <span class="help-block" data-ng-messages="jugendForm.farbe.$error" data-ng-if="jugendForm.farbe.$touched">
+                    <p data-ng-message="required">Farbe ist ein Pflichtfeld</p>
+                </span>
             </div>
             <div class="text-center" data-ng-if="vm.jugend.name">Vorschau:
                 <spi-jugend-label jugend="vm.jugend"></spi-jugend-label>

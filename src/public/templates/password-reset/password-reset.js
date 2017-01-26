@@ -6,7 +6,8 @@
             'spi.auth', 'ui.router'
         ])
         .config(states)
-        .controller('PasswordResetController', PasswordResetController);
+        .controller('PasswordResetController', PasswordResetController)
+        .directive('compareTo', compareTo);
 
     function states($stateProvider) {
         $stateProvider
@@ -23,6 +24,25 @@
                 }
             });
 
+    }
+
+    function compareTo() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareTo"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareTo = function(modelValue) {
+                    return modelValue === scope.otherModelValue;
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
     }
 
     function isValidToken($stateParams, $q, $state, toastr, $timeout, auth) {

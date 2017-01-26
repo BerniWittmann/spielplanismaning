@@ -6,12 +6,20 @@
 
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
-        <form data-ng-submit="vm.changeUserDetails()" style="margin-top:30px;">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Username" data-ng-model="vm.user.username" required>
+        <form data-ng-submit="vm.changeUserDetails()" style="margin-top:30px;" name="accountForm" novalidate>
+            <div class="form-group" data-ng-class="{ 'has-error': accountForm.username.$touched && accountForm.username.$invalid }">
+                <input type="text" class="form-control" placeholder="Username" data-ng-minlength="3" data-ng-model="vm.user.username" required name="username">
+                <span class="help-block" data-ng-messages="accountForm.username.$error" data-ng-if="accountForm.username.$touched">
+                    <p data-ng-message="required">Username ist ein Pflichtfeld</p>
+                    <p data-ng-message="minlength">Username ist zu kurz</p>
+                </span>
             </div>
-            <div class="form-group">
-                <input type="email" class="form-control" placeholder="Email" data-ng-model="vm.user.email" required>
+            <div class="form-group" data-ng-class="{ 'has-error': accountForm.email.$touched && accountForm.email.$invalid }">
+                <input type="email" class="form-control" placeholder="Email" data-ng-model="vm.user.email" name="email" required>
+                <span class="help-block" data-ng-messages="accountForm.email.$error" data-ng-if="accountForm.email.$touched">
+                    <p data-ng-message="required">E-Mail ist ein Pflichtfeld</p>
+                    <p data-ng-message="email">E-Mail ist ungültig</p>
+                </span>
             </div>
             <div class="form-group">
                 <p>Rolle: {{vm.user.role.name}}</p>
