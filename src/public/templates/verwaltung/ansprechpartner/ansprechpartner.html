@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-12 page-header">
+        <h3>Ansprechpartner</h3>
+    </div>
+</div>
+
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table table-condensed table-striped table-hover text-center" data-ng-if="vm.ansprechpartner.length > 0">
+            <thead>
+            <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">E-Mail</th>
+                <th class="text-center">Turnier</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="kontakt in vm.ansprechpartner" class="text-center" data-spi-ansprechpartner-single="kontakt">
+            </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-info" data-ng-if="vm.ansprechpartner.length === 0">Keine Ansprechpartner gefunden</div>
+    </div>
+</div>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-8 col-md-offset-2">
+        <a class="btn btn-primary pull-right" data-ng-click="vm.add()">
+            Hinzufügen <i class="fa fa-lg fa-plus"></i>
+        </a>
+    </div>
+</div>

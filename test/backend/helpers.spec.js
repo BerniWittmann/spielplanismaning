@@ -270,5 +270,41 @@ describe('Helpers', function () {
             expect(result).to.deep.equal(data);
         });
     });
+
+    it('soll ein neues Entity speichern', function () {
+        var data = undefined;
+        var model = function (body) {
+            data = body;
+            return {
+                save: function (cb) {
+                    return cb(null, body);
+                }
+            }
+        };
+        var req = {
+            body: {
+                data: '123'
+            }
+        };
+
+        var res = {
+            json: function (data) {
+                res.data = data;
+            },
+            status: function (statusCode) {
+                res.statusCode = statusCode;
+                return {
+                    json: res.json
+                }
+            },
+            data: undefined,
+            statusCode: undefined
+        };
+
+        helpers.addEntity(model, req, res);
+        expect(data).to.equal(req.body);
+        expect(res.statusCode).to.equal(200);
+        expect(res.data).to.equal(req.body);
+    })
 });
 

@@ -38,16 +38,5 @@ describe('Route: Config', function () {
             return done();
         });
     });
-
-    it('gibt die Kontaktangaben zurück', function (done) {
-        request(server).get('/api/config/kontakt').end(function (err, response) {
-            if (err) return done(err);
-            expect(response).not.to.be.undefined;
-            expect(response.statusCode).to.equal(200);
-            expect(response.body[0].name).to.equal('Klaus Krecken');
-            expect(response.body[1].name).to.equal('Stefan Meyer');
-            return done();
-        });
-    });
 });
 

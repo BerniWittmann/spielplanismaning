@@ -8,6 +8,7 @@ module.exports = function (app, sendgrid, secret) {
     var jugenden = require('./jugenden.js')();
     var spiele = require('./spiele.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
     var spielplan = require('./spielplan.js')();
+    var ansprechpartner = require('./ansprechpartner.js')();
 
     var API_PREFIX = '/api';
     app.use(API_PREFIX + '/users', users);
@@ -18,5 +19,6 @@ module.exports = function (app, sendgrid, secret) {
     app.use(API_PREFIX + '/jugenden', jugenden);
     app.use(API_PREFIX + '/spiele', spiele);
     app.use(API_PREFIX + '/spielplan', spielplan);
+    app.use(API_PREFIX + '/ansprechpartner', ansprechpartner);
     app.use(/\/.*/, routes);
 };

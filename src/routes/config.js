@@ -2,8 +2,6 @@ module.exports = function (env) {
     var express = require('express');
     var version = require('../../package.json').version;
     var router = express.Router();
-    var exampleContacts = '[{"name": "Klaus Krecken", "email": "klaus@krecken.de", "turnier": "Kinderbeachturnier"},{"name": "Stefan Meyer", "email": "vorsitzender@fhi-ismaning.de", "turnier": "DBT Stoneline Beach Cup"}]';
-
     /**
      * @api {get} /config/version Version
      * @apiName GetVersion
@@ -75,33 +73,6 @@ module.exports = function (env) {
      **/
     router.get('/lockdownmode', function (req, res) {
         return res.json((env.LOCKDOWNMODE || 'false') === 'true');
-    });
-
-    /**
-     * @api {get} /config/kontakt Kontakt
-     * @apiName GetKontakt
-     * @apiDescription Gibt Kontaktadressen zurück
-     * @apiGroup Config
-     *
-     * @apiSuccess {String} name Name
-     * @apiSuccess {String} email Email
-     * @apiSuccess {String} turnier Turniername
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     [{
-     *         "name": "Name Nachname",
-     *         "email": "email@test.de",
-     *         "turnier": "Kinderbeachturnier"
-     *     },{
-     *         "name": "Hans Meyer",
-     *         "email": "hm@mail.de",
-     *         "turnier": "DBT Stoneline Beach Cup"
-     *     }]
-     *
-     **/
-    router.get('/kontakt', function (req, res) {
-        return res.json(JSON.parse(env.KONTAKTE || exampleContacts));
     });
 
     return router;

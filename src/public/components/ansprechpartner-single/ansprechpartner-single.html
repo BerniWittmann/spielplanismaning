@@ -1,0 +1,33 @@
+<td class="text-center">
+    <span data-ng-if="!vm.isEditing">{{ vm.kontakt.name }}</span>
+    <div class="form-group" data-ng-if="vm.isEditing">
+        <input class="form-control" data-ng-model="vm.kontakt.name" name="name"
+               type="text" data-ng-enter="vm.save()" placeholder="Name"/>
+    </div>
+</td>
+<td class="text-center">
+    <span data-ng-if="!vm.isEditing">{{ vm.kontakt.email }} <a href="mailto:{{ vm.kontakt.email }}"><i
+            class="fa fa-envelope"></i></a></span>
+    <div class="form-group" data-ng-if="vm.isEditing">
+        <input class="form-control" data-ng-model="vm.kontakt.email" name="email"
+               type="email" placeholder="E-Mail" data-ng-enter="vm.save()"/>
+    </div>
+</td>
+<td class="text-center">
+    <span data-ng-if="!vm.isEditing">{{ vm.kontakt.turnier }}</span>
+    <div class="form-group" data-ng-if="vm.isEditing">
+        <input class="form-control" data-ng-model="vm.kontakt.turnier" name="turnier"
+               type="text" placeholder="Turnier" data-ng-enter="vm.save()"/>
+    </div>
+</td>
+<td>
+    <a class="btn btn-default" data-ng-if="!vm.isEditing" data-ng-click="vm.edit()"><i
+            class="fa fa-lg fa-pencil"></i></a>
+
+    <button data-ng-click="vm.deleteKontakt()" class="btn btn-danger" data-ng-if="vm.isEditing && !vm.isNew"><i
+            class="fa fa-lg fa-trash"></i>
+    </button>
+    <button data-ng-click="vm.save()" class="btn btn-success" data-ng-if="vm.isEditing"><i
+            class="fa fa-lg fa-check"></i>
+    </button>
+</td>

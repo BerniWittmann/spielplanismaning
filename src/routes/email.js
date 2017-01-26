@@ -73,10 +73,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      *     }
      **/
     router.post('/subscriber', function (req, res) {
-        var subscriber = new Subscriber(req.body);
-        subscriber.save(function (err, sub) {
-            return handler.handleErrorAndResponse(err, res, sub);
-        });
+        helpers.addEntity(Subscriber, req, res);
     });
 
     /**

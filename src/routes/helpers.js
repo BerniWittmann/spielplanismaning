@@ -108,6 +108,14 @@ module.exports = function () {
         });
     }
 
+    function addEntity(model, req, res) {
+        var entity = new model(req.body);
+
+        entity.save(function (err, entity) {
+            return handler.handleErrorAndResponse(err, res, entity);
+        });
+    }
+
     function getRequiredRouteConfig(routes, path, method, configKey) {
         path = removeLastSlashFromPath(path);
         var route = routes[path];
@@ -152,6 +160,7 @@ module.exports = function () {
         verifyToken: verifyToken,
         saveUserAndSendMail: saveUserAndSendMail,
         findEntityAndPushTeam: findEntityAndPushTeam,
-        getRequiredRouteConfig: getRequiredRouteConfig
+        getRequiredRouteConfig: getRequiredRouteConfig,
+        addEntity: addEntity
     }
 };

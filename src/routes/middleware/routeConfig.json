@@ -238,5 +238,31 @@
         "body.username"
       ]
     }
+  },
+  "/api/ansprechpartner": {
+    "AUTH": {
+      "POST": [
+        "admin"
+      ],
+      "PUT": [
+        "admin"
+      ],
+      "DELETE": [
+        "admin"
+      ]
+    },
+    "PARAMS": {
+      "POST": [
+        "body.name",
+        "body.turnier",
+        "body.email"
+      ],
+      "PUT": [
+        "query.id"
+      ],
+      "DELETE": [
+        "query.id"
+      ]
+    }
   }
 }
