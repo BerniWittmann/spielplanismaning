@@ -3,7 +3,7 @@
 
     angular
         .module('spi', [
-            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpInterceptor', 'spi.constants', 'spi.errorHandler', 'toastr'
+            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpInterceptor', 'spi.constants', 'spi.errorHandler', 'toastr', 'ngMessages'
         ])
         .config(states)
         .config(toastr)
@@ -59,7 +59,9 @@
 
         $rootScope.$on('$viewContentLoading', function () {
             if (!vm.runBefore) {
-                auth.checkRoute($q, $state.current);
+                if (!_.isEqual($state.current.name, 'spi.login')) {
+                    auth.checkRoute($q, $state.current);
+                }
                 vm.runBefore = true;
             }
         });
