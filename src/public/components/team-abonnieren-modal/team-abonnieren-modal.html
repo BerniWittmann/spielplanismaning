@@ -5,16 +5,21 @@
     <spi-loader loading="vm.loading"></spi-loader>
     <div class="row">
         <div class="col-md-12">
-            <form name="emailForm" data-ng-submit="vm.addAbonnent(emailForm)">
+            <form name="emailForm" data-ng-submit="vm.addAbonnent(emailForm)" novalidate>
                 <div class="alert alert-{{vm.message.type}}" data-ng-if="vm.message.text.length > 0"
                      data-ng-bind="vm.message.text"></div>
                 <h5>Erhalte Email-Benachrichtungen zu Spielen, Ergebnissen, usw. für {{vm.team.name}}</h5>
                 <div class="alert alert-danger" data-ng-if="vm.submitted && emailForm.email.$error.email">Ungültige
                     Email Adresse
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-ng-class="{ 'has-error': emailForm.email.$touched && emailForm.email.$invalid }">
                     <input type="email" class="form-control" data-ng-change="vm.resetFormValidation()"
                            placeholder="Email" name="email" data-ng-model="vm.abonnent.email" required>
+                    <span class="help-block" data-ng-messages="emailForm.email.$error"
+                          data-ng-if="emailForm.email.$touched">
+                        <p data-ng-message="required">Die E-Mail ist ein Pflichtfeld</p>
+                        <p data-ng-message="email">Die E-Mail ist ungültig</p>
+                    </span>
                 </div>
                 <button data-ng-disabled="vm.loading || vm.bereitsabonniert" type="submit" class="btn btn-primary">
                     Abonnieren

@@ -30,14 +30,19 @@
 
     <div class="row" data-ng-if="vm.canEdit">
         <div class="col-md-12">
-            <form data-ng-submit="vm.addGruppe()" style="margin-top:30px;">
+            <form data-ng-submit="vm.addGruppe()" style="margin-top:30px;" name="gruppeForm" novalidate>
                 <h5>Gruppe hinzufügen</h5>
                 <div class="alert alert-danger" data-ng-if="vm.error">
                     {{vm.error.message}}
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-ng-class="{ 'has-error': gruppeForm.name.$touched && gruppeForm.name.$invalid }">
                     <input type="text" class="form-control" placeholder="Gruppen-Name" data-ng-model="vm.gruppe.name"
-                           required>
+                           required name="name" data-ng-minlength="3">
+                    <span class="help-block" data-ng-messages="gruppeForm.name.$error"
+                          data-ng-if="gruppeForm.name.$touched">
+                        <p data-ng-message="required">Der Name ist ein Pflichtfeld</p>
+                        <p data-ng-message="minlength">Der Name ist zu kurz</p>
+                    </span>
                 </div>
                 <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary">anlegen</button>
             </form>
