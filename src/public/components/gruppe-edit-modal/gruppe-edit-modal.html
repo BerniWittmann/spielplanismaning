@@ -30,7 +30,7 @@
                         <p data-ng-message="minlength">Der Name ist zu kurz</p>
                     </span>
                 </div>
-                <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary">anlegen</button>
+                <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary" data-ng-disabled="teamForm.$invalid">anlegen</button>
             </form>
         </div>
     </div>

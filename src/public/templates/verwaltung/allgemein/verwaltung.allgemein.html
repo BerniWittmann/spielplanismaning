@@ -58,7 +58,7 @@
                     </span>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Speichern</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="spielzeitForm.$invalid">Speichern</button>
         </form>
     </div>
 </div>
@@ -95,7 +95,7 @@
                     <p data-ng-message="required">Rolle ist ein Pflichtfeld</p>
                 </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Anlegen</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="registerForm.$invalid">Anlegen</button>
         </form>
     </div>
 </div>
@@ -114,7 +114,7 @@
                     <p data-ng-message="minlength">Username ist zu kurz</p>
                 </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Löschen</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="deleteForm.$invalid">Löschen</button>
         </form>
     </div>
 </div>

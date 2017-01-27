@@ -29,6 +29,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <a class="pull-left" data-ng-click="vm.gotoAbmelden()">News abbestellen</a>
+    <a class="pull-left" data-ng-click="vm.gotoAbmelden()" data-ng-disabled="emailForm.$invalid">News abbestellen</a>
     <button class="btn btn-primary" type="button" data-ng-click="vm.abbrechen()">Schließen</button>
 </div>

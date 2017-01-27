@@ -27,7 +27,7 @@
             <div class="form-group">
                 <a data-ng-click="vm.resetPassword()">Passwort ändern</a>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Speichern</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="accountForm.$invalid">Speichern</button>
         </form>
     </div>
 </div>

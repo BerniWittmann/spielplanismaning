@@ -48,7 +48,7 @@
                     <p data-ng-message="required">E-Mail Text ist ein Pflichtfeld</p>
                 </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Senden</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="emailForm.$invalid">Senden</button>
         </form>
     </div>
 </div>
