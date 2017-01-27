@@ -8,23 +8,19 @@
             var jugend = {};
 
             jugend.getAll = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.jugenden.base()});
+                return routes.requestGET(routes.urls.jugenden.base());
             };
 
             jugend.get = function (id) {
-                return routes.request({method: routes.methods.GET, url: routes.urls.jugenden.base(), params: {id: id}});
+                return routes.requestGETID(routes.urls.jugenden.base(), id);
             };
 
             jugend.create = function (newjugend) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.jugenden.base(), data: newjugend});
+                return routes.requestPOST(routes.urls.jugenden.base(), newjugend);
             };
 
             jugend.delete = function (id) {
-                return routes.request({
-                    method: routes.methods.DELETE,
-                    url: routes.urls.jugenden.base(),
-                    params: {id: id}
-                });
+                return routes.requestDELETE(routes.urls.jugenden.base(), id);
             };
 
             jugend.update = function (jugendId, jugend) {
@@ -46,11 +42,11 @@
             };
 
             jugend.getTore = function (id) {
-                return routes.request({method: routes.methods.GET, url: routes.urls.jugenden.tore(), params: {id: id}});
+                return routes.requestGETID(routes.urls.jugenden.tore(), id);
             };
 
             jugend.getGesamtTore = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.jugenden.tore()});
+                return routes.requestGET(routes.urls.jugenden.tore());
             };
 
             return jugend;

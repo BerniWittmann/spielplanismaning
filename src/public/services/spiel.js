@@ -8,11 +8,11 @@
             var spiel = {};
 
             spiel.getAll = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.spiele.base()});
+                return routes.requestGET(routes.urls.spiele.base());
             };
 
             spiel.create = function (spiel) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.spiele.base(), data: spiel});
+                return routes.requestPOST(routes.urls.spiele.base(), spiel);
             };
 
             function getByParam(param, id) {
@@ -38,11 +38,7 @@
             };
 
             spiel.delete = function (spielid) {
-                return routes.request({
-                    method: routes.methods.DELETE,
-                    url: routes.urls.spiele.base(),
-                    params: {id: spielid}
-                });
+                return routes.requestDELETE(routes.urls.spiele.base(), spielid);
             };
 
             spiel.deleteAll = function () {
@@ -51,16 +47,11 @@
 
             spiel.updateTore = function (spiel) {
                 Logger.log('Tore für Spiel #' + spiel.nummer + ' geändert!');
-                return routes.request({
-                    method: routes.methods.PUT,
-                    url: routes.urls.spiele.tore(),
-                    params: {id: spiel._id},
-                    data: spiel
-                });
+                return routes.requestPUTID(routes.urls.spiele.tore(), spiel._id, spiel);
             };
 
             spiel.resetSpiel = function (spiel) {
-                return routes.request({method: routes.methods.DELETE, url: routes.urls.spiele.tore(), params: {id: spiel._id}});
+                return routes.requestDELETE(routes.urls.spiele.tore(), spiel._id);
             };
 
             return spiel;

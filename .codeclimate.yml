@@ -9,7 +9,7 @@ engines:
     config:
       languages:
         javascript:
-          mass_threshold: 40
+          mass_threshold: 50
     exclude_fingerprints:
       - d1f6e82231068d565aa0b72941818070
       - 5488f48e2a975964f74089b29a23ea07

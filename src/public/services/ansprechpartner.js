@@ -7,23 +7,23 @@
             var ansprechpartner = {};
 
             ansprechpartner.getAll = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.ansprechpartner.base()});
+                return routes.requestGET(routes.urls.ansprechpartner.base());
             };
 
             ansprechpartner.get = function (id) {
-                return routes.request({method: routes.methods.GET, url: routes.urls.ansprechpartner.base(), params: {id: id}});
+                return routes.requestGETID(routes.urls.ansprechpartner.base(), id);
             };
 
             ansprechpartner.create = function (data) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.ansprechpartner.base(), data: data});
+                return routes.requestPOST(routes.urls.ansprechpartner.base(), data);
             };
 
             ansprechpartner.update = function (id, data) {
-                return routes.request({method: routes.methods.PUT, url: routes.urls.ansprechpartner.base(), params: {id: id}, data: data});
+                return routes.requestPUTID(routes.urls.ansprechpartner.base(), id, data);
             };
 
             ansprechpartner.delete = function (id) {
-                return routes.request({method: routes.methods.DELETE, url: routes.urls.ansprechpartner.base(), params: {id: id}});
+                return routes.requestDELETE(routes.urls.ansprechpartner.base(), id);
             };
 
             return ansprechpartner;

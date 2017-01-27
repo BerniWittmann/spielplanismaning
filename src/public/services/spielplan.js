@@ -13,7 +13,7 @@
             };
 
             spielplan.getZeiten = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.spielplan.base()}).then(function (data) {
+                return routes.requestGET(routes.urls.spielplan.base()).then(function (data) {
                     _.defaultsDeep(data, {startzeit: '09:00', spielzeit: 8, pausenzeit: 2});
                     _.extend(spielplan, data);
                     return data;
@@ -21,11 +21,11 @@
             };
 
             spielplan.saveZeiten = function (zeiten) {
-                return routes.request({method: routes.methods.PUT, url: routes.urls.spielplan.zeiten(), data: zeiten});
+                return routes.requestPUT(routes.urls.spielplan.zeiten(), zeiten);
             };
 
             spielplan.createSpielplan = function () {
-                return routes.request({method: routes.methods.PUT, url: routes.urls.spielplan.base()});
+                return routes.requestPUT(routes.urls.spielplan.base(), undefined);
             };
 
             return spielplan;

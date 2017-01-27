@@ -7,19 +7,15 @@
             var email = {};
 
             email.send = function (email) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.email.base(), data: email});
+                return routes.requestPOST(routes.urls.email.base(), email);
             };
 
             email.sendBugReport = function (data) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.email.bug(), data: data});
+                return routes.requestPOST(routes.urls.email.bug(), data);
             };
 
             email.addSubscriber = function (abonnent) {
-                return routes.request({
-                    method: routes.methods.POST,
-                    url: routes.urls.email.subscriber(),
-                    data: abonnent
-                }).then(function (res) {
+                return routes.requestPOST(routes.urls.email.subscriber(), abonnent).then(function (res) {
                     email.addSubscriptionToken(abonnent);
                     return res;
                 });
@@ -34,7 +30,7 @@
             };
 
             email.getSubscribers = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.email.subscriber()});
+                return routes.requestGET(routes.urls.email.subscriber());
             };
 
             function getSubscriptionToken() {

@@ -8,7 +8,7 @@
             var team = {};
 
             team.getAll = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.team.base()});
+                return routes.requestGET(routes.urls.team.base());
             };
 
             team.create = function (team) {
@@ -21,7 +21,7 @@
             };
 
             team.get = function (id) {
-                return routes.request({method: routes.methods.GET, url: routes.urls.team.base(), params: {id: id}});
+                return routes.requestGETID(routes.urls.team.base(), id);
             };
 
             team.getByGruppe = function (gruppenid) {
@@ -33,25 +33,16 @@
             };
 
             team.delete = function (teamid) {
-                return routes.request({
-                    method: routes.methods.DELETE,
-                    url: routes.urls.team.base(),
-                    params: {id: teamid}
-                });
+                return routes.requestDELETE(routes.urls.team.base(), teamid);
             };
 
             team.resetErgebnisse = function () {
-                return routes.request({method: routes.methods.PUT, url: routes.urls.team.resetErgebnisse()});
+                return routes.requestPUT(routes.urls.team.resetErgebnisse(), undefined);
             };
 
             team.updateName = function (team, name) {
                 team.name = name;
-                return routes.request({
-                    method: routes.methods.PUT,
-                    url: routes.urls.team.base(),
-                    params: {id: team._id},
-                    data: team
-                });
+                return routes.requestPUTID(routes.urls.team.base(), team._id, team);
             };
 
             return team;
