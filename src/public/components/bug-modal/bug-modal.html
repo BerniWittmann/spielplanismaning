@@ -4,29 +4,44 @@
 <div class="modal-body">
     <div class="row" data-ng-if="!vm.sent && !vm.error">
         <div class="col-md-12">
-            <form data-ng-submit="vm.send()" style="margin-top:30px;">
+            <form data-ng-submit="vm.send(bugForm)" style="margin-top:30px;" name="bugForm" novalidate>
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Vorname" data-ng-model="vm.mail.vorname">
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Nachname" data-ng-model="vm.mail.nachname">
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-ng-class="{'has-error': bugForm.email.$touched && !bugForm.email.$valid}">
                     <input type="email" class="form-control" placeholder="E-Mail" data-ng-model="vm.mail.email"
-                           required>
+                           required name="email">
+                    <span class="help-block" data-ng-messages="bugForm.email.$error"
+                          data-ng-if="bugForm.email.$touched">
+                        <p data-ng-message="required">E-Mail ist ein Pflichtfeld</p>
+                        <p data-ng-message="email">E-Mail ist ungültig</p>
+                    </span>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Betreff" data-ng-model="vm.mail.title"
-                           required>
-                    <p>Ein kurzer Titel, der das Problem benennt.</p>
+                <div class="form-group" data-ng-class="{'has-error': bugForm.subject.$touched && !bugForm.subject.$valid}">
+                    <label for="bug-subject">Ein kurzer Titel, der das Problem benennt.</label>
+                    <input type="text" id="bug-subject" class="form-control" placeholder="Betreff" data-ng-model="vm.mail.title"
+                           required name="subject" data-ng-minlength="3">
+                    <span class="help-block" data-ng-messages="bugForm.subject.$error"
+                          data-ng-if="bugForm.subject.$touched">
+                        <p data-ng-message="required">Dies ist ein Pflichtfeld</p>
+                        <p data-ng-message="minlength">Der Betreff ist zu kurz</p>
+                    </span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-ng-class="{'has-error': bugForm.text.$touched && !bugForm.text.$valid}">
+                    <label for="bug-text">Eine detaillerte Beschreibung des Problems. Je detaillierter, umso besser können wir das Problem
+                        nachvollziehen.</label>
                     <textarea rows="3" class="form-control" placeholder="Beschreibung"
-                              data-ng-model="vm.mail.text"></textarea>
-                    <p>Eine detaillerte Beschreibung des Problems. Je detaillierter, umso besser können wir das Problem
-                        nachvollziehen.</p>
+                              data-ng-model="vm.mail.text" id="bug-text" name="text" required data-ng-minlength="3"></textarea>
+                    <span class="help-block" data-ng-messages="bugForm.text.$error"
+                          data-ng-if="bugForm.text.$touched">
+                        <p data-ng-message="required">Dies ist ein Pflichtfeld</p>
+                        <p data-ng-message="minlength">Der Text ist zu kurz</p>
+                    </span>
                 </div>
-                <button type="submit" class="btn btn-success">Senden</button>
+                <button type="submit" class="btn btn-success" data-ng-disabled="bugForm.$invalid">Senden</button>
             </form>
         </div>
     </div>

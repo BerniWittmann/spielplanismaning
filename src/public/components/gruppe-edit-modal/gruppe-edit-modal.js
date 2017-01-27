@@ -86,8 +86,8 @@
             $uibModalInstance.dismiss('cancel');
         }
 
-        function addTeam() {
-            if (!vm.loading) {
+        function addTeam(form) {
+            if (!vm.loading && form.$valid) {
                 vm.loading = true;
                 _.extend(vm.team, {
                     gruppe: vm.gruppe._id,

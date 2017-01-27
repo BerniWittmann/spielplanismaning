@@ -19,6 +19,7 @@
                 _id: 'grp2'
             }
         };
+        var form = {$valid: true};
         var abonnement = [{
             team: '1',
             email: 'test@t.de'
@@ -139,7 +140,7 @@
             render();
             var spy = chai.spy.on(mockEmail, 'removeSubscription');
 
-            ctrl.abbestellen();
+            ctrl.abbestellen(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();
@@ -148,7 +149,7 @@
         it('Nach dem Abmelden wird ein Hinweis angezeigt und das Formular ausgeblendet', function () {
             render();
 
-            ctrl.abbestellen();
+            ctrl.abbestellen(form);
             scope.$digest();
 
             var result = element.find('.alert-success');

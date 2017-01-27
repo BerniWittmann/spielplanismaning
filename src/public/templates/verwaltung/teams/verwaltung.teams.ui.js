@@ -38,15 +38,17 @@
             jugend: {},
             jugenden: jugenden,
             teams: teams,
-            addJugend: function () {
-                jugend.create(vm.jugend).then(function (res) {
-                    spielplan.createSpielplan();
-                    vm.jugend = {};
-                    vm.jugenden.push(res);
-                    $timeout(function () {
-                        $scope.$apply();
-                    }, 0, false);
-                });
+            addJugend: function (form) {
+                if (form.$valid) {
+                    jugend.create(vm.jugend).then(function (res) {
+                        spielplan.createSpielplan();
+                        vm.jugend = {};
+                        vm.jugenden.push(res);
+                        $timeout(function () {
+                            $scope.$apply();
+                        }, 0, false);
+                    });
+                }
             },
             generateSpielplan: function () {
                 spielplan.createSpielplan();
@@ -54,15 +56,6 @@
             spielplanError: spielplan.error,
             isLoggedIn: auth.isAdmin(),
             farben: JUGEND_FARBEN
-        });
-
-        $scope.$watch(function () {
-            return spielplan.error;
-        }, function () {
-            vm.spielplanError = spielplan.error;
-            if(spielplan.error) {
-                $window.scrollTo(0, 0);
-            }
         });
 
         vm.loading = false;

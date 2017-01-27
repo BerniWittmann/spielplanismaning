@@ -6,7 +6,8 @@
             'spi.auth', 'ui.router'
         ])
         .config(states)
-        .controller('PasswordResetController', PasswordResetController);
+        .controller('PasswordResetController', PasswordResetController)
+        .directive('compareTo', compareTo);
 
     function states($stateProvider) {
         $stateProvider
@@ -23,6 +24,25 @@
                 }
             });
 
+    }
+
+    function compareTo() {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=compareTo"
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareTo = function(modelValue) {
+                    return modelValue === scope.otherModelValue;
+                };
+
+                scope.$watch("otherModelValue", function() {
+                    ngModel.$validate();
+                });
+            }
+        };
     }
 
     function isValidToken($stateParams, $q, $state, toastr, $timeout, auth) {
@@ -53,8 +73,8 @@
         vm.password = undefined;
         vm.passwordCheck = undefined;
         vm.username = undefined;
-        vm.resetPassword = function () {
-            if(vm.password && isValidToken && vm.username && _.isEqual(vm.password, vm.passwordCheck)) {
+        vm.resetPassword = function (form) {
+            if(form.$valid && vm.password && isValidToken && vm.username && _.isEqual(vm.password, vm.passwordCheck)) {
                 auth.resetPassword(vm.username, $stateParams.token, vm.password).then(function () {
                     toastr.success('Dein Passwort wurde zurückgesetzt, du kannst dich jetzt abmelden.', 'Passwort zurückgesetzt');
                     $state.go('spi.login');

@@ -22,18 +22,26 @@
 </div>
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <form data-ng-submit="vm.login()" style="margin-top:80px;">
+        <form data-ng-submit="vm.login(loginForm)" style="margin-top:80px;" name="loginForm" novalidate>
             <h3 class="width-100 text-center">Login</h3>
 
-            <div class="form-group">
+            <div class="form-group" data-ng-class="{ 'has-error': loginForm.username.$touched && loginForm.username.$invalid }">
                 <input type="text" class="form-control" placeholder="Username" data-ng-model="vm.user.username"
-                       data-ng-change="vm.resetErr()" required>
+                       data-ng-change="vm.resetErr()" name="username" data-ng-minlength="3" required>
+                <span class="help-block" data-ng-messages="loginForm.username.$error" data-ng-if="loginForm.username.$touched">
+                    <p data-ng-message="required">Username ist ein Pflichtfeld</p>
+                    <p data-ng-message="minlength">Username ist zu kurz</p>
+                </span>
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error': loginForm.password.$touched && loginForm.password.$invalid }">
                 <input type="password" class="form-control" placeholder="Passwort" data-ng-model="vm.user.password"
-                       data-ng-change="vm.resetErr()" required>
+                       data-ng-change="vm.resetErr()" name="password" required data-ng-minlength="6">
+                <span class="help-block" ng-messages="loginForm.password.$error" ng-if="loginForm.password.$touched">
+                    <p ng-message="required">Passwort ist ein Pflichtfeld</p>
+                    <p data-ng-message="minlength">Passwort ist zu kurz</p>
+                </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Login</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="loginForm.$invalid">Login</button>
         </form>
     </div>
 </div>

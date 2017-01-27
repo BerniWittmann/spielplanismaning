@@ -11,6 +11,7 @@
 
     var gewaehltesTeam;
     var mockTeam;
+    var form = {$valid: true};
 
     describe('Component: Team-Edit-Modal', function () {
         beforeEach(module('spi.components.team-edit-modal.ui'));
@@ -49,7 +50,7 @@
             controller.name = 'Neuer Name';
             var spy = chai.spy.on(mockTeam, 'updateName');
 
-            controller.save();
+            controller.save(form);
 
             expect(spy).to.have.been.called.with(gewaehltesTeam, 'Neuer Name');
         });

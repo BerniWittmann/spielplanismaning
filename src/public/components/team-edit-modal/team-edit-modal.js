@@ -41,12 +41,14 @@
             name: gewTeam.name
         });
 
-        function save() {
-            vm.loading = true;
-            team.updateName(vm.team, vm.name).then(function (res) {
-                vm.loading = false;
-                $uibModalInstance.close(res);
-            });
+        function save(form) {
+            if (form.$valid) {
+                vm.loading = true;
+                team.updateName(vm.team, vm.name).then(function (res) {
+                    vm.loading = false;
+                    $uibModalInstance.close(res);
+                });
+            }
         }
     }
 })();

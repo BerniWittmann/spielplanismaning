@@ -68,41 +68,47 @@
             vm.registerMsg = undefined;
         }
 
-        function register() {
-            auth.register(vm.user).then(function () {
-                vm.registerMsg = vm.user.username + ' wurde registriert.';
-                vm.user = {};
-            }, function (error) {
-                if (error.ERROR.code === 11000) {
-                    vm.registerErr = 'Dieser Username oder diese Email existiert bereits';
-                } else {
-                    vm.registerErr = error;
-                }
-            });
-        }
-
-        function deleteUser() {
-            if (auth.currentUser() === vm.username) {
-                vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
-                return vm.delErr;
+        function register(form) {
+            if (form.$valid) {
+                auth.register(vm.user).then(function () {
+                    vm.registerMsg = vm.user.username + ' wurde registriert.';
+                    vm.user = {};
+                }, function (error) {
+                    if (error.ERROR.code === 11000) {
+                        vm.registerErr = 'Dieser Username oder diese Email existiert bereits';
+                    } else {
+                        vm.registerErr = error;
+                    }
+                });
             }
-            return auth.deleteUser(vm.username).then(function () {
-                vm.username = undefined;
-                vm.delMsg = 'User gelöscht!';
-            }, function (err) {
-                vm.delErr = err;
-            });
         }
 
-        function saveSpielzeit() {
-            vm.loading = true;
-            spielplan.saveZeiten({
-                startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
-                , spielzeit: vm.spielzeit
-                , pausenzeit: vm.pausenzeit
-            }).then(function () {
-                vm.loading = false;
-            });
+        function deleteUser(form) {
+            if (form.$valid) {
+                if (auth.currentUser() === vm.username) {
+                    vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
+                    return vm.delErr;
+                }
+                return auth.deleteUser(vm.username).then(function () {
+                    vm.username = undefined;
+                    vm.delMsg = 'User gelöscht!';
+                }, function (err) {
+                    vm.delErr = err;
+                });
+            }
+        }
+
+        function saveSpielzeit(form) {
+            if (form.$valid) {
+                vm.loading = true;
+                spielplan.saveZeiten({
+                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
+                    , spielzeit: vm.spielzeit
+                    , pausenzeit: vm.pausenzeit
+                }).then(function () {
+                    vm.loading = false;
+                });
+            }
         }
 
         function increment(name) {

@@ -11,6 +11,7 @@
         var mockErrorHandler = {
             handleResponseError: function () {}
         };
+        var form = {$valid: true};
 
         beforeEach(function () {
             module(function ($provide) {
@@ -180,7 +181,7 @@
             var spySpielplan = chai.spy.on(mockSpielplan, 'createSpielplan');
             $httpBackend.expectGET('/api/gruppen?jugend=j4').respond(201, {});
 
-            ctrl.addJugend();
+            ctrl.addJugend(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();

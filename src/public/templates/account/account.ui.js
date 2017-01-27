@@ -41,14 +41,16 @@
                     toastr.error(error.MESSAGE, 'Fehler');
                 });
             },
-            changeUserDetails: function () {
-                auth.setUserDetails(vm.user).then(function (response) {
-                    auth.saveToken(response.token);
-                    toastr.success('Wir haben deine Daten gespeichert', 'Gespeichert');
-                }, function (error) {
-                    console.log(error);
-                    toastr.error(error.MESSAGE, 'Fehler');
-                });
+            changeUserDetails: function (form) {
+                if(form.$valid) {
+                    auth.setUserDetails(vm.user).then(function (response) {
+                        auth.saveToken(response.token);
+                        toastr.success('Wir haben deine Daten gespeichert', 'Gespeichert');
+                    }, function (error) {
+                        console.log(error);
+                        toastr.error(error.MESSAGE, 'Fehler');
+                    });
+                }
             }
         });
     }

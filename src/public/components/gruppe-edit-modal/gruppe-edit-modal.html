@@ -19,13 +19,18 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form data-ng-submit="vm.addTeam()" style="margin-top:30px;">
+            <form data-ng-submit="vm.addTeam(teamForm)" style="margin-top:30px;" name="teamForm" novalidate>
                 <h5>Team zur Gruppe hinzufügen</h5>
-                <div class="form-group">
+                <div class="form-group" data-ng-class="{ 'has-error': teamForm.name.$touched && teamForm.name.$invalid }">
                     <input type="text" class="form-control" placeholder="Team-Name" data-ng-model="vm.team.name"
-                           required>
+                           required data-ng-minlength="3" name="name">
+                    <span class="help-block" data-ng-messages="teamForm.name.$error"
+                          data-ng-if="teamForm.name.$touched">
+                        <p data-ng-message="required">Der Name ist ein Pflichtfeld</p>
+                        <p data-ng-message="minlength">Der Name ist zu kurz</p>
+                    </span>
                 </div>
-                <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary">anlegen</button>
+                <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary" data-ng-disabled="teamForm.$invalid">anlegen</button>
             </form>
         </div>
     </div>

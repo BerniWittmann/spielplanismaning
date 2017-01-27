@@ -13,6 +13,7 @@
         }, 'spi.templates.verwaltung.email-abonnements.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
+        var form = {$valid: true};
 
         var abonnements = [{
             email: 'Test1@test.de',
@@ -132,7 +133,7 @@
             };
             var spy = chai.spy.on(mockEmail, 'send');
 
-            ctrl.send();
+            ctrl.send(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();

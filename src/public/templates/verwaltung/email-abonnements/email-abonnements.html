@@ -31,18 +31,24 @@
 
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <form data-ng-submit="vm.send()" style="margin-top:30px;">
+        <form data-ng-submit="vm.send(emailForm)" style="margin-top:30px;" name="emailForm" novalidate>
             <h3 class="text-center">Email an alle Abonnenten versenden</h3>
             <div class="alert alert-danger" data-ng-if="vm.err">{{vm.err}}</div>
             <div class="alert alert-success" data-ng-if="vm.message">{{vm.message}}</div>
-            <div class="form-group">
+            <div class="form-group" data-ng-class="{ 'has-error': emailForm.subject.$touched && emailForm.subject.$invalid }">
                 <input type="text" class="form-control" placeholder="Betreff" data-ng-model="vm.email.subject"
-                       required>
+                       required name="subject">
+                <span class="help-block" data-ng-messages="emailForm.subject.$error" data-ng-if="emailForm.subject.$touched">
+                    <p data-ng-message="required">Betreff ist ein Pflichtfeld</p>
+                </span>
             </div>
-            <div class="form-group">
-                <textarea class="form-control" placeholder="Text" data-ng-model="vm.email.text" required></textarea>
+            <div class="form-group" data-ng-class="{ 'has-error': emailForm.text.$touched && emailForm.text.$invalid }">
+                <textarea class="form-control" placeholder="Text" data-ng-model="vm.email.text" name="text" required></textarea>
+                <span class="help-block" data-ng-messages="emailForm.text.$error" data-ng-if="emailForm.text.$touched">
+                    <p data-ng-message="required">E-Mail Text ist ein Pflichtfeld</p>
+                </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block">Senden</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="emailForm.$invalid">Senden</button>
         </form>
     </div>
 </div>

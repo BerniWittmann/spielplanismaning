@@ -13,6 +13,7 @@
         go: function () {
         }
     };
+    var form = {$valid: true};
 
     var mockTeams = [
         {
@@ -112,7 +113,7 @@
             controller.loading = false;
             controller.team = {name: 'Test Team 4'};
 
-            controller.addTeam();
+            controller.addTeam(form);
             scope.$apply();
             var result = controller.teams[3];
 
@@ -129,7 +130,7 @@
             controller.loading = false;
             controller.team = {name: 'Test Team 4'};
 
-            controller.addTeam();
+            controller.addTeam(form);
             scope.$apply();
 
             expect(spy_spielplan).to.have.been.called();
