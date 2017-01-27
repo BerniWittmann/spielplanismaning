@@ -15,6 +15,7 @@
     var username = 'Username';
     var version = '0.0.0';
     var env = 'testing';
+    var form = {$valid: true};
 
     describe('Component: Bug-Modal', function () {
         beforeEach(module('spi.components.bug-modal.ui'));
@@ -83,7 +84,7 @@
             var spy_close = chai.spy.on(uibModalInstance, 'close');
             expect(spy_close).not.to.have.been.called();
 
-            controller.send();
+            controller.send(form);
             scope.$apply();
             $timeout.flush();
 
@@ -98,7 +99,7 @@
             controller.mail.email = 'test@byom.de';
             var spy_send = chai.spy.on(mockEmail, 'sendBugReport');
 
-            controller.send();
+            controller.send(form);
 
             expect(spy_send).to.have.been.called();
             var datetime = mockEmail.sentData.datetime;
@@ -125,7 +126,7 @@
             controller.mail.nachname = 'Nachname';
             controller.mail.email = 'test@byom.de';
 
-            controller.send();
+            controller.send(form);
 
             expect(controller.sent).to.be.true;
         });

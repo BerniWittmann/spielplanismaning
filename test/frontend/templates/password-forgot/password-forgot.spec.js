@@ -19,6 +19,7 @@
             error: function () {
             }
         };
+        var form = {$valid: true};
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -85,7 +86,7 @@
             ctrl.email = 'test@byom.de';
             var spy = chai.spy.on(mockAuth, 'forgotPassword');
 
-            ctrl.forgotPassword();
+            ctrl.forgotPassword(form);
 
             expect(spy).to.have.been.called.with('test@byom.de');
         });
@@ -95,7 +96,7 @@
             ctrl.email = 'test@byom.de';
             var spy = chai.spy.on(mockToastr, 'success');
 
-            ctrl.forgotPassword();
+            ctrl.forgotPassword(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();

@@ -15,6 +15,7 @@
         var mockToastr = {
             error: function () {}
         };
+        var form = {$valid: true};
 
         var lockdown = false;
 
@@ -47,6 +48,7 @@
                     return deferred.promise;
                 }
             };
+            var form = {$valid: true};
 
             var ctrl = scope.vm = $controller('LoginController', {
                 auth: mockAuth,
@@ -125,7 +127,7 @@
                 password: '12345'
             };
 
-            element.find('form').find('button').click();
+            ctrl.login(form);
 
             expect(spy).to.have.been.called.with({
                 username: 'berni',
@@ -140,7 +142,7 @@
                 password: 'abc'
             };
 
-            element.find('form').find('button').click();
+            ctrl.login(form);
             scope.$digest();
             
             expect(ctrl.error.MESSAGE).to.be.equal('Falscher Username/Passwort');

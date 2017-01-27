@@ -16,6 +16,7 @@
                 rank: 0
             }
         };
+        var form = {$valid: true};
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
@@ -130,7 +131,7 @@
             ctrl.user.username = 'NeuerUsername';
             var spy = chai.spy.on(mockAuth, 'setUserDetails');
 
-            ctrl.changeUserDetails();
+            ctrl.changeUserDetails(form);
 
             var userNew = user;
             userNew.username = 'NeuerUsername';
@@ -142,7 +143,7 @@
             ctrl.user.email = 'NeueEmail';
             var spy = chai.spy.on(mockAuth, 'setUserDetails');
 
-            ctrl.changeUserDetails();
+            ctrl.changeUserDetails(form);
 
             var userNew = user;
             userNew.email = 'NeueEmail';

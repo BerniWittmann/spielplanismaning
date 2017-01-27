@@ -12,6 +12,7 @@
         }, 'spi.templates.password-reset.ui'));
         beforeEach(module('htmlModule'));
 
+        var form = {$valid: true};
         var mockAuth;
         var mockToastr = {
             success: function () {
@@ -105,7 +106,7 @@
             ctrl.password = '1234';
             ctrl.passwordCheck = '1235';
 
-            ctrl.resetPassword();
+            ctrl.resetPassword(form);
             scope.$digest();
 
             expect(spy).not.to.have.been.called();
@@ -117,7 +118,7 @@
             ctrl.password = '1234';
             ctrl.passwordCheck = '1234';
 
-            ctrl.resetPassword();
+            ctrl.resetPassword(form);
             scope.$digest();
 
             expect(spy).not.to.have.been.called();
@@ -128,7 +129,7 @@
             var spy = chai.spy.on(mockAuth, 'resetPassword');
             ctrl.username = 'Test';
 
-            ctrl.resetPassword();
+            ctrl.resetPassword(form);
             scope.$digest();
 
             expect(spy).not.to.have.been.called();
@@ -141,7 +142,7 @@
             ctrl.password = '1234';
             ctrl.passwordCheck = '1234';
 
-            ctrl.resetPassword();
+            ctrl.resetPassword(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();

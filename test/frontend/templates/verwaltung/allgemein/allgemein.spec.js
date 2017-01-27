@@ -21,6 +21,7 @@
                 pausenzeit: 4
             }
         };
+        var form = {$valid: true};
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -121,7 +122,7 @@
             ctrl.spielzeit = 7;
             ctrl.pausenzeit = 3;
 
-            ctrl.saveSpielzeit();
+            ctrl.saveSpielzeit(form);
             scope.$digest();
 
             expect(mockSpielplan.zeiten).to.deep.equal({startzeit: '09:30', spielzeit: 7, pausenzeit: 3});
@@ -138,7 +139,7 @@
             };
             var spy = chai.spy.on(mockAuth, 'register');
 
-            ctrl.register();
+            ctrl.register(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();
@@ -156,7 +157,7 @@
                 role: 'Bearbeiter'
             };
 
-            ctrl.register();
+            ctrl.register(form);
             scope.$digest();
 
             var result = element.find('.alert-danger');
@@ -169,7 +170,7 @@
             ctrl.username = 'Berni';
             var spy = chai.spy.on(mockAuth, 'deleteUser');
 
-            ctrl.delete();
+            ctrl.delete(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();
@@ -182,7 +183,7 @@
             render();
             ctrl.username = 'Test';
 
-            ctrl.delete();
+            ctrl.delete(form);
             scope.$digest();
 
             var result = element.find('.alert-danger');
