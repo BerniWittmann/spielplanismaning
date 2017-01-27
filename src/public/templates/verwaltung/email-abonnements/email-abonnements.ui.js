@@ -39,9 +39,11 @@
 
         _.extend(vm, {
             abonnements: (subscribers || []),
-            send: function () {
-                if (!_.isEqual(vm.email, emailBlank)) {
-                    return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
+            send: function (form) {
+                if (form.$valid) {
+                    if (!_.isEqual(vm.email, emailBlank)) {
+                        return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
+                    }
                 }
             },
             gotoTeam: function (team) {

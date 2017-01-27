@@ -41,18 +41,20 @@
         if (_.isEqual($stateParams.reasonKey, 'AUTH_ERROR')) {
             toastr.error('Sie haben keinen Zugriff auf diese Ressource', 'Fehler');
         }
-        vm.login = function () {
-            vm.user.username = vm.user.username.toLowerCase();
-            auth.logIn(vm.user).then(function () {
-                if ($stateParams.next) {
-                    $state.go($stateParams.next);
-                } else {
-                    $state.go('spi.home');
-                }
-            }, function (error) {
-                console.log(error);
-                vm.error = error;
-            });
+        vm.login = function (form) {
+            if (form.$valid) {
+                vm.user.username = vm.user.username.toLowerCase();
+                auth.logIn(vm.user).then(function () {
+                    if ($stateParams.next) {
+                        $state.go($stateParams.next);
+                    } else {
+                        $state.go('spi.home');
+                    }
+                }, function (error) {
+                    console.log(error);
+                    vm.error = error;
+                });
+            }
         };
         vm.resetErr = function () {
             vm.error = undefined;

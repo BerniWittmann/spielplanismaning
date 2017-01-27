@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
-        <form data-ng-submit="vm.changeUserDetails()" style="margin-top:30px;" name="accountForm" novalidate>
+        <form data-ng-submit="vm.changeUserDetails(accountForm)" style="margin-top:30px;" name="accountForm" novalidate>
             <div class="form-group" data-ng-class="{ 'has-error': accountForm.username.$touched && accountForm.username.$invalid }">
                 <input type="text" class="form-control" placeholder="Username" data-ng-minlength="3" data-ng-model="vm.user.username" required name="username">
                 <span class="help-block" data-ng-messages="accountForm.username.$error" data-ng-if="accountForm.username.$touched">

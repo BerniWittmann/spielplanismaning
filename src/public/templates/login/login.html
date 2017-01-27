@@ -22,7 +22,7 @@
 </div>
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <form data-ng-submit="vm.login()" style="margin-top:80px;" name="loginForm" novalidate>
+        <form data-ng-submit="vm.login(loginForm)" style="margin-top:80px;" name="loginForm" novalidate>
             <h3 class="width-100 text-center">Login</h3>
 
             <div class="form-group" data-ng-class="{ 'has-error': loginForm.username.$touched && loginForm.username.$invalid }">

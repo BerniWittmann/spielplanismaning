@@ -19,7 +19,7 @@
 
 <div data-ng-if="vm.isLoggedIn" class="row">
     <div class="col-md-4 col-md-offset-4">
-        <form data-ng-submit="vm.addJugend()" style="margin-top:30px;" name="jugendForm" novalidate>
+        <form data-ng-submit="vm.addJugend(jugendForm)" style="margin-top:30px;" name="jugendForm" novalidate>
             <h4 class="width-100 text-center">Jugend hinzufügen</h4>
 
             <div class="form-group" data-ng-class="{ 'has-error': jugendForm.name.$touched && jugendForm.name.$invalid }">

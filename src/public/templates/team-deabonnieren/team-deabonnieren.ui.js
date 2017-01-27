@@ -54,18 +54,20 @@
             redirect();
         };
 
-        vm.abbestellen = function () {
-            if (email.checkSubscription(vm.sub)) {
-                email.removeSubscription(vm.sub).then(function () {
-                    success();
-                    redirect();
-                }, function (err) {
-                    console.log(err);
-                    vm.message = vm.sub.email + ' kann nicht abgemeldet werden. Vielleicht ist diese Email bereits abgemeldet';
-                });
+        vm.abbestellen = function (form) {
+            if (form.$valid) {
+                if (email.checkSubscription(vm.sub)) {
+                    email.removeSubscription(vm.sub).then(function () {
+                        success();
+                        redirect();
+                    }, function (err) {
+                        console.log(err);
+                        vm.message = vm.sub.email + ' kann nicht abgemeldet werden. Vielleicht ist diese Email bereits abgemeldet';
+                    });
 
-            } else {
-                vm.message = vm.sub.email + ' kann nicht abgemeldet werden. Vielleicht ist diese Email bereits abgemeldet';
+                } else {
+                    vm.message = vm.sub.email + ' kann nicht abgemeldet werden. Vielleicht ist diese Email bereits abgemeldet';
+                }
             }
         };
 

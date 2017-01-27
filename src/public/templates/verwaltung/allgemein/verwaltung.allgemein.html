@@ -8,7 +8,7 @@
 
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
-        <form name="spielzeitForm" data-ng-submit="vm.saveSpielzeit()" novalidate>
+        <form name="spielzeitForm" data-ng-submit="vm.saveSpielzeit(spielzeitForm)" novalidate>
             <div class="row">
                 <div class="form-group col-md-4" data-ng-class="{'has-error': !spielzeitForm.startzeit.$valid}">
                     <div class="control-label center-block text-center special-padding" style="width: 100%">Startzeit
@@ -65,7 +65,7 @@
 
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <form data-ng-submit="vm.register()" style="margin-top:30px;" name="registerForm" novalidate>
+        <form data-ng-submit="vm.register(registerForm)" style="margin-top:30px;" name="registerForm" novalidate>
             <h3 class="text-center">User anlegen</h3>
             <div class="alert alert-success" data-ng-if="vm.registerMsg">{{vm.registerMsg}}</div>
             <div class="alert alert-danger" data-ng-if="vm.registerErr">{{vm.registerErr}}</div>
@@ -102,7 +102,7 @@
 
 <div class="row">
     <div class="col-md-2 col-md-offset-5">
-        <form data-ng-submit="vm.delete()" style="margin-top:30px;" name="deleteForm" novalidate>
+        <form data-ng-submit="vm.delete(deleteForm)" style="margin-top:30px;" name="deleteForm" novalidate>
             <h3 class="text-center">User löschen</h3>
             <div class="alert alert-danger" data-ng-if="vm.delErr">{{vm.delErr}}</div>
             <div class="alert alert-success" data-ng-if="vm.delMsg">{{vm.delMsg}}</div>

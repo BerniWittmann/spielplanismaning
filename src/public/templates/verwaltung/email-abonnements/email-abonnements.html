@@ -31,7 +31,7 @@
 
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <form data-ng-submit="vm.send()" style="margin-top:30px;" name="emailForm" novalidate>
+        <form data-ng-submit="vm.send(emailForm)" style="margin-top:30px;" name="emailForm" novalidate>
             <h3 class="text-center">Email an alle Abonnenten versenden</h3>
             <div class="alert alert-danger" data-ng-if="vm.err">{{vm.err}}</div>
             <div class="alert alert-success" data-ng-if="vm.message">{{vm.message}}</div>
