@@ -78,8 +78,8 @@
             }
         }
 
-        function addGruppe() {
-            if (!vm.loading) {
+        function addGruppe(form) {
+            if (!vm.loading && form.$valid) {
                 vm.loading = true;
                 vm.error = undefined;
                 gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {

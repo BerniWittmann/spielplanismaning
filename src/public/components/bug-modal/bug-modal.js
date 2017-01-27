@@ -69,16 +69,18 @@
             $uibModalInstance.close();
         }
 
-        function send() {
-            vm.sent = true;
-            vm.mail.name = (vm.mail.vorname || '') + ' ' + (vm.mail.nachname || '');
-            vm.mail.datetime = moment().format('DD.MM.YYYY HH:mm');
-            email.sendBugReport(vm.mail).then(function () {
+        function send(form) {
+            if (form.$valid) {
                 vm.sent = true;
-                $timeout(close, 5000);
-            }, function (err) {
-                vm.error = err.MESSAGE;
-            });
+                vm.mail.name = (vm.mail.vorname || '') + ' ' + (vm.mail.nachname || '');
+                vm.mail.datetime = moment().format('DD.MM.YYYY HH:mm');
+                email.sendBugReport(vm.mail).then(function () {
+                    vm.sent = true;
+                    $timeout(close, 5000);
+                }, function (err) {
+                    vm.error = err.MESSAGE;
+                });
+            }
         }
 
         function abbrechen() {

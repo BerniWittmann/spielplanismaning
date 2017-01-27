@@ -30,7 +30,7 @@
 
     <div class="row" data-ng-if="vm.canEdit">
         <div class="col-md-12">
-            <form data-ng-submit="vm.addGruppe()" style="margin-top:30px;" name="gruppeForm" novalidate>
+            <form data-ng-submit="vm.addGruppe(gruppeForm)" style="margin-top:30px;" name="gruppeForm" novalidate>
                 <h5>Gruppe hinzufügen</h5>
                 <div class="alert alert-danger" data-ng-if="vm.error">
                     {{vm.error.message}}

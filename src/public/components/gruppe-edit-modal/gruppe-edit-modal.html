@@ -19,7 +19,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form data-ng-submit="vm.addTeam()" style="margin-top:30px;" name="teamForm" novalidate>
+            <form data-ng-submit="vm.addTeam(teamForm)" style="margin-top:30px;" name="teamForm" novalidate>
                 <h5>Team zur Gruppe hinzufügen</h5>
                 <div class="form-group" data-ng-class="{ 'has-error': teamForm.name.$touched && teamForm.name.$invalid }">
                     <input type="text" class="form-control" placeholder="Team-Name" data-ng-model="vm.team.name"

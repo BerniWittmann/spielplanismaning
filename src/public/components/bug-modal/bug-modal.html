@@ -4,7 +4,7 @@
 <div class="modal-body">
     <div class="row" data-ng-if="!vm.sent && !vm.error">
         <div class="col-md-12">
-            <form data-ng-submit="vm.send()" style="margin-top:30px;" name="bugForm" novalidate>
+            <form data-ng-submit="vm.send(bugForm)" style="margin-top:30px;" name="bugForm" novalidate>
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Vorname" data-ng-model="vm.mail.vorname">
                 </div>
