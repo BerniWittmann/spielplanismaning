@@ -6,19 +6,19 @@
         .factory('config', ['routes', function (routes) {
 
             function getEnv() {
-                return routes.request({method: routes.methods.GET, url: routes.urls.config.env()});
+                return routes.requestGET(routes.urls.config.env());
             }
 
             function getVersion() {
-                return routes.request({method: routes.methods.GET, url: routes.urls.config.version()});
+                return routes.requestGET(routes.urls.config.version());
             }
 
             function getKontakte() {
-                return routes.request({method: routes.methods.GET, url: routes.urls.config.kontakt()});
+                return routes.requestGET(routes.urls.config.kontakt());
             }
 
             function getLockdown() {
-                return routes.request({method: routes.methods.GET, url: routes.urls.config.lockdownMode()});
+                return routes.requestGET(routes.urls.config.lockdownMode());
             }
 
             return {

@@ -39,15 +39,11 @@
             };
 
             auth.register = function (user) {
-                return routes.request({method: routes.methods.POST, url: routes.urls.users.register(), data: user});
+                return routes.requestPOST(routes.urls.users.register(), user);
             };
 
             auth.logIn = function (user) {
-                return routes.request({
-                    method: routes.methods.POST,
-                    url: routes.urls.users.login(),
-                    data: user
-                }).then(function (res) {
+                return routes.requestPOST(routes.urls.users.login(), user).then(function (res) {
                     auth.saveToken(res.token);
                     return res;
                 });
@@ -55,11 +51,7 @@
 
             auth.deleteUser = function (username) {
                 if (auth.isAdmin()) {
-                    return routes.request({
-                        method: routes.methods.PUT,
-                        url: routes.urls.users.delete(),
-                        data: {username: username}
-                    });
+                    return routes.requestPUT(routes.urls.users.delete(), {username: username});
                 } else {
                     return new Error('No Permission');
                 }
@@ -129,19 +121,11 @@
                     email: email
                 };
 
-                return routes.request({
-                    method: routes.methods.PUT,
-                    url: routes.urls.users.forgotPassword(),
-                    data: data
-                });
+                return routes.requestPOST(routes.urls.users.forgotPassword(), data);
             };
 
             auth.checkResetToken = function (token) {
-                return routes.request({
-                    method: routes.methods.PUT,
-                    url: routes.urls.users.resetPasswordCheck(),
-                    data: {token: token}
-                });
+                return routes.requestPOST(routes.urls.users.resetPasswordCheck(), {token: token});
             };
 
             auth.resetPassword = function (username, token, password) {
@@ -150,15 +134,15 @@
                     token: token,
                     password: password
                 };
-                return routes.request({method: routes.methods.PUT, url: routes.urls.users.resetPassword(), data: data});
+                return routes.requestPOST(routes.urls.users.resetPassword(), data);
             };
 
             auth.getUserDetails = function () {
-                return routes.request({method: routes.methods.GET, url: routes.urls.users.userDetails()});
+                return routes.requestGET(routes.urls.users.userDetails());
             };
 
             auth.setUserDetails = function (data) {
-                return routes.request({method: routes.methods.PUT, url: routes.urls.users.userDetails(), data: data});
+                return routes.requestPOST(routes.urls.users.userDetails(), data);
             };
 
             return auth;

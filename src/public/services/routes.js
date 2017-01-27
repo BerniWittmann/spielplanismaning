@@ -115,9 +115,39 @@
                 });
             }
 
+            function requestGET(url) {
+                return request({method: methods.GET, url: url});
+            }
+
+            function requestGETID(url, id) {
+                return request({method: methods.GET, url: url, params: {id: id}});
+            }
+
+            function requestDELETE(url, id) {
+                return request({method: methods.DELETE, url: url, params: {id: id}});
+            }
+
+            function requestPUTID(url, id, data) {
+                return request({method: methods.PUT, url: url, params: {id: id}, data:data});
+            }
+
+            function requestPUT(url, data) {
+                return request({method: methods.PUT, url: url, data:data});
+            }
+
+            function requestPOST(url, data) {
+                return request({method: methods.POST, url: url, data:data});
+            }
+
             _.extend(routes, {
                 methods: methods,
                 request: request,
+                requestGET: requestGET,
+                requestGETID: requestGETID,
+                requestDELETE: requestDELETE,
+                requestPUT: requestPUT,
+                requestPUTID: requestPUTID,
+                requestPOST: requestPOST,
                 urls: urls
             });
 

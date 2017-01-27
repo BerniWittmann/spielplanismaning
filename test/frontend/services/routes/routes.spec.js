@@ -176,5 +176,100 @@
             });
             httpBackend.flush();
         });
+
+        describe('soll Shorthand Methoden zur Verfügung stellen', function () {
+            it('GET Shorthand', function (done) {
+                response = 'Success';
+
+                httpBackend.expect('GET', url).respond(200, response);
+
+                routes.requestGET(url).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('GET by ID Shorthand', function (done) {
+                response = 'Success';
+                var id = 12;
+
+                httpBackend.expect('GET', url + '?id=' + id).respond(200, response);
+
+                routes.requestGETID(url, id).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('DELETE Shorthand', function (done) {
+                response = 'Success';
+                var id = 12;
+
+                httpBackend.expect('DELETE', url + '?id=' + id).respond(200, response);
+
+                routes.requestDELETE(url, id).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('PUT Shorthand', function (done) {
+                response = 'Success';
+                var data = {
+                    data: 'abc',
+                    name: 123
+                };
+
+                httpBackend.expect('PUT', url, data).respond(200, response);
+
+                routes.requestPUT(url, data).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('PUT With ID Shorthand', function (done) {
+                response = 'Success';
+                var data = {
+                    data: 'abc',
+                    name: 123
+                };
+                var id = 12;
+
+                httpBackend.expect('PUT', url + '?id=' + id, data).respond(200, response);
+
+                routes.requestPUTID(url, id, data).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('POST Shorthand', function (done) {
+                response = 'Success';
+                var data = {
+                    data: 'abc',
+                    name: 123
+                };
+
+                httpBackend.expect('POST', url, data).respond(200, response);
+
+                routes.requestPOST(url, data).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+        });
     });
 }());
