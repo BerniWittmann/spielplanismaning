@@ -19,10 +19,24 @@
 
         var lockdown = false;
 
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
+
+        var mockConfig;
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.login.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('config', mockConfig);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -35,6 +49,8 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
+
             mockAuth = {
                 register: function () {
                 },
@@ -49,6 +65,12 @@
                 }
             };
             var form = {$valid: true};
+
+            mockConfig = {
+                getLockdown: function () {
+                    return $q.when(true);
+                }
+            };
 
             var ctrl = scope.vm = $controller('LoginController', {
                 auth: mockAuth,
@@ -70,7 +92,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller;
+        var element, render, ctrl, scope, $state, $rootScope, $controller, injector;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.
@@ -87,6 +109,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll den Lockdownmode resolven', function () {
+                var promise = resolve('lockdown').forStateAndView('spi.login');
+                var res = promise.$$state.value;
+                expect(res).to.equal(true);
+            });
         });
 
         describe('Der Lockdownmode ist aktiviert', function () {

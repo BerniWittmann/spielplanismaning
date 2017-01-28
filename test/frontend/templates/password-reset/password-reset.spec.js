@@ -11,6 +11,19 @@
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.password-reset.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('auth', mockAuth);
+            $provide.value('toastr', mockToastr);
+        }));
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         var form = {$valid: true};
         var mockAuth;
@@ -41,8 +54,12 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
             mockAuth = {
                 resetPassword: function () {
+                    return $q.when();
+                },
+                checkResetToken: function () {
                     return $q.when();
                 }
             };
@@ -68,7 +85,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller;
+        var element, render, ctrl, scope, $state, $rootScope, $controller, injector;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.
@@ -85,6 +102,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll den Token resolven', function () {
+                var promise = resolve('isValidToken').forStateAndView('spi.password-reset');
+                expect(promise).to.be.false;
+            });
+
         });
 
         it('Es wird ein Feld für die Eingabe des Nutzernamens angezeigt', function () {

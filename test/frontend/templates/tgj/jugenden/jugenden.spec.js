@@ -34,6 +34,17 @@
         var mockErrorHandler = {
             handleResponseError: function () {}
         };
+        var mockJugend;
+        var injector;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(function () {
             module(function ($provide) {
@@ -48,6 +59,9 @@
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
         beforeEach(module('spi.components.bestaetigen-modal.ui'));
+        beforeEach(module(function ($provide) {
+            $provide.value('jugend', mockJugend);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -59,7 +73,15 @@
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
+            var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
+            injector = $injector;
+
+            mockJugend = {
+                getAll: function () {
+                    return $q.when(jugenden);
+                }
+            };
 
             var ctrl = scope.vm = $controller('JugendenController', {
                 jugenden: jugenden,
@@ -105,6 +127,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Jugenden resolven', function () {
+                var promise = resolve('jugenden').forStateAndView('spi.tgj.jugenden');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(jugenden);
+            });
         });
 
         it('soll die Jugenden laden', function () {

@@ -46,11 +46,24 @@
         var mockStateParams = {
             spielid: '1'
         };
+        var injector;
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.spiel.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('spiel', mockSpiel);
+            $provide.value('Logger', {});
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -63,6 +76,7 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
             mockSpiel = {
                 get: function () {
                     var deferred = $q.defer();
@@ -107,6 +121,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL + '/');
+        });
+
+        describe('Resolves', function () {
+            it('soll das Spiel resolven', function () {
+                var promise = resolve('aktivesSpiel').forStateAndView('spi.spiel');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(spiel);
+            });
         });
 
         it('soll die Spiel-Nummer anzeigen', function () {

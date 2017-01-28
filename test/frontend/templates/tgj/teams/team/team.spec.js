@@ -43,6 +43,8 @@
             teamA: 't3',
             teamB: 't1'
         }];
+        var injector;
+        var mockSpiel;
         var mockTeamAbonnierenDialog;
         var mockEmail = {
             isSubscribed: false,
@@ -51,11 +53,24 @@
             }
         };
 
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
         }, 'spi.templates.tgj.team.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('spiel', mockSpiel);
+            $provide.value('team', mockTeam);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -69,11 +84,20 @@
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
+            injector = $injector;
             mockTeam = {
                 getByGruppe: function () {
                     var deferred = $q.defer();
                     deferred.resolve(team.gruppe.teams);
                     return deferred.promise;
+                },
+                get: function () {
+                    return $q.when(team);
+                }
+            };
+            mockSpiel = {
+                getByTeam: function () {
+                    return $q.when(spiele);
                 }
             };
             mockTeamAbonnierenDialog = {
@@ -125,6 +149,20 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll das Team resolven', function () {
+                var promise = resolve('aktivesTeam').forStateAndView('spi.tgj.team');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(team);
+            });
+
+            it('soll die Spiele des Teams resolven', function () {
+                var promise = resolve('spiele').forStateAndView('spi.tgj.team');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(spiele);
+            });
         });
 
         it('soll den Teamnamen anzeigen', function () {
