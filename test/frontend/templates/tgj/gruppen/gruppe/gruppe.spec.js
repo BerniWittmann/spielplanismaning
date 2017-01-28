@@ -41,12 +41,27 @@
             teamB: 't1'
         }];
         var mockSpiel;
+        var injector;
+        var mockGruppe;
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
         }, 'spi.templates.tgj.gruppe.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('spiel', mockSpiel);
+            $provide.value('gruppe', mockGruppe);
+            $provide.value('aktiveGruppe', gruppe);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -59,11 +74,18 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector
             mockSpiel = {
                 getByGruppe: function () {
                     var deferred = $q.defer();
                     deferred.resolve(spiele);
                     return deferred.promise;
+                }
+            };
+
+            mockGruppe = {
+                get: function () {
+                    return $q.when(gruppe);
                 }
             };
 
@@ -102,6 +124,20 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Gruppe resolven', function () {
+                var promise = resolve('aktiveGruppe').forStateAndView('spi.tgj.gruppe');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(gruppe);
+            });
+
+            it('soll die Spiele der Gruppe resolven', function () {
+                var promise = resolve('spiele').forStateAndView('spi.tgj.gruppe');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(spiele);
+            });
         });
 
         it('soll den Gruppennamen anzeigen', function () {

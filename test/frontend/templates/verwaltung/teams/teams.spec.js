@@ -26,6 +26,10 @@
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
         beforeEach(module('spi.components.bestaetigen-modal.ui'));
+        beforeEach(module(function ($provide) {
+            $provide.value('jugend', mockJugend);
+            $provide.value('team', mockTeams);
+        }));
 
         var jugenden = [{
             _id: 'j1',
@@ -68,6 +72,17 @@
             scrollTo: function () {
             }
         };
+        var injector;
+        var mockTeams;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -81,6 +96,7 @@
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
+            injector = $injector;
             mockAuth = {
                 hatZugriff: true,
                 canAccess: function () {
@@ -88,6 +104,11 @@
                 },
                 isAdmin: function () {
                     return mockAuth.hatZugriff;
+                }
+            };
+            mockTeams = {
+                getAll: function () {
+                    return $q.when(teams);
                 }
             };
             mockJugend = {
@@ -103,7 +124,7 @@
                     return deferred.promise;
                 }, getAll: function () {
                     var deferred = $q.defer();
-                    deferred.resolve({data: jugenden});
+                    deferred.resolve(jugenden);
                     return deferred.promise;
                 }
             };
@@ -161,6 +182,20 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Jugenden resolven', function () {
+                var promise = resolve('jugenden').forStateAndView('spi.verwaltung.teams');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(jugenden);
+            });
+
+            it('soll die Teams resolven', function () {
+                var promise = resolve('teams').forStateAndView('spi.verwaltung.teams');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(teams);
+            });
         });
 
         it('Es werden die Jugenden geladen', function () {

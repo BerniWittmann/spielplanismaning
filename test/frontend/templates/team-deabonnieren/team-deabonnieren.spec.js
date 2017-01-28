@@ -34,11 +34,25 @@
             }
         };
         var mockEmail;
+        var mockTeam;
+        var injector;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.teamdeabonnieren.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('team', mockTeam);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -51,6 +65,7 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
             mockEmail = {
                 getSubscriptionByTeam: function () {
                     return abonnement;
@@ -66,6 +81,12 @@
                 getEmailSubscriptionByTeam: function () {
                     return abonnement[0].email;
                 },
+            };
+
+            mockTeam = {
+                get: function () {
+                    return $q.when(team);
+                }
             };
 
             var ctrl = scope.vm = $controller('TeamDeabonnierenController', {
@@ -107,6 +128,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll das Team resolven', function () {
+                var promise = resolve('aktivesTeam').forStateAndView('spi.team-deabonnieren');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(team);
+            });
         });
 
         it('Der Team-Name wird angezeigt', function () {

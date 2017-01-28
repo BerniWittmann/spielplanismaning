@@ -41,11 +41,24 @@
             gruppen: []
         }];
         var mockJugend;
+        var injector;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.tabellen.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('jugend', mockJugend);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -58,11 +71,18 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
             mockJugend = {
                 getTore: function (id) {
                     var deferred = $q.defer();
                     deferred.resolve(parseInt(id) * 3);
                     return deferred.promise;
+                },
+                getAll: function () {
+                    return $q.when(jugenden);
+                },
+                getGesamtTore: function () {
+                    return $q.when(18);
                 }
             };
 
@@ -102,6 +122,20 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Jugenden resolven', function () {
+                var promise = resolve('jugenden').forStateAndView('spi.tabellen');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(jugenden);
+            });
+
+            it('soll die Tore der Jugenden resolven', function () {
+                var promise = resolve('jugendTore').forStateAndView('spi.tabellen');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(18);
+            });
         });
 
         it('soll die Jugenden anzeigen', function () {
