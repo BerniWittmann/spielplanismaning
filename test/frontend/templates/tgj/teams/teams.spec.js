@@ -56,6 +56,17 @@
             go: function () {
             }
         };
+        var injector;
+        var mockTeam;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
@@ -63,6 +74,9 @@
         }, 'spi.templates.tgj.teams.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
+        beforeEach(module(function ($provide) {
+            $provide.value('team', mockTeam);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -74,6 +88,14 @@
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
+            var $q = $injector.get('$q');
+            injector = $injector;
+
+            mockTeam = {
+                getAll: function () {
+                    return $q.when(teams);
+                }
+            };
 
             var ctrl = scope.vm = $controller('TeamsController', {
                 $state: mockState,
@@ -110,6 +132,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Teams resolven', function () {
+                var promise = resolve('teams').forStateAndView('spi.tgj.teams');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(teams);
+            });
         });
 
         it('soll die Teams laden', function () {

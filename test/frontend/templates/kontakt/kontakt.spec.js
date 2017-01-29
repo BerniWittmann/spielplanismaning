@@ -23,22 +23,54 @@
         var mockBugDialog = {
             open: function () {}
         };
+        var mockConfig;
+        var mockAnsprechpartner;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.kontakt.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('config', mockConfig);
+            $provide.value('ansprechpartner', mockAnsprechpartner);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
             var $templateCache = $injector.get('$templateCache');
             var $compile = $injector.get('$compile');
             $state = $injector.get('$state');
+            injector = $injector;
 
             var $controller = $injector.get('$controller');
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
+            var $q = $injector.get('$q');
+
+            mockConfig = {
+                getVersion: function () {
+                    return $q.when('0.0.0');
+                },
+                getEnv: function () {
+                    return $q.when('testing');
+                }
+            };
+
+            mockAnsprechpartner = {
+                getAll: function () {
+                    return $q.when(mockKontakte);
+                }
+            };
 
             var ctrl = scope.vm = $controller('KontaktController', {
                 version: '0.0.0',
@@ -60,7 +92,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller;
+        var element, render, ctrl, scope, $state, $rootScope, $controller, injector;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.
@@ -77,6 +109,26 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Kontakte resolven', function () {
+                var promise = resolve('kontakt').forStateAndView('spi.kontakt');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(mockKontakte);
+            });
+
+            it('soll die Version resolven', function () {
+                var promise = resolve('version').forStateAndView('spi.kontakt');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal('0.0.0');
+            });
+
+            it('soll die Env resolven', function () {
+                var promise = resolve('env').forStateAndView('spi.kontakt');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal('testing');
+            });
         });
 
         it('Die Kontakte sollen geladen werden', function () {

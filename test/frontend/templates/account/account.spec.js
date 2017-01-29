@@ -18,10 +18,24 @@
         };
         var form = {$valid: true};
 
+        var mockAuthPromise;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
+
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.account.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('auth', mockAuthPromise);
+        }));
 
         var mockAuth;
         var mockToastr = {
@@ -36,6 +50,7 @@
             var $templateCache = $injector.get('$templateCache');
             var $compile = $injector.get('$compile');
             $state = $injector.get('$state');
+            injector = $injector;
 
             var $controller = $injector.get('$controller');
             var scope = $rootScope.$new();
@@ -51,6 +66,12 @@
                 },
                 forgotPassword: function (email) {
                     return $q.when();
+                }
+            };
+
+            mockAuthPromise = {
+                getUserDetails: function () {
+                    return $q.when(user);
                 }
             };
 
@@ -73,7 +94,7 @@
             };
         }
 
-        var element, render, ctrl, scope, $state, $rootScope, $controller;
+        var element, render, ctrl, scope, $state, $rootScope, $controller, injector;
 
         beforeEach(inject(function ($injector) {
             // Call the helper function that "creates" a page.
@@ -90,6 +111,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die User-Details resolven', function () {
+                var promise = resolve('userDetails').forStateAndView('spi.account');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(user);
+            });
         });
 
         it('Es werden die User Daten geladen geladen', function () {

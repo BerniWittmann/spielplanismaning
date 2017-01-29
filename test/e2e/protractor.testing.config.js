@@ -3,7 +3,7 @@ exports.config = {
     specs: ['*.spec.js'],
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
-    getPageTimeout: 20000,
+    getPageTimeout: 60000,
     allScriptsTimeout: 10000,
     rootElement : 'body',
     capabilities: {

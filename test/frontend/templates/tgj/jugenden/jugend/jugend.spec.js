@@ -43,12 +43,28 @@
             teamA: 't3',
             teamB: 't1'
         }];
+        var injector;
+        var mockJugend;
+        var mockSpiele;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
         }, 'spi.templates.tgj.jugend.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('jugend', mockJugend);
+            $provide.value('spiel', mockSpiele);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -60,7 +76,21 @@
             var scope = $rootScope.$new();
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
+            var $q = $injector.get('$q');
+            injector = $injector;
             $httpBackend = $injector.get('$httpBackend');
+
+            mockJugend = {
+                get: function () {
+                    return $q.when(jugend);
+                }
+            };
+
+            mockSpiele = {
+                getByJugend: function () {
+                    return $q.when(spiele);
+                }
+            };
 
             var ctrl = scope.vm = $controller('JugendController', {
                 aktiveJugend: jugend,
@@ -97,6 +127,20 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Jugend resolven', function () {
+                var promise = resolve('aktiveJugend').forStateAndView('spi.tgj.jugend');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(jugend);
+            });
+
+            it('soll die Spiele resolven', function () {
+                var promise = resolve('spiele').forStateAndView('spi.tgj.jugend');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(spiele);
+            });
         });
 
         it('soll den Jugendnamen anzeigen', function () {

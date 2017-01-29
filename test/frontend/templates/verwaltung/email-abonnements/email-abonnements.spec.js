@@ -14,6 +14,9 @@
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
         var form = {$valid: true};
+        beforeEach(module(function ($provide) {
+            $provide.value('email', mockEmail);
+        }));
 
         var abonnements = [{
             email: 'Test1@test.de',
@@ -52,6 +55,16 @@
             }
         };
         var mockBestaetigenDialog;
+        var injector;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -65,6 +78,7 @@
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
             $httpBackend = $injector.get('$httpBackend');
+            injector = $injector;
             mockBestaetigenDialog = {
                 open: function (msg, fn) {
                     return fn();
@@ -75,6 +89,9 @@
                     var deferred = $q.defer();
                     deferred.resolve();
                     return deferred.promise;
+                },
+                getSubscribers: function () {
+                    return $q.when(abonnements);
                 }
             };
 
@@ -115,6 +132,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Abonnenten resolven', function () {
+                var promise = resolve('subscribers').forStateAndView('spi.verwaltung.email-abonnements');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(abonnements);
+            });
         });
 
         it('Es werden die Abonnements geladen', function () {

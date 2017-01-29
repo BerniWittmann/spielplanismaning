@@ -29,12 +29,25 @@
                 _id: 'jgd1'
             }
         }];
+        var injector;
+        var mockGruppe;
 
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.tgj', {abstract: true});
         }, 'spi.templates.tgj.gruppen.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('gruppe', mockGruppe);
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -47,6 +60,13 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
+
+            mockGruppe = {
+                getAll: function () {
+                    return $q.when(gruppen);
+                }
+            };
 
             var ctrl = scope.vm = $controller('GruppenController', {
                 gruppen: gruppen
@@ -82,6 +102,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Gruppen resolven', function () {
+                var promise = resolve('gruppen').forStateAndView('spi.tgj.gruppen');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(gruppen);
+            });
         });
 
         it('soll die Gruppen anzeigen', function () {

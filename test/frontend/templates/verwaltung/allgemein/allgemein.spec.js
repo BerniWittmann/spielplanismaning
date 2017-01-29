@@ -12,6 +12,9 @@
             $stateProvider.state('spi.verwaltung', {abstract: true});
         }, 'spi.templates.verwaltung.allgemein.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('spielplan', mockSpielplan);
+        }));
 
         var mockAuth;
         var mockSpielplan = {
@@ -22,6 +25,16 @@
             }
         };
         var form = {$valid: true};
+        var injector;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -34,6 +47,7 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
             $httpBackend = $injector.get('$httpBackend');
             mockAuth = {
                 bereitsRegistriert: false,
@@ -105,6 +119,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll die Zeiten resolven', function () {
+                var promise = resolve('zeiten').forStateAndView('spi.verwaltung.allgemein');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(mockSpielplan.zeiten);
+            });
         });
 
         it('Es werden die Zeiten geladen', function () {

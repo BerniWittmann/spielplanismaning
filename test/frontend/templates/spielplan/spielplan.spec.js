@@ -53,6 +53,17 @@
         var mockErrorHandler = {
             handleResponseError: function () {}
         };
+        var mockSpiele;
+        var injector;
+
+        function resolve(value) {
+            return {forStateAndView: function (state, view) {
+                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                var res = viewDefinition.resolve[value];
+                $rootScope.$digest();
+                return injector.invoke(res);
+            }};
+        }
 
         beforeEach(function () {
             module(function ($provide) {
@@ -65,6 +76,10 @@
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
         beforeEach(module('spi.components.bestaetigen-modal.ui'));
+        beforeEach(module(function ($provide) {
+            $provide.value('spiel', mockSpiele);
+            $provide.value('Logger', {});
+        }));
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
@@ -77,6 +92,7 @@
             var stateDetails = $state.get(state);
             var html = $templateCache.get(stateDetails.templateUrl);
             var $q = $injector.get('$q');
+            injector = $injector;
 
             var ctrl = scope.vm = $controller('SpielplanController', {
                 spiele: spiele,
@@ -85,6 +101,12 @@
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
+
+            mockSpiele = {
+                getAll: function () {
+                    return $q.when(spiele);
+                }
+            };
 
             return {
                 controller: ctrl,
@@ -114,6 +136,14 @@
 
         it('soll auf die URL reagieren', function () {
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
+        });
+
+        describe('Resolves', function () {
+            it('soll Spiele resolven', function () {
+                var promise = resolve('spiele').forStateAndView('spi.spielplan');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(spiele);
+            });
         });
 
         it('soll die Spiele laden', function () {
