@@ -239,7 +239,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             ignoreEnvironment = false;
         }
 
-        if (disableMails === 'true') {
+        if (disableMails !== 'true') {
             if (!ignoreEnvironment && env !== 'production') {
                 mail.setTos(['kinderbeach.ismaning@byom.com']);
                 mail.setSmtpapiTos(['kinderbeach.ismaning@byom.com']);
