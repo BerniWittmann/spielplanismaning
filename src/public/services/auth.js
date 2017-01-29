@@ -121,11 +121,11 @@
                     email: email
                 };
 
-                return routes.requestPOST(routes.urls.users.forgotPassword(), data);
+                return routes.requestPUT(routes.urls.users.forgotPassword(), data);
             };
 
             auth.checkResetToken = function (token) {
-                return routes.requestPOST(routes.urls.users.resetPasswordCheck(), {token: token});
+                return routes.requestPUT(routes.urls.users.resetPasswordCheck(), {token: token});
             };
 
             auth.resetPassword = function (username, token, password) {
@@ -134,7 +134,7 @@
                     token: token,
                     password: password
                 };
-                return routes.requestPOST(routes.urls.users.resetPassword(), data);
+                return routes.requestPUT(routes.urls.users.resetPassword(), data);
             };
 
             auth.getUserDetails = function () {
@@ -142,7 +142,7 @@
             };
 
             auth.setUserDetails = function (data) {
-                return routes.requestPOST(routes.urls.users.userDetails(), data);
+                return routes.requestPUT(routes.urls.users.userDetails(), data);
             };
 
             return auth;
