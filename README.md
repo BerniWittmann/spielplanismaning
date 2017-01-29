@@ -60,6 +60,7 @@ npm start
 3. gulp versioning task ausführen
 4. push to origin (inkl. tags)
 5. Pull-Request erstellen
+6. Tests und Code-Analyse laufen automatisch. Pull-Request kann nur bei erfolgreichen Tests und nach Approval gemergt werden. Möglichst auch alle Code-Climate Issues beheben.
 6. Pull-Request mergen
 
 
