@@ -60,6 +60,6 @@ npm start
 3. gulp versioning task ausführen
 4. push to origin (inkl. tags)
 5. Pull-Request erstellen
-6. Pull-Request inkl. squash mergen
+6. Pull-Request mergen
 
 
