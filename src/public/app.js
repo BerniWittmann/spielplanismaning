@@ -4,6 +4,7 @@
     angular
         .module('spi', [
             /* module-injector */
+            'ngAnimate',
             'spi.config',
             'spi.auth',
             'spi.logger',
@@ -18,7 +19,8 @@
             'spi.errorHandler',
             'toastr',
             'ngMessages',
-            'LocalStorageModule'
+            'LocalStorageModule',
+            'angular-loading-bar'
         ])
         .config(states)
         .config(toastr)
