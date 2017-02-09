@@ -51,13 +51,11 @@
                         $state.go('spi.home');
                     }
                 }, function (error) {
-                    console.log(error);
-                    vm.error = error;
+                    console.error(error);
+                    vm.user = {};
+                    form.$setUntouched();
                 });
             }
-        };
-        vm.resetErr = function () {
-            vm.error = undefined;
         };
     }
 })();

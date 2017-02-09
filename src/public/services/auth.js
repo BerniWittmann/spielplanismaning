@@ -55,8 +55,12 @@
 
             auth.logIn = function (user) {
                 return routes.requestPOST(routes.urls.users.login(), user).then(function (res) {
-                    auth.saveToken(res.token);
+                    if (res && res.token) {
+                        auth.saveToken(res.token);
+                    }
                     return res;
+                }, function (err) {
+                    return $q.reject(err);
                 });
             };
 
@@ -108,12 +112,14 @@
             };
 
             auth.checkRoute = function ($q, toState) {
+                console.log(toState);
                 if (toState && toState.data && toState.data.requiredRoles && toState.data.requiredRoles.length > 0) {
                     if (_.includes(toState.data.requiredRoles, auth.getRole().name)) {
                         return $q.when();
                     } else {
                         if (!_.isEqual(toState.name, 'spi.login')) {
                             $timeout(function () {
+                                console.warn('Maaaaanoommaananananae!!')
                                 $state.go('spi.login', {
                                     next: toState.name,
                                     reasonKey: 'AUTH_ERROR',
