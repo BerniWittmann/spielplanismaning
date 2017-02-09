@@ -112,7 +112,6 @@
             };
 
             auth.checkRoute = function ($q, toState) {
-                console.log(toState);
                 if (toState && toState.data && toState.data.requiredRoles && toState.data.requiredRoles.length > 0) {
                     if (_.includes(toState.data.requiredRoles, auth.getRole().name)) {
                         return $q.when();
