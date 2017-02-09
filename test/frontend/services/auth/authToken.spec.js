@@ -6,28 +6,32 @@
     describe('Service: Auth-Token', function () {
         beforeEach(module('spi.auth.token'));
         beforeEach(module('spi.constants'));
-        var TOKENNAME = 'spielplan-ismaning-token';
+        beforeEach(module('spi.storage'));
+        var TOKENNAME;
 
         var window;
         var authToken;
+        var storage;
 
-        beforeEach(inject(function (_authToken_, $window) {
+        beforeEach(inject(function (_authToken_, $window, _storage_, _AUTH_TOKEN_NAME_) {
             authToken = _authToken_;
             window = $window;
+            storage = _storage_;
+            TOKENNAME = _AUTH_TOKEN_NAME_;
+            storage.remove(TOKENNAME);
         }));
 
         it('soll einen Token speichern können', function () {
-            window.localStorage.removeItem(TOKENNAME);
             var token = 'dasIstMeinToken123abc';
 
             authToken.saveToken(token);
 
-            expect(window.localStorage[TOKENNAME]).to.be.equal(token);
+            expect(storage.get(TOKENNAME)).to.be.equal(token);
         });
 
         it('soll einen Token laden können', function () {
             var token = 'dasIstMeinNeuerToken123abc';
-            window.localStorage[TOKENNAME] = token;
+            storage.set(TOKENNAME, token);
 
             var result = authToken.getToken();
 
@@ -35,11 +39,12 @@
         });
 
         it('soll einen Token löschen können', function () {
-            window.localStorage[TOKENNAME] = 'dasIstMeinNeuerToken123abc';
+            storage.set(TOKENNAME, 'dasIstMeinNeuerToken123abc');
 
             var result = authToken.removeToken();
 
             expect(result).to.be.undefined;
+            expect(storage.get(TOKENNAME)).to.be.undefined;
         });
     });
 

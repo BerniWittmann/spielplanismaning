@@ -35,8 +35,8 @@
                 wert: 'hellrot'
             }
         ])
-        .constant('AUTH_TOKEN_NAME', 'spielplan-ismaning-token')
-        .constant('EMAIL_SUBSCRIPTION_TOKEN_NAME', 'spielplan-ismaning-subscriptions')
+        .constant('AUTH_TOKEN_NAME', 'token')
+        .constant('EMAIL_SUBSCRIPTION_TOKEN_NAME', 'subscriptions')
         .constant('BUG_REPORT_EMAIL', 'bugreport9+qupxrjhtl7lupgbiaeo8@boards.trello.com')
         .constant('ANZAHL_PLAETZE', 3)
         .constant('ENDPOINT_BASE', '/api');

@@ -19,11 +19,17 @@
                 var token = auth.getToken();
 
                 if (token) {
-                    var payload = JSON.parse($window.atob(token.split('.')[1]));
+                    try {
+                        var payload = JSON.parse($window.atob(token.split('.')[1]));
+                    } catch (err) {
+                        console.warn(err);
+                        return false;
+                    }
                     if (payload.exp > Date.now() / 1000) {
                         Logger.enableLogging();
                         return true;
                     }
+                    return false;
                 }
                 Logger.disableLogging();
                 return false;
@@ -32,7 +38,12 @@
             auth.currentUser = function () {
                 if (auth.isLoggedIn()) {
                     var token = auth.getToken();
-                    var payload = JSON.parse($window.atob(token.split('.')[1]));
+                    try {
+                        var payload = JSON.parse($window.atob(token.split('.')[1]));
+                    } catch (err) {
+                        console.warn(err);
+                        return undefined;
+                    }
                     return payload.username;
                 }
                 return undefined;

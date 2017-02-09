@@ -8,11 +8,12 @@
         beforeEach(module('spi.email'));
         beforeEach(module('spi.constants'));
         var ENDPOINT_BASE_URL = '/api/email';
-        var TOKENNAME = 'spielplan-ismaning-subscriptions';
+        var TOKENNAME;
 
         var httpBackend;
         var email;
         var window;
+        var storage;
         var response;
         var responseTest;
         var array = [{
@@ -25,11 +26,13 @@
             email: 'abc',
             team: '321'
         }];
-        beforeEach(inject(function (_email_, $httpBackend, $window) {
+        beforeEach(inject(function (_email_, $httpBackend, $window, _storage_, _EMAIL_SUBSCRIPTION_TOKEN_NAME_) {
             email = _email_;
             httpBackend = $httpBackend;
             window = $window;
+            storage = _storage_;
             response = undefined;
+            TOKENNAME = _EMAIL_SUBSCRIPTION_TOKEN_NAME_;
         }));
 
         afterEach(function () {
@@ -92,7 +95,7 @@
             email.checkSubscription = function () {
                 return false;
             };
-            window.localStorage.removeItem(TOKENNAME);
+            storage.remove(TOKENNAME);
             var abonnent = {
                 email: 'Test@web.de',
                 team: '1244bfij14'
@@ -100,7 +103,7 @@
 
             email.addSubscriptionToken(abonnent);
 
-            var result = JSON.parse(window.localStorage[TOKENNAME])[0];
+            var result = JSON.parse(storage.get(TOKENNAME))[0];
             expect(result.email).to.be.equal(abonnent.email);
             expect(result.team).to.be.equal(abonnent.team);
         });
@@ -116,7 +119,7 @@
         });
 
         it('soll die Abonnenten nach Teams gefiltert laden', function () {
-            window.localStorage[TOKENNAME] = JSON.stringify(array);
+            storage.set(TOKENNAME, JSON.stringify(array));
 
             var result = email.getSubscriptionByTeam({team: '123'});
 
@@ -126,7 +129,7 @@
         });
 
         it('soll die Email des ersten Abonnenten nach Teams gefiltert laden', function () {
-            window.localStorage[TOKENNAME] = JSON.stringify(array);
+            storage.set(TOKENNAME, JSON.stringify(array));
 
             var result = email.getEmailSubscriptionByTeam('123');
 
@@ -134,7 +137,7 @@
         });
 
         it('soll geprüft werden können ob das Team bereits abonniert ist', function () {
-            window.localStorage[TOKENNAME] = JSON.stringify(array);
+            storage.set(TOKENNAME, JSON.stringify(array));
             var abonnent1 = {email: 'Test', team: '123'};
             var abonnent2 = {email: 'Test2', team: '123'};
 
@@ -152,7 +155,7 @@
             email.removeSubscription(array[0]).then(function (res) {
                 responseTest = res;
 
-                var result = JSON.parse(window.localStorage[TOKENNAME]);
+                var result = JSON.parse(storage.get(TOKENNAME));
 
                 expect(_.isEqual(res, response)).to.be.true;
                 expect(result).to.have.lengthOf(2);
