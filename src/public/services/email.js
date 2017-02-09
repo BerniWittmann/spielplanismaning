@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.email', ['spi.routes'])
-        .factory('email', ['routes', '$window', 'EMAIL_SUBSCRIPTION_TOKEN_NAME', function (routes, $window, EMAIL_SUBSCRIPTION_TOKEN_NAME) {
+        .module('spi.email', ['spi.routes', 'spi.storage'])
+        .factory('email', ['routes', 'storage', 'EMAIL_SUBSCRIPTION_TOKEN_NAME', function (routes, storage, EMAIL_SUBSCRIPTION_TOKEN_NAME) {
             var email = {};
 
             email.send = function (email) {
@@ -25,7 +25,7 @@
                 if (!email.checkSubscription(sub)) {
                     var token = getSubscriptionToken();
                     token.push(sub);
-                    $window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME] = JSON.stringify(token);
+                    storage.set(EMAIL_SUBSCRIPTION_TOKEN_NAME, JSON.stringify(token));
                 }
             };
 
@@ -34,8 +34,8 @@
             };
 
             function getSubscriptionToken() {
-                if (!_.isUndefined($window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME])) {
-                    return (JSON.parse($window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME]) || []);
+                if (!_.isUndefined(storage.get(EMAIL_SUBSCRIPTION_TOKEN_NAME))) {
+                    return (JSON.parse(storage.get(EMAIL_SUBSCRIPTION_TOKEN_NAME)) || []);
                 }
                 return [];
             }
@@ -68,7 +68,7 @@
                     url: routes.urls.email.subscriber(),
                     params: {email: sub.email, team: sub.team}
                 }).then(function (res) {
-                    $window.localStorage[EMAIL_SUBSCRIPTION_TOKEN_NAME] = JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual));
+                    storage.set(EMAIL_SUBSCRIPTION_TOKEN_NAME, JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual)));
                     return res;
                 });
             };

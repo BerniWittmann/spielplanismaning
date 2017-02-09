@@ -3,10 +3,26 @@
 
     angular
         .module('spi', [
-            /* module-injector */ 'spi.config', 'spi.auth', 'spi.logger', 'ui.router', 'spi.components.navigation.ui', 'spi.templates.ui', 'spi.components.footer.ui', 'spi.components.loader.ui', 'spi.email', 'spi.httpInterceptor', 'spi.constants', 'spi.errorHandler', 'toastr', 'ngMessages'
+            /* module-injector */
+            'spi.config',
+            'spi.auth',
+            'spi.logger',
+            'ui.router',
+            'spi.components.navigation.ui',
+            'spi.templates.ui',
+            'spi.components.footer.ui',
+            'spi.components.loader.ui',
+            'spi.email',
+            'spi.httpInterceptor',
+            'spi.constants',
+            'spi.errorHandler',
+            'toastr',
+            'ngMessages',
+            'LocalStorageModule'
         ])
         .config(states)
         .config(toastr)
+        .config(localStorage)
         .controller('AppController', AppController)
         .directive('ngEnter', ngEnter)
         .run(run);
@@ -23,6 +39,12 @@
             });
 
         $locationProvider.html5Mode(true);
+    }
+
+    function localStorage(localStorageServiceProvider) {
+        localStorageServiceProvider
+            .setPrefix('spielplan-ismaning')
+            .setStorageCookie(30, '/', true);
     }
 
     function toastr(toastrConfig) {

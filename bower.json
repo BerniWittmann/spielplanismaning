@@ -4,7 +4,7 @@
   "authors": [
     "BerniWittmann <wittmann_b@web.de>"
   ],
-  "version": "1.4.1",
+  "version": "1.4.2",
   "homepage": "http://handballismaning.de",
   "private": true,
   "dependencies": {
@@ -20,7 +20,8 @@
     "jquery": "^3.0.0",
     "angular-mocks": "^1.5.8",
     "angular-toastr": "^2.1.1",
-    "angular-messages": "^1.5.8"
+    "angular-messages": "^1.5.8",
+    "angular-local-storage": "^0.5.2"
   },
   "resolutions": {
     "angular": "1.5.8"

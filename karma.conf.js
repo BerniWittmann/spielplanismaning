@@ -25,6 +25,7 @@ module.exports = function (config) {
             'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
             '../../node_modules/chai-jquery/chai-jquery.js',
             'bower_components/ng-table/dist/ng-table.js',
+            'bower_components/angular-local-storage/dist/angular-local-storage.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
