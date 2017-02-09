@@ -1,3 +1,61 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<html xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+
+<head>
+    <title>Spielplan</title>
+    <meta property="og:title" content="Spielplan Kinderbeachturnier 2016">
+    <meta property="og:description" content="Spielplan für das Kinderbeachturnier 2016 in Ismaning">
+    <meta property="og:email_address" content="kinderbeach.ismaning@mail.com">
+    <meta property="og:image" content="http://spielplanismaning.herokuapp.com/assets/img/hoelle_sued_logo_klein.png">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/hoelle_sued_logo_klein_gelb.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/assets/img/hoelle_sued_logo_klein_gelb.png">
+
+    <base href="/">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <style>
+        .error-template {padding: 40px 15px; padding-top: 10%; text-align: center; height: 100%;}
+        .error-actions {margin-top:15px;margin-bottom:15px;}
+        .error-actions .btn { margin-right:10px; }
+        .error-message {margin-top: 10px;}
+        .page {
+            padding: 0;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container-fluid page">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template jumbotron">
+                <h1>Oops!</h1>
+                <h2><%= message %></h2>
+
+                <div class="error-details">
+                    Ein Fehler ist aufgetreten!
+                    <br>
+                    Bitte melden Sie das Problem direkt, damit dieses Problem nicht wieder auftreten kann!
+                </div>
+                <div class="error-actions">
+                    <a href="mailto:bugreport9+qupxrjhtl7lupgbiaeo8@boards.trello.com?subject=%23Bug%20Fehlerseite%20ist%20aufgetaucht&body=Vielen%20Dank%2C%20dass%20Sie%20dieses%20Problem%20melden.%0D%0A%0D%0AAm%20Besten%20beschreiben%20sie%20m%C3%B6glichst%20detailliert%2C%20wie%20es%20zu%20dem%20Problem%20gekommen%20ist%2C%20damit%20das%20Problem%20m%C3%B6glichst%20schnell%20behoben%20werden%20kann.%20Sie%20k%C3%B6nnen%20diesen%20Text%20aus%20der%20E-Mail%20entfernen%2C%20sodass%20nur%20noch%20ihre%20Nachricht%20gesendet%20wird.%0D%0A%0D%0AVielen%20Dank!%0D%0A" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-envelope"></span> Problem melden </a>
+                </div>
+                <div class="error-message">
+                    <h2><%= error.status %></h2>
+                    <pre><%= error.stack %></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
