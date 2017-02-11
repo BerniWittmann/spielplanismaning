@@ -84,3 +84,17 @@
  * @apiDefine Admin_Bearbeiter Admin | Bearbeiter
  * Für diese Funktion braucht man entweder Admin- oder Bearbeiter-Rechte.
  */
+
+/**
+ * @apiDefine AuthHeader Authorization Header
+ * @apiHeader (Authorization Header) {String} Authorization Authorization token.
+ * @apiHeaderExample {json} Authorization-Header-Example:
+ *     {
+ *       "Authorization": "abcdefghijklmnopqrstuvw"
+ *     }
+ */
+
+/**
+ * @apiDefine Deprecated
+ * @apiDeprecated Dieser Endpoint wird voraussichtlich in einer der nächsten Version entfernt.
+ */

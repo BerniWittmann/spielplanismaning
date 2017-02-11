@@ -16,6 +16,8 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiGroup Email
      * @apiPermission Admin
      *
+     * @apiUse AuthHeader
+     *
      * @apiParam {String} subject  Betreff der Email.
      * @apiParam {String} text     Text der Email.
      *
@@ -106,6 +108,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse TeamObject
      * @apiUse vResponse
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -146,6 +149,8 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiDescription Sendet eine Email mit einem BugReport
      * @apiGroup Email
      * @apiPermission Admin
+     *
+     * @apiParam {String} email E-Mail des Melders.
      *
      * @apiUse SuccessMessage
      *

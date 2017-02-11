@@ -2,13 +2,13 @@ module.exports = function (err) {
     /**
      * @apiDefine ErrorAnsprechpartnerNotFoundMessage
      *
-     * @apiError (JugendNotFound) {String} MESSAGE Error-Message: 'Error'
-     * @apiError (JugendNotFound) {Integer} STATUSCODE Status-Code: 404
-     * @apiError (JugendNotFound) {String} MESSAGEKEY Key der Message: 'ERROR_ANSPRECHPARTNER_NOT_FOUND'
-     * @apiError (JugendNotFound) {Object} ERROR Error Object
+     * @apiError (AnsprechpartnerNotFound) {String} MESSAGE Error-Message: 'Error'
+     * @apiError (AnsprechpartnerNotFound) {Integer} STATUSCODE Status-Code: 404
+     * @apiError (AnsprechpartnerNotFound) {String} MESSAGEKEY Key der Message: 'ERROR_ANSPRECHPARTNER_NOT_FOUND'
+     * @apiError (AnsprechpartnerNotFound) {Object} ERROR Error Object
      *
      * @apiErrorExample Error-Response JugendNotFound:
-     *     HTTP/1.1 404 INTERNAL SERVER ERROR
+     *     HTTP/1.1 404 NOT FOUND
      *     {
      *          "MESSAGE": "Ansprechpartner nicht gefunden",
      *          "STATUSCODE": 404,

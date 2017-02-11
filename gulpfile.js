@@ -62,7 +62,7 @@ gulp.task('open:testing', function () {
 
 // api doc
 gulp.task('apidoc', function () {
-    apidoc({
+    return apidoc({
         src: "src/routes",
         dest: "docs/api",
         config: "./",
@@ -71,6 +71,15 @@ gulp.task('apidoc', function () {
         gulp.src('docs/api/*')
             .pipe(git.commit('updated apidoc'));
     });
+});
+
+gulp.task('apidoc:nocommit', function (done) {
+    return apidoc({
+        src: "./src/routes",
+        dest: "./docs/api/",
+        config: "./",
+        includeFilters: [".*\\.js$"]
+    }, done);
 });
 
 gulp.task('pre-commit', ['test:precommit']);

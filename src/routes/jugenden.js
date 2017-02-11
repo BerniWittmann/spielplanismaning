@@ -56,8 +56,11 @@ module.exports = function () {
      * @apiSuccess {Array} teams Teams der Jugend
      * @apiUse vResponse
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse ErrorBadRequest
+     *
+     * @apiParam {String} name Name der Jugend.
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -109,6 +112,7 @@ module.exports = function () {
      * @apiDescription Löscht eine Jugend
      * @apiGroup Jugend
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse ErrorBadRequest
      *

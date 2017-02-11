@@ -50,6 +50,7 @@ module.exports = function () {
      * @apiDescription Generiert den Spielplan
      * @apiGroup Spielplan
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse SpielplanErstelltMessage
      **/
@@ -66,6 +67,11 @@ module.exports = function () {
      * @apiDescription Updatet die Spielplan-Zeiten
      * @apiGroup Spielplan
      * @apiPermission Admin
+     * @apiUse AuthHeader
+     *
+     * @apiParam {String} startzeit Gewählte Startzeit im Format HH:mm.
+     * @apiParam {Number} spielzeit Gewählte Spielzeit in Minuten.
+     * @apiParam {Number} pausenzeit Gewählte Pausenzeit in Minuten.
      *
      * @apiUse SuccessMessage
      *
@@ -105,6 +111,7 @@ module.exports = function () {
      * @apiDescription Updatet die Spielplan-Ausnahmen
      * @apiGroup Spielplan
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiSuccess {String} _id ID der Ausnahme
      * @apiSuccess {Object} team1 Team-Object des ersten Teams
@@ -121,6 +128,8 @@ module.exports = function () {
      *         team2: null,
      *         _id: '577be9e15060bba2b1d5659d'
      *      } ]
+     *
+     *  @apiUse Deprecated
      **/
     router.put('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).exec(function (err, spielplan) {
@@ -140,6 +149,7 @@ module.exports = function () {
      * @apiDescription Lädt die Spielplan-Ausnahmen
      * @apiGroup Spielplan
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiSuccess {String} _id ID der Ausnahme
      * @apiSuccess {Object} team1 Team-Object des ersten Teams
@@ -156,6 +166,8 @@ module.exports = function () {
      *         team2: null,
      *         _id: '577be9e15060bba2b1d5659d'
      *      } ]
+     *
+     * @apiUse Deprecated
      **/
     router.get('/ausnahmen', function (req, res) {
         Spielplan.findOne({}).deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {

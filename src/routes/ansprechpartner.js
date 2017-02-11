@@ -55,6 +55,10 @@ module.exports = function () {
      * @apiPermission Admin
      *
      * @apiUse ErrorBadRequest
+     * @apiUse AuthHeader
+     * @apiParam {String} name Name des Ansprechpartners.
+     * @apiParam {String} turnier Zuständiges Turnier des Ansprechpartners.
+     * @apiParam {String} email E-Mail-Adresse des Ansprechpartners.
      *
      * @apiSuccessExample Success-Response:
      *      HTTP/1.1 200 OK
@@ -79,6 +83,7 @@ module.exports = function () {
      * @apiPermission Admin
      *
      * @apiUse ErrorBadRequest
+     * @apiUse AuthHeader
      *
      * @apiParam {String} id ID des Ansprechpartners.
      *
@@ -98,6 +103,7 @@ module.exports = function () {
      * @apiPermission Admin
      *
      * @apiUse ErrorBadRequest
+     * @apiUse AuthHeader
      *
      * @apiParam {String} id ID des Ansprechpartners.
      *

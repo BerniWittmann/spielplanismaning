@@ -58,10 +58,16 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Speichert ein Spiel
      * @apiGroup Spiele
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse spielResponse
      *
+     * @apiParam {String} jugend ID der Gruppe.
+     * @apiParam {String} gruppe ID der Jugend.
+     *
      * @apiUse ErrorBadRequest
+     *
+     * @apiUse Deprecated
      **/
     router.post('/', function (req, res) {
         var spiel = new Spiel(req.body);
@@ -81,10 +87,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiPermission Admin
      *
      * @apiParam {String} id ID des Spiels.
+     * @apiUse AuthHeader
      *
      * @apiUse SuccessDeleteMessage
      *
      * @apiUse ErrorBadRequest
+     * @apiUse Deprecated
      **/
     router.delete('/', function (req, res) {
         return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
@@ -99,9 +107,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiGroup Spiele
      *
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse SpielplanErstelltMessage
-     *
+     * @apiUse Deprecated
      **/
     router.put('/alle', function (req, res) {
         //TODO Entweder kann das gelöscht werden, oder es kommt später wieder zum Einsatz z.B: beim Verschieben der Spiele
@@ -122,8 +131,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Löscht alle Spiele
      * @apiGroup Spiele
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse SuccessDeleteMessage
+     * @apiUse Deprecated
      **/
     router.delete('/alle', function (req, res) {
         Spiel.remove({}, function (err) {
@@ -137,6 +148,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Löscht die Ergebnisse eines Spiels
      * @apiGroup Spiele
      * @apiPermission Admin_Bearbeiter
+     * @apiUse AuthHeader
      *
      * @apiParam {String} id ID des Spiels
      *
@@ -182,8 +194,11 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiDescription Speichert das Ergebnis eines Spiels
      * @apiGroup Spiele
      * @apiPermission Admin_Bearbeiter
+     * @apiUse AuthHeader
      *
      * @apiParam {String} id ID des Spiels
+     * @apiParam {Number} toreA Tore von Team A
+     * @apiParam {Number} toreB Tore von Team B
      *
      * @apiUse spielResponse
      *

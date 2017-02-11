@@ -141,7 +141,9 @@
     },
     "PARAMS": {
       "PUT": [
-        "query.id"
+        "query.id",
+        "body.toreA",
+        "body.toreB"
       ],
       "DELETE": [
         "query.id"

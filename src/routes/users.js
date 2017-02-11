@@ -20,6 +20,11 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiGroup Users
      *
      * @apiPermission Admin
+     * @apiUse AuthHeader
+     *
+     * @apiParam {String} username Username des neuen Nutzers.
+     * @apiParam {String} email E-Mail-Adresse des neuen Nutzers.
+     * @apiParam {String} role Rolle des neuen Nutzers.
      *
      * @apiUse ErrorUnbekannteRolle
      *
@@ -47,6 +52,9 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiName UserLogin
      * @apiDescription Loggt einen Benutzer ein
      * @apiGroup Users
+     *
+     * @apiParam {String} username Username des Nutzers.
+     * @apiParam {String} password Passwort des Nutzers.
      *
      * @apiUse ErrorFehlendeFelder
      *
@@ -83,6 +91,9 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiDescription Löscht einen Benutzer
      * @apiGroup Users
      * @apiPermission Admin
+     * @apiUse AuthHeader
+     *
+     * @apiParam {String} username Username des zu löschenden Nutzers.
      *
      * @apiUse ErrorUserNotFound
      *
@@ -116,6 +127,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiDescription Fordert ein neues Passwort für einen Benutzer an
      * @apiGroup Users
      *
+     * @apiParam {String} email E-Mail des Nutzers.
+     *
      * @apiUse ErrorBadRequest
      *
      * @apiUse SuccessMessage
@@ -142,6 +155,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiName UserPasswordResetCheck
      * @apiDescription Prüft ob der ResetToken zum Zurücksetzen des Passworts korrekt ist
      * @apiGroup Users
+     *
+     * @apiParam {String} token Reset-Token des Nutzers.
      *
      * @apiUse ErrorBadRequest
      *
@@ -171,6 +186,10 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiName UserPasswordReset
      * @apiDescription Setzt ein neues Passwort für einen Benutzer
      * @apiGroup Users
+     *
+     * @apiParam {String} token Reset-Token des Nutzers.
+     * @apiParam {String} username Username des Nutzers.
+     * @apiParam {String} password Neues Passwort des Nutzers.
      *
      * @apiUse ErrorBadRequest
      *
@@ -208,6 +227,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiDescription Lädt die NutzerDetails des Users
      * @apiGroup Users
      * @apiPermission Admin_Bearbeiter
+     * @apiUse AuthHeader
      *
      * @apiUse ErrorForbiddenMessage
      *
@@ -251,6 +271,10 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiDescription Speichert die NutzerDetails des Users
      * @apiGroup Users
      * @apiPermission Admin_Bearbeiter
+     * @apiUse AuthHeader
+     *
+     * @apiParam {String} username Username des neuen Nutzers.
+     * @apiParam {String} email E-Mail-Adresse des Nutzers.
      *
      * @apiUse ErrorUserNotFound
      *

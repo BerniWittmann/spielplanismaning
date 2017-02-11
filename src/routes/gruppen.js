@@ -56,12 +56,14 @@ module.exports = function () {
      * @apiGroup Gruppe
      *
      * @apiParam {String} jugend  ID der Jugend.
+     * @apiParam {String} name Name der Gruppe
      *
      * @apiSuccess {String} _id ID der Gruppe
      * @apiSuccess {name} name Name der Gruppe
      * @apiUse jugendID
      * @apiSuccess {Array} teams Teams der Gruppe
      * @apiUse vResponse
+     * @apiUse AuthHeader
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
@@ -117,6 +119,7 @@ module.exports = function () {
      *
      * @apiUse SuccessMessage
      * @apiPermission Admin
+     * @apiUse AuthHeader
      *
      * @apiUse ErrorBadRequest
      * @apiUse ErrorGruppeNotFoundMessage
