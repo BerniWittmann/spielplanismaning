@@ -164,21 +164,5 @@
                 password: '12345'
             });
         });
-
-        it('soll eine Fehlermeldung anzeigen, wenn die Anmeldedaten falsch sind', function () {
-            render();
-            ctrl.user = {
-                username: 'test',
-                password: 'abc'
-            };
-
-            ctrl.login(form);
-            scope.$digest();
-            
-            expect(ctrl.error.MESSAGE).to.be.equal('Falscher Username/Passwort');
-            var result = element.find('div.alert-danger');
-            expect(result).to.exist;
-            expect(result.text()).to.include('Falscher Username/Passwort');
-        });
     });
 }());

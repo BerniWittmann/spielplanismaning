@@ -118,7 +118,6 @@
                     } else {
                         if (!_.isEqual(toState.name, 'spi.login')) {
                             $timeout(function () {
-                                console.warn('Maaaaanoommaananananae!!')
                                 $state.go('spi.login', {
                                     next: toState.name,
                                     reasonKey: 'AUTH_ERROR',

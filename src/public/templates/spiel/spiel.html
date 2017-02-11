@@ -32,8 +32,13 @@
                 <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)" id="spiel-teamA">{{vm.spiel.teamA.name}}</h3>
             </div>
             <div class="col-xs-4">
-                <h1 data-ng-if="vm.spiel.beendet" id="spiel-stand"><span class="score">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</span>
-                </h1>
+                <div data-ng-if="vm.spiel.beendet" id="spiel-stand">
+                    <div class="score hidden-xs" data-scorea="{{vm.spiel.toreA}}" data-scoreb="{{vm.spiel.toreB}}"
+                          flipcounter="{}">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</div>
+                    <div class="score-normal visible-xs-block">
+                        {{vm.spiel.toreA}} : {{vm.spiel.toreB}}
+                    </div>
+                </div>
             </div>
             <div class="col-xs-4">
                 <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamB)" id="spiel-teamB">{{vm.spiel.teamB.name}}</h3>
