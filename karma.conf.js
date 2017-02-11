@@ -26,6 +26,7 @@ module.exports = function (config) {
             '../../node_modules/chai-jquery/chai-jquery.js',
             'bower_components/ng-table/dist/ng-table.js',
             'bower_components/angular-local-storage/dist/angular-local-storage.js',
+            'bower_components/flipclock/compiled/flipclock.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
