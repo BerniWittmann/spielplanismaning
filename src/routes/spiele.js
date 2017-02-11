@@ -147,7 +147,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName DeleteSpielErgebnis
      * @apiDescription Löscht die Ergebnisse eines Spiels
      * @apiGroup Spiele
-     * @apiPermission Admin_Bearbeiter
+     * @apiPermission Admin
+     * @apiPermission Bearbeiter
      * @apiUse AuthHeader
      *
      * @apiParam {String} id ID des Spiels
@@ -193,7 +194,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiName UpdateSpielErgebnis
      * @apiDescription Speichert das Ergebnis eines Spiels
      * @apiGroup Spiele
-     * @apiPermission Admin_Bearbeiter
+     * @apiPermission Admin
+     * @apiPermission Bearbeiter
      * @apiUse AuthHeader
      *
      * @apiParam {String} id ID des Spiels

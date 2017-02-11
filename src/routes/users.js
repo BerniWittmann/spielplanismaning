@@ -226,7 +226,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiName UserDetailsLoad
      * @apiDescription Lädt die NutzerDetails des Users
      * @apiGroup Users
-     * @apiPermission Admin_Bearbeiter
+     * @apiPermission Admin
+     * @apiPermission Bearbeiter
      * @apiUse AuthHeader
      *
      * @apiUse ErrorForbiddenMessage
@@ -270,7 +271,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiName UserDetailsUpdate
      * @apiDescription Speichert die NutzerDetails des Users
      * @apiGroup Users
-     * @apiPermission Admin_Bearbeiter
+     * @apiPermission Admin
+     * @apiPermission Bearbeiter
      * @apiUse AuthHeader
      *
      * @apiParam {String} username Username des neuen Nutzers.
