@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.allgemein.ui', [
-            'spi.auth', 'ui.router', 'spi.spielplan'
+            'spi.auth', 'ui.router'
         ])
         .config(states)
         .controller('VerwaltungAllgemeinController', VerwaltungAllgemeinController);
@@ -16,47 +16,24 @@
                 templateUrl: 'templates/verwaltung/allgemein/verwaltung.allgemein.html',
                 controller: VerwaltungAllgemeinController,
                 controllerAs: 'vm',
-                resolve: {
-                    zeiten: function (spielplan) {
-                        return spielplan.getZeiten();
-                    }
-                },
                 data: {
                     requiredRoles: ['admin']
                 }
             });
     }
 
-    function VerwaltungAllgemeinController(auth, spielplan, zeiten) {
+    function VerwaltungAllgemeinController(auth) {
         var vm = this;
         vm.loading = true;
-        var d = new Date();
-        d.setHours(9);
-        d.setMinutes(0);
 
         //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             user: {},
             register: register,
-            startzeit: d,
-            spielzeit: 8,
-            pausenzeit: 2,
             resetRegisterForm: resetRegisterForm,
             resetDeleteForm: resetDeleteForm,
-            delete: deleteUser,
-            saveSpielzeit: saveSpielzeit,
-            increment: increment,
-            decrement: decrement
+            delete: deleteUser
         });
-
-        if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
-            var date = new Date();
-            date.setHours(parseInt(zeiten.startzeit.substring(0, 2), 10));
-            date.setMinutes(parseInt(zeiten.startzeit.substring(3, 5), 10));
-            vm.startzeit = date;
-            vm.spielzeit = zeiten.spielzeit;
-            vm.pausenzeit = zeiten.pausenzeit;
-        }
 
         function resetDeleteForm() {
             vm.delErr = undefined;
@@ -95,39 +72,6 @@
                 }, function (err) {
                     vm.delErr = err;
                 });
-            }
-        }
-
-        function saveSpielzeit(form) {
-            if (form.$valid) {
-                vm.loading = true;
-                spielplan.saveZeiten({
-                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
-                    , spielzeit: vm.spielzeit
-                    , pausenzeit: vm.pausenzeit
-                }).then(function () {
-                    vm.loading = false;
-                });
-            }
-        }
-
-        function increment(name) {
-            if (_.isEqual(name, 'spielzeit')) {
-                vm.spielzeit = vm.spielzeit + 1;
-            } else if (_.isEqual(name, 'pausenzeit')) {
-                vm.pausenzeit = vm.pausenzeit + 1;
-            }
-        }
-
-        function decrement(name) {
-            if (_.isEqual(name, 'spielzeit')) {
-                if (vm.spielzeit > 1) {
-                    vm.spielzeit = vm.spielzeit - 1;
-                }
-            } else if (_.isEqual(name, 'pausenzeit')) {
-                if (vm.pausenzeit > 1) {
-                    vm.pausenzeit = vm.pausenzeit - 1;
-                }
             }
         }
 

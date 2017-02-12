@@ -3,17 +3,27 @@
 
     var expect = chai.expect;
 
-    describe('Template: Verwaltung Allgemein', function () {
-        var URL = '/allgemein';
-        var STATE_NAME = 'spi.verwaltung.allgemein';
+    describe('Template: Verwaltung Spielplan', function () {
+        var URL = '/spielplan';
+        var STATE_NAME = 'spi.verwaltung.spielplan';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
             $stateProvider.state('spi.verwaltung', {abstract: true});
-        }, 'spi.templates.verwaltung.allgemein.ui'));
+        }, 'spi.templates.verwaltung.spielplan.ui'));
         beforeEach(module('htmlModule'));
+        beforeEach(module(function ($provide) {
+            $provide.value('spielplan', mockSpielplan);
+        }));
 
-        var mockAuth;
+        var mockSpielplan = {
+            zeiten: {
+                startzeit: '10:00',
+                spielzeit: 6,
+                pausenzeit: 4
+            },
+            createSpielplan: function () {}
+        };
         var form = {$valid: true};
         var injector;
 
@@ -39,29 +49,23 @@
             var $q = $injector.get('$q');
             injector = $injector;
             $httpBackend = $injector.get('$httpBackend');
-            mockAuth = {
-                bereitsRegistriert: false,
-                register: function () {
+            _.extend(mockSpielplan, {
+                getZeiten: function () {
                     var deferred = $q.defer();
-                    if (mockAuth.bereitsRegistriert) {
-                        deferred.reject({ERROR: {code: 11000}});
-                    } else {
-                        deferred.resolve();
-                    }
+                    deferred.resolve(mockSpielplan.zeiten);
                     return deferred.promise;
                 },
-                currentUser: function () {
-                    return 'Test'
-                },
-                deleteUser: function () {
+                saveZeiten: function (zeiten) {
+                    mockSpielplan.zeiten = zeiten;
                     var deferred = $q.defer();
                     deferred.resolve();
                     return deferred.promise;
                 }
-            };
+            });
 
-            var ctrl = scope.vm = $controller('VerwaltungAllgemeinController', {
-                auth: mockAuth
+            var ctrl = scope.vm = $controller('VerwaltungSpielplanController', {
+                spielplan: mockSpielplan,
+                zeiten: mockSpielplan.zeiten
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -96,65 +100,47 @@
             expect($state.href(STATE_NAME)).to.be.equal('#' + URL);
         });
 
-        it('soll einen Nutzer registrieren können', function () {
-            render();
-            ctrl.user = {
-                username: 'Test',
-                email: 'test1234@byom.de',
-                role: 'Bearbeiter'
-            };
-            var spy = chai.spy.on(mockAuth, 'register');
-
-            ctrl.register(form);
-            scope.$digest();
-
-            expect(spy).to.have.been.called();
-            var result = element.find('.alert-success');
-            expect(result).to.exist;
-            expect(result.text()).to.contain('Test wurde registriert');
+        describe('Resolves', function () {
+            it('soll die Zeiten resolven', function () {
+                var promise = resolve('zeiten').forStateAndView('spi.verwaltung.spielplan');
+                var res = promise.$$state.value;
+                expect(res).to.deep.equal(mockSpielplan.zeiten);
+            });
         });
 
-        it('Wenn der Nutzer bereits vorhanden ist, soll ein Fehler angezeigt werden', function () {
-            mockAuth.bereitsRegistriert = true;
+        it('Es werden die Zeiten geladen', function () {
             render();
-            ctrl.user = {
-                username: 'Test',
-                email: 'test123@byom.de',
-                role: 'Bearbeiter'
-            };
-
-            ctrl.register(form);
-            scope.$digest();
-
-            var result = element.find('.alert-danger');
-            expect(result).to.exist;
-            expect(result.text()).to.contain('Dieser Username oder diese Email existiert bereits');
+            var startzeit = moment(ctrl.startzeit.toISOString()).format('HH:mm');
+            expect(startzeit).to.be.equal('10:00');
+            expect(ctrl.spielzeit).to.be.equal(6);
+            expect(ctrl.pausenzeit).to.be.equal(4);
         });
 
-        it('soll einen Nutzer löschen können', function () {
+        it('Die Zeiten können gespeichert werden', function () {
             render();
-            ctrl.username = 'Berni';
-            var spy = chai.spy.on(mockAuth, 'deleteUser');
+            ctrl.startzeit.setHours(9);
+            ctrl.startzeit.setMinutes(30);
+            ctrl.spielzeit = 7;
+            ctrl.pausenzeit = 3;
 
-            ctrl.delete(form);
+            ctrl.saveSpielzeit(form);
             scope.$digest();
 
-            expect(spy).to.have.been.called();
-            var result = element.find('.alert-success');
-            expect(result).to.exist;
-            expect(result.text()).to.contain('User gelöscht!');
+            expect(mockSpielplan.zeiten).to.deep.equal({startzeit: '09:30', spielzeit: 7, pausenzeit: 3});
+            expect(element.find('input[name="spielzeit"]').val()).to.be.equal('7');
+            expect(element.find('input[name="pausenzeit"]').val()).to.be.equal('3');
         });
 
-        it('Wenn der Nutzer gerade angemeldet ist, kann er nicht gelöscht werden', function () {
+        it('Soll einen Button zur Generierung des Spielplans haben', function () {
             render();
-            ctrl.username = 'Test';
+            var spySpielplan = chai.spy.on(mockSpielplan, 'createSpielplan');
+            var btn = element.find('#generate-spielplan-btn');
+            expect(btn).to.exist;
+            expect(btn.text()).to.equal('Spielplan neu generieren');
 
-            ctrl.delete(form);
+            ctrl.generateSpielplan();
             scope.$digest();
-
-            var result = element.find('.alert-danger');
-            expect(result).to.exist;
-            expect(result.text()).to.contain('Gerade angemeldeter User kann nicht gelöscht werden.');
+            expect(spySpielplan).to.have.been.called();
         });
     });
 }());

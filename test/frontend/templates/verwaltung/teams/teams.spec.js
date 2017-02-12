@@ -228,17 +228,5 @@
             render();
             expect(element.find('spi-spielplan-ausnahmen')).to.exist;
         });
-
-        it('Soll einen Button zur Generierung des Spielplans haben', function () {
-            render();
-            var spySpielplan = chai.spy.on(mockSpielplan, 'createSpielplan');
-            var btn = element.find('#generate-spielplan-btn');
-            expect(btn).to.exist;
-            expect(btn.text()).to.equal('Spielplan neu generieren');
-
-            ctrl.generateSpielplan();
-            scope.$digest();
-            expect(spySpielplan).to.have.been.called();
-        })
     });
 }());
