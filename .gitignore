@@ -5,3 +5,4 @@
 /spielplanismaning.iml
 node_modules/
 /src/public/coverage/
+/config/.env
