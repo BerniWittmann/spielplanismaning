@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var request = require("supertest");
-var env = {};
-var server = require('./testserver.js')(env);
+var server = require('./testserver.js')();
 
 describe('Route: Index', function () {
     it('soll die index.html rendern', function (done) {

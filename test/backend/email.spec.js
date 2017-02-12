@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var request = require("supertest");
-var env = {};
-var server = require('./testserver.js')(env);
+var server = require('./testserver.js')();
 var mongoose = require('mongoose');
 
 describe('Route: Email', function () {

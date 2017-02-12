@@ -1,19 +1,11 @@
-module.exports = function (env) {
+module.exports = function () {
+    require('dotenv').config({path: 'config/test.env'});
     var express = require('express');
     var app = express();
     var mongoose = require('mongoose');
     var bodyParser = require('body-parser');
 
-    process.env.SECRET = env.SECRET || process.env.SECRET || 'TEST-SECRET';
-    process.env.NODE_ENV = env.NODE_ENV || process.env.NODE_ENV || 'development';
-    process.env.URL = env.URL || process.env.URL || 'http://localhost:8001';
-    process.env.DISABLEEMAIL = env.DISABLEEMAIL || process.env.DISABLEEMAIL || 'true';
-    process.env.VERSION = env.VERSION || process.env.VERSION || 'vtag';
-    process.env.LOCKDOWNMODE = env.LOCKDOWNMODE || process.env.LOCKDOWNMODE || 'false';
-    process.env.DISABLE_EMAILS = process.env.DISABLE_EMAILS || 'true';
-    process.env.MONGO_DB_URI = env.MONGO_DB_URI || process.env.MONGO_DB_URI || 'mongodb://localhost/spielplan-test';
-
-    sendgrid = require('sendgrid')((process.env.SENDGRID_USERNAME || 'test'), (process.env.SENDGRID_PASSWORD || 'test'));
+    var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
     sendgrid.send = function (mail, cb) {
         console.log('Mail sent.');
         console.log(mail);
@@ -47,12 +39,12 @@ module.exports = function (env) {
     require('../../src/config/passport');
 
     var routes = require('../../src/routes/index')();
-    var users = require('../../src/routes/users')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS, process.env.SECRET);
-    var email = require('../../src/routes/email')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var users = require('../../src/routes/users')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLE_EMAILS, process.env.SECRET);
+    var email = require('../../src/routes/email')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLE_EMAILS);
     var config = require('../../src/routes/config')(process.env);
     var gruppen = require('../../src/routes/gruppen')();
     var jugenden = require('../../src/routes/jugenden')();
-    var spiele = require('../../src/routes/spiele')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), process.env.DISABLE_EMAILS);
+    var spiele = require('../../src/routes/spiele')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLE_EMAILS);
     var spielplan = require('../../src/routes/spielplan')();
     var teams = require('../../src/routes/teams')();
     var ansprechpartner = require('../../src/routes/ansprechpartner')();
@@ -78,7 +70,7 @@ module.exports = function (env) {
     app.use('/api/ansprechpartner', ansprechpartner);
     app.use(/\/.*/, routes);
 
-    var databaseSetup = require('./database-setup/database-setup')(process.env.MONGO_DB_URI);
+    var databaseSetup = require('./database-setup/database-setup')(process.env.MONGODB_URI);
 
     app.connectDB = databaseSetup.connect;
     app.disconnectDB = databaseSetup.disconnect;

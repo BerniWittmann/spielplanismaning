@@ -1,3 +1,4 @@
+require('dotenv').config({path: 'config/.env'});
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -9,7 +10,7 @@ var passport = require('passport');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
-var secret = (process.env.SECRET || 'TSV_SECRET');
+var secret = process.env.SECRET;
 var app = express();
 
 require('./models/Gruppen');
@@ -22,12 +23,8 @@ require('./models/Users')(secret);
 require('./models/Ansprechpartner');
 require('./config/passport');
 
-app.set('ENVIRONMENT', (process.env.NODE_ENV || 'development'));
-if (app.get('ENVIRONMENT') === 'development') {
-    app.set('MONGODB_URI', (process.env.MONGODB_URI || 'mongodb://localhost/spielplan'));
-} else {
-    app.set('MONGODB_URI', process.env.MONGODB_URI);
-}
+app.set('ENVIRONMENT', process.env.NODE_ENV);
+app.set('MONGODB_URI', process.env.MONGODB_URI);
 
 // connect MongoDB
 mongoose.connect(app.get('MONGODB_URI'), function (err) {

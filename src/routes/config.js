@@ -47,7 +47,7 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/env', function (req, res) {
-        res.json((env.NODE_ENV || 'development'));
+        res.json(env.NODE_ENV);
     });
 
     /**
@@ -72,7 +72,7 @@ module.exports = function (env) {
      *
      **/
     router.get('/lockdownmode', function (req, res) {
-        return res.json((env.LOCKDOWNMODE || 'false') === 'true');
+        return res.json(env.LOCKDOWNMODE === 'true');
     });
 
     return router;

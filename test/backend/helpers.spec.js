@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 var helpers = require('../../src/routes/helpers.js')();
-var server = require('./testserver.js')({});
+var server = require('./testserver.js')();
 
 describe('Helpers', function () {
     describe('soll die Datenbank query basierend auf Parametern laden', function () {

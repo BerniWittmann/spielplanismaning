@@ -1,12 +1,12 @@
 module.exports = function (app, sendgrid, secret) {
     var routes = require('./index.js')();
-    var users = require('./users.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'), secret);
-    var email = require('./email.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+    var users = require('./users.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL, secret);
+    var email = require('./email.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
     var config = require('./config.js')(process.env);
     var teams = require('./teams.js')();
     var gruppen = require('./gruppen.js')();
     var jugenden = require('./jugenden.js')();
-    var spiele = require('./spiele.js')(sendgrid, (process.env.NODE_ENV || 'development'), (process.env.URL || 'http://localhost:8000/'), (process.env.DISABLEEMAIL || 'false'));
+    var spiele = require('./spiele.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
     var spielplan = require('./spielplan.js')();
     var ansprechpartner = require('./ansprechpartner.js')();
 

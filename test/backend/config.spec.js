@@ -1,11 +1,7 @@
 var expect = require('chai').expect;
 var request = require("supertest");
-var env = {
-    NODE_ENV: 'testing',
-    LOCKDOWNMODE: 'true'
-};
 var version = require('../../package.json').version;
-var server = require('./testserver.js')(env);
+var server = require('./testserver.js')();
 
 describe('Route: Config', function () {
 
