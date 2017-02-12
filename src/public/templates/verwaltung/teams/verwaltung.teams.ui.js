@@ -30,7 +30,7 @@
 
     }
 
-    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, $window, jugenden, teams, JUGEND_FARBEN) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, jugenden, teams, JUGEND_FARBEN) {
         var vm = this;
         vm.loading = true;
 
@@ -50,10 +50,6 @@
                     });
                 }
             },
-            generateSpielplan: function () {
-                spielplan.createSpielplan();
-            },
-            spielplanError: spielplan.error,
             isLoggedIn: auth.isAdmin(),
             farben: JUGEND_FARBEN
         });
