@@ -38,7 +38,8 @@ describe('API Authorization', function () {
         role: {
             name: 'Tütü',
             rank: 99
-        }
+        },
+        checksum: 'b8aa411b45ac08c37ee3780f4854d2e9'
     };
 
     var ALL_ROLES = ['admin', 'bearbeiter'];
@@ -137,7 +138,7 @@ describe('API Authorization', function () {
             request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
-                .set('Authorization', jwt.sign(exampleTokenPayload, 'TEST-SECRET'))
+                .set('Authorization', jwt.sign(exampleTokenPayload, process.env.SECRET))
                 .expect(403)
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -153,7 +154,7 @@ describe('API Authorization', function () {
             request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
-                .set('Authorization', jwt.sign(exampleTokenPayload, 'TEST-SECRET'))
+                .set('Authorization', jwt.sign(exampleTokenPayload, process.env.SECRET))
                 .expect(403)
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -169,6 +170,26 @@ describe('API Authorization', function () {
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
                 .set('Authorization', server.bearbeiterToken)
+                .expect(403)
+                .end(function (err, response) {
+                    if (err) return done(err);
+                    expect(response).not.to.be.undefined;
+                    expect(response.statusCode).to.equal(403);
+                    expect(response.body.MESSAGEKEY).to.be.equal('ERROR_FORBIDDEN');
+                    return done();
+                });
+        });
+
+        it('wenn die Checksummen nicht stimmen, soll ein Fehler gemeldet werden', function (done) {
+            var token = jwt.verify(roleTokens.bearbeiter, process.env.SECRET);
+            token.role = {
+                name: 'Admin',
+                rank: 1
+            };
+            request(server)
+                .put('/api/users/delete')
+                .send({username: userNameToBeDeleted})
+                .set('Authorization', jwt.sign(token, process.env.SECRET))
                 .expect(403)
                 .end(function (err, response) {
                     if (err) return done(err);

@@ -27,6 +27,7 @@ module.exports = function (config) {
             'bower_components/ng-table/dist/ng-table.js',
             'bower_components/angular-local-storage/dist/angular-local-storage.js',
             'bower_components/flipclock/compiled/flipclock.js',
+            'bower_components/angular-md5/angular-md5.min.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',

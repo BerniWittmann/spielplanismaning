@@ -6,6 +6,7 @@ module.exports = function (secret) {
     var uuidTokenGen = require('uuid-token-generator');
     var tokenGenerator = new uuidTokenGen();
     var _ = require('lodash');
+    var md5 = require('md5');
     var roles = ['Bearbeiter', 'Admin'];
 
     var UserSchema = new mongoose.Schema({
@@ -37,13 +38,16 @@ module.exports = function (secret) {
         var today = new Date();
         var exp = new Date(today);
         exp.setDate(today.getDate() + 60);
-        return jwt.sign({
+        var obj = {
             _id: this._id,
             username: this.username,
             email: this.email,
             role: this.role,
-            exp: parseInt(exp.getTime() / 1000, 10)
-        }, secret);
+            exp: parseInt(exp.getTime() / 1000, 10),
+            iat: parseInt(today.getTime() / 1000, 10)
+        };
+        obj.checksum = md5(JSON.stringify(obj));
+        return jwt.sign(obj, secret);
     };
 
     UserSchema.methods.setPassword = function (password) {

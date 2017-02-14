@@ -2,14 +2,15 @@
     'use strict';
 
     angular
-        .module('spi.auth', ['spi.auth.token', 'spi.routes', 'spi.logger'])
-        .factory('auth', ['routes', '$state', 'authToken', '$q', '$window', '$timeout', 'Logger', function (routes,
-                                                                                                            $state,
-                                                                                                            authToken,
-                                                                                                            $q,
-                                                                                                            $window,
-                                                                                                            $timeout,
-                                                                                                            Logger) {
+        .module('spi.auth', ['spi.auth.token', 'spi.routes', 'spi.logger', 'angular-md5'])
+        .factory('auth', ['routes', '$state', 'authToken', '$q', '$window', '$timeout', 'md5', 'Logger', function (routes,
+                                                                                                                   $state,
+                                                                                                                   authToken,
+                                                                                                                   $q,
+                                                                                                                   $window,
+                                                                                                                   $timeout,
+                                                                                                                   md5,
+                                                                                                                   Logger) {
             var auth = {};
             auth.saveToken = authToken.saveToken;
 
@@ -23,6 +24,12 @@
                         var payload = JSON.parse($window.atob(token.split('.')[1]));
                     } catch (err) {
                         console.warn(err);
+                        return false;
+                    }
+                    var checksum = payload.checksum;
+                    delete payload.checksum;
+                    if (!checksum || checksum !== md5.createHash(JSON.stringify(payload))) {
+                        console.warn('Checksums don\'t match');
                         return false;
                     }
                     if (payload.exp > Date.now() / 1000) {

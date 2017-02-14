@@ -82,7 +82,7 @@
         });
 
         it('soll zurückgeben ob ein Nutzer eingeloggt ist', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg');
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDAsImNoZWNrc3VtIjoiMWNkNWE5NmQyOGM5NzE5YTcyZDI4ZjYwNWFlNDdlZWEifQ.MbNRGSnpCc8xaJ3T6CDC3Mn8NxYU0dkJycml_x7Z6tM');
 
             var result = auth.isLoggedIn();
 
@@ -90,11 +90,19 @@
         });
 
         it('soll den Namen des Nutzers zurückgeben können', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg');
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDAsImNoZWNrc3VtIjoiMWNkNWE5NmQyOGM5NzE5YTcyZDI4ZjYwNWFlNDdlZWEifQ.MbNRGSnpCc8xaJ3T6CDC3Mn8NxYU0dkJycml_x7Z6tM');
 
             var result = auth.currentUser();
 
             expect(result).to.be.equal('berni');
+        });
+
+        it('soll verhindern, dass der Token manipuliert werden kann', function () {
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjowLCJuYW1lIjoiQmVhcmJlaXRlciJ9LCJleHAiOjk5OTk5OTk5OTksImlhdCI6MTQ2OTQ1MzE0MCwiY2hlY2tzdW0iOiIxY2Q1YTk2ZDI4Yzk3MTlhNzJkMjhmNjA1YWU0N2VlYSJ9.zz9vgGtfnVejhTlFU-woXq9CVxLSoMzRRrB1sX5L1H4');
+
+            var result = auth.isLoggedIn();
+
+            expect(result).to.be.false;
         });
 
         it('soll einen neuen Nutzer registrieren können', function () {

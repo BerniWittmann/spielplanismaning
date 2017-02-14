@@ -4,6 +4,7 @@ module.exports = function () {
     var _ = require('lodash');
     var handler = require('./handler.js');
     var jsonwebtoken = require('jsonwebtoken');
+    var md5 = require('md5');
 
     function getEntityQuery(model, req) {
         var query = model.find();
@@ -89,10 +90,16 @@ module.exports = function () {
 
     function verifyToken(req, secret) {
         try {
-            return jsonwebtoken.verify(req.get('Authorization'), secret);
+            var obj = jsonwebtoken.verify(req.get('Authorization'), secret);
         } catch (err) {
             return undefined;
         }
+        var checksum = obj.checksum;
+        delete obj.checksum;
+        if (checksum && md5(JSON.stringify(obj)) === checksum) {
+            return obj;
+        }
+        return undefined;
     }
 
     function saveUserAndSendMail(user, res, mail) {
