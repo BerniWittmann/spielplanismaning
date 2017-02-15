@@ -305,6 +305,135 @@ describe('Helpers', function () {
         expect(data).to.equal(req.body);
         expect(res.statusCode).to.equal(200);
         expect(res.data).to.equal(req.body);
-    })
+    });
+
+    describe('soll den Spielplan auf Korrektheit prüfen', function () {
+        it('soll wenn kein Team doppelt vorkommt, true zurückgeben', function () {
+            var spiele = [{
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '2'
+                }
+            }, {
+                teamA: {
+                    _id: '3'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '5'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '2'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '3'
+                },
+                teamB: {
+                    _id: '5'
+                }
+            }];
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.true;
+        });
+
+        it('soll bei doppelten Teams false zurückgeben', function () {
+            var spiele = [{
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '2'
+                }
+            }, {
+                teamA: {
+                    _id: '3'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '2'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '3'
+                },
+                teamB: {
+                    _id: '5'
+                }
+            }];
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.false;
+        });
+
+        it('soll auch mit leeren Spielen zurechtkommen', function () {
+            var spiele = [{
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '2'
+                }
+            }, {
+                teamA: {
+                    _id: '3'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '5'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {}, {}];
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.true;
+        });
+    });
 });
 

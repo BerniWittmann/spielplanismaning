@@ -172,5 +172,14 @@
                 expect(_.isEqual(res, response)).to.be.true;
             });
         });
+
+        it('soll die Reihenfolge der Spiele speichern', function () {
+            httpBackend.expectDELETE(ENDPOINT_BASE_URL + '/order').respond(200, mockSpiele);
+
+            spiel.updateOrder(mockSpiele).then(function (res) {
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
+            });
+        })
     });
 }());

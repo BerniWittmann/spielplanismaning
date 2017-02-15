@@ -24,7 +24,7 @@
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth) {
+    function SpielplanController($state, spiele, spiel, auth) {
         var vm = this;
         vm.loading = true;
 
