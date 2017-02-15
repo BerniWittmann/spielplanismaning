@@ -3,8 +3,7 @@ describe('Navigation', function () {
     var navigation = require('./PageObjects/navigation.js')();
 
     beforeAll(function (done) {
-        browser.get(utils.getBaseURI());
-        return done();
+        return utils.loadPage(browser).then(done);
     });
 
     it('Standardmäßig soll die Home-Seite geladen werden', function (done) {

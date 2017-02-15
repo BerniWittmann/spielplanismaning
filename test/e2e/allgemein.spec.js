@@ -2,8 +2,7 @@ describe('Spielplan-Ismaning App', function () {
     var utils = require('./utils.js')();
 
     beforeAll(function (done) {
-        browser.get(utils.getBaseURI());
-        return done();
+        return utils.loadPage(browser).then(done);
     });
 
     it('soll einen Titel haben', function (done) {
