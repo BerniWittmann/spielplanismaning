@@ -20,7 +20,8 @@
             'toastr',
             'ngMessages',
             'LocalStorageModule',
-            'angular-loading-bar'
+            'angular-loading-bar',
+            'ui.sortable'
         ])
         .config(states)
         .config(toastr)

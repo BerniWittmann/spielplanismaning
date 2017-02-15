@@ -87,6 +87,9 @@
                     },
                     tore: function () {
                         return ENDPOINT_BASE + '/spiele/tore';
+                    },
+                    order: function () {
+                        return ENDPOINT_BASE + '/spiele/order';
                     }
                 },
                 spielplan: {

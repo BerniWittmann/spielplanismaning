@@ -1,13 +1,18 @@
 <div class="row">
     <div class="col-md-12 page-header">
         <h3>Spielplan</h3>
+        <div class="pull-right" data-ng-if="vm.canEdit">
+            <button data-ng-if="!vm.isEditing" data-ng-click="vm.toggleEdit()" type="button" class="btn btn-primary btn-md"><i class="fa fa-pencil"></i> Spielplan bearbeiten</i></button>
+            <button data-ng-if="vm.isEditing" data-ng-click="vm.saveOrder()" type="button" class="btn btn-success btn-md"><i class="fa fa-check"></i> Spielplan speichern</i></button>
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12 table-responsive">
         <div data-ng-if="!vm.loading && vm.spiele.length === 0" class="alert alert-info">Keine Spiele gefunden.</div>
-        <table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading && vm.spiele.length > 0" id="spielplan">
+        <table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading && vm.spiele.length > 0"
+               id="spielplan">
             <thead>
             <tr>
                 <th class="text-center">Nr</th>
@@ -20,7 +25,7 @@
                 <th class="text-center">Spielstand</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody ui-sortable="vm.sortableOptions" ng-model="vm.spiele">
             <tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'platz3': spiel.platz=='3'}"
                 data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
             </tbody>

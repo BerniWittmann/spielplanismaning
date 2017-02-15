@@ -15,6 +15,7 @@ module.exports = function (config) {
         files: [
             //include bower dependecies
             'bower_components/jquery/dist/jquery.js',
+            'bower_components/jquery-ui/jquery-ui.min.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
@@ -27,7 +28,8 @@ module.exports = function (config) {
             'bower_components/ng-table/dist/ng-table.js',
             'bower_components/angular-local-storage/dist/angular-local-storage.js',
             'bower_components/flipclock/compiled/flipclock.js',
-            'bower_components/angular-md5/angular-md5.min.js',
+            'bower_components/angular-md5/angular-md5.js',
+            'bower_components/angular-ui-sortable/sortable.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',

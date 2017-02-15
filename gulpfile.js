@@ -22,8 +22,9 @@ gulp.task('build-and-watch', function () {
 });
 
 gulp.task('watch-task', function () {
-    return watch('src/**', {ignoreInitial: true})
-        .pipe(gulp.dest('dist/'));
+    return watch('src/**', {ignoreInitial: true}, function () {
+        console.log('File changes detected... Rebuilding...');
+    }).pipe(gulp.dest('dist/'));
 });
 
 // versioning

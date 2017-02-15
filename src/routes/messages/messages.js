@@ -66,6 +66,12 @@ module.exports = function () {
         },
         ErrorAnsprechpartnerNotFound: function (res, err) {
             send(require('./ErrorAnsprechpartnerNotFound.js')(err), res);
+        },
+        SpielplanAktualisert: function (res, spiele) {
+            send(require('./SpielplanAktualisiertMessage.js')(spiele), res);
+        },
+        ErrorSpielplanUngueltig: function (res) {
+            send(require('./ErrorSpielplanUngueltig.js'), res);
         }
     };
 };
