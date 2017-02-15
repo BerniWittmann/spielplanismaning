@@ -290,6 +290,21 @@ describe('Route: Spiele', function () {
             });
     });
 
+    it('soll die Reihenfolge der Spiele ändern können', function (done) {
+        request(server)
+            .put('/api/spiele/order')
+            .set('Authorization', server.adminToken)
+            .send(alleSpiele)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(409);
+                expect(response.body.MESSAGEKEY).to.be.equal('ERROR_SPIELPLAN_UNGUELTIG');
+                return done();
+            });
+    });
+
     after(function (done) {
         server.disconnectDB(done);
     });

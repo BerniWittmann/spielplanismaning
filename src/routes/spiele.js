@@ -4,9 +4,11 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     var mongoose = require('mongoose');
     var async = require('async');
+    var moment = require('moment');
 
     var Spiel = mongoose.model('Spiel');
     var Subscriber = mongoose.model('Subscriber');
+    var Spielplan = mongoose.model('Spielplan');
     var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
     var messages = require('./messages/messages.js')();
@@ -270,6 +272,60 @@ module.exports = function (sendgrid, env, url, disableMails) {
                             return res.json(spiel);
                         }
                     });
+                });
+            });
+        });
+    });
+
+    /**
+     * @api {Put} /spiele/order Update die Reihenfolge Spiele
+     * @apiName UpdateSpieleOrder
+     * @apiDescription Speichert die Reihenfolge der Spiele
+     * @apiGroup Spiele
+     *
+     * @apiPermission Admin
+     * @apiUse AuthHeader
+     *
+     * @apiUse SpielplanAktualisiertMessage
+     * @apiUse ErrorSpielplanUngueltig
+     **/
+    router.put('/order', function (req, res) {
+        var spiele = req.body;
+
+        if (!helpers.checkSpielOrderChangeAllowed(spiele)) {
+            return messages.ErrorSpielplanUngueltig(res);
+        }
+
+
+        Spielplan.findOne().exec(function (err, spielplan) {
+            if (err) {
+                return messages.Error(res, err);
+            }
+
+            async.eachSeries(spiele, function (singlespiel, asyncdone) {
+                var index = spiele.indexOf(singlespiel);
+                Spiel.findById(singlespiel._id).exec(function (err, spiel) {
+                    if (err) {
+                        return asyncdone(err);
+                    }
+
+                    var zeit = moment(spielplan.startzeit, 'HH:mm').add(Math.floor(index / 3) * (spielplan.spielzeit + spielplan.pausenzeit), 'm');
+                    spiel.uhrzeit = zeit.format('HH:mm');
+                    spiel.platz = (index % 3) + 1;
+                    spiel.nummer = index + 1;
+                    spiel.save(asyncdone);
+                });
+            }, function (err) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
+
+                Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, neueSpiele) {
+                    if (err) {
+                        return messages.Error(res, err);
+                    }
+
+                    return messages.SpielplanAktualisert(res, neueSpiele);
                 });
             });
         });

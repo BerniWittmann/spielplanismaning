@@ -158,6 +158,27 @@ module.exports = function () {
         return [];
     }
 
+    function checkSpielOrderChangeAllowed(spiele) {
+        var teamsParallel = []
+        for(var i = 0; i < spiele.length; i += 3) {
+            for (var j = i; j < i + 3; j++) {
+                if (j < spiele.length) {
+                    if (spiele[j].teamA && spiele[j].teamB) {
+                        teamsParallel.push(spiele[j].teamA._id);
+                        teamsParallel.push(spiele[j].teamB._id);
+                    }
+                }
+            }
+
+            if (_.uniq(teamsParallel).length !== teamsParallel.length) {
+                return false;
+            }
+            teamsParallel = [];
+        }
+
+        return true;
+    }
+
     return {
         getEntityQuery: getEntityQuery,
         resetErgebnis: resetErgebnis,
@@ -168,6 +189,7 @@ module.exports = function () {
         saveUserAndSendMail: saveUserAndSendMail,
         findEntityAndPushTeam: findEntityAndPushTeam,
         getRequiredRouteConfig: getRequiredRouteConfig,
-        addEntity: addEntity
+        addEntity: addEntity,
+        checkSpielOrderChangeAllowed: checkSpielOrderChangeAllowed
     }
 };

@@ -54,6 +54,10 @@
                 return routes.requestDELETE(routes.urls.spiele.tore(), spiel._id);
             };
 
+            spiel.updateOrder = function (spiele) {
+                return routes.requestPUT(routes.urls.spiele.order(), spiele);
+            };
+
             return spiel;
         }]);
 

@@ -49,11 +49,21 @@
             go: function () {
             }
         };
+        var mockAuth = {
+            role: undefined,
+            isAdmin: function () {
+                return mockAuth.role === 'Admin';
+            },
+            isBearbeiter: function () {
+                return true;
+            }
+        };
 
         var mockErrorHandler = {
             handleResponseError: function () {}
         };
         var mockSpiele;
+        var mockSpiel;
         var injector;
 
         function resolve(value) {
@@ -97,7 +107,8 @@
             var ctrl = scope.vm = $controller('SpielplanController', {
                 spiele: spiele,
                 $state: mockState,
-                errorHandler: mockErrorHandler
+                spiel: mockSpiel,
+                auth: mockAuth
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -181,5 +192,49 @@
                 expect(alert.text()).to.equal('Keine Spiele gefunden.');
             });
         });
+
+        describe('es soll ein Button zum Bearbeiten des Spielplans existieren', function () {
+
+            it('für nicht eingeloggte User soll der Button nicht sichtbar sein', function () {
+                mockAuth.role = undefined;
+                render();
+                expect(element.find('.page-header').find('button.btn')).not.to.exist;
+            });
+
+            it('für Bearbeiter soll der Button nicht sichtbar sein', function () {
+                mockAuth.role = 'Bearbeiter';
+                render();
+                expect(element.find('.page-header').find('button.btn')).not.to.exist;
+            });
+
+            it('für Admins soll der Button sichtbar sein', function () {
+                mockAuth.role = 'Admin';
+                ctrl.canEdit = mockAuth.isAdmin;
+
+                render();
+                scope.$apply();
+                var button = element.find('.page-header').find('button.btn');
+
+                button.triggerHandler('click');
+                scope.$apply();
+
+                expect(button).to.exist;
+            });
+
+            it('Beim Klick auf den Spielplan bearbeiten Button soll man in den Editiermodus kommen', function () {
+                mockAuth.role = 'Admin';
+                ctrl.canEdit = mockAuth.isAdmin;
+
+                render();
+                scope.$apply();
+                var button = element.find('.page-header').find('button.btn');
+
+                button.triggerHandler('click');
+                scope.$apply();
+
+                expect(ctrl.isEditing).to.be.true;
+            });
+        })
+
     });
 }());

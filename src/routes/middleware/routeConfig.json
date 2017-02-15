@@ -128,6 +128,11 @@
       "admin"
     ]
   },
+  "/api/spiele/order": {
+    "AUTH": [
+      "admin"
+    ]
+  },
   "/api/spiele/tore": {
     "AUTH": {
       "PUT": [

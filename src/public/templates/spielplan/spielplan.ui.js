@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.spielplan.ui', [
-            'ui.router', 'spi.spiel', 'spi.components.spielplan.singlespiel.ui'
+            'ui.router', 'ui.sortable', 'spi.spiel', 'spi.auth', 'spi.components.spielplan.singlespiel.ui'
         ])
         .config(states)
         .controller('SpielplanController', SpielplanController);
@@ -24,7 +24,7 @@
 
     }
 
-    function SpielplanController($state, spiele) {
+    function SpielplanController($state, spiele, spiel, auth) {
         var vm = this;
         vm.loading = true;
 
@@ -36,8 +36,39 @@
                         spielid: gewaehltesspiel._id
                     });
                 }
-            }
+            },
+            spieleBackup: spiele,
+            sortableOptions: {
+                axis: 'y',
+                update: function (e, ui) {
+                    if (!vm.isEditing) {
+                        ui.item.sortable.cancel();
+                    }
+                }
+            },
+            isEditing: false,
+            canEdit: auth.isAdmin(),
+            toggleEdit: toggleEdit,
+            saveOrder: saveOrder
         });
+
+        function toggleEdit() {
+            if (vm.canEdit) {
+                vm.isEditing = !vm.isEditing;
+            } else {
+                vm.isEditing = false;
+            }
+        }
+
+        function saveOrder () {
+            return spiel.updateOrder(vm.spiele).then(function (res) {
+                vm.spiele = _.sortBy(res.GAMES, ['nummer']);
+                vm.isEditing = false;
+            }, function () {
+                vm.spiele = _.sortBy(vm.spieleBackup, ['nummer']);
+                vm.isEditing = false;
+            });
+        }
 
         vm.loading = false;
     }
