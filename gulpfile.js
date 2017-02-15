@@ -10,11 +10,15 @@ var watch = require('gulp-watch');
 
 require('require-dir')('./gulp-tasks');
 
-gulp.task('default', ['build-and-watch']);
+gulp.task('default', ['serve-and-watch']);
 
 // configure which files to watch and what tasks to use on file changes
-gulp.task('build-and-watch', function () {
+gulp.task('serve-and-watch', function () {
     return runSequence('serve', 'watch-task');
+});
+
+gulp.task('build-and-watch', function () {
+   return runSequence('build', 'watch-task');
 });
 
 gulp.task('watch-task', function () {
