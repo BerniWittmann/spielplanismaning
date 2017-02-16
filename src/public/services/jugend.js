@@ -8,7 +8,7 @@
             var jugend = {};
 
             jugend.getAll = function () {
-                return routes.requestGET(routes.urls.jugenden.base());
+                return routes.requestGETBase('jugenden');
             };
 
             jugend.get = function (id) {

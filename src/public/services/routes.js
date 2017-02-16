@@ -142,6 +142,14 @@
                 return request({method: methods.POST, url: url, data:data});
             }
 
+            function requestGETBase(base) {
+                return request({method: methods.GET, url: urls[base].base()});
+            }
+
+            function requestGETBaseParam(base, param) {
+                return request({method: methods.GET, url: urls[base].base(), params: param});
+            }
+
             _.extend(routes, {
                 methods: methods,
                 request: request,
@@ -151,6 +159,8 @@
                 requestPUT: requestPUT,
                 requestPUTID: requestPUTID,
                 requestPOST: requestPOST,
+                requestGETBaseParam: requestGETBaseParam,
+                requestGETBase: requestGETBase,
                 urls: urls
             });
 

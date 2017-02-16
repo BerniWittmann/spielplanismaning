@@ -8,7 +8,7 @@
             var team = {};
 
             team.getAll = function () {
-                return routes.requestGET(routes.urls.team.base());
+                return routes.requestGETBase('team');
             };
 
             team.create = function (team) {
@@ -25,11 +25,7 @@
             };
 
             team.getByGruppe = function (gruppenid) {
-                return routes.request({
-                    method: routes.methods.GET,
-                    url: routes.urls.team.base(),
-                    params: {gruppe: gruppenid}
-                });
+                return routes.requestGETBaseParam('team', {gruppe: gruppenid});
             };
 
             team.delete = function (teamid) {

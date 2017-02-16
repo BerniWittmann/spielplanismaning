@@ -8,7 +8,7 @@
             var gruppe = {};
 
             gruppe.getAll = function () {
-                return routes.requestGET(routes.urls.gruppen.base());
+                return routes.requestGETBase('gruppen');
             };
 
             gruppe.create = function (jugendId, newGruppe) {
@@ -25,7 +25,7 @@
             };
 
             gruppe.getByJugend = function (jugendid) {
-                return routes.request({method: routes.methods.GET, url: routes.urls.gruppen.base(), params: {jugend: jugendid}});
+                return routes.requestGETBaseParam('gruppen', {jugend: jugendid});
             };
 
             gruppe.delete = function (id) {

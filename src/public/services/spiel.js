@@ -8,7 +8,7 @@
             var spiel = {};
 
             spiel.getAll = function () {
-                return routes.requestGET(routes.urls.spiele.base());
+                return routes.requestGETBase('spiele');
             };
 
             spiel.create = function (spiel) {
@@ -18,7 +18,7 @@
             function getByParam(param, id) {
                 var params = {};
                 params[param] = id;
-                return routes.request({method: routes.methods.GET, url: routes.urls.spiele.base(), params: params});
+                return routes.requestGETBaseParam('spiele', params);
             }
 
             spiel.get = function (id) {

@@ -13,7 +13,7 @@
             };
 
             spielplan.getZeiten = function () {
-                return routes.requestGET(routes.urls.spielplan.base()).then(function (data) {
+                return routes.requestGETBase('spielplan').then(function (data) {
                     _.defaultsDeep(data, {startzeit: '09:00', spielzeit: 8, pausenzeit: 2});
                     _.extend(spielplan, data);
                     return data;

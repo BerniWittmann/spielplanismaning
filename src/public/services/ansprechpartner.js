@@ -7,7 +7,7 @@
             var ansprechpartner = {};
 
             ansprechpartner.getAll = function () {
-                return routes.requestGET(routes.urls.ansprechpartner.base());
+                return routes.requestGETBase('ansprechpartner');
             };
 
             ansprechpartner.get = function (id) {
