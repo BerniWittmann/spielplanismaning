@@ -26,7 +26,7 @@
             </tr>
             </thead>
             <tbody ui-sortable="vm.sortableOptions" ng-model="vm.spiele">
-            <tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'platz3': spiel.platz=='3'}"
+            <tr data-ng-repeat="spiel in vm.spiele"
                 data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
             </tbody>
         </table>

@@ -89,7 +89,7 @@ input[type=number] {
     color: gray;
 }
 
-.platz3 > td {
+#spielplan > tbody > tr:nth-child(3n+3) > td {
     border-bottom: 2px solid #ddd;
 }
 

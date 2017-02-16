@@ -62,6 +62,10 @@
         var mockErrorHandler = {
             handleResponseError: function () {}
         };
+        var mockScope = {
+            $watch: function () {
+            }
+        };
         var mockSpiele;
         var mockSpiel;
         var injector;
@@ -106,6 +110,7 @@
 
             var ctrl = scope.vm = $controller('SpielplanController', {
                 spiele: spiele,
+                $scope: mockScope,
                 $state: mockState,
                 spiel: mockSpiel,
                 auth: mockAuth

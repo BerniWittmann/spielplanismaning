@@ -24,9 +24,10 @@
 
     }
 
-    function SpielplanController($state, spiele, spiel, auth) {
+    function SpielplanController($state, $scope, spiele, spiel, auth) {
         var vm = this;
         vm.loading = true;
+        var $jq = jQuery.noConflict();
 
         _.extend(vm, {
             spiele: _.sortBy(spiele, ['nummer']),
@@ -40,11 +41,7 @@
             spieleBackup: spiele,
             sortableOptions: {
                 axis: 'y',
-                update: function (e, ui) {
-                    if (!vm.isEditing) {
-                        ui.item.sortable.cancel();
-                    }
-                }
+                disabled: true
             },
             isEditing: false,
             canEdit: auth.isAdmin(),
@@ -69,6 +66,10 @@
                 vm.isEditing = false;
             });
         }
+
+        $scope.$watch('vm.isEditing', function (newVal) {
+            vm.sortableOptions.disabled = !newVal;
+        });
 
         vm.loading = false;
     }
