@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.spielplan.ui', [
-            'ui.router', 'ui.sortable', 'spi.spiel', 'spi.auth', 'spi.components.spielplan.singlespiel.ui'
+            'ui.router', 'ui.sortable', 'spi.spiel', 'spi.auth', 'spi.components.spielplan.singlespiel.ui', 'toastr'
         ])
         .config(states)
         .controller('SpielplanController', SpielplanController);
@@ -24,7 +24,7 @@
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth) {
+    function SpielplanController($state, $scope, spiele, spiel, auth, toastr) {
         var vm = this;
         vm.loading = true;
         var $jq = jQuery.noConflict();
@@ -41,13 +41,23 @@
             spieleBackup: spiele,
             sortableOptions: {
                 axis: 'y',
-                disabled: true
+                disabled: true,
+                update: function () {
+                    vm.errorIndex = undefined;
+                }
             },
             isEditing: false,
             canEdit: auth.isAdmin(),
             toggleEdit: toggleEdit,
-            saveOrder: saveOrder
+            saveOrder: saveOrder,
+            errorIndex: undefined,
+            checkRowInvalid: checkRowInvalid,
+            abortEdit: abortEdit
         });
+
+        function checkRowInvalid(index) {
+            return vm.errorIndex >= 0&& index >= vm.errorIndex && index < (vm.errorIndex + 3);
+        }
 
         function toggleEdit() {
             if (vm.canEdit) {
@@ -57,13 +67,22 @@
             }
         }
 
+        function abortEdit() {
+            vm.spiele = _.sortBy(vm.spieleBackup, ['nummer']);
+            vm.isEditing = false;
+            vm.errorIndex = undefined;
+        }
+
         function saveOrder () {
             return spiel.updateOrder(vm.spiele).then(function (res) {
                 vm.spiele = _.sortBy(res.GAMES, ['nummer']);
                 vm.isEditing = false;
-            }, function () {
-                vm.spiele = _.sortBy(vm.spieleBackup, ['nummer']);
-                vm.isEditing = false;
+                vm.errorIndex = undefined;
+                toastr.success('Die neue Reihenfolge der Spiele wurde gespeichert.', 'Spielplan gespeichert');
+            }, function (err) {
+                if (err.MESSAGEKEY === 'ERROR_SPIELPLAN_UNGUELTIG') {
+                    vm.errorIndex = err.INDEX_WITH_ERROR;
+                }
             });
         }
 

@@ -70,8 +70,8 @@ module.exports = function () {
         SpielplanAktualisert: function (res, spiele) {
             send(require('./SpielplanAktualisiertMessage.js')(spiele), res);
         },
-        ErrorSpielplanUngueltig: function (res) {
-            send(require('./ErrorSpielplanUngueltig.js'), res);
+        ErrorSpielplanUngueltig: function (res, index) {
+            send(require('./ErrorSpielplanUngueltig.js')(index), res);
         }
     };
 };

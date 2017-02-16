@@ -292,8 +292,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.put('/order', function (req, res) {
         var spiele = req.body;
 
-        if (!helpers.checkSpielOrderChangeAllowed(spiele)) {
-            return messages.ErrorSpielplanUngueltig(res);
+        var errorIndex = helpers.checkSpielOrderChangeAllowed(spiele);
+        if (errorIndex >= 0) {
+            return messages.ErrorSpielplanUngueltig(res, errorIndex);
         }
 
 

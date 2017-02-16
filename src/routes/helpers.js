@@ -171,12 +171,13 @@ module.exports = function () {
             }
 
             if (_.uniq(teamsParallel).length !== teamsParallel.length) {
-                return false;
+                console.warn(i);
+                return i;
             }
             teamsParallel = [];
         }
 
-        return true;
+        return -1;
     }
 
     return {
