@@ -4,7 +4,6 @@
     angular
         .module('spi.routes', ['spi.errorHandler', 'spi.constants'])
         .factory('routes', ['$http', 'errorHandler', 'ENDPOINT_BASE', function ($http, errorHandler, ENDPOINT_BASE) {
-            var routes = {};
             var methods = {
                 GET: 'GET',
                 POST: 'POST',
@@ -118,39 +117,59 @@
                 });
             }
 
+            function requestMethod(method, url) {
+                return requestMethodParamsData(method, url, undefined, undefined);
+            }
+
+            function requestMethodParams(method, url, params) {
+                return requestMethodParamsData(method, url, undefined, params);
+            }
+
+            function requestMethodData(method, url, data) {
+                return requestMethodParamsData(method, url, data, undefined);
+            }
+
+            function requestMethodParamsData(method, url, data, params) {
+                if (!methods[method]) {
+                    console.error('Unkown method: ' + method);
+                    return;
+                }
+                return request({method: methods[method], url: url, data:data, params: params});
+            }
+
             function requestGET(url) {
-                return request({method: methods.GET, url: url});
+                return requestMethod('GET', url);
             }
 
             function requestGETID(url, id) {
-                return request({method: methods.GET, url: url, params: {id: id}});
+                return requestMethodParams('GET', url, {id: id});
             }
 
             function requestDELETE(url, id) {
-                return request({method: methods.DELETE, url: url, params: {id: id}});
+                return requestMethodParams('DELETE', url, {id: id});
             }
 
             function requestPUTID(url, id, data) {
-                return request({method: methods.PUT, url: url, params: {id: id}, data:data});
+                return requestMethodParamsData('PUT', url, data, {id: id});
             }
 
             function requestPUT(url, data) {
-                return request({method: methods.PUT, url: url, data:data});
+                return requestMethodData('PUT', url, data);
             }
 
             function requestPOST(url, data) {
-                return request({method: methods.POST, url: url, data:data});
+                return requestMethodData('POST', url, data);
             }
 
             function requestGETBase(base) {
-                return request({method: methods.GET, url: urls[base].base()});
+                return requestGET('GET', urls[base].base());
             }
 
             function requestGETBaseParam(base, param) {
-                return request({method: methods.GET, url: urls[base].base(), params: param});
+                return requestMethodParams('GET', urls[base].base(), param);
             }
 
-            _.extend(routes, {
+            return {
                 methods: methods,
                 request: request,
                 requestGET: requestGET,
@@ -162,10 +181,7 @@
                 requestGETBaseParam: requestGETBaseParam,
                 requestGETBase: requestGETBase,
                 urls: urls
-            });
-
-
-            return routes;
+            };
         }]);
 
 }());
