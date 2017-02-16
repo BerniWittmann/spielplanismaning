@@ -18,7 +18,7 @@ gulp.task('test:precommit', function (done) {
 });
 
 gulp.task('test:travis', function () {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'test:e2e:testing', 'lint', function (err) {
+    return runSequence('test:frontend', 'test:backend:withOutWipe', 'lint', function (err) {
         var exitCode = 0;
         if (err) {
             exitCode = 2;
