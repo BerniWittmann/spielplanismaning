@@ -162,7 +162,7 @@
             }
 
             function requestGETBase(base) {
-                return requestGET('GET', urls[base].base());
+                return requestGET(urls[base].base());
             }
 
             function requestGETBaseParam(base, param) {
