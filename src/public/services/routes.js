@@ -171,7 +171,10 @@
 
             return {
                 methods: methods,
-                request: request,
+                requestMethod: requestMethod,
+                requestMethodParams: requestMethodParams,
+                requestMethodData: requestMethodData,
+                requestMethodParamsData: requestMethodParamsData,
                 requestGET: requestGET,
                 requestGETID: requestGETID,
                 requestDELETE: requestDELETE,

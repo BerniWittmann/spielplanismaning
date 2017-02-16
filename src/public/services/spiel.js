@@ -42,7 +42,7 @@
             };
 
             spiel.deleteAll = function () {
-                return routes.request({method: routes.methods.DELETE, url: routes.urls.spiele.alle()});
+                return routes.requestMethod('DELETE', routes.urls.spiele.alle());
             };
 
             spiel.updateTore = function (spiel) {

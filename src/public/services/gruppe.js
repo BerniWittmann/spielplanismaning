@@ -12,12 +12,7 @@
             };
 
             gruppe.create = function (jugendId, newGruppe) {
-                return routes.request({
-                    method: routes.methods.POST,
-                    url: routes.urls.gruppen.base(),
-                    params: {jugend: jugendId},
-                    data: newGruppe
-                });
+                return routes.requestMethodParamsData('POST', routes.urls.gruppen.base(), newGruppe, {jugend: jugendId});
             };
 
             gruppe.get = function (id) {

@@ -12,12 +12,7 @@
             };
 
             team.create = function (team) {
-                return routes.request({
-                    method: routes.methods.POST,
-                    url: routes.urls.team.base(),
-                    params: {jugend: team.jugend, gruppe: team.gruppe},
-                    data: team
-                });
+                return routes.requestMethodParamsData('POST', routes.urls.team.base(), team, {jugend: team.jugend, gruppe: team.gruppe});
             };
 
             team.get = function (id) {

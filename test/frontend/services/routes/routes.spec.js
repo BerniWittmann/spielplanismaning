@@ -48,10 +48,7 @@
                     response = 'Success';
                     httpBackend.expect(method, url).respond(200, response);
 
-                    routes.request({
-                        method: method,
-                        url: url
-                    }).then(function (res) {
+                    routes.requestMethodParamsData(method, url, undefined, undefined).then(function (res) {
                         responseTest = res;
                         expect(_.isEqual(res, response)).to.be.true;
                         return done();
@@ -66,11 +63,7 @@
                 response = 'Success';
                 httpBackend.expect('GET', url).respond(200, response);
 
-                routes.request({
-                    method: 'GET',
-                    url: url,
-                    params: {}
-                }).then(function (res) {
+                routes.requestMethodParamsData('GET', url, undefined, {}).then(function (res) {
                     responseTest = res;
                     expect(_.isEqual(res, response)).to.be.true;
                     return done();
@@ -82,13 +75,7 @@
                 response = 'Success';
                 httpBackend.expect('GET', url + '?foo=bar').respond(200, response);
 
-                routes.request({
-                    method: 'GET',
-                    url: url,
-                    params: {
-                        foo: 'bar'
-                    }
-                }).then(function (res) {
+                routes.requestMethodParamsData('GET', url, undefined, {foo: 'bar'}).then(function (res) {
                     responseTest = res;
                     expect(_.isEqual(res, response)).to.be.true;
                     return done();
@@ -100,14 +87,7 @@
                 response = 'Success';
                 httpBackend.expect('GET', url + '?foo=bar&coding=fun').respond(200, response);
 
-                routes.request({
-                    method: 'GET',
-                    url: url,
-                    params: {
-                        foo: 'bar',
-                        coding: 'fun'
-                    }
-                }).then(function (res) {
+                routes.requestMethodParamsData('GET', url, undefined, {foo: 'bar', coding: 'fun'}).then(function (res) {
                     responseTest = res;
                     expect(_.isEqual(res, response)).to.be.true;
                     return done();
@@ -122,11 +102,7 @@
 
                 httpBackend.expect('GET', url, {}).respond(200, response);
 
-                routes.request({
-                    method: 'GET',
-                    url: url,
-                    data: {}
-                }).then(function (res) {
+                routes.requestMethodParamsData('GET', url, {}, undefined).then(function (res) {
                     responseTest = res;
                     expect(_.isEqual(res, response)).to.be.true;
                     return done();
@@ -143,11 +119,7 @@
 
                 httpBackend.expect('GET', url, data).respond(200, response);
 
-                routes.request({
-                    method: 'GET',
-                    url: url,
-                    data: data
-                }).then(function (res) {
+                routes.requestMethodParamsData('GET', url, data, undefined).then(function (res) {
                     responseTest = res;
                     expect(_.isEqual(res, response)).to.be.true;
                     return done();
@@ -167,14 +139,17 @@
 
             httpBackend.expect('GET', url).respond(500, 'Error');
 
-            routes.request({
-                method: 'GET',
-                url: url
-            }).then(function () {
+            routes.requestMethodParamsData('GET', url, undefined, undefined).then(function () {
                 expect(spy).to.have.been.called.with('Error');
                 return done();
             });
             httpBackend.flush();
+        });
+
+        it('bei einer ungültigen Method, soll ein Fehler geworfen werden', function (done) {
+            routes.requestMethodParamsData('GET', url, undefined, undefined);
+            httpBackend.verifyNoOutstandingRequest();
+            done();
         });
 
         describe('soll Shorthand Methoden zur Verfügung stellen', function () {
@@ -264,6 +239,93 @@
                 httpBackend.expect('POST', url, data).respond(200, response);
 
                 routes.requestPOST(url, data).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('Method Sorthand', function (done) {
+                response = 'Success';
+
+                httpBackend.expect('GET', url).respond(200, response);
+
+                routes.requestMethod('GET', url).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('Method + Params Sorthand', function (done) {
+                response = 'Success';
+                var id = 12;
+
+                httpBackend.expect('GET', url + '?id='+ id).respond(200, response);
+
+                routes.requestMethodParams('GET', url, {id: id}).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('Method + Data Sorthand', function (done) {
+                response = 'Success';
+                var data = {
+                    foo: 'bar'
+                };
+
+                httpBackend.expect('GET', url, data).respond(200, response);
+
+                routes.requestMethodData('GET', url, data).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('Method + Params + Data Sorthand', function (done) {
+                response = 'Success';
+                var id = 12;
+                var data = {
+                    foo: 'bar'
+                };
+
+                httpBackend.expect('GET', url + '?id='+ id, data).respond(200, response);
+
+                routes.requestMethodParamsData('GET', url, data, {id: id}).then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('GET Base url shorthand', function (done) {
+                response = 'Success';
+
+                httpBackend.expect('GET', '/api/teams').respond(200, response);
+
+                routes.requestGETBase('team').then(function (res) {
+                    responseTest = res;
+                    expect(_.isEqual(res, response)).to.be.true;
+                    return done();
+                });
+                httpBackend.flush();
+            });
+
+            it('GET Base url + Params shorthand', function (done) {
+                response = 'Success';
+                var id = 12;
+
+                httpBackend.expect('GET', '/api/teams?id=' + id).respond(200, response);
+
+                routes.requestGETBaseParam('team', {id: id}).then(function (res) {
                     responseTest = res;
                     expect(_.isEqual(res, response)).to.be.true;
                     return done();

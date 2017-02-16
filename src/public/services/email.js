@@ -63,11 +63,7 @@
             };
 
             email.removeSubscription = function (sub) {
-                return routes.request({
-                    method: routes.methods.DELETE,
-                    url: routes.urls.email.subscriber(),
-                    params: {email: sub.email, team: sub.team}
-                }).then(function (res) {
+                return routes.requestMethodParams('DELETE', routes.urls.email.subscriber(), {email: sub.email, team: sub.team}).then(function (res) {
                     storage.set(EMAIL_SUBSCRIPTION_TOKEN_NAME, JSON.stringify(_.pullAllWith(getSubscriptionToken(), [sub], _.isEqual)));
                     return res;
                 });

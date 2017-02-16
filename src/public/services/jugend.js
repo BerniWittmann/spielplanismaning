@@ -24,12 +24,7 @@
             };
 
             jugend.update = function (jugendId, jugend) {
-                return routes.request({
-                    method: routes.methods.PUT,
-                    url: routes.urls.jugenden.base(),
-                    params: {id: jugendId},
-                    data: jugend
-                });
+                return routes.requestMethodParamsData('PUT', routes.urls.jugenden.base(), jugend, {id: jugendId});
             };
 
             jugend.addGruppe = function (jugendId, gruppenId) {
