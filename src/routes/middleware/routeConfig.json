@@ -176,11 +176,6 @@
       ]
     }
   },
-  "/api/spielplan/ausnahmen": {
-    "AUTH": [
-      "admin"
-    ]
-  },
   "/api/users/register": {
     "AUTH": [
       "admin"

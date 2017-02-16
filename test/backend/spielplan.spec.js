@@ -115,40 +115,6 @@ describe('Route: Spielplan', function () {
             });
     });
 
-    it('soll die Ausnahmen speichern', function (done) {
-        request(server)
-            .put('/api/spielplan/ausnahmen')
-            .send(ausnahme)
-            .set('Authorization', server.adminToken)
-            .set('Accept', 'application/json')
-            .end(function (err, response) {
-                if (err) return done(err);
-                expect(response).not.to.be.undefined;
-                expect(response.statusCode).to.equal(200);
-                expect(response.body[0]._id).to.exist;
-                mongoose.model('Spielplan').findOne().exec(function (err, res) {
-                    if (err) throw err;
-                    expect(res.ausnahmen).to.have.lengthOf(1);
-                    return done();
-                });
-            });
-    });
-
-    it('soll die Ausnahmen laden', function (done) {
-        request(server)
-            .get('/api/spielplan/ausnahmen')
-            .set('Authorization', server.adminToken)
-            .set('Accept', 'application/json')
-            .end(function (err, response) {
-                if (err) return done(err);
-                expect(response).not.to.be.undefined;
-                expect(response.statusCode).to.equal(200);
-                expect(response.body).to.have.lengthOf(1);
-                expect(response.body[0]._id).to.be.equal(ausnahme._id);
-                return done();
-            });
-    });
-
     it('soll den Spielplan generieren', function (done) {
         request(server)
             .put('/api/spielplan')

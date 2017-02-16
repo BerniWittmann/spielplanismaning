@@ -222,11 +222,5 @@
             expect(spy).to.have.been.called();
             expect(spySpielplan).to.have.been.called();
         });
-
-        it('Es werden die Ausnhamen angezeigt', function () {
-            expectViertenRequest = true;
-            render();
-            expect(element.find('spi-spielplan-ausnahmen')).to.exist;
-        });
     });
 }());

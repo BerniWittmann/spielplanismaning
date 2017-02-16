@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.teams.ui', [
-            'spi.auth', 'ui.router', 'spi.team', 'spi.jugend', 'spi.components.jugendpanel.ui', 'spi.spielplan', 'spi.components.spielplan.ausnahmen.ui'
+            'spi.auth', 'ui.router', 'spi.team', 'spi.jugend', 'spi.components.jugendpanel.ui', 'spi.spielplan'
         ])
         .config(states)
         .controller('VerwaltungTeamsController', VerwaltungTeamsController);
