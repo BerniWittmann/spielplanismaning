@@ -352,7 +352,7 @@ describe('Helpers', function () {
                     _id: '5'
                 }
             }];
-            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.true;
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.equal(-1);
         });
 
         it('soll bei doppelten Teams false zurückgeben', function () {
@@ -399,7 +399,7 @@ describe('Helpers', function () {
                     _id: '5'
                 }
             }];
-            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.false;
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.above(-1);
         });
 
         it('soll auch mit leeren Spielen zurechtkommen', function () {
@@ -432,8 +432,55 @@ describe('Helpers', function () {
                     _id: '6'
                 }
             }, {}, {}];
-            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.true;
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.equal(-1);
         });
+
+        it('soll den korrekten Index des Fehlers zurückgeben', function () {
+            var spiele = [{
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '2'
+                }
+            }, {
+                teamA: {
+                    _id: '3'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '5'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '6'
+                }
+            }, {
+                teamA: {
+                    _id: '2'
+                },
+                teamB: {
+                    _id: '4'
+                }
+            }, {
+                teamA: {
+                    _id: '1'
+                },
+                teamB: {
+                    _id: '5'
+                }
+            }];
+            expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.equal(3);
+        })
     });
 });
 
