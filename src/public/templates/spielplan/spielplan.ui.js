@@ -27,7 +27,6 @@
     function SpielplanController($state, $scope, spiele, spiel, auth, toastr) {
         var vm = this;
         vm.loading = true;
-        var $jq = jQuery.noConflict();
 
         _.extend(vm, {
             spiele: _.sortBy(spiele, ['nummer']),
@@ -42,8 +41,12 @@
             sortableOptions: {
                 axis: 'y',
                 disabled: true,
-                update: function () {
+                update: function (e, ui) {
                     vm.errorIndex = undefined;
+                    if (ui.item.scope().spiel.beendet) {
+                        ui.item.sortable.cancel();
+                        toastr.warning('Spiele die bereits beendet sind können nicht mehr verschoben werden.', 'Spiel nicht verschiebbar');
+                    }
                 }
             },
             isEditing: false,
@@ -56,7 +59,7 @@
         });
 
         function checkRowInvalid(index) {
-            return vm.errorIndex >= 0&& index >= vm.errorIndex && index < (vm.errorIndex + 3);
+            return vm.errorIndex >= 0 && index >= vm.errorIndex && index < (vm.errorIndex + 3);
         }
 
         function toggleEdit() {
@@ -73,7 +76,7 @@
             vm.errorIndex = undefined;
         }
 
-        function saveOrder () {
+        function saveOrder() {
             return spiel.updateOrder(vm.spiele).then(function (res) {
                 vm.spiele = _.sortBy(res.GAMES, ['nummer']);
                 vm.isEditing = false;
