@@ -138,6 +138,6 @@ gulp.task('build:favicon', function () {
 
 // build etc
 gulp.task('build:etc', function () {
-    return gulp.src(['./src/**/*.json'])
+    return gulp.src(['./src/**/*.json', './src/**/emailTemplates/*.ejs'])
         .pipe(gulp.dest('./dist'));
 });
