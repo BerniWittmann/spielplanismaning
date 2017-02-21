@@ -16,19 +16,23 @@ module.exports = function (sendgrid, env, url, disableMails) {
     var handler = require('./handler.js');
 
     function notifySubscribers(spiel, fn, callback) {
-        async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
-            Subscriber.getByTeam(team._id).then(function (mails) {
-                var emails = [];
-                mails.forEach(function (mail) {
-                    emails.push(mail.email);
-                });
-                if (emails.length > 0) {
-                    fn(team, spiel, emails, asyncdone);
-                } else {
-                    return asyncdone(null, {});
-                }
+        return async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+            if (team && team._id) {
+                Subscriber.getByTeam(team._id).then(function (mails) {
+                    var emails = [];
+                    mails.forEach(function (mail) {
+                        emails.push(mail.email);
+                    });
+                    if (emails.length > 0) {
+                        fn(team, spiel, emails, asyncdone);
+                    } else {
+                        return asyncdone(null, {});
+                    }
 
-            });
+                });
+            } else {
+                return callback(null, {});
+            }
         }, function (err) {
             if (err) return messages.Error(res, err);
             return callback(null, {});
@@ -239,7 +243,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         }
 
                         function sendNextSpielUpdates(cb) {
-                            Spiel.findOne({
+                            return Spiel.findOne({
                                 nummer: spiel.nummer + 6
                             }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
                                 if (err) {
@@ -258,13 +262,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                             });
                         }
 
-                        if (disableMails === 'true') {
+                        if (disableMails !== 'true') {
                             return sendNextSpielUpdates(function (err) {
                                 if (err) {
                                     return messages.Error(res, err);
                                 }
 
-                                notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
+                                return notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
                                     return handler.handleErrorAndResponse(err, res, spiel);
                                 });
                             });
