@@ -161,7 +161,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     resetUrl:  url + 'reset-password?token=' + user.resetToken,
                     kontaktUrl: url + 'kontakt',
                     username: user.username,
-                    userEmail: email,
+                    email: email,
                     baseUrl: url
                 };
                 var html = ejs.render(template, data);
@@ -222,6 +222,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
             }
             if (!data.name) {
                 data.name = data.vorname + ' ' + data.nachname;
+            }
+            if (!data.email) {
+                data.email = data.username;
             }
             var mail = new sendgrid.Email();
             mail.setTos(constants.BUG_REPORT_EMAIL_TO);
