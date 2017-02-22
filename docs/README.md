@@ -18,13 +18,13 @@ In diesem Projekt gibt es zwei Umgebungen/Apps: eine Testumgebung und eine Produ
 
 Es gibt verschiedene Nutzerrollen, die unterschiedliche Berechtigungen haben.
 
-| Name          | Status        |
-|:-------------:|:-------------:|
-| Bearbeiter    | Umgesetzt     |
-| Admin         | Umgesetzt     |
-| Trainer       | Geplant       |
-| Kampfgericht  | Fraglich      |
-| Schiedsrichter| Fraglich      |
+| Name          | Status        | Berechtigungen   |
+|:-------------:|:-------------:|---------------|
+| Bearbeiter    | Umgesetzt     | Spiel-Ergebnisse eintragen, Spiele für Kampfgericht drucken   |
+| Admin         | Umgesetzt     | Alles                                                         |
+| Trainer       | Geplant       |                                                               |
+| Kampfgericht  | Fraglich      |                                                               |
+| Schiedsrichter| Fraglich      |                                                               |
 
 # Changelog
 
