@@ -17,6 +17,13 @@ ul {
     -webkit-padding-start: 0;
 }
 
+noscript div {
+    padding: 1em;
+    background-color: white;
+    margin: 5em;
+    text-align: center;
+}
+
 a:hover {
     text-decoration: none;
 }
