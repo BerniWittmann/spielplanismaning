@@ -10,18 +10,7 @@
     <div class="col-md-12">
         <form name="spielzeitForm" data-ng-submit="vm.saveSpielzeit(spielzeitForm)" novalidate>
             <div class="row">
-                <div class="form-group col-md-4" data-ng-class="{'has-error': !spielzeitForm.startzeit.$valid}">
-                    <div class="control-label center-block text-center special-padding" style="width: 100%">Startzeit
-                    </div>
-                    <uib-timepicker class="center-block" style="width: 105px;" ng-model="vm.startzeit" hour-step="1"
-                                    minute-step="5" show-meridian="false" name="startzeit"></uib-timepicker>
-                    <span class="help-block text-center" data-ng-messages="spielzeitForm.startzeit.$error"
-                          data-ng-if="spielzeitForm.startzeit.$touched">
-                        <p data-ng-message="required">Dies ist ein Pflichtfeld</p>
-                        <p data-ng-message="time">Zeit ist ungültig</p>
-                    </span>
-                </div>
-                <div class="form-group col-md-4" data-ng-class="{'has-error': !spielzeitForm.spielzeit.$valid}">
+                <div class="form-group col-md-3 col-md-offset-3" data-ng-class="{'has-error': !spielzeitForm.spielzeit.$valid}">
                     <div class="control-label center-block text-center" style="width: inherit;">Spielzeit</div>
                     <div class="center-block width-60">
                         <a data-ng-click="vm.increment('spielzeit')" class="btn btn-link center-block"
@@ -39,7 +28,7 @@
                         <p data-ng-message="number">Zeit ist ungültig</p>
                     </span>
                 </div>
-                <div class="form-group col-md-4" data-ng-class="{'has-error': !spielzeitForm.pausenzeit.$valid}">
+                <div class="form-group col-md-3" data-ng-class="{'has-error': !spielzeitForm.pausenzeit.$valid}">
                     <div class="control-label center-block text-center" style="width: inherit;">Pausenzeit</div>
                     <div class="center-block width-60">
                         <a data-ng-click="vm.increment('pausenzeit')" class="btn btn-link center-block"
@@ -55,6 +44,30 @@
                         <p data-ng-message="required">Dies ist ein Pflichtfeld</p>
                         <p data-ng-message="min">Zeit ist zu niedrig</p>
                         <p data-ng-message="number">Zeit ist ungültig</p>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-3 col-md-offset-3" data-ng-class="{'has-error': !spielzeitForm.startzeit.$valid}">
+                    <div class="control-label center-block text-center special-padding" style="width: 100%">Startzeit
+                    </div>
+                    <uib-timepicker class="center-block" style="width: 105px;" ng-model="vm.startzeit" hour-step="1"
+                                    minute-step="5" show-meridian="false" name="startzeit"></uib-timepicker>
+                    <span class="help-block text-center" data-ng-messages="spielzeitForm.startzeit.$error"
+                          data-ng-if="spielzeitForm.startzeit.$touched">
+                        <p data-ng-message="required">Dies ist ein Pflichtfeld</p>
+                        <p data-ng-message="time">Zeit ist ungültig</p>
+                    </span>
+                </div>
+                <div class="form-group col-md-3" data-ng-class="{'has-error': !spielzeitForm.endzeit.$valid}">
+                    <div class="control-label center-block text-center special-padding" style="width: 100%">Endzeit
+                    </div>
+                    <uib-timepicker class="center-block" style="width: 105px;" ng-model="vm.endzeit" hour-step="1"
+                                    minute-step="5" show-meridian="false" name="endzeit"></uib-timepicker>
+                    <span class="help-block text-center" data-ng-messages="spielzeitForm.endzeit.$error"
+                          data-ng-if="spielzeitForm.endzeit.$touched">
+                        <p data-ng-message="required">Dies ist ein Pflichtfeld</p>
+                        <p data-ng-message="time">Zeit ist ungültig</p>
                     </span>
                 </div>
             </div>

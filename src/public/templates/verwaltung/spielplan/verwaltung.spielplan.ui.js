@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.spielplan.ui', [
-            'ui.router', 'spi.spielplan', 'angular-flatpickr'
+            'ui.router', 'spi.spielplan', 'angular-flatpickr', 'toastr'
         ])
         .config(states)
         .controller('VerwaltungSpielplanController', VerwaltungSpielplanController);
@@ -27,16 +27,19 @@
             });
     }
 
-    function VerwaltungSpielplanController(spielplan, zeiten, $scope) {
+    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
         d.setHours(9);
         d.setMinutes(0);
+        var d2 = d;
+        d2.setHours(17);
 
         //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             startzeit: d,
+            endzeit: d2,
             spielzeit: 8,
             pausenzeit: 2,
             saveSpielzeit: saveSpielzeit,
@@ -70,6 +73,7 @@
                 vm.loading = true;
                 spielplan.saveZeiten({
                     startzeit: moment(vm.startzeit.toISOString()).format('HH:mm'),
+                    endzeit: moment(vm.endzeit.toISOString()).format('HH:mm'),
                     spielzeit: vm.spielzeit,
                     pausenzeit: vm.pausenzeit,
                     startdatum: vm.startdate,
@@ -110,6 +114,13 @@
                     vm.startdate = parts[0];
                     vm.enddate = parts[2];
                 }
+            }
+        });
+
+        $scope.$watchGroup(['vm.endzeit','vm.startzeit'], function () {
+            if (moment(vm.startzeit.toISOString()).isAfter(moment(vm.endzeit.toISOString()))) {
+                toastr.warning('Die Startzeit muss vor der Endzeit liegen!', 'Achtung!');
+                vm.endzeit = vm.startzeit;
             }
         });
 
