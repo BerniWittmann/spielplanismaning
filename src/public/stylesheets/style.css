@@ -284,5 +284,5 @@ td .form-group {
 .table-body-spiele-by-date::after {
     content: '';
     display: block;
-    height: 25px;
+    height: 35px;
 }
