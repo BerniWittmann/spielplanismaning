@@ -28,7 +28,8 @@
             createSpielplan: function () {}
         };
         var mockToastr = {
-            warning: function() {}
+            warning: function() {},
+            success: function() {}
         };
         var form = {$valid: true};
         var injector;
