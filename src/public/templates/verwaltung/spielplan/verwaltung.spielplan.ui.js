@@ -36,6 +36,11 @@
         var d2 = d;
         d2.setHours(17);
 
+        if (!zeiten.startdatum || !zeiten.enddatum) {
+            zeiten.startdatum = moment().format('DD.MM.YYYY');
+            zeiten.enddatum = moment().format('DD.MM.YYYY');
+        }
+
         //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             startzeit: d,
@@ -52,7 +57,7 @@
                 mode: 'range',
                 dateFormat: 'd.m.Y',
                 locale: 'de',
-                defaultDate: d
+                defaultDate: zeiten.startdatum + ' bis ' + zeiten.enddatum
             },
             date: moment(d).format('DD.MM.YYYY'),
             startdate: undefined,
@@ -60,12 +65,17 @@
         });
 
         if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
-            var date = new Date();
-            date.setHours(parseInt(zeiten.startzeit.substring(0, 2), 10));
-            date.setMinutes(parseInt(zeiten.startzeit.substring(3, 5), 10));
-            vm.startzeit = date;
+            if (moment(zeiten.startzeit, 'HH:mm').isValid()) {
+                vm.startzeit = moment(zeiten.startzeit, 'HH:mm').toDate();
+            }
+            if (moment(zeiten.endzeit, 'HH:mm').isValid()) {
+                vm.endzeit = moment(zeiten.endzeit, 'HH:mm').toDate();
+            }
             vm.spielzeit = zeiten.spielzeit;
             vm.pausenzeit = zeiten.pausenzeit;
+            vm.startdate = zeiten.startdatum;
+            vm.enddate = zeiten.enddatum;
+            vm.date = zeiten.startdatum + ' bis ' + zeiten.enddatum;
         }
 
         function saveSpielzeit(form) {
@@ -118,9 +128,11 @@
         });
 
         $scope.$watchGroup(['vm.endzeit','vm.startzeit'], function () {
-            if (moment(vm.startzeit.toISOString()).isAfter(moment(vm.endzeit.toISOString()))) {
-                toastr.warning('Die Startzeit muss vor der Endzeit liegen!', 'Achtung!');
-                vm.endzeit = vm.startzeit;
+            if (vm.startzeit && vm.endzeit) {
+                if (moment(vm.startzeit.toISOString()).isAfter(moment(vm.endzeit.toISOString()))) {
+                    toastr.warning('Die Startzeit muss vor der Endzeit liegen!', 'Achtung!');
+                    vm.endzeit = vm.startzeit;
+                }
             }
         });
 

@@ -72,6 +72,9 @@ module.exports = function () {
         },
         ErrorSpielplanUngueltig: function (res, index) {
             send(require('./ErrorSpielplanUngueltig.js')(index), res);
+        },
+        ErrorZeitenUngueltig: function (res) {
+            send(require('./ErrorZeitenUngueltig.js'), res);
         }
     };
 };

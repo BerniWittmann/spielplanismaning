@@ -172,7 +172,10 @@
       "PUT": [
         "body.startzeit",
         "body.spielzeit",
-        "body.pausenzeit"
+        "body.pausenzeit",
+        "body.endzeit",
+        "body.startdatum",
+        "body.enddatum"
       ]
     }
   },

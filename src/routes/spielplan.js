@@ -72,12 +72,21 @@ module.exports = function () {
      * @apiParam {String} startzeit Gewählte Startzeit im Format HH:mm.
      * @apiParam {Number} spielzeit Gewählte Spielzeit in Minuten.
      * @apiParam {Number} pausenzeit Gewählte Pausenzeit in Minuten.
+     * @apiParam {String} endzeit Gewählte Endzeit im Format HH:mm.
+     * @apiParam {String} startdatum Startdatum im Format DD.MM.YYYY.
+     * @apiParam {String} enddatum Enddatum im Format DD.MM.YYYY.
      *
      * @apiUse SuccessMessage
+     *
+     * @apiUse ErrorZeitenUngueltig
      *
      * @apiUse ErrorBadRequest
      **/
     router.put('/zeiten', function (req, res) {
+        if (moment(req.body.startdatum, 'DD.MM:YYYY').isAfter(moment(req.body.enddatum, 'DD.MM:YYYY')) || moment(req.body.startzeit, 'HH:mm').isAfter(moment(req.body.endzeit, 'HH:mm'))) {
+            return messages.ErrorZeitenUngueltig(res);
+        }
+
         Spielplan.findOneAndUpdate({}, req.body, {
             upsert: true
         }, function (err) {
@@ -95,7 +104,6 @@ module.exports = function () {
                     singlespiel.save(asyncdone);
                 }, function (err) {
                     return handler.handleErrorAndSuccess(err, res);
-
                 });
 
                 function compareNumbers(a, b) {
