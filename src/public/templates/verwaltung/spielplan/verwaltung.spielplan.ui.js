@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.spielplan.ui', [
-            'ui.router', 'spi.spielplan'
+            'ui.router', 'spi.spielplan', 'angular-flatpickr'
         ])
         .config(states)
         .controller('VerwaltungSpielplanController', VerwaltungSpielplanController);
@@ -27,7 +27,7 @@
             });
     }
 
-    function VerwaltungSpielplanController(spielplan, zeiten) {
+    function VerwaltungSpielplanController(spielplan, zeiten, $scope) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
@@ -44,7 +44,16 @@
             decrement: decrement,
             generateSpielplan: function () {
                 spielplan.createSpielplan();
-            }
+            },
+            datePickerOptions: {
+                mode: 'range',
+                dateFormat: 'd.m.Y',
+                locale: 'de',
+                defaultDate: d
+            },
+            date: moment(d).format('DD.MM.YYYY'),
+            startdate: undefined,
+            enddate: undefined
         });
 
         if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
@@ -60,9 +69,11 @@
             if (form.$valid) {
                 vm.loading = true;
                 spielplan.saveZeiten({
-                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
-                    , spielzeit: vm.spielzeit
-                    , pausenzeit: vm.pausenzeit
+                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm'),
+                    spielzeit: vm.spielzeit,
+                    pausenzeit: vm.pausenzeit,
+                    startdatum: vm.startdate,
+                    enddatum: vm.enddate
                 }).then(function () {
                     vm.loading = false;
                 });
@@ -88,6 +99,19 @@
                 }
             }
         }
+
+        $scope.$watch('vm.date', function () {
+            if (vm.date) {
+                var parts = vm.date.split(' ');
+                if (parts.length === 1) {
+                    vm.startdate = parts[0];
+                    vm.enddate = parts[0];
+                } else {
+                    vm.startdate = parts[0];
+                    vm.enddate = parts[2];
+                }
+            }
+        });
 
         vm.loading = false;
     }

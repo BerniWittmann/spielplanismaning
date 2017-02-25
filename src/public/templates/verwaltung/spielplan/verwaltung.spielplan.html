@@ -58,6 +58,12 @@
                     </span>
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group col-md-4 col-md-offset-4">
+                    <label for="spielplan-datepicker">Startdatum / Enddatum</label>
+                    <input class="form-control" id="spielplan-datepicker" ng-flatpickr data-fp-opts="vm.datePickerOptions" ng-model="vm.date" data-enabletime="false">
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary center-block" data-ng-disabled="spielzeitForm.$invalid">Speichern</button>
         </form>
     </div>

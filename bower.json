@@ -28,7 +28,8 @@
     "angular-md5": "^0.1.10",
     "angular-ui-sortable": "^0.16.1",
     "jquery-ui": "^1.12.1",
-    "angular-bootstrap-toggle-switch": "^0.5.6"
+    "angular-bootstrap-toggle-switch": "^0.5.6",
+    "angular-flatpickr": "^2.0.0"
   },
   "resolutions": {
     "angular": "1.5.8",
