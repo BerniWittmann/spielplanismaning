@@ -30,6 +30,9 @@ module.exports = function (config) {
             'bower_components/flipclock/compiled/flipclock.js',
             'bower_components/angular-md5/angular-md5.js',
             'bower_components/angular-ui-sortable/sortable.js',
+            'bower_components/angular-flatpickr/dist/ng-flatpickr.js',
+            'bower_components/flatpickr-calendar/dist/flatpickr.js',
+            'bower_components/flatpickr-calendar/dist/l10n/de.js',
             //include src files
             '{components,templates,services}/**/*.js',
             '{components,templates}/**/*.html',
