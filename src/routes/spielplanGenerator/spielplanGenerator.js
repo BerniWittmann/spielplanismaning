@@ -5,6 +5,7 @@ module.exports = function () {
     var async = require('async');
     var _ = require('lodash');
     var helper = require('./helper.js');
+    var helpers = require('../helpers.js')();
 
     var spielplanGenerator = {};
 
@@ -50,15 +51,19 @@ module.exports = function () {
                 var i = 1;
                 var platz = plaetze; //Bei 3 anfangen macht calcPlatz einfacher
                 var leerdurchgelaufeneGruppen = 0;
+                var datum;
 
                 var leeresSpiel = function () {
                     console.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    platz = helper.calcPlatz(platz, plaetze);
-                    zeit = helper.calcZeit(platz, zeit, zeiten, i);
+                    var dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
+                    platz = dateTimeObj.platz;
+                    zeit = dateTimeObj.time;
+                    datum = dateTimeObj.date;
                     var spiel = {
                         nummer: i,
                         platz: platz,
-                        uhrzeit: zeit.format('HH:mm')
+                        datum: datum,
+                        uhrzeit: zeit
                     };
                     spiele.push(spiel);
                     i++;
@@ -90,16 +95,19 @@ module.exports = function () {
                                     geradeSpielendeTeams = helper.addLastTeam(teamB, geradeSpielendeTeams);
                                     console.log('Spielerstellung Nr. ' + i + ': TeamB gewählt: ' + teamB.name);
 
-                                    platz = helper.calcPlatz(platz, plaetze);
-                                    console.log('Spielerstellung Nr. ' + i + ': Platz vergeben: ' + platz);
+                                    var dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
+                                    platz = dateTimeObj.platz;
+                                    zeit = dateTimeObj.time;
+                                    datum = dateTimeObj.date;
 
-                                    zeit = helper.calcZeit(platz, zeit, zeiten, i);
-                                    console.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + zeit.format('HH:mm'));
+                                    console.log('Spielerstellung Nr. ' + i + ': Platz vergeben: ' + platz);
+                                    console.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + datum + ' ' + zeit);
 
                                     var neuesSpiel = {
                                         nummer: i,
                                         platz: platz,
-                                        uhrzeit: zeit.format('HH:mm'),
+                                        uhrzeit: zeit,
+                                        datum: datum,
                                         gruppe: gruppe._id,
                                         jugend: gruppe.jugend._id,
                                         teamA: teamA._id,

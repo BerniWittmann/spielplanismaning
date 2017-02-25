@@ -5,6 +5,7 @@ module.exports = function () {
     var handler = require('./handler.js');
     var jsonwebtoken = require('jsonwebtoken');
     var md5 = require('md5');
+    var moment = require('moment');
 
     function getEntityQuery(model, req) {
         var query = model.find();
@@ -180,6 +181,32 @@ module.exports = function () {
         return -1;
     }
 
+    function calcSpielDateTime(nr, spielplan) {
+        var dailyStartTime = moment(spielplan.startzeit, 'HH:mm');
+        var dailyEndTime = moment(spielplan.endzeit, 'HH:mm');
+        var spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * 3;
+        if (spielePerDay < 0) {
+            return undefined;
+        }
+        var offsetDays = Math.floor((nr - 1) / spielePerDay);
+        if (offsetDays < 0) {
+            return undefined;
+        }
+        var offsetSpiele = (nr - 1) % spielePerDay;
+        if (offsetSpiele < 0) {
+            return undefined;
+        }
+
+        var date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
+        var time = dailyStartTime.add(Math.floor(offsetSpiele / 3) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
+        var platz = (offsetSpiele % 3) + 1;
+        return {
+            date: date.format('DD.MM.YYYY'),
+            time: time.format('HH:mm'),
+            platz: platz
+        }
+    }
+
     return {
         getEntityQuery: getEntityQuery,
         resetErgebnis: resetErgebnis,
@@ -191,6 +218,7 @@ module.exports = function () {
         findEntityAndPushTeam: findEntityAndPushTeam,
         getRequiredRouteConfig: getRequiredRouteConfig,
         addEntity: addEntity,
-        checkSpielOrderChangeAllowed: checkSpielOrderChangeAllowed
+        checkSpielOrderChangeAllowed: checkSpielOrderChangeAllowed,
+        calcSpielDateTime: calcSpielDateTime
     }
 };

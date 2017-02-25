@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var SpielSchema = new mongoose.Schema({
     nummer: Number,
     platz: Number,
+    datum: String, //01.01.1970
     uhrzeit: String, //10:40
     gruppe: {
         type: Schema.ObjectId,

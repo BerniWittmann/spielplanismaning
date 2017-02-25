@@ -314,9 +314,11 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         return asyncdone(err);
                     }
 
-                    var zeit = moment(spielplan.startzeit, 'HH:mm').add(Math.floor(index / 3) * (spielplan.spielzeit + spielplan.pausenzeit), 'm');
-                    spiel.uhrzeit = zeit.format('HH:mm');
-                    spiel.platz = (index % 3) + 1;
+                    var dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
+
+                    spiel.datum = dateTimePlace.date;
+                    spiel.uhrzeit = dateTimePlace.time;
+                    spiel.platz = dateTimePlace.platz;
                     spiel.nummer = index + 1;
                     spiel.save(asyncdone);
                 });
