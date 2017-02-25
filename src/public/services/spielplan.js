@@ -9,12 +9,22 @@
                 startzeit: undefined,
                 spielzeit: undefined,
                 pausenzeit: undefined,
+                endzeit: undefined,
+                startdatum: undefined,
+                enddatum: undefined,
                 spiele: []
             };
 
             spielplan.getZeiten = function () {
                 return routes.requestGETBase('spielplan').then(function (data) {
-                    _.defaultsDeep(data, {startzeit: '09:00', spielzeit: 8, pausenzeit: 2});
+                    _.defaultsDeep(data, {
+                        startzeit: '09:00',
+                        spielzeit: 8,
+                        pausenzeit: 2,
+                        endzeit: '17:00',
+                        startdatum: moment().format('DD.MM.YYYY'),
+                        enddatum: moment().format('DD.MM.YYYY')
+                    });
                     _.extend(spielplan, data);
                     return data;
                 });

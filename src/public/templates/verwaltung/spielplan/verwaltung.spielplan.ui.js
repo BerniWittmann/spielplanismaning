@@ -57,7 +57,7 @@
                 mode: 'range',
                 dateFormat: 'd.m.Y',
                 locale: 'de',
-                defaultDate: zeiten.startdatum + ' bis ' + zeiten.enddatum
+                defaultDate: [moment(zeiten.startdatum, 'DD.MM.YYYY').toDate(), moment(zeiten.enddatum, 'DD.MM.YYYY').toDate()]
             },
             date: moment(d).format('DD.MM.YYYY'),
             startdate: undefined,
@@ -89,7 +89,12 @@
                     startdatum: vm.startdate,
                     enddatum: vm.enddate
                 }).then(function () {
-                    vm.loading = false;
+                    spielplan.getZeiten().then(function (res) {
+                        zeiten = res;
+                        vm.datePickerOptions.defaultDate = [moment(res.startdatum, 'DD.MM.YYYY').toDate(), moment(res.enddatum, 'DD.MM.YYYY').toDate()];
+                        vm.loading = false;
+                        toastr.success('Spielplan-Einstellungen wurden gespeichert.', 'Gespeichert');
+                    });
                 });
             }
         }

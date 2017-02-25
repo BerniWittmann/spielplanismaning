@@ -12,6 +12,7 @@ module.exports = function () {
     var messages = require('./messages/messages.js')();
     var spielplanGenerator = require('./spielplanGenerator/spielplanGenerator')();
     var handler = require('./handler.js');
+    var helpers = require('./helpers.js')();
 
     /**
      * @api {get} /spielplan Get Spielplan
@@ -83,7 +84,7 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.put('/zeiten', function (req, res) {
-        if (moment(req.body.startdatum, 'DD.MM:YYYY').isAfter(moment(req.body.enddatum, 'DD.MM:YYYY')) || moment(req.body.startzeit, 'HH:mm').isAfter(moment(req.body.endzeit, 'HH:mm'))) {
+        if (moment(req.body.startdatum, 'DD.MM.YYYY').isAfter(moment(req.body.enddatum, 'DD.MM.YYYY')) || moment(req.body.startzeit, 'HH:mm').isAfter(moment(req.body.endzeit, 'HH:mm'))) {
             return messages.ErrorZeitenUngueltig(res);
         }
 
@@ -99,8 +100,10 @@ module.exports = function () {
 
                 spiele = spiele.sort(compareNumbers);
                 async.eachSeries(spiele, function (singlespiel, asyncdone) {
-                    var zeit = moment(req.body.startzeit, 'HH:mm').add(Math.floor((singlespiel.nummer - 1) / 3) * (req.body.spielzeit + req.body.pausenzeit), 'm');
-                    singlespiel.uhrzeit = zeit.format('HH:mm');
+                    var dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body);
+                    singlespiel.uhrzeit = dateTimeObject.time;
+                    singlespiel.datum = dateTimeObject.date;
+                    singlespiel.platz = dateTimeObject.platz;
                     singlespiel.save(asyncdone);
                 }, function (err) {
                     return handler.handleErrorAndSuccess(err, res);
