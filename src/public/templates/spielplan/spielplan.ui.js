@@ -30,6 +30,7 @@
 
         _.extend(vm, {
             spiele: _.sortBy(spiele, ['nummer']),
+            spieleByDate: _.groupBy(_.sortBy(spiele, ['nummer']), 'datum'),
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
                     $state.go('spi.spiel', {
@@ -91,6 +92,9 @@
 
         $scope.$watch('vm.isEditing', function (newVal) {
             vm.sortableOptions.disabled = !newVal;
+        });
+        $scope.$watch('vm.spiele', function (newVal) {
+            vm.spieleByDate = _.groupBy(_.sortBy(newVal, ['nummer']), 'datum');
         });
 
         vm.loading = false;
