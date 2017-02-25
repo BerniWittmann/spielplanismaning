@@ -482,5 +482,391 @@ describe('Helpers', function () {
             expect(helpers.checkSpielOrderChangeAllowed(spiele)).to.be.equal(3);
         })
     });
+
+    describe('soll das richtige Datum und Zeit für ein Spiel berechnen', function () {
+        var calcSpielDateTime = helpers.calcSpielDateTime;
+        var spielplan;
+
+        describe('Eintägiges Event', function () {
+            describe('die Spielzeiten passen genau', function () {
+                beforeEach(function () {
+                    spielplan = {
+                        spielzeit: 15,
+                        pausenzeit: 5,
+                        startzeit: '10:00',
+                        endzeit: '11:00',
+                        startdatum: '01.01.1970',
+                        enddatum: '01.01.1970'
+                    };
+                });
+                it('soll für das erste Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(1, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll für das zweite Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(2, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(2);
+                });
+                it('soll für das dritte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(3, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll für das vierte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(4, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:20');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel richtig berechen', function () {
+                    var result = calcSpielDateTime(9, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:40');
+                    expect(result.platz).to.equal(3);
+                });
+            });
+
+            describe('die Spielzeiten passen nicht genau', function () {
+                beforeEach(function () {
+                    spielplan = {
+                        spielzeit: 15,
+                        pausenzeit: 3,
+                        startzeit: '10:00',
+                        endzeit: '11:00',
+                        startdatum: '01.01.1970',
+                        enddatum: '01.01.1970'
+                    };
+                });
+
+                it('soll für das erste Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(1, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll für das zweite Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(2, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(2);
+                });
+                it('soll für das dritte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(3, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll für das vierte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(4, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:18');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel richtig berechen', function () {
+                    var result = calcSpielDateTime(9, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:36');
+                    expect(result.platz).to.equal(3);
+                });
+            });
+        });
+
+        describe('Zweitägiges Event', function () {
+            beforeEach(function () {
+                spielplan = {
+                    spielzeit: 15,
+                    pausenzeit: 5,
+                    startzeit: '10:00',
+                    endzeit: '11:00',
+                    startdatum: '01.01.1970',
+                    enddatum: '02.01.1970'
+                };
+            });
+            describe('die Spielzeiten passen genau', function () {
+                it('soll für das erste Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(1, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll für das zweite Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(2, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(2);
+                });
+                it('soll für das dritte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(3, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll für das vierte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(4, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:20');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am ersten Tag richtig berechen', function () {
+                    var result = calcSpielDateTime(9, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:40');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll das erste Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(10, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(18, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:40');
+                    expect(result.platz).to.equal(3);
+                });
+            });
+
+            describe('die Spielzeiten passen nicht genau', function () {
+                beforeEach(function () {
+                    spielplan = {
+                        spielzeit: 15,
+                        pausenzeit: 3,
+                        startzeit: '10:00',
+                        endzeit: '11:00',
+                        startdatum: '01.01.1970',
+                        enddatum: '02.01.1970'
+                    };
+                });
+
+                it('soll für das erste Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(1, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll für das zweite Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(2, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(2);
+                });
+                it('soll für das dritte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(3, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll für das vierte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(4, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:18');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am ersten Tag richtig berechen', function () {
+                    var result = calcSpielDateTime(9, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:36');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll das erste Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(10, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(18, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:36');
+                    expect(result.platz).to.equal(3);
+                });
+            });
+        });
+
+        describe('Dreitägiges Event', function () {
+            beforeEach(function () {
+                spielplan = {
+                    spielzeit: 15,
+                    pausenzeit: 5,
+                    startzeit: '10:00',
+                    endzeit: '11:00',
+                    startdatum: '01.01.1970',
+                    enddatum: '03.01.1970'
+                };
+            });
+            describe('die Spielzeiten passen genau', function () {
+                it('soll für das erste Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(1, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll für das zweite Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(2, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(2);
+                });
+                it('soll für das dritte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(3, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll für das vierte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(4, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:20');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am ersten Tag richtig berechen', function () {
+                    var result = calcSpielDateTime(9, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:40');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll das erste Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(10, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(18, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:40');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll das erste Spiel am dritten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(19, spielplan);
+
+                    expect(result.date).to.equal('03.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am dritten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(27, spielplan);
+
+                    expect(result.date).to.equal('03.01.1970');
+                    expect(result.time).to.equal('10:40');
+                    expect(result.platz).to.equal(3);
+                });
+            });
+
+            describe('die Spielzeiten passen nicht genau', function () {
+                beforeEach(function () {
+                    spielplan = {
+                        spielzeit: 15,
+                        pausenzeit: 3,
+                        startzeit: '10:00',
+                        endzeit: '11:00',
+                        startdatum: '01.01.1970',
+                        enddatum: '03.01.1970'
+                    };
+                });
+
+                it('soll für das erste Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(1, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll für das zweite Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(2, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(2);
+                });
+                it('soll für das dritte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(3, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll für das vierte Spiel richtig berechnen', function () {
+                    var result = calcSpielDateTime(4, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:18');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am ersten Tag richtig berechen', function () {
+                    var result = calcSpielDateTime(9, spielplan);
+
+                    expect(result.date).to.equal('01.01.1970');
+                    expect(result.time).to.equal('10:36');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll das erste Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(10, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am zweiten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(18, spielplan);
+
+                    expect(result.date).to.equal('02.01.1970');
+                    expect(result.time).to.equal('10:36');
+                    expect(result.platz).to.equal(3);
+                });
+                it('soll das erste Spiel am dritten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(19, spielplan);
+
+                    expect(result.date).to.equal('03.01.1970');
+                    expect(result.time).to.equal('10:00');
+                    expect(result.platz).to.equal(1);
+                });
+                it('soll das letzte Spiel am dritten Tag richtig berechnen', function () {
+                    var result = calcSpielDateTime(27, spielplan);
+
+                    expect(result.date).to.equal('03.01.1970');
+                    expect(result.time).to.equal('10:36');
+                    expect(result.platz).to.equal(3);
+                });
+            });
+        });
+    });
 });
 

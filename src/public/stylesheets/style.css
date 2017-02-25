@@ -280,3 +280,9 @@ textarea {
 td .form-group {
     margin-bottom: 0;
 }
+
+.table-body-spiele-by-date::after {
+    content: '';
+    display: block;
+    height: 35px;
+}

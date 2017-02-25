@@ -56,7 +56,10 @@
             response = {
                 startzeit: '09:00',
                 spielzeit: 8,
-                pausenzeit: 2
+                pausenzeit: 2,
+                endzeit: '16:00',
+                startdatum: '01.01.1970',
+                enddatum: '31.01.2001'
             };
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
@@ -70,7 +73,10 @@
             response = {
                 startzeit: '09:00',
                 spielzeit: 8,
-                pausenzeit: 2
+                pausenzeit: 2,
+                endzeit: '16:00',
+                startdatum: '01.01.1970',
+                enddatum: '31.01.2001'
             };
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '/zeiten').respond(201, response);
 

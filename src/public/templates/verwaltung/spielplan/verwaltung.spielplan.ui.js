@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.spielplan.ui', [
-            'ui.router', 'spi.spielplan'
+            'ui.router', 'spi.spielplan', 'angular-flatpickr', 'toastr'
         ])
         .config(states)
         .controller('VerwaltungSpielplanController', VerwaltungSpielplanController);
@@ -27,16 +27,24 @@
             });
     }
 
-    function VerwaltungSpielplanController(spielplan, zeiten) {
+    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr) {
         var vm = this;
         vm.loading = true;
         var d = new Date();
         d.setHours(9);
         d.setMinutes(0);
+        var d2 = d;
+        d2.setHours(17);
+
+        if (!zeiten.startdatum || !zeiten.enddatum) {
+            zeiten.startdatum = moment().format('DD.MM.YYYY');
+            zeiten.enddatum = moment().format('DD.MM.YYYY');
+        }
 
         //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             startzeit: d,
+            endzeit: d2,
             spielzeit: 8,
             pausenzeit: 2,
             saveSpielzeit: saveSpielzeit,
@@ -44,27 +52,49 @@
             decrement: decrement,
             generateSpielplan: function () {
                 spielplan.createSpielplan();
-            }
+            },
+            datePickerOptions: {
+                mode: 'range',
+                dateFormat: 'd.m.Y',
+                locale: 'de',
+                defaultDate: [moment(zeiten.startdatum, 'DD.MM.YYYY').toDate(), moment(zeiten.enddatum, 'DD.MM.YYYY').toDate()]
+            },
+            date: moment(d).format('DD.MM.YYYY'),
+            startdate: undefined,
+            enddate: undefined
         });
 
         if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
-            var date = new Date();
-            date.setHours(parseInt(zeiten.startzeit.substring(0, 2), 10));
-            date.setMinutes(parseInt(zeiten.startzeit.substring(3, 5), 10));
-            vm.startzeit = date;
+            if (moment(zeiten.startzeit, 'HH:mm').isValid()) {
+                vm.startzeit = moment(zeiten.startzeit, 'HH:mm').toDate();
+            }
+            if (moment(zeiten.endzeit, 'HH:mm').isValid()) {
+                vm.endzeit = moment(zeiten.endzeit, 'HH:mm').toDate();
+            }
             vm.spielzeit = zeiten.spielzeit;
             vm.pausenzeit = zeiten.pausenzeit;
+            vm.startdate = zeiten.startdatum;
+            vm.enddate = zeiten.enddatum;
+            vm.date = zeiten.startdatum + ' bis ' + zeiten.enddatum;
         }
 
         function saveSpielzeit(form) {
             if (form.$valid) {
                 vm.loading = true;
                 spielplan.saveZeiten({
-                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm')
-                    , spielzeit: vm.spielzeit
-                    , pausenzeit: vm.pausenzeit
+                    startzeit: moment(vm.startzeit.toISOString()).format('HH:mm'),
+                    endzeit: moment(vm.endzeit.toISOString()).format('HH:mm'),
+                    spielzeit: vm.spielzeit,
+                    pausenzeit: vm.pausenzeit,
+                    startdatum: vm.startdate,
+                    enddatum: vm.enddate
                 }).then(function () {
-                    vm.loading = false;
+                    spielplan.getZeiten().then(function (res) {
+                        zeiten = res;
+                        vm.datePickerOptions.defaultDate = [moment(res.startdatum, 'DD.MM.YYYY').toDate(), moment(res.enddatum, 'DD.MM.YYYY').toDate()];
+                        vm.loading = false;
+                        toastr.success('Spielplan-Einstellungen wurden gespeichert.', 'Gespeichert');
+                    });
                 });
             }
         }
@@ -88,6 +118,28 @@
                 }
             }
         }
+
+        $scope.$watch('vm.date', function () {
+            if (vm.date) {
+                var parts = vm.date.split(' ');
+                if (parts.length === 1) {
+                    vm.startdate = parts[0];
+                    vm.enddate = parts[0];
+                } else {
+                    vm.startdate = parts[0];
+                    vm.enddate = parts[2];
+                }
+            }
+        });
+
+        $scope.$watchGroup(['vm.endzeit','vm.startzeit'], function () {
+            if (vm.startzeit && vm.endzeit) {
+                if (moment(vm.startzeit.toISOString()).isAfter(moment(vm.endzeit.toISOString()))) {
+                    toastr.warning('Die Startzeit muss vor der Endzeit liegen!', 'Achtung!');
+                    vm.endzeit = vm.startzeit;
+                }
+            }
+        });
 
         vm.loading = false;
     }

@@ -27,16 +27,19 @@
         var spiele = [{
             nummer: 1,
             uhrzeit: '09:00',
+            datum: '01.01.1970',
             teamA: 't1',
             teamB: 't2'
         }, {
             nummer: 2,
             uhrzeit: '09:10',
+            datum: '01.01.1970',
             teamA: 't2',
             teamB: 't3'
         }, {
             nummer: 3,
             uhrzeit: '09:20',
+            datum: '01.01.1970',
             teamA: 't3',
             teamB: 't1'
         }];
@@ -150,9 +153,9 @@
             expect(element.find('spi-spiele-tabelle')).to.exist;
             var result = element.find('spi-spiele-tabelle').find('tbody').find('tr');
             expect(result).to.have.lengthOf(3);
-            expect(angular.element(angular.element(result[0]).find('td')[0]).text()).to.contain('09:00');
-            expect(angular.element(angular.element(result[1]).find('td')[0]).text()).to.contain('09:10');
-            expect(angular.element(angular.element(result[2]).find('td')[0]).text()).to.contain('09:20');
+            expect(angular.element(angular.element(result[0]).find('td')[1]).text()).to.contain('09:00');
+            expect(angular.element(angular.element(result[1]).find('td')[1]).text()).to.contain('09:10');
+            expect(angular.element(angular.element(result[2]).find('td')[1]).text()).to.contain('09:20');
         });
 
         it('soll die Tabelle laden', function () {

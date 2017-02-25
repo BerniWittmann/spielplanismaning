@@ -20,9 +20,16 @@
             zeiten: {
                 startzeit: '10:00',
                 spielzeit: 6,
-                pausenzeit: 4
+                pausenzeit: 4,
+                endzeit: '16:00',
+                startdatum: '01.01.1970',
+                enddatum: '31.01.2000'
             },
             createSpielplan: function () {}
+        };
+        var mockToastr = {
+            warning: function() {},
+            success: function() {}
         };
         var form = {$valid: true};
         var injector;
@@ -65,7 +72,9 @@
 
             var ctrl = scope.vm = $controller('VerwaltungSpielplanController', {
                 spielplan: mockSpielplan,
-                zeiten: mockSpielplan.zeiten
+                zeiten: mockSpielplan.zeiten,
+                $scope: scope,
+                toastr: mockToastr
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -112,23 +121,50 @@
             render();
             var startzeit = moment(ctrl.startzeit.toISOString()).format('HH:mm');
             expect(startzeit).to.be.equal('10:00');
+            var endzeit = moment(ctrl.endzeit.toISOString()).format('HH:mm');
+            expect(endzeit).to.be.equal('16:00');
             expect(ctrl.spielzeit).to.be.equal(6);
             expect(ctrl.pausenzeit).to.be.equal(4);
+            expect(ctrl.startdate).to.be.equal('01.01.1970');
+            expect(ctrl.enddate).to.be.equal('31.01.2000');
         });
 
         it('Die Zeiten können gespeichert werden', function () {
             render();
             ctrl.startzeit.setHours(9);
             ctrl.startzeit.setMinutes(30);
+            ctrl.endzeit.setHours(17);
+            ctrl.endzeit.setMinutes(30);
             ctrl.spielzeit = 7;
             ctrl.pausenzeit = 3;
+            ctrl.startdate = '02.02.1980';
+            ctrl.enddate = '01.03.2001';
 
             ctrl.saveSpielzeit(form);
             scope.$digest();
 
-            expect(mockSpielplan.zeiten).to.deep.equal({startzeit: '09:30', spielzeit: 7, pausenzeit: 3});
+            expect(mockSpielplan.zeiten).to.deep.equal({
+                startzeit: '09:30',
+                spielzeit: 7,
+                pausenzeit: 3,
+                endzeit: '17:30',
+                startdatum: '02.02.1980',
+                enddatum: '01.03.2001'
+            });
             expect(element.find('input[name="spielzeit"]').val()).to.be.equal('7');
             expect(element.find('input[name="pausenzeit"]').val()).to.be.equal('3');
+        });
+
+        it('wenn die Startzeit nach der Endzeit liegt soll ein Fehler angezeigt werden', function () {
+            var d1 = new Date();
+            d1.setHours(17);
+            d1.setMinutes(30);
+            var d2 = d1;
+            d2.setHours(11);
+            ctrl.endzeit = d2;
+            ctrl.startzeit = d1;
+
+            expect(ctrl.startzeit).to.equal(ctrl.endzeit);
         });
 
         it('Soll einen Button zur Generierung des Spielplans haben', function () {

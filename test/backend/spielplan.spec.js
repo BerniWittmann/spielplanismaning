@@ -89,11 +89,60 @@ describe('Route: Spielplan', function () {
             });
     });
 
+    it('wenn die Startzeit vor der Endzeit liegt, soll ein Fehler geworfen werden', function (done) {
+        var spielplan = {
+            startzeit: '19:00',
+            spielzeit: 6,
+            pausenzeit: 4,
+            endzeit: '10:00',
+            startdatum: '01.01.1970',
+            enddatum: '01.01.1970'
+        };
+        request(server)
+            .put('/api/spielplan/zeiten')
+            .set('Authorization', server.adminToken)
+            .send(spielplan)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_ZEITEN_UNGUELTIG');
+                return done();
+            });
+    });
+
+    it('wenn das Startdatum nach dem Enddatum liegt, soll ein Fehler geworfen werden', function (done) {
+        var spielplan = {
+            startzeit: '10:00',
+            spielzeit: 6,
+            pausenzeit: 4,
+            endzeit: '19:00',
+            startdatum: '31.12.2000',
+            enddatum: '01.01.1970'
+        };
+        request(server)
+            .put('/api/spielplan/zeiten')
+            .set('Authorization', server.adminToken)
+            .send(spielplan)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(400);
+                expect(response.body.MESSAGEKEY).to.equal('ERROR_ZEITEN_UNGUELTIG');
+                return done();
+            });
+    });
+
     it('soll die Zeiten updaten können', function (done) {
         var spielplan = {
             startzeit: '10:00',
             spielzeit: 6,
-            pausenzeit: 4
+            pausenzeit: 4,
+            endzeit: '19:00',
+            startdatum: '01.01.1970',
+            enddatum: '01.01.1970'
         };
         request(server)
             .put('/api/spielplan/zeiten')

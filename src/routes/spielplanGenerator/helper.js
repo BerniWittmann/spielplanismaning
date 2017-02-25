@@ -93,21 +93,6 @@ function addLastTeam(team, geradeSpielendeTeams) {
     return geradeSpielendeTeams;
 }
 
-function calcZeit(platz, zeit, spielplan, spielnr) {
-    if (spielnr > 1 && platz === 1) {
-        zeit = zeit.add(spielplan.spielzeit + spielplan.pausenzeit, 'm');
-    }
-    return zeit;
-}
-
-function calcPlatz(platz, plaetze) {
-    platz++;
-    if (platz > plaetze) {
-        platz = 1;
-    }
-    return platz;
-}
-
 function getSpieleByTeam(team, spiele) {
     return _.filter(spiele, function (o) {
         return _.isEqual(o.teamA, team._id) || _.isEqual(o.teamB, team._id);
@@ -194,8 +179,6 @@ module.exports = {
     getTeamWithoutLast: getTeamWithoutLast,
     getPossibleGegner: getPossibleGegner,
     addLastTeam: addLastTeam,
-    calcZeit: calcZeit,
-    calcPlatz: calcPlatz,
     getSpieleByTeam: getSpieleByTeam,
     getSpieleByGruppe: getSpieleByGruppe,
     checkSpieleFuerGruppeUebrig: checkSpieleFuerGruppeUebrig,

@@ -13,6 +13,7 @@
             "_id": "5795079dfebe4a03004bfe2a",
             "nummer": 1,
             "platz": 1,
+            "datum": "01.01.1970",
             "uhrzeit": "09:00",
             "gruppe": {
                 "_id": "5795053d25126d0300d95521",
@@ -106,17 +107,18 @@
             var result = element.find('tr').find('td');
 
             expect(angular.element(result[0]).text()).to.be.equal('1');
-            expect(angular.element(result[1]).text()).to.be.equal('09:00');
-            expect(angular.element(result[2]).text()).to.be.equal('1');
-            expect(angular.element(result[3]).scope().vm.spiel.jugend._id).to.be.equal('5795053d25126d0300d95520');
-            expect(angular.element(result[3]).scope().vm.spiel.jugend.name).to.be.equal('Test Jugend');
-            expect(angular.element(result[4]).text()).to.be.equal('Test Gruppe');
-            expect(angular.element(result[5]).text()).to.contain('Test Team 1');
-            expect(angular.element(result[6]).text()).to.contain('Test Team 2');
+            expect(angular.element(result[1]).text()).to.be.equal('01.01.1970');
+            expect(angular.element(result[2]).text()).to.be.equal('09:00');
+            expect(angular.element(result[3]).text()).to.be.equal('1');
+            expect(angular.element(result[4]).scope().vm.spiel.jugend._id).to.be.equal('5795053d25126d0300d95520');
+            expect(angular.element(result[4]).scope().vm.spiel.jugend.name).to.be.equal('Test Jugend');
+            expect(angular.element(result[5]).text()).to.be.equal('Test Gruppe');
+            expect(angular.element(result[6]).text()).to.contain('Test Team 1');
+            expect(angular.element(result[7]).text()).to.contain('Test Team 2');
         });
 
         it('Das Ergebnis wird geladen', function () {
-            var result = angular.element(element.find('tr').find('td')[7]);
+            var result = angular.element(element.find('tr').find('td')[8]);
 
             expect(result.text()).to.contain('0 : 0');
         });
@@ -129,7 +131,7 @@
             });
 
             it('Es wird kein Bearbeiten Button angezeigt', function () {
-                var spans = angular.element(element.find('tr').find('td')[7]).find('span');
+                var spans = angular.element(element.find('tr').find('td')[8]).find('span');
 
                 var result = false;
                 _.forEach(spans, function (span) {
@@ -151,7 +153,7 @@
             });
 
             it('Es wird ein Bearbeiten Button angezeigt', function () {
-                var spans = angular.element(element.find('tr').find('td')[7]).find('span');
+                var spans = angular.element(element.find('tr').find('td')[8]).find('span');
 
                 var result = false;
                 _.forEach(spans, function (span) {
@@ -167,7 +169,7 @@
             describe('Beim Klick auf den Bearbeiten Button, kann man ein Ergebnis eintragen', function () {
                 var el;
                 beforeEach(function () {
-                    el = angular.element(element.find('tr').find('td')[7]);
+                    el = angular.element(element.find('tr').find('td')[8]);
                     el.find('i').parent().triggerHandler('click');
                 });
 
@@ -245,7 +247,7 @@
         });
 
         it('Bei Klick auf Team A wird man zum Team weitergeleitet', function () {
-            var result = angular.element(element.find('tr').find('td')[5]);
+            var result = angular.element(element.find('tr').find('td')[6]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -256,7 +258,7 @@
         });
 
         it('Bei Klick auf Team B wird man zum Team weitergeleitet', function () {
-            var result = angular.element(element.find('tr').find('td')[6]);
+            var result = angular.element(element.find('tr').find('td')[7]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -267,7 +269,7 @@
         });
 
         it('Bei Klick auf die Gruppe wird man zur Gruppe weitergeleitet', function () {
-            var result = angular.element(element.find('tr').find('td')[4]);
+            var result = angular.element(element.find('tr').find('td')[5]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -278,7 +280,7 @@
         });
 
         it('Bei Klick auf die Jugend wird man zur Jugend weitergeleitet', function () {
-            var result = angular.element(element.find('tr').find('td')[3]);
+            var result = angular.element(element.find('tr').find('td')[4]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -289,7 +291,7 @@
         });
 
         it('Bei Klick auf den Platz wird man zum Platz weitergeleitet', function () {
-            var result = angular.element(element.find('tr').find('td')[2]);
+            var result = angular.element(element.find('tr').find('td')[3]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');

@@ -17,6 +17,7 @@
             <thead>
             <tr>
                 <th class="text-center">Nr</th>
+                <th class="text-center">Datum</th>
                 <th class="text-center">Zeit</th>
                 <th class="text-center">Platz</th>
                 <th>Jugend</th>
@@ -26,10 +27,15 @@
                 <th class="text-center">Spielstand</th>
             </tr>
             </thead>
-            <tbody ui-sortable="vm.sortableOptions" ng-model="vm.spiele">
-            <tr data-ng-repeat="spiel in vm.spiele" data-ng-class="{'invalid-spielplan-row': vm.checkRowInvalid($index)}"
-                data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)" data-index="{{ $index }}"></tr>
+            <tbody ui-sortable="vm.sortableOptions" ng-model="vm.spiele" data-ng-if="vm.isEditing">
+            <tr data-ng-repeat="spiel in vm.spiele" class="spielplan-single-spiel" data-ng-class="{'invalid-spielplan-row': vm.checkRowInvalid($index)}"
+                data-spi-single-spiel="spiel" data-index="{{ $index }}"></tr>
             </tbody>
+            <div data-ng-if="!vm.isEditing">
+                <tbody class="table-body-spiele-by-date" data-ng-repeat="spieleByDate in vm.spieleByDate">
+                    <tr data-ng-repeat="spiel in spieleByDate" class="spielplan-single-spiel" data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
+                </tbody>
+            </div>
         </table>
         <spi-loader loading="vm.loading"></spi-loader>
     </div>

@@ -13,6 +13,7 @@
             "_id": "5795079dfebe4a03004bfe2a",
             "nummer": 1,
             "platz": 1,
+            "datum": '01.01.1970',
             "uhrzeit": "09:00",
             "gruppe": {
                 "$oid": "5795053d25126d0300d95521"
@@ -38,6 +39,7 @@
                 "_id": "5795079dfebe4a03004bfe2b",
                 "nummer": 2,
                 "platz": 2,
+                "datum": '01.01.1970',
                 "uhrzeit": "09:00",
                 "gruppe": {
                     "$oid": "5795053d25126d0300d95521"
@@ -63,6 +65,7 @@
                 "_id": "5795079dfebe4a03004bfe2c",
                 "nummer": 3,
                 "platz": 3,
+                "datum": '01.01.1970',
                 "uhrzeit": "09:00",
                 "gruppe": {
                     "_id": "5795053d25126d0300d95521",
@@ -122,7 +125,7 @@
         });
 
         it('Die Ergebnisse der Spiele werden geladen', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[6]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[7]);
 
             expect(result.text()).to.contain('3 : 1');
         });
@@ -130,13 +133,14 @@
         it('Die Daten der Teams werden geladen', function () {
             var result = angular.element(element.find('tbody').find('tr')[2]).find('td');
 
-            expect(angular.element(result[0]).text()).to.be.equal('09:00');
-            expect(angular.element(result[1]).text()).to.be.equal('3');
-            expect(angular.element(result[2]).scope().spiel.jugend._id).to.be.equal('5795053d25126d0300d95521');
-            expect(angular.element(result[2]).scope().spiel.jugend.name).to.be.equal('Test Jugend');
-            expect(angular.element(result[3]).text()).to.be.equal('Test Gruppe');
-            expect(angular.element(result[4]).text()).to.contain('Test Team 1');
-            expect(angular.element(result[5]).text()).to.contain('Test Team 2');
+            expect(angular.element(result[0]).text()).to.be.equal('01.01.1970');
+            expect(angular.element(result[1]).text()).to.be.equal('09:00');
+            expect(angular.element(result[2]).text()).to.be.equal('3');
+            expect(angular.element(result[3]).scope().spiel.jugend._id).to.be.equal('5795053d25126d0300d95521');
+            expect(angular.element(result[3]).scope().spiel.jugend.name).to.be.equal('Test Jugend');
+            expect(angular.element(result[4]).text()).to.be.equal('Test Gruppe');
+            expect(angular.element(result[5]).text()).to.contain('Test Team 1');
+            expect(angular.element(result[6]).text()).to.contain('Test Team 2');
         });
 
         it('Bei Klick auf ein Spiel wird man zum Spiel weitergeleitet', function () {
@@ -151,7 +155,7 @@
         });
 
         it('Bei Klick auf Team A wird man zum Team weitergeleitet', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[4]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[5]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -162,7 +166,7 @@
         });
 
         it('Bei Klick auf Team B wird man zum Team weitergeleitet', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[5]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[6]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -173,7 +177,7 @@
         });
 
         it('Bei Klick auf die Gruppe wird man zur Gruppe weitergeleitet', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[3]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[4]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -184,7 +188,7 @@
         });
 
         it('Bei Klick auf die Jugend wird man zur Gruppe weitergeleitet', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[2]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[3]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -195,7 +199,7 @@
         });
 
         it('Bei Klick auf den Platz wird man zum Platz weitergeleitet', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[1]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[2]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
@@ -206,7 +210,7 @@
         });
 
         it('das ausgewählt Team wird gehighlited', function () {
-            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[4]);
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[5]);
 
             expect(result.hasClass('highlightTeamName')).to.be.true;
         });
