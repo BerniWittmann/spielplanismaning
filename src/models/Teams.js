@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var TeamSchema = new mongoose.Schema({
+const TeamSchema = new mongoose.Schema({
     name: String,
     gruppe: {
         type: Schema.ObjectId,
@@ -54,7 +54,7 @@ TeamSchema.methods.changeName = function (name, cb) {
     this.save(cb);
 };
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 TeamSchema.plugin(deepPopulate, {});
 
 mongoose.model('Team', TeamSchema);

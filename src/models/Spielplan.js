@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var SpielPlanSchema = new mongoose.Schema({
+const SpielPlanSchema = new mongoose.Schema({
     startzeit: String, //10:40
     spielzeit: Number,
     pausenzeit: Number,
@@ -9,7 +9,7 @@ var SpielPlanSchema = new mongoose.Schema({
     enddatum: String //01.01.1970
 });
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 SpielPlanSchema.plugin(deepPopulate, {});
 
 mongoose.model('Spielplan', SpielPlanSchema);

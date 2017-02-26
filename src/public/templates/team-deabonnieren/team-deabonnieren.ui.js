@@ -25,7 +25,7 @@
     }
 
     function TeamDeabonnierenController(aktivesTeam, email, $state, $timeout) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         vm.team = aktivesTeam;

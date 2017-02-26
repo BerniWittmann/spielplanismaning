@@ -11,22 +11,22 @@
                                                                                                                    $timeout,
                                                                                                                    md5,
                                                                                                                    Logger) {
-            var auth = {};
+            const auth = {};
             auth.saveToken = authToken.saveToken;
 
             auth.getToken = authToken.getToken;
 
             auth.isLoggedIn = function () {
-                var token = auth.getToken();
+                const token = auth.getToken();
 
                 if (token) {
                     try {
-                        var payload = JSON.parse($window.atob(token.split('.')[1]));
+                        const payload = JSON.parse($window.atob(token.split('.')[1]));
                     } catch (err) {
                         console.warn(err);
                         return false;
                     }
-                    var checksum = payload.checksum;
+                    const checksum = payload.checksum;
                     delete payload.checksum;
                     if (!checksum || checksum !== md5.createHash(JSON.stringify(payload))) {
                         console.warn('Checksums don\'t match');
@@ -44,9 +44,9 @@
 
             auth.currentUser = function () {
                 if (auth.isLoggedIn()) {
-                    var token = auth.getToken();
+                    const token = auth.getToken();
                     try {
-                        var payload = JSON.parse($window.atob(token.split('.')[1]));
+                        const payload = JSON.parse($window.atob(token.split('.')[1]));
                     } catch (err) {
                         console.warn(err);
                         return undefined;
@@ -85,10 +85,10 @@
             };
 
             auth.getRole = function () {
-                var token = auth.getToken();
+                const token = auth.getToken();
 
                 if (token && !_.isUndefined(token)) {
-                    var payload = JSON.parse($window.atob(token.split('.')[1]));
+                    const payload = JSON.parse($window.atob(token.split('.')[1]));
                     if (payload.exp > Date.now() / 1000) {
                         payload.role.name = payload.role.name.toLowerCase();
                         return payload.role;
@@ -102,7 +102,7 @@
             };
 
             auth.canAccess = function (requiredRoles) {
-                var role = auth.getRole();
+                const role = auth.getRole();
 
                 if (requiredRoles && requiredRoles.length > 0) {
                     return _.includes(requiredRoles, role.name);
@@ -139,7 +139,7 @@
             };
 
             auth.forgotPassword = function (email) {
-                var data = {
+                const data = {
                     email: email
                 };
 
@@ -151,7 +151,7 @@
             };
 
             auth.resetPassword = function (username, token, password) {
-                var data = {
+                const data = {
                     username: username,
                     token: token,
                     password: password

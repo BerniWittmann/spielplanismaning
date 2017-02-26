@@ -28,7 +28,7 @@
     }
 
     function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, team) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

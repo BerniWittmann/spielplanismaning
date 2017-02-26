@@ -28,7 +28,7 @@
     }
 
     function TabellenController(jugend, jugenden, jugendTore) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

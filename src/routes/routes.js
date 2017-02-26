@@ -1,16 +1,16 @@
 module.exports = function (app, sendgrid, secret) {
-    var routes = require('./index.js')();
-    var users = require('./users.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL, secret);
-    var email = require('./email.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
-    var config = require('./config.js')(process.env);
-    var teams = require('./teams.js')();
-    var gruppen = require('./gruppen.js')();
-    var jugenden = require('./jugenden.js')();
-    var spiele = require('./spiele.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
-    var spielplan = require('./spielplan.js')();
-    var ansprechpartner = require('./ansprechpartner.js')();
+    const routes = require('./index.js')();
+    const users = require('./users.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL, secret);
+    const email = require('./email.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
+    const config = require('./config.js')(process.env);
+    const teams = require('./teams.js')();
+    const gruppen = require('./gruppen.js')();
+    const jugenden = require('./jugenden.js')();
+    const spiele = require('./spiele.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
+    const spielplan = require('./spielplan.js')();
+    const ansprechpartner = require('./ansprechpartner.js')();
 
-    var API_PREFIX = '/api';
+    const API_PREFIX = '/api';
     app.use(API_PREFIX + '/users', users);
     app.use(API_PREFIX + '/email', email);
     app.use(API_PREFIX + '/config', config);

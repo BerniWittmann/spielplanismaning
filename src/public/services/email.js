@@ -4,7 +4,7 @@
     angular
         .module('spi.email', ['spi.routes', 'spi.storage'])
         .factory('email', ['routes', 'storage', 'EMAIL_SUBSCRIPTION_TOKEN_NAME', function (routes, storage, EMAIL_SUBSCRIPTION_TOKEN_NAME) {
-            var email = {};
+            const email = {};
 
             email.send = function (email) {
                 return routes.requestPOST(routes.urls.email.base(), email);
@@ -23,7 +23,7 @@
 
             email.addSubscriptionToken = function (sub) {
                 if (!email.checkSubscription(sub)) {
-                    var token = getSubscriptionToken();
+                    const token = getSubscriptionToken();
                     token.push(sub);
                     storage.set(EMAIL_SUBSCRIPTION_TOKEN_NAME, JSON.stringify(token));
                 }
@@ -53,7 +53,7 @@
             };
 
             email.checkSubscription = function (sub) {
-                var result = false;
+                let result = false;
                 _.forEach(getSubscriptionToken(), function (s) {
                     if (_.isEqual(s.team, sub.team) && (_.isUndefined(sub.email) || _.isEqual(s.email, sub.email))) {
                         result = true;

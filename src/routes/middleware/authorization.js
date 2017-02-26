@@ -1,18 +1,18 @@
 module.exports = function (app, secret) {
-    var messages = require('./../messages/messages.js')();
-    var jwt = require('jsonwebtoken');
-    var _ = require('lodash');
-    var mongoose = require('mongoose');
-    var User = mongoose.model('User');
-    var helpers = require('../helpers.js')();
-    var fs = require('fs');
-    var path = require('path');
-    var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/routeConfig.json'), 'utf8'));
+    const messages = require('./../messages/messages.js')();
+    const jwt = require('jsonwebtoken');
+    const _ = require('lodash');
+    const mongoose = require('mongoose');
+    const User = mongoose.model('User');
+    const helpers = require('../helpers.js')();
+    const fs = require('fs');
+    const path = require('path');
+    const routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/routeConfig.json'), 'utf8'));
 
-    var authenticate = function (req, res, next) {
-        var requiredRoles = helpers.getRequiredRouteConfig(routes, req.path, req.method, 'AUTH');
+    const authenticate = function (req, res, next) {
+        const requiredRoles = helpers.getRequiredRouteConfig(routes, req.path, req.method, 'AUTH');
 
-        var authNeeded = requiredRoles && requiredRoles.length > 0;
+        const authNeeded = requiredRoles && requiredRoles.length > 0;
 
         if (!authNeeded) {
             return next();
@@ -22,7 +22,7 @@ module.exports = function (app, secret) {
             return messages.ErrorNotAuthorized(res);
         }
 
-        var user = helpers.verifyToken(req, secret);
+        const user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id || !user.role) {
             return messages.ErrorForbidden(res);
@@ -33,7 +33,7 @@ module.exports = function (app, secret) {
                 return messages.ErrorForbidden(res);
             }
 
-            var roleName = user.role.name.toLowerCase();
+            const roleName = user.role.name.toLowerCase();
             if (!_.isEqual(roleName, userDB.role.name.toLowerCase())) {
                 return messages.ErrorForbidden(res);
             }

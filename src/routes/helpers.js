@@ -1,15 +1,15 @@
 module.exports = function () {
 
-    var messages = require('./messages/messages.js')();
-    var _ = require('lodash');
-    var handler = require('./handler.js');
-    var jsonwebtoken = require('jsonwebtoken');
-    var md5 = require('md5');
-    var moment = require('moment');
+    const messages = require('./messages/messages.js')();
+    const _ = require('lodash');
+    const handler = require('./handler.js');
+    const jsonwebtoken = require('jsonwebtoken');
+    const md5 = require('md5');
+    const moment = require('moment');
 
     function getEntityQuery(model, req) {
-        var query = model.find();
-        var searchById = false;
+        let query = model.find();
+        let searchById = false;
         if (req.query.id) {
             searchById = true;
             query = model.findById(req.query.id);
@@ -48,7 +48,7 @@ module.exports = function () {
     }
 
     function getEntity(model, population, notFoundMessage, res, req) {
-        var {query, searchById} = getEntityQuery(model, req);
+        const {query, searchById} = getEntityQuery(model, req);
         query.deepPopulate(population).exec(function (err, data) {
             return handler.handleQueryResponse(err, data, res, searchById, notFoundMessage);
         });
@@ -70,7 +70,7 @@ module.exports = function () {
     }
 
     function removeEntityBy(model, by, value, res, cb) {
-        var query = {};
+        const query = {};
         query[by] = value;
         return model.remove(query, function (err) {
             if (err) {
@@ -91,11 +91,11 @@ module.exports = function () {
 
     function verifyToken(req, secret) {
         try {
-            var obj = jsonwebtoken.verify(req.get('Authorization'), secret);
+            const obj = jsonwebtoken.verify(req.get('Authorization'), secret);
         } catch (err) {
             return undefined;
         }
-        var checksum = obj.checksum;
+        const checksum = obj.checksum;
         delete obj.checksum;
         if (checksum && md5(JSON.stringify(obj)) === checksum) {
             return obj;
@@ -117,7 +117,7 @@ module.exports = function () {
     }
 
     function addEntity(model, req, res) {
-        var entity = new model(req.body);
+        const entity = new model(req.body);
 
         entity.save(function (err, entity) {
             return handler.handleErrorAndResponse(err, res, entity);
@@ -126,7 +126,7 @@ module.exports = function () {
 
     function getRequiredRouteConfig(routes, path, method, configKey) {
         path = removeLastSlashFromPath(path);
-        var route = routes[path];
+        let route = routes[path];
 
         if (_.isUndefined(route) || _.isNull(route)) {
             return []
@@ -146,7 +146,7 @@ module.exports = function () {
             return [];
         }
 
-        var routeconfig = route[method];
+        const routeconfig = route[method];
 
         if (_.isArray(routeconfig)) {
             return routeconfig;
@@ -160,9 +160,9 @@ module.exports = function () {
     }
 
     function checkSpielOrderChangeAllowed(spiele) {
-        var teamsParallel = []
-        for(var i = 0; i < spiele.length; i += 3) {
-            for (var j = i; j < i + 3; j++) {
+        let teamsParallel = [];
+        for(let i = 0; i < spiele.length; i += 3) {
+            for (let j = i; j < i + 3; j++) {
                 if (j < spiele.length) {
                     if (spiele[j].teamA && spiele[j].teamB) {
                         teamsParallel.push(spiele[j].teamA._id);
@@ -182,24 +182,24 @@ module.exports = function () {
     }
 
     function calcSpielDateTime(nr, spielplan) {
-        var dailyStartTime = moment(spielplan.startzeit, 'HH:mm');
-        var dailyEndTime = moment(spielplan.endzeit, 'HH:mm');
-        var spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * 3;
+        const dailyStartTime = moment(spielplan.startzeit, 'HH:mm');
+        const dailyEndTime = moment(spielplan.endzeit, 'HH:mm');
+        const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * 3;
         if (spielePerDay < 0) {
             return undefined;
         }
-        var offsetDays = Math.floor((nr - 1) / spielePerDay);
+        const offsetDays = Math.floor((nr - 1) / spielePerDay);
         if (offsetDays < 0) {
             return undefined;
         }
-        var offsetSpiele = (nr - 1) % spielePerDay;
+        const offsetSpiele = (nr - 1) % spielePerDay;
         if (offsetSpiele < 0) {
             return undefined;
         }
 
-        var date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
-        var time = dailyStartTime.add(Math.floor(offsetSpiele / 3) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
-        var platz = (offsetSpiele % 3) + 1;
+        const date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
+        const time = dailyStartTime.add(Math.floor(offsetSpiele / 3) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
+        const platz = (offsetSpiele % 3) + 1;
         return {
             date: date.format('DD.MM.YYYY'),
             time: time.format('HH:mm'),

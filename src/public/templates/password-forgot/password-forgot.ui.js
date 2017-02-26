@@ -23,7 +23,7 @@
     }
 
     function PasswordForgotController(auth, toastr) {
-        var vm = this;
+        const vm = this;
         vm.email = undefined;
 
         vm.forgotPassword = function (form) {

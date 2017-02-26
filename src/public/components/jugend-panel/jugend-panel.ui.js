@@ -16,7 +16,7 @@
         });
 
     function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, BestaetigenDialog) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

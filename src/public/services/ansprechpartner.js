@@ -4,7 +4,7 @@
     angular
         .module('spi.ansprechpartner', ['spi.routes'])
         .factory('ansprechpartner', ['routes', function (routes) {
-            var ansprechpartner = {};
+            const ansprechpartner = {};
 
             ansprechpartner.getAll = function () {
                 return routes.requestGETBase('ansprechpartner');

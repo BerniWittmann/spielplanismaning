@@ -1,15 +1,15 @@
 module.exports = function (secret) {
-    var mongoose = require('mongoose');
-    var crypto = require('crypto');
-    var jwt = require('jsonwebtoken');
-    var moment = require('moment');
-    var uuidTokenGen = require('uuid-token-generator');
-    var tokenGenerator = new uuidTokenGen();
-    var _ = require('lodash');
-    var md5 = require('md5');
-    var roles = ['Bearbeiter', 'Admin'];
+    const mongoose = require('mongoose');
+    const crypto = require('crypto');
+    const jwt = require('jsonwebtoken');
+    const moment = require('moment');
+    const uuidTokenGen = require('uuid-token-generator');
+    const tokenGenerator = new uuidTokenGen();
+    const _ = require('lodash');
+    const md5 = require('md5');
+    const roles = ['Bearbeiter', 'Admin'];
 
-    var UserSchema = new mongoose.Schema({
+    const UserSchema = new mongoose.Schema({
         username: {
             type: String,
             lowercase: true,
@@ -35,10 +35,10 @@ module.exports = function (secret) {
 
     UserSchema.methods.generateJWT = function () {
         // set expiration to 60 days
-        var today = new Date();
-        var exp = new Date(today);
+        const today = new Date();
+        const exp = new Date(today);
         exp.setDate(today.getDate() + 60);
-        var obj = {
+        const obj = {
             _id: this._id,
             username: this.username,
             email: this.email,
@@ -70,7 +70,7 @@ module.exports = function (secret) {
     };
 
     UserSchema.methods.validPassword = function (password) {
-        var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+        const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 
         return this.hash === hash;
     };
@@ -107,7 +107,7 @@ module.exports = function (secret) {
         this.email = email;
     };
 
-    var deepPopulate = require('mongoose-deep-populate')(mongoose);
+    const deepPopulate = require('mongoose-deep-populate')(mongoose);
     UserSchema.plugin(deepPopulate, {});
 
     mongoose.model('User', UserSchema);

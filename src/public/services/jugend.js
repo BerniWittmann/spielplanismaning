@@ -5,7 +5,7 @@
         .module('spi.jugend', ['spi.routes'])
         .factory('jugend', ['routes', function (routes) {
 
-            var jugend = {};
+            const jugend = {};
 
             jugend.getAll = function () {
                 return routes.requestGETBase('jugenden');
@@ -28,7 +28,7 @@
             };
 
             jugend.addGruppe = function (jugendId, gruppenId) {
-                var jgd;
+                let jgd;
                 return jugend.get(jugendId).then(function (res) {
                     jgd = res;
                     jgd.gruppen.push(gruppenId);

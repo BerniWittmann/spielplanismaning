@@ -1,25 +1,25 @@
 module.exports = function (sendgrid, env, url, disableMails) {
-    var express = require('express');
-    var router = express.Router();
+    const express = require('express');
+    const router = express.Router();
 
-    var mongoose = require('mongoose');
-    var async = require('async');
-    var moment = require('moment');
+    const mongoose = require('mongoose');
+    const async = require('async');
+    const moment = require('moment');
 
-    var Spiel = mongoose.model('Spiel');
-    var Subscriber = mongoose.model('Subscriber');
-    var Spielplan = mongoose.model('Spielplan');
-    var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
+    const Spiel = mongoose.model('Spiel');
+    const Subscriber = mongoose.model('Subscriber');
+    const Spielplan = mongoose.model('Spielplan');
+    const MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
-    var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js')();
-    var handler = require('./handler.js');
+    const messages = require('./messages/messages.js')();
+    const helpers = require('./helpers.js')();
+    const handler = require('./handler.js');
 
     function notifySubscribers(spiel, fn, callback) {
         return async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
             if (team && team._id) {
                 Subscriber.getByTeam(team._id).then(function (mails) {
-                    var emails = [];
+                    const emails = [];
                     mails.forEach(function (mail) {
                         emails.push(mail.email);
                     });
@@ -76,7 +76,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.post('/', function (req, res) {
-        var spiel = new Spiel(req.body);
+        const spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
         spiel.gruppe = req.body.gruppe;
 
@@ -120,9 +120,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.put('/alle', function (req, res) {
         //TODO Entweder kann das gelöscht werden, oder es kommt später wieder zum Einsatz z.B: beim Verschieben der Spiele
-        var spiele = req.body;
+        const spiele = req.body;
         async.eachSeries(spiele, function (singlespiel, asyncdone) {
-            var spiel = new Spiel(singlespiel);
+            const spiel = new Spiel(singlespiel);
             spiel.jugend = singlespiel.jugend;
             spiel.gruppe = singlespiel.gruppe;
             spiel.save(asyncdone);
@@ -164,13 +164,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/tore', function (req, res) {
-        var query = Spiel.findById(req.query.id);
+        const query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
             }
 
-            var oldData = {
+            const oldData = {
                 toreA: spiel.toreA,
                 toreB: spiel.toreB,
                 punkteA: spiel.punkteA,
@@ -214,15 +214,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
-        var query = Spiel.findById(req.query.id);
+        const query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
             }
-            var toreAOld = spiel.toreA;
-            var toreBOld = spiel.toreB;
-            var punkteAOld = spiel.punkteA;
-            var punkteBOld = spiel.punkteB;
+            const toreAOld = spiel.toreA;
+            const toreBOld = spiel.toreB;
+            const punkteAOld = spiel.punkteA;
+            const punkteBOld = spiel.punkteB;
             spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
                 if (err) {
                     return messages.Error(res, err);
@@ -294,9 +294,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorSpielplanUngueltig
      **/
     router.put('/order', function (req, res) {
-        var spiele = req.body;
+        const spiele = req.body;
 
-        var errorIndex = helpers.checkSpielOrderChangeAllowed(spiele);
+        const errorIndex = helpers.checkSpielOrderChangeAllowed(spiele);
         if (errorIndex >= 0) {
             return messages.ErrorSpielplanUngueltig(res, errorIndex);
         }
@@ -308,13 +308,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
             }
 
             async.eachSeries(spiele, function (singlespiel, asyncdone) {
-                var index = spiele.indexOf(singlespiel);
+                const index = spiele.indexOf(singlespiel);
                 Spiel.findById(singlespiel._id).exec(function (err, spiel) {
                     if (err) {
                         return asyncdone(err);
                     }
 
-                    var dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
+                    const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
 
                     spiel.datum = dateTimePlace.date;
                     spiel.uhrzeit = dateTimePlace.time;

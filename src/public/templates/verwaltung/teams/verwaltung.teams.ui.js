@@ -31,7 +31,7 @@
     }
 
     function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, jugenden, teams, JUGEND_FARBEN) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

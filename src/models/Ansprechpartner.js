@@ -1,12 +1,12 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var AnsprechpartnerSchema = new mongoose.Schema({
+const AnsprechpartnerSchema = new mongoose.Schema({
     name: String,
     turnier: String,
     email: String
 });
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 AnsprechpartnerSchema.plugin(deepPopulate, {});
 
 mongoose.model('Ansprechpartner', AnsprechpartnerSchema);

@@ -1,19 +1,19 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var concatCss = require('gulp-concat-css');
-var clean = require('gulp-clean');
-var cleanCss = require('gulp-clean-css');
-var gp_uglify = require('gulp-uglify');
-var babel = require('gulp-babel');
-var imagemin = require('gulp-imagemin');
-var concatJs = require('gulp-concat');
-var templateCache = require('gulp-angular-templatecache');
-var htmlmin = require('gulp-htmlmin');
-var ngAnnotate = require('gulp-ng-annotate');
-var sourcemaps = require('gulp-sourcemaps');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
+const concatCss = require('gulp-concat-css');
+const clean = require('gulp-clean');
+const cleanCss = require('gulp-clean-css');
+const gp_uglify = require('gulp-uglify');
+const babel = require('gulp-babel');
+const imagemin = require('gulp-imagemin');
+const concatJs = require('gulp-concat');
+const templateCache = require('gulp-angular-templatecache');
+const htmlmin = require('gulp-htmlmin');
+const ngAnnotate = require('gulp-ng-annotate');
+let sourcemaps = require('gulp-sourcemaps');
 
 
-var uglify = false;
+let uglify = false;
 
 // build
 gulp.task('build', function (done) {

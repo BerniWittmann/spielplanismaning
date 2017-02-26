@@ -1,7 +1,7 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var inject = require('gulp-inject');
-var replace = require('gulp-replace');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
+const inject = require('gulp-inject');
+const replace = require('gulp-replace');
 
 gulp.task('inject', function (done) {
     return runSequence('moveViews', 'inject:css', 'inject:js', done);

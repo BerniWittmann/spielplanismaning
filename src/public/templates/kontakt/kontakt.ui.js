@@ -31,7 +31,7 @@
     }
 
     function KontaktController(version, kontakt, env, BUG_REPORT_EMAIL, BugDialog) {
-        var vm = this;
+        const vm = this;
 
         vm.loading = true;
 

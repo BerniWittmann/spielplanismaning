@@ -28,7 +28,7 @@
     }
 
     function SpieleDruckController($state, spiele) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

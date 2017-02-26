@@ -29,20 +29,20 @@
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                var options = {
+                const options = {
                     clockFace: 'MinuteCounter',
                     autoPlay: false
                 };
                 _.extend(options, scope.$eval(attrs.flipcounter));
-                var scoreA = scope.$eval(attrs.scorea);
-                var scoreB = scope.$eval(attrs.scoreb);
-                var time = 60 * scoreA + scoreB;
+                const scoreA = scope.$eval(attrs.scorea);
+                const scoreB = scope.$eval(attrs.scoreb);
+                const time = 60 * scoreA + scoreB;
 
-                var start = time - scoreB - 1;
+                let start = time - scoreB - 1;
                 if (start < 0) {
                     start = 0;
                 }
-                var clock = $(element).FlipClock(start, options);
+                const clock = $(element).FlipClock(start, options);
                 clock.stop();
                 if (scoreA > 0) {
                     clock.flip();
@@ -58,7 +58,7 @@
     }
 
     function SpielController($state, aktivesSpiel) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

@@ -15,7 +15,7 @@
         });
 
     function SpieleTabellenController($state) {
-        var vm = this;
+        const vm = this;
 
         _.extend(vm, {
             gotoTeam: function (team) {

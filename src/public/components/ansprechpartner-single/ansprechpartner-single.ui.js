@@ -17,7 +17,7 @@
         });
 
     function AnsprechpartnerSingleController($scope, ansprechpartner, toastr) {
-        var vm = this;
+        const vm = this;
 
         _.extend(vm, {
             kontakt: $scope.spiAnsprechpartnerSingle,

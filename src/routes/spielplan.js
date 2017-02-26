@@ -1,18 +1,18 @@
 module.exports = function () {
-    var express = require('express');
-    var router = express.Router();
+    const express = require('express');
+    const router = express.Router();
 
-    var mongoose = require('mongoose');
-    var moment = require('moment');
-    var async = require('async');
+    const mongoose = require('mongoose');
+    const moment = require('moment');
+    const async = require('async');
 
-    var Spielplan = mongoose.model('Spielplan');
-    var Spiel = mongoose.model('Spiel');
+    const Spielplan = mongoose.model('Spielplan');
+    const Spiel = mongoose.model('Spiel');
 
-    var messages = require('./messages/messages.js')();
-    var spielplanGenerator = require('./spielplanGenerator/spielplanGenerator')();
-    var handler = require('./handler.js');
-    var helpers = require('./helpers.js')();
+    const messages = require('./messages/messages.js')();
+    const spielplanGenerator = require('./spielplanGenerator/spielplanGenerator')();
+    const handler = require('./handler.js');
+    const helpers = require('./helpers.js')();
 
     /**
      * @api {get} /spielplan Get Spielplan
@@ -39,7 +39,7 @@ module.exports = function () {
      *     }]
      **/
     router.get('/', function (req, res) {
-        var query = Spielplan.findOne({});
+        const query = Spielplan.findOne({});
         query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
             return handler.handleErrorAndResponse(err, res, spielplan);
         });
@@ -100,7 +100,7 @@ module.exports = function () {
 
                 spiele = spiele.sort(compareNumbers);
                 async.eachSeries(spiele, function (singlespiel, asyncdone) {
-                    var dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body);
+                    const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body);
                     singlespiel.uhrzeit = dateTimeObject.time;
                     singlespiel.datum = dateTimeObject.date;
                     singlespiel.platz = dateTimeObject.platz;

@@ -29,7 +29,7 @@
     }
 
     function AnsprechpartnerController(ansprechpartner, kontakte, $scope) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

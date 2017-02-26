@@ -1,12 +1,12 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var Server = require('karma').Server;
-var mocha = require('gulp-mocha');
-var angularProtractor = require('gulp-angular-protractor');
-var mongobackup = require('mongobackup');
-var spawn = require('child_process').spawn;
-var mongoose = require('mongoose');
-var eslint = require('gulp-eslint');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
+const Server = require('karma').Server;
+const mocha = require('gulp-mocha');
+const angularProtractor = require('gulp-angular-protractor');
+let mongobackup = require('mongobackup');
+const spawn = require('child_process').spawn;
+const mongoose = require('mongoose');
+const eslint = require('gulp-eslint');
 require('shelljs/global');
 
 gulp.task('test', function (done) {
@@ -19,7 +19,7 @@ gulp.task('test:precommit', function (done) {
 
 gulp.task('test:travis', function () {
     return runSequence('test:frontend', 'test:backend:withOutWipe', 'lint', function (err) {
-        var exitCode = 0;
+        let exitCode = 0;
         if (err) {
             exitCode = 2;
             console.log('[ERROR] gulp test task failed', err);
@@ -94,10 +94,10 @@ gulp.task('testDB:wipe', function (done) {
 });
 
 gulp.task('testDB:restore', function (done) {
-    var DB_SETUP_PATH = __dirname + '/../test/backend/database-setup';
-    var LOGGING = false;
-    var args = ['--db', 'spielplan-test', '--drop', DB_SETUP_PATH + '/data/spielplan'];
-    var mongorestore = spawn(DB_SETUP_PATH + '/mongorestore', args);
+    const DB_SETUP_PATH = __dirname + '/../test/backend/database-setup';
+    const LOGGING = false;
+    const args = ['--db', 'spielplan-test', '--drop', DB_SETUP_PATH + '/data/spielplan'];
+    const mongorestore = spawn(DB_SETUP_PATH + '/mongorestore', args);
     mongorestore.stdout.on('data', function (data) {
         if (LOGGING) console.log('stdout: ' + data);
     });

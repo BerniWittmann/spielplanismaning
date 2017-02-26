@@ -5,7 +5,7 @@
         .module('spi.gruppe', ['spi.routes'])
         .factory('gruppe', ['routes', function (routes) {
 
-            var gruppe = {};
+            const gruppe = {};
 
             gruppe.getAll = function () {
                 return routes.requestGETBase('gruppen');

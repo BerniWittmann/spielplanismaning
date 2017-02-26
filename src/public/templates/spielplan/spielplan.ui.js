@@ -25,7 +25,7 @@
     }
 
     function SpielplanController($state, $scope, spiele, spiel, auth, toastr) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {
@@ -95,15 +95,15 @@
         vm.showGruppe = checkShowGruppe();
 
         function checkShowJugend() {
-            var jugenden = _.groupBy(vm.spiele, 'jugend._id');
+            const jugenden = _.groupBy(vm.spiele, 'jugend._id');
             return Object.keys(jugenden).length > 1;
         }
 
         function checkShowGruppe() {
-            var result = false;
-            var spiele = _.cloneDeep(vm.spiele);
-            var jugenden = _.uniqBy(_.map(spiele, function(spiel) {
-                return spiel.jugend ;
+            let result = false;
+            const spiele = _.cloneDeep(vm.spiele);
+            const jugenden = _.uniqBy(_.map(spiele, function (spiel) {
+                return spiel.jugend;
             }), '_id');
             _.forEach(jugenden, function (jugend) {
                 if (jugend && jugend.gruppen.length > 1) {

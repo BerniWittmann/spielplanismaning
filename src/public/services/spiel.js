@@ -5,7 +5,7 @@
         .module('spi.spiel', ['spi.routes'])
         .factory('spiel', ['Logger', 'routes', function (Logger, routes) {
 
-            var spiel = {};
+            const spiel = {};
 
             spiel.getAll = function () {
                 return routes.requestGETBase('spiele');
@@ -16,7 +16,7 @@
             };
 
             function getByParam(param, id) {
-                var params = {};
+                const params = {};
                 params[param] = id;
                 return routes.requestGETBaseParam('spiele', params);
             }

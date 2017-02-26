@@ -18,7 +18,7 @@
     }
 
     function FooterController(config) {
-        var vm = this;
+        const vm = this;
 
         config.getEnv().then(function (res) {
             _.extend(vm, {

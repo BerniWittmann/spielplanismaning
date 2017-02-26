@@ -28,12 +28,12 @@
     }
 
     function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
-        var d = new Date();
+        const d = new Date();
         d.setHours(9);
         d.setMinutes(0);
-        var d2 = d;
+        const d2 = d;
         d2.setHours(17);
 
         if (!zeiten.startdatum || !zeiten.enddatum) {
@@ -121,7 +121,7 @@
 
         $scope.$watch('vm.date', function () {
             if (vm.date) {
-                var parts = vm.date.split(' ');
+                const parts = vm.date.split(' ');
                 if (parts.length === 1) {
                     vm.startdate = parts[0];
                     vm.enddate = parts[0];

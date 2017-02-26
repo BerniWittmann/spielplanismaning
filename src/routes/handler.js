@@ -1,5 +1,5 @@
-var messages = require('./messages/messages.js')();
-var _ = require('lodash');
+const messages = require('./messages/messages.js')();
+const _ = require('lodash');
 
 function handleErrorAndResponse(err, res, data) {
     if (err) {

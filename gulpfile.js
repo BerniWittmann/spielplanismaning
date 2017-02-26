@@ -1,12 +1,12 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var open = require('gulp-open');
-var git = require('gulp-git');
-var bump = require('gulp-bump');
-var filter = require('gulp-filter');
-var tag_version = require('gulp-tag-version');
-var apidoc = require('gulp-apidoc');
-var watch = require('gulp-watch');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
+const open = require('gulp-open');
+const git = require('gulp-git');
+const bump = require('gulp-bump');
+const filter = require('gulp-filter');
+const tag_version = require('gulp-tag-version');
+const apidoc = require('gulp-apidoc');
+const watch = require('gulp-watch');
 
 require('require-dir')('./gulp-tasks');
 
