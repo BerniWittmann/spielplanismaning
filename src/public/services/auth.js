@@ -20,8 +20,9 @@
                 const token = auth.getToken();
 
                 if (token) {
+                    let payload;
                     try {
-                        const payload = JSON.parse($window.atob(token.split('.')[1]));
+                        payload = JSON.parse($window.atob(token.split('.')[1]));
                     } catch (err) {
                         console.warn(err);
                         return false;
@@ -45,8 +46,9 @@
             auth.currentUser = function () {
                 if (auth.isLoggedIn()) {
                     const token = auth.getToken();
+                    let payload;
                     try {
-                        const payload = JSON.parse($window.atob(token.split('.')[1]));
+                        payload = JSON.parse($window.atob(token.split('.')[1]));
                     } catch (err) {
                         console.warn(err);
                         return undefined;
