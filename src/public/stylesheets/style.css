@@ -241,18 +241,6 @@ body {
     display: block;
 }
 
-.navbar-spi .navbar-header > .navbar-brand > .brand-image > .brand-image-hover {
-    display: none;
-}
-
-.navbar-spi .navbar-header > .navbar-brand > .brand-image:hover .brand-image-normal {
-    display: none;
-}
-
-.navbar-spi .navbar-header > .navbar-brand > .brand-image:hover .brand-image-hover {
-    display: block;
-}
-
 .valign, table tr > td.valign, table tr > th.valign {
     vertical-align: middle;
 }
