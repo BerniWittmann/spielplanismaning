@@ -26,6 +26,7 @@
         .config(states)
         .config(toastr)
         .config(localStorage)
+        .config(tooltips)
         .controller('AppController', AppController)
         .directive('ngEnter', ngEnter)
         .run(run);
@@ -48,6 +49,21 @@
         localStorageServiceProvider
             .setPrefix('spielplan-ismaning')
             .setStorageCookie(30, '/', true);
+    }
+
+    function tooltips($uibTooltipProvider) {
+        var parser = new UAParser();
+        var result = parser.getResult();
+        var touch = result.device && (result.device.type === 'tablet' || result.device.type === 'mobile');
+
+        if (touch) {
+            var options = {
+                trigger: 'none' // default dummy trigger event to show tooltips
+            };
+
+            $uibTooltipProvider.options(options);
+        }
+
     }
 
     function toastr(toastrConfig) {
