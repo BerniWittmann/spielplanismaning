@@ -90,8 +90,9 @@ module.exports = function () {
     }
 
     function verifyToken(req, secret) {
+        let obj;
         try {
-            const obj = jsonwebtoken.verify(req.get('Authorization'), secret);
+            obj = jsonwebtoken.verify(req.get('Authorization'), secret);
         } catch (err) {
             return undefined;
         }
