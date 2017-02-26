@@ -13,37 +13,61 @@
             nummer: 1,
             platz: 1,
             beendet: false,
-            jugend: 'jgd1'
+            jugend: {
+                _id: '1',
+                name: 'jgd1',
+                gruppen: [{}, {}]
+            }
         }, {
             _id: '2',
             nummer: 2,
             platz: 2,
             beendet: false,
-            jugend: 'jgd1'
+            jugend: {
+                _id: '1',
+                name: 'jgd1',
+                gruppen: [{}, {}]
+            }
         }, {
             _id: '3',
             nummer: 3,
             platz: 3,
             beendet: false,
-            jugend: 'jgd1'
+            jugend: {
+                _id: '1',
+                name: 'jgd1',
+                gruppen: [{}, {}]
+            }
         }, {
             _id: '4',
             nummer: 4,
             platz: 1,
             beendet: false,
-            jugend: 'jgd2'
+            jugend: {
+                _id: '2',
+                name: 'jgd2',
+                gruppen: [{}]
+            }
         }, {
             _id: '6',
             nummer: 6,
             platz: 2,
             beendet: false,
-            jugend: 'jgd2'
+            jugend: {
+                _id: '2',
+                name: 'jgd2',
+                gruppen: [{}]
+            }
         }, {
             _id: '5',
             nummer: 5,
             platz: 4,
             beendet: false,
-            jugend: 'jgd2'
+            jugend: {
+                _id: '2',
+                name: 'jgd2',
+                gruppen: [{}]
+            }
         }];
         var mockState = {
             go: function () {
