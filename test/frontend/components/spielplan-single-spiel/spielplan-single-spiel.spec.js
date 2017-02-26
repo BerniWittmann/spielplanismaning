@@ -44,6 +44,8 @@
             go: function () {
             }
         };
+        var showGruppe = true;
+        var showJugend = true;
 
         var authMock = {
             access: false,
@@ -71,6 +73,8 @@
         beforeEach(inject(function ($rootScope, $compile, $q) {
             scope = $rootScope.$new();
             scope.spiel = spiel;
+            scope.showJugend = showJugend;
+            scope.showGruppe = showGruppe;
             $provide.service('$state', function () {
                 return stateMock;
             });
@@ -91,7 +95,7 @@
                 };
                 return mockSpiel;
             });
-            element = $compile('<table><tr data-spi-single-spiel="spiel"></tr></table>')(scope);
+            element = $compile('<table><tr data-spi-single-spiel="spiel" data-show-jugend="showJugend" data-show-gruppe="showGruppe"></tr></table>')(scope);
             scope.$digest();
             controller = element.controller("SpielplanSingleSpielController");
             compile = $compile;
@@ -100,7 +104,9 @@
         var compile;
 
         function recompile() {
-            element = compile('<table><tr data-spi-single-spiel="spiel"></tr></table>')(scope);
+            scope.showJugend = showJugend;
+            scope.showGruppe = showGruppe;
+            element = compile('<table><tr data-spi-single-spiel="spiel" data-show-jugend="showJugend" data-show-gruppe="showGruppe"></tr></table>')(scope);
         }
 
         it('Das Spiel wird geladen', function () {
@@ -126,6 +132,8 @@
         describe('Angenommen der Nutzer ist nicht angemeldet', function () {
             beforeEach(function () {
                 authMock.access = false;
+                showGruppe = true;
+                showJugend = true;
                 recompile();
                 scope.$apply();
             });
@@ -148,6 +156,8 @@
         describe('Angenommen der Nutzer ist angemeldet', function () {
             beforeEach(function () {
                 authMock.access = true;
+                showGruppe = true;
+                showJugend = true;
                 recompile();
                 scope.$apply();
             });
@@ -301,5 +311,26 @@
             });
         });
 
+        it('soll die Gruppe ausblenden können', function () {
+            showGruppe = false;
+            recompile();
+            scope.$apply();
+            var result = element.find('tr').find('td');
+
+            expect(angular.element(result[5]).text()).not.to.be.equal('Test Gruppe');
+
+            showGruppe = true;
+        });
+
+        it('soll die Jugend ausblenden können', function () {
+            showJugend = false;
+            recompile();
+            scope.$apply();
+            var result = element.find('tr').find('td');
+
+            expect(angular.element(result[5]).text()).not.to.be.equal('Test Jugend');
+
+            showJugend = true;
+        });
     });
 }());

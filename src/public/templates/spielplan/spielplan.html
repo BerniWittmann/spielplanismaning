@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-12 table-responsive">
         <div data-ng-if="!vm.loading && vm.spiele.length === 0" class="alert alert-info">Keine Spiele gefunden.</div>
-        <table class="table table-condensed table-striped table-hover" data-ng-if="!vm.loading && vm.spiele.length > 0"
+        <table class="table table-condensed table-striped table-hover table-clickable" data-ng-if="!vm.loading && vm.spiele.length > 0"
                id="spielplan">
             <thead>
             <tr>
@@ -20,8 +20,8 @@
                 <th class="text-center">Datum</th>
                 <th class="text-center">Zeit</th>
                 <th class="text-center">Platz</th>
-                <th>Jugend</th>
-                <th>Gruppe</th>
+                <th data-ng-if="vm.showJugend">Jugend</th>
+                <th data-ng-if="vm.showGruppe">Gruppe</th>
                 <th>Heim</th>
                 <th>Gast</th>
                 <th class="text-center">Spielstand</th>
@@ -33,7 +33,7 @@
             </tbody>
             <div data-ng-if="!vm.isEditing">
                 <tbody class="table-body-spiele-by-date" data-ng-repeat="spieleByDate in vm.spieleByDate">
-                    <tr data-ng-repeat="spiel in spieleByDate" class="spielplan-single-spiel" data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
+                    <tr data-ng-repeat="spiel in spieleByDate" class="spielplan-single-spiel" data-show-jugend="vm.showJugend" data-show-gruppe="vm.showGruppe" data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
                 </tbody>
             </div>
         </table>
