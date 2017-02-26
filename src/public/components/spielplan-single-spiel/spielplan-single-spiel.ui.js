@@ -13,7 +13,9 @@
                 controller: 'SpielplanSingleSpielController',
                 controllerAs: 'vm',
                 scope: {
-                    'spiSingleSpiel': '='
+                    'spiSingleSpiel': '=',
+                    'showJugend': '=',
+                    'showGruppe': '='
                 }
             };
         })
@@ -37,6 +39,8 @@
             canEdit: auth.isAdmin() || auth.isBearbeiter(),
             canDelete: auth.isAdmin(),
             spiel: $scope.spiSingleSpiel,
+            showGruppe: $scope.showGruppe,
+            showJugend: $scope.showJugend,
             isEditing: false,
             edit: function () {
                 if (vm.canEdit) {

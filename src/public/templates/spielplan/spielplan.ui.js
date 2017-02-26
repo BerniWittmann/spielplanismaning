@@ -90,6 +90,29 @@
             });
         }
 
+
+        vm.showJugend = checkShowJugend();
+        vm.showGruppe = checkShowGruppe();
+
+        function checkShowJugend() {
+            var jugenden = _.groupBy(vm.spiele, 'jugend._id');
+            return Object.keys(jugenden).length > 1;
+        }
+
+        function checkShowGruppe() {
+            var result = false;
+            var spiele = _.cloneDeep(vm.spiele);
+            var jugenden = _.uniqBy(_.map(spiele, function(spiel) {
+                return spiel.jugend ;
+            }), '_id');
+            _.forEach(jugenden, function (jugend) {
+                if (jugend && jugend.gruppen.length > 1) {
+                    result = true;
+                }
+            });
+            return result;
+        }
+
         $scope.$watch('vm.isEditing', function (newVal) {
             vm.sortableOptions.disabled = !newVal;
         });
