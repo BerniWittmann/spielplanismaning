@@ -29,7 +29,8 @@
     "angular-ui-sortable": "^0.16.1",
     "jquery-ui": "^1.12.1",
     "angular-bootstrap-toggle-switch": "^0.5.6",
-    "angular-flatpickr": "^2.0.0"
+    "angular-flatpickr": "^2.0.0",
+    "ua-parser-js": "^0.7.12"
   },
   "resolutions": {
     "angular": "1.5.8",

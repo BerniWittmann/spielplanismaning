@@ -286,3 +286,7 @@ td .form-group {
     display: block;
     height: 35px;
 }
+
+.table-clickable tbody tr, .table-clickable tbody tr td {
+    cursor:pointer
+}
