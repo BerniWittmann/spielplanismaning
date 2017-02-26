@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var JugendSchema = new mongoose.Schema({
+const JugendSchema = new mongoose.Schema({
     name: String,
     gruppen: [{
         type: Schema.ObjectId,
@@ -32,7 +32,7 @@ JugendSchema.methods.pushTeams = function (team, cb) {
     this.save(cb);
 };
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 JugendSchema.plugin(deepPopulate, {});
 
 mongoose.model('Jugend', JugendSchema);

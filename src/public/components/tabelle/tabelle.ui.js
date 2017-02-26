@@ -15,7 +15,7 @@
         });
 
     function TabelleController() {
-        var vm = this;
+        const vm = this;
 
         vm.$onChanges = function (changeObj) {
             if (!_.isUndefined(changeObj.teams) && !_.isUndefined(changeObj.teams.currentValue)) {
@@ -24,7 +24,7 @@
         };
 
         function compare(a, b) {
-            var result = a.punkte - b.punkte;
+            let result = a.punkte - b.punkte;
             if (result === 0) {
                 result = (a.tore - a.gtore) - (b.tore - b.gtore);
                 if (result === 0) {

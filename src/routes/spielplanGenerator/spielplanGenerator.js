@@ -1,25 +1,25 @@
 module.exports = function () {
     /* eslint no-loop-func: 0 */
 
-    var moment = require('moment');
-    var async = require('async');
-    var _ = require('lodash');
-    var helper = require('./helper.js');
-    var helpers = require('../helpers.js')();
+    const moment = require('moment');
+    const async = require('async');
+    const _ = require('lodash');
+    const helper = require('./helper.js');
+    const helpers = require('../helpers.js')();
 
-    var spielplanGenerator = {};
+    const spielplanGenerator = {};
 
     spielplanGenerator.generateNew = function (cb) {
         //init variables
-        var leereSpieleStreak = 0;
-        var maxLeereSpieleStreak = 6;
-        var spiele = [];
-        var spieleGesamt;
-        var plaetze = 3;
+        let leereSpieleStreak = 0;
+        const maxLeereSpieleStreak = 6;
+        const spiele = [];
+        let spieleGesamt;
+        const plaetze = 3;
 
-        var zeit;
-        var zeiten;
-        var gruppen = [];
+        let zeit;
+        let zeiten;
+        let gruppen = [];
         //GetZeiten, GetGruppen, delete Spiele, resetErgebnisse
         async.parallel([
             function (callback) {
@@ -46,20 +46,20 @@ module.exports = function () {
             if (spieleGesamt > 0) {
                 console.log('Spielplanerstellung: Anzahl Spiele: ' + spieleGesamt);
 
-                var lastPlayingTeams = [];
-                var geradeSpielendeTeams = [];
-                var i = 1;
-                var platz = plaetze; //Bei 3 anfangen macht calcPlatz einfacher
-                var leerdurchgelaufeneGruppen = 0;
-                var datum;
+                let lastPlayingTeams = [];
+                let geradeSpielendeTeams = [];
+                let i = 1;
+                let platz = plaetze; //Bei 3 anfangen macht calcPlatz einfacher
+                let leerdurchgelaufeneGruppen = 0;
+                let datum;
 
-                var leeresSpiel = function () {
+                const leeresSpiel = function () {
                     console.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                    var dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
+                    const dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
                     platz = dateTimeObj.platz;
                     zeit = dateTimeObj.time;
                     datum = dateTimeObj.date;
-                    var spiel = {
+                    const spiel = {
                         nummer: i,
                         platz: platz,
                         datum: datum,
@@ -85,17 +85,17 @@ module.exports = function () {
                     _.forEach(gruppen, function (gruppe) {
                         if (helper.checkSpieleFuerGruppeUebrig(gruppe, spiele)) {
                             console.log('Spielerstellung Nr. ' + i + ': gestartet');
-                            var teamA = helper.getTeamWithoutLast(gruppe, geradeSpielendeTeams, lastPlayingTeams, spiele);
+                            const teamA = helper.getTeamWithoutLast(gruppe, geradeSpielendeTeams, lastPlayingTeams, spiele);
                             if (!_.isUndefined(teamA)) {
                                 geradeSpielendeTeams = helper.addLastTeam(teamA, geradeSpielendeTeams);
                                 console.log('Spielerstellung Nr. ' + i + ': TeamA gewählt: ' + teamA.name);
 
-                                var teamB = helper.getPossibleGegner(gruppe, teamA, geradeSpielendeTeams, lastPlayingTeams, spiele);
+                                const teamB = helper.getPossibleGegner(gruppe, teamA, geradeSpielendeTeams, lastPlayingTeams, spiele);
                                 if (!_.isUndefined(teamB)) {
                                     geradeSpielendeTeams = helper.addLastTeam(teamB, geradeSpielendeTeams);
                                     console.log('Spielerstellung Nr. ' + i + ': TeamB gewählt: ' + teamB.name);
 
-                                    var dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
+                                    const dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
                                     platz = dateTimeObj.platz;
                                     zeit = dateTimeObj.time;
                                     datum = dateTimeObj.date;
@@ -103,7 +103,7 @@ module.exports = function () {
                                     console.log('Spielerstellung Nr. ' + i + ': Platz vergeben: ' + platz);
                                     console.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + datum + ' ' + zeit);
 
-                                    var neuesSpiel = {
+                                    const neuesSpiel = {
                                         nummer: i,
                                         platz: platz,
                                         uhrzeit: zeit,
@@ -136,7 +136,7 @@ module.exports = function () {
                     }
                 }
                 if (_.last(spiele).platz === 1) {
-                    for (var j = 0; j < 2; j++) {
+                    for (let j = 0; j < 2; j++) {
                         leeresSpiel();
                     }
                 } else if (_.last(spiele).platz === 2) {

@@ -5,7 +5,7 @@
         .module('spi.spielplan', ['spi.routes'])
         .factory('spielplan', ['routes', function (routes) {
 
-            var spielplan = {
+            const spielplan = {
                 startzeit: undefined,
                 spielzeit: undefined,
                 pausenzeit: undefined,

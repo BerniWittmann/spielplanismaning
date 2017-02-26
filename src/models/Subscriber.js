@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var SubscriberSchema = new mongoose.Schema({
+const SubscriberSchema = new mongoose.Schema({
     email: String,
     team: {
         type: Schema.ObjectId,
@@ -9,7 +9,7 @@ var SubscriberSchema = new mongoose.Schema({
     }
 });
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 SubscriberSchema.plugin(deepPopulate, {});
 
 SubscriberSchema.statics.getByTeam = function search(teamid, cb) {

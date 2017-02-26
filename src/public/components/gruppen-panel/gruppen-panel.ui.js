@@ -16,7 +16,7 @@
         });
 
     function GruppenPanelController() {
-        var vm = this;
+        const vm = this;
         
         _.extend(vm, {
             teams: _.sortBy(vm.gruppe.teams, 'name')

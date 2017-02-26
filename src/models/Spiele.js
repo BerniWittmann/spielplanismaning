@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var SpielSchema = new mongoose.Schema({
+const SpielSchema = new mongoose.Schema({
     nummer: Number,
     platz: Number,
     datum: String, //01.01.1970
@@ -184,7 +184,7 @@ SpielSchema.methods.setPunkteB = function (punkteB, cb) {
     this.save(cb);
 };
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 SpielSchema.plugin(deepPopulate, {});
 
 mongoose.model('Spiel', SpielSchema);

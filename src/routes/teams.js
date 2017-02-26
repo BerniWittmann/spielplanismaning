@@ -1,15 +1,15 @@
 module.exports = function () {
-    var express = require('express');
-    var router = express.Router();
-    var mongoose = require('mongoose');
-    var Gruppe = mongoose.model('Gruppe');
-    var Jugend = mongoose.model('Jugend');
-    var Team = mongoose.model('Team');
-    var async = require('async');
+    const express = require('express');
+    const router = express.Router();
+    const mongoose = require('mongoose');
+    const Gruppe = mongoose.model('Gruppe');
+    const Jugend = mongoose.model('Jugend');
+    const Team = mongoose.model('Team');
+    const async = require('async');
 
-    var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js')();
-    var handler = require('./handler.js');
+    const messages = require('./messages/messages.js')();
+    const helpers = require('./helpers.js')();
+    const handler = require('./handler.js');
 
     /**
      * @api {get} /teams Get Team
@@ -64,7 +64,7 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        var query = Team.findById(req.query.id);
+        const query = Team.findById(req.query.id);
         query.deepPopulate('gruppe, jugend').exec(function (err, team) {
             if (err) {
                 return messages.Error(res, err);
@@ -126,7 +126,7 @@ module.exports = function () {
      *     }]
      **/
     router.post('/', function (req, res) {
-        var team = new Team(req.body);
+        const team = new Team(req.body);
         team.jugend = req.query.jugend;
         team.gruppe = req.query.gruppe;
 
@@ -208,7 +208,7 @@ module.exports = function () {
      * @apiUse ResetMessage
      **/
     router.put('/resetErgebnisse', function (req, res) {
-        var query = Team.find();
+        const query = Team.find();
         query.exec(function (err, teams) {
             if (err) {
                 return messages.Error(res, err);

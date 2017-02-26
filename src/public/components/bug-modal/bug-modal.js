@@ -44,7 +44,7 @@
     }
 
     function BugMailController($uibModalInstance, $timeout, email, version, env, username, role) {
-        var vm = this;
+        const vm = this;
 
         _.extend(vm, {
             sent: false,

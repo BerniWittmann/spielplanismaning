@@ -13,7 +13,7 @@
 
                 responseError: function (response) {
                     if (response.status === 401 || response.status === 403) {
-                        var state = $injector.get('$state');
+                        const state = $injector.get('$state');
                         if (!_.isEqual(state.current.name, 'spi.login')) {
                             state.go('spi.login', {
                                 reasonKey: 'AUTH_ERROR',

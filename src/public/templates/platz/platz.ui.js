@@ -24,7 +24,7 @@
     }
 
     function PlatzController(spiele, $stateParams, errorHandler, ANZAHL_PLAETZE) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         if (!$stateParams.platznummer || $stateParams.platznummer > ANZAHL_PLAETZE || $stateParams.platznummer <= 0) {

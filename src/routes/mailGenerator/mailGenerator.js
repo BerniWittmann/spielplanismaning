@@ -1,20 +1,20 @@
 module.exports = function (sendgrid, env, url, disableMails) {
-    var _ = require('lodash');
-    var constants = require('./constants.js');
-    var ejs = require('ejs');
-    var path = require('path');
-    var fs = require('fs');
+    const _ = require('lodash');
+    const constants = require('./constants.js');
+    const ejs = require('ejs');
+    const path = require('path');
+    const fs = require('fs');
     const emailTemplatesFolderName = 'emailTemplates';
-    var mailGenerator = {};
+    const mailGenerator = {};
 
     mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
         if (emails.length > 0) {
-            var templatePath = path.join(__dirname, emailTemplatesFolderName, 'ergebnisUpdate.ejs');
+            const templatePath = path.join(__dirname, emailTemplatesFolderName, 'ergebnisUpdate.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
                 if (err) {
                     return cb(err, {});
                 }
-                var spielausgang = 'gespielt.';
+                let spielausgang = 'gespielt.';
                 if (spiel.unentschieden) {
                     spielausgang = 'Unentschieden gespielt.';
                 } else {
@@ -24,7 +24,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         spielausgang = 'verloren.';
                     }
                 }
-                var mail = new sendgrid.Email();
+                const mail = new sendgrid.Email();
                 mail.setTos(emails);
                 mail.setSmtpapiTos(emails);
                 mail.setFrom('mail@spielplanismaning.herokuapp.com');
@@ -33,7 +33,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 mail.setText('Ergebnis-Update: ' + team.name + ' hat ' + spielausgang);
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-                var data = {
+                const data = {
                     teamname: team.name,
                     teamaname: spiel.teamA.name,
                     toreA: spiel.toreA,
@@ -45,7 +45,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     kontaktUrl: url + 'kontakt'
                 };
 
-                var html = ejs.render(template, data);
+                const html = ejs.render(template, data);
 
                 mail.setHtml(html);
 
@@ -58,12 +58,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     mailGenerator.sendSpielReminder = function (team, spiel, emails, cb) {
         if (emails.length > 0) {
-            var templatePath = path.join(__dirname, emailTemplatesFolderName, 'spielReminder.ejs');
+            const templatePath = path.join(__dirname, emailTemplatesFolderName, 'spielReminder.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
                 if (err) {
                     return cb(err, {});
                 }
-                var mail = new sendgrid.Email();
+                const mail = new sendgrid.Email();
                 mail.setTos(emails);
                 mail.setSmtpapiTos(emails);
                 mail.setFrom('mail@spielplanismaning.herokuapp.com');
@@ -73,14 +73,14 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
 
                 mail.addSubstitution('-teamname-', team.name);
-                var teambname;
+                let teambname;
                 if (team._id === spiel.teamA._id) {
                     teambname = spiel.teamB.name;
                 } else {
                     teambname = spiel.teamA.name;
                 }
 
-                var data = {
+                const data = {
                     teamname: team.name,
                     platz: spiel.platz,
                     uhrzeit: spiel.uhrzeit,
@@ -90,7 +90,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     kontaktUrl: url + 'kontakt'
                 };
 
-                var html = ejs.render(template, data);
+                const html = ejs.render(template, data);
 
                 mail.setHtml(html);
 
@@ -103,12 +103,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     mailGenerator.sendDefaultMail = function (emails, subject, body, cb) {
         if (emails.length > 0) {
-            var templatePath = path.join(__dirname, emailTemplatesFolderName, 'default.ejs');
+            const templatePath = path.join(__dirname, emailTemplatesFolderName, 'default.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
                 if (err) {
                     return cb(err, {});
                 }
-                var mail = new sendgrid.Email();
+                const mail = new sendgrid.Email();
                 mail.setTos(emails);
                 mail.setSmtpapiTos(emails);
                 mail.setFrom('mail@spielplanismaning.herokuapp.com');
@@ -117,13 +117,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 mail.setText(body);
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-                var data = {
+                const data = {
                     subject: subject,
                     body: body,
                     kontaktUrl: url + 'kontakt'
-                }
+                };
 
-                var html = ejs.render(template, data);
+                const html = ejs.render(template, data);
 
                 mail.setHtml(html);
 
@@ -136,19 +136,19 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     mailGenerator.registerMail = function (user, cb) {
         if (user) {
-            var templatePath = path.join(__dirname, emailTemplatesFolderName, 'register.ejs');
+            const templatePath = path.join(__dirname, emailTemplatesFolderName, 'register.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
                 if (err) {
                     return cb(err, {});
                 }
 
-                var email;
+                let email;
                 if (!user.email) {
                     email = user.username;
                 } else {
                     email = user.email;
                 }
-                var mail = new sendgrid.Email();
+                const mail = new sendgrid.Email();
                 mail.setTos(email);
                 mail.setSmtpapiTos(email);
                 mail.setFrom('mail@spielplanismaning.herokuapp.com');
@@ -157,14 +157,14 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 mail.setText('Account-Freischaltung');
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-                var data = {
-                    resetUrl:  url + 'reset-password?token=' + user.resetToken,
+                const data = {
+                    resetUrl: url + 'reset-password?token=' + user.resetToken,
                     kontaktUrl: url + 'kontakt',
                     username: user.username,
                     email: email,
                     baseUrl: url
                 };
-                var html = ejs.render(template, data);
+                const html = ejs.render(template, data);
 
                 mail.setHtml(html);
 
@@ -178,19 +178,19 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     mailGenerator.passwordForgotMail = function (user, cb) {
         if (user) {
-            var templatePath = path.join(__dirname, emailTemplatesFolderName, 'passwordForgot.ejs');
+            const templatePath = path.join(__dirname, emailTemplatesFolderName, 'passwordForgot.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
                 if (err) {
                     return cb(err, {});
                 }
 
-                var email;
+                let email;
                 if (!user.email) {
                     email = user.username;
                 } else {
                     email = user.email;
                 }
-                var mail = new sendgrid.Email();
+                const mail = new sendgrid.Email();
                 mail.setTos(email);
                 mail.setSmtpapiTos(email);
                 mail.setFrom('mail@spielplanismaning.herokuapp.com');
@@ -199,11 +199,11 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 mail.setText('Passwort zurücksetzen');
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
 
-                var data = {
-                    resetUrl:  url + 'reset-password?token=' + user.resetToken,
+                const data = {
+                    resetUrl: url + 'reset-password?token=' + user.resetToken,
                     kontaktUrl: url + 'kontakt'
                 };
-                var html = ejs.render(template, data);
+                const html = ejs.render(template, data);
 
                 mail.setHtml(html);
 
@@ -215,7 +215,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     };
 
     mailGenerator.bugReportMail = function (data, cb) {
-        var templatePath = path.join(__dirname, emailTemplatesFolderName, 'bugReport.ejs');
+        const templatePath = path.join(__dirname, emailTemplatesFolderName, 'bugReport.ejs');
         return fs.readFile(templatePath, 'utf-8', function (err, template) {
             if (err) {
                 return cb(err, {});
@@ -226,17 +226,17 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (!data.email) {
                 data.email = data.username;
             }
-            var mail = new sendgrid.Email();
+            const mail = new sendgrid.Email();
             mail.setTos(constants.BUG_REPORT_EMAIL_TO);
             mail.setSmtpapiTos(constants.BUG_REPORT_EMAIL_TO);
             mail.setFrom(data.email);
             mail.setFromName(data.name);
-            var subject = constants.BUG_REPORT_EMAIL_SUBJECT_PREFIX + ' ' + data.title + ' ' + constants.BUG_REPORT_EMAIL_LABEL + ' ' + constants.BUG_REPORT_EMAIL_MEMBER;
+            const subject = constants.BUG_REPORT_EMAIL_SUBJECT_PREFIX + ' ' + data.title + ' ' + constants.BUG_REPORT_EMAIL_LABEL + ' ' + constants.BUG_REPORT_EMAIL_MEMBER;
             mail.setSubject(subject);
 
             mail.replyto = data.email;
 
-            var html = ejs.render(template, data);
+            const html = ejs.render(template, data);
 
             mail.setHtml(html);
 

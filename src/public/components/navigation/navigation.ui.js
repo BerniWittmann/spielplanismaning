@@ -19,7 +19,7 @@
     }
 
     function NavigationController($state, $scope, auth) {
-        var vm = this;
+        const vm = this;
 
         _.extend(vm, {
             isLoggedIn: auth.isLoggedIn,

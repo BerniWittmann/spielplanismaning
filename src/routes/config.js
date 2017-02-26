@@ -1,7 +1,7 @@
 module.exports = function (env) {
-    var express = require('express');
-    var version = require('../../package.json').version;
-    var router = express.Router();
+    const express = require('express');
+    const version = require('../../package.json').version;
+    const router = express.Router();
     /**
      * @api {get} /config/version Version
      * @apiName GetVersion

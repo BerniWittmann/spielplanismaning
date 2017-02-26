@@ -5,7 +5,7 @@
         .module('spi.auth.token', ['spi.storage'])
         .factory('authToken', ['storage', 'AUTH_TOKEN_NAME', function (storage, AUTH_TOKEN_NAME) {
 
-            var auth = {};
+            const auth = {};
 
             auth.saveToken = function (token) {
                 storage.set(AUTH_TOKEN_NAME, token);

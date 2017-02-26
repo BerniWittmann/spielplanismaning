@@ -30,9 +30,9 @@
     }
 
     function TeamAbonnierenController($state, $uibModalInstance, gewTeam, email) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
-        var emptymessage = {
+        const emptymessage = {
             text: '',
             type: ''
         };

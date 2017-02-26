@@ -6,7 +6,7 @@
         .service('Logger', Logger);
 
     function Logger(LOG_PREFIX, LOG_MAX_STRING_LENGTH) {
-        var LOGGING_ENABLED = false;
+        let LOGGING_ENABLED = false;
 
         return {
             log: function (text) {

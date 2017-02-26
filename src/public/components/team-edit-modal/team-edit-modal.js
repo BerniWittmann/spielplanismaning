@@ -30,7 +30,7 @@
     }
 
     function TeamEditierenController($uibModalInstance, team, gewTeam) {
-        var vm = this;
+        const vm = this;
 
         _.extend(vm, {
             team: gewTeam,

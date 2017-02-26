@@ -1,13 +1,13 @@
 module.exports = function () {
-    var express = require('express');
-    var router = express.Router();
+    const express = require('express');
+    const router = express.Router();
 
-    var mongoose = require('mongoose');
-    var Ansprechpartner = mongoose.model('Ansprechpartner');
+    const mongoose = require('mongoose');
+    const Ansprechpartner = mongoose.model('Ansprechpartner');
 
-    var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js')();
-    var handler = require('./handler.js');
+    const messages = require('./messages/messages.js')();
+    const helpers = require('./helpers.js')();
+    const handler = require('./handler.js');
 
     /**
      * @api {get} /ansprechpartner Get Ansprechpartner

@@ -1,17 +1,17 @@
 module.exports = function (sendgrid, env, url, disableEmails, secret) {
-    var express = require('express');
-    var router = express.Router();
+    const express = require('express');
+    const router = express.Router();
 
-    var mongoose = require('mongoose');
-    var User = mongoose.model('User');
-    var passport = require('passport');
-    var jwt = require('express-jwt');
-    var jsonwebtoken = require('jsonwebtoken');
+    const mongoose = require('mongoose');
+    const User = mongoose.model('User');
+    const passport = require('passport');
+    const jwt = require('express-jwt');
+    const jsonwebtoken = require('jsonwebtoken');
 
-    var messages = require('./messages/messages.js')();
-    var mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
-    var helpers = require('./helpers.js')();
-    var handler = require('./handler.js');
+    const messages = require('./messages/messages.js')();
+    const mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
+    const helpers = require('./helpers.js')();
+    const handler = require('./handler.js');
 
     /**
      * @api {post} /users/register Register User
@@ -33,7 +33,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.post('/register', function (req, res) {
-        var user = new User();
+        const user = new User();
 
         user.username = req.body.username;
         user.email = req.body.email;
@@ -134,7 +134,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-forgot', function (req, res) {
-        var email = req.body.email;
+        const email = req.body.email;
 
         User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
             if (!user) {
@@ -245,7 +245,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.get('/user-details', function (req, res) {
-        var user = helpers.verifyToken(req, secret);
+        const user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id) {
             return messages.ErrorForbidden(res);
@@ -256,7 +256,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 return messages.ErrorForbidden(res);
             }
 
-            var result = {
+            const result = {
                 _id: userDB._id,
                 username: userDB.username,
                 email: userDB.email,
@@ -297,7 +297,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      *     }
      **/
     router.put('/user-details', function (req, res) {
-        var user = helpers.verifyToken(req, secret);
+        const user = helpers.verifyToken(req, secret);
 
         if (!user || !user._id) {
             return messages.ErrorForbidden(res);
@@ -308,12 +308,12 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 return messages.ErrorForbidden(res);
             }
 
-            var username = userDB.username;
+            let username = userDB.username;
             if (req.body.username) {
                 username = req.body.username.toLowerCase();
             }
 
-            var email = (userDB.email || "");
+            let email = (userDB.email || "");
             if (req.body.email) {
                 email = req.body.email;
             }
@@ -323,7 +323,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                     return messages.Error(res, err);
                 }
 
-                var result = {
+                const result = {
                     _id: userNew._id,
                     username: userNew.username,
                     email: userNew.email,

@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var GruppenSchema = new mongoose.Schema({
+const GruppenSchema = new mongoose.Schema({
     name: String,
     teams: [{type: Schema.ObjectId, ref: 'Team'}],
     jugend: {type: Schema.ObjectId, ref: 'Jugend'}
@@ -13,7 +13,7 @@ GruppenSchema.methods.pushTeams = function (team, cb) {
     this.save(cb);
 };
 
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 GruppenSchema.plugin(deepPopulate, {});
 
 mongoose.model('Gruppe', GruppenSchema);

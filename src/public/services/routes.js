@@ -4,13 +4,13 @@
     angular
         .module('spi.routes', ['spi.errorHandler', 'spi.constants'])
         .factory('routes', ['$http', 'errorHandler', 'ENDPOINT_BASE', function ($http, errorHandler, ENDPOINT_BASE) {
-            var methods = {
+            const methods = {
                 GET: 'GET',
                 POST: 'POST',
                 PUT: 'PUT',
                 DELETE: 'DELETE'
             };
-            var urls = {
+            const urls = {
                 ansprechpartner: {
                     base: function () {
                         return ENDPOINT_BASE + '/ansprechpartner';

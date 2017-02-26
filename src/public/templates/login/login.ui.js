@@ -33,7 +33,7 @@
     }
 
     function LoginController(auth, $state, lockdown, $stateParams, toastr) {
-        var vm = this;
+        const vm = this;
         vm.lockdown = lockdown;
         vm.user = {};
         vm.reason = $stateParams.reason;

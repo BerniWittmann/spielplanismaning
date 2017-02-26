@@ -1,17 +1,17 @@
-var _ = require('lodash');
-var mongoose = require('mongoose');
-var async = require('async');
-var moment = require('moment');
+const _ = require('lodash');
+const mongoose = require('mongoose');
+const async = require('async');
+const moment = require('moment');
 
-var Spielplan = mongoose.model('Spielplan');
-var Spiel = mongoose.model('Spiel');
-var Gruppen = mongoose.model('Gruppe');
-var Team = mongoose.model('Team');
+const Spielplan = mongoose.model('Spielplan');
+const Spiel = mongoose.model('Spiel');
+const Gruppen = mongoose.model('Gruppe');
+const Team = mongoose.model('Team');
 
 function calcSpieleGesamt(gruppen) {
-    var sum = 0;
+    let sum = 0;
     _.forEach(gruppen, function (gruppe) {
-        var n = gruppe.teams.length;
+        const n = gruppe.teams.length;
         sum += (n * (n - 1)) / 2;
     });
 
@@ -19,11 +19,11 @@ function calcSpieleGesamt(gruppen) {
 }
 
 function getTeamWithoutLast(gruppe, geradeSpielendeTeams, lastPlayingTeams, spiele) {
-    var teams = [];
+    let teams = [];
     _.extend(teams, gruppe.teams);
     _.pullAllBy(teams, geradeSpielendeTeams, '_id');
 
-    var moeglTeams = [];
+    const moeglTeams = [];
     _.extend(moeglTeams, teams);
 
     _.pullAllBy(teams, lastPlayingTeams, '_id');
@@ -42,10 +42,10 @@ function chooseTeam(teams, spiele) {
     if (_.size(teams) === 0) {
         return undefined;
     }
-    var team = _.head(teams);
-    var spieleTeam = getSpieleByTeam(team, spiele);
+    let team = _.head(teams);
+    let spieleTeam = getSpieleByTeam(team, spiele);
     _.forEach(teams, function (t) {
-        var spieleT = getSpieleByTeam(t, spiele);
+        const spieleT = getSpieleByTeam(t, spiele);
 
         if (spieleT.length < spieleTeam.length) {
             team = t;
@@ -60,11 +60,11 @@ function chooseTeam(teams, spiele) {
 }
 
 function getPossibleGegner(gruppe, team, geradeSpielendeTeams, lastPlayingTeams, games) {
-    var alle = [];
+    const alle = [];
     _.extend(alle, gruppe.teams);
     _.pullAllBy(alle, geradeSpielendeTeams, '_id');
-    var spiele = getSpieleByTeam(team, games);
-    var bereitsgespielt = [team];
+    const spiele = getSpieleByTeam(team, games);
+    const bereitsgespielt = [team];
     _.forEach(spiele, function (spiel) {
         if (_.isEqual(spiel.teamA, team._id)) {
             bereitsgespielt.push({
@@ -78,7 +78,7 @@ function getPossibleGegner(gruppe, team, geradeSpielendeTeams, lastPlayingTeams,
     });
     _.pullAllBy(alle, bereitsgespielt, '_id');
 
-    var moeglicheGegner = [];
+    let moeglicheGegner = [];
     _.extend(moeglicheGegner, alle);
 
     _.pullAllBy(moeglicheGegner, lastPlayingTeams, '_id');
@@ -106,8 +106,8 @@ function getSpieleByGruppe(gruppe, spiele) {
 }
 
 function checkSpieleFuerGruppeUebrig(gruppe, spiele) {
-    var max = (gruppe.teams.length * (gruppe.teams.length - 1) / 2);
-    var result = getSpieleByGruppe(gruppe, spiele).length;
+    const max = (gruppe.teams.length * (gruppe.teams.length - 1) / 2);
+    const result = getSpieleByGruppe(gruppe, spiele).length;
     return result < max;
 }
 

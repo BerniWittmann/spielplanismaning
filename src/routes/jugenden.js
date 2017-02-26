@@ -1,15 +1,15 @@
 module.exports = function () {
-    var express = require('express');
-    var router = express.Router();
+    const express = require('express');
+    const router = express.Router();
 
-    var mongoose = require('mongoose');
-    var Gruppe = mongoose.model('Gruppe');
-    var Jugend = mongoose.model('Jugend');
-    var Team = mongoose.model('Team');
+    const mongoose = require('mongoose');
+    const Gruppe = mongoose.model('Gruppe');
+    const Jugend = mongoose.model('Jugend');
+    const Team = mongoose.model('Team');
 
-    var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js')();
-    var handler = require('./handler.js');
+    const messages = require('./messages/messages.js')();
+    const helpers = require('./helpers.js')();
+    const handler = require('./handler.js');
 
     /**
      * @api {get} /jugenden Get Jugenden
@@ -75,13 +75,13 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
-        var jugend = new Jugend(req.body);
+        const jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
             if (err) {
                 return messages.Error(res, err);
             }
-            var gruppe = new Gruppe({
+            const gruppe = new Gruppe({
                 name: "Gruppe A"
                 , jugend: jugend._id
             });
@@ -156,12 +156,12 @@ module.exports = function () {
      *     }
      **/
     router.get('/tore', function (req, res) {
-        var query = Jugend.find();
+        let query = Jugend.find();
         if (req.query.id) {
             query = Jugend.findById(req.query.id);
         }
-        var tore = 0;
-        var teams = [];
+        let tore = 0;
+        const teams = [];
         query.deepPopulate('teams').exec(function (err, jugenden) {
             if (err) {
                 return messages.Error(res, err);

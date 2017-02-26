@@ -28,8 +28,8 @@
     }
 
     function AccountController(userDetails, auth, toastr) {
-        var vm = this;
-        var email = userDetails.email;
+        const vm = this;
+        const email = userDetails.email;
 
         _.extend(vm, {
             user: userDetails,

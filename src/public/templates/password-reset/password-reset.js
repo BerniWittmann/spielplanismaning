@@ -69,7 +69,7 @@
     }
 
     function PasswordResetController(auth, toastr, $stateParams, $state, isValidToken) {
-        var vm = this;
+        const vm = this;
         vm.password = undefined;
         vm.passwordCheck = undefined;
         vm.username = undefined;

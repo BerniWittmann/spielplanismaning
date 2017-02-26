@@ -1,9 +1,9 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var nodemon = require('gulp-nodemon');
-var notify = require('gulp-notify');
-var livereload = require('gulp-livereload');
-var open = require('gulp-open');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
+const nodemon = require('gulp-nodemon');
+let notify = require('gulp-notify');
+let livereload = require('gulp-livereload');
+const open = require('gulp-open');
 // serve
 gulp.task('serve', function (done) {
     runSequence('build', 'start:server', done);

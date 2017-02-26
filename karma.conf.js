@@ -49,7 +49,13 @@ module.exports = function (config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             '{components,templates}/**/*.html': ['ng-html2js'],
-            '{{components,templates,services}/**/*.js, app.js}': ['coverage']
+            '{{components,templates,services}/**/*.js, app.js}': ['babel', 'coverage']
+        },
+
+        babelPreprocessor: {
+            options: {
+                presets: ['es2015']
+            }
         },
 
         ngHtml2JsPreprocessor: {
@@ -65,7 +71,7 @@ module.exports = function (config) {
             cacheIdFromPath: function(filepath) {
                 // example strips 'public/' from anywhere in the path
                 // module(app/templates/template.html) => app/public/templates/template.html
-                var cacheId = filepath.replace('public/', '');
+                const cacheId = filepath.replace('public/', '');
                 return cacheId;
             },
 

@@ -28,19 +28,19 @@
     }
 
     function HomeController(spiele) {
-        var vm = this;
+        const vm = this;
 
         vm.loading = true;
-        var allespiele = _.sortBy(spiele, ['nummer']);
+        const allespiele = _.sortBy(spiele, ['nummer']);
         spiele = [];
         _.extend(spiele, allespiele);
 
-        var n = _.findIndex(spiele, function (o) {
+        let n = _.findIndex(spiele, function (o) {
             return !o.beendet && !_.isNull(o.jugend);
         });
 
         if (n >= 0) {
-            var aktuellesSpielIndex;
+            let aktuellesSpielIndex;
             while (n < allespiele.length && _.isUndefined(spiele[n].jugend)) {
                 n++;
             }

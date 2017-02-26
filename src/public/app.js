@@ -52,12 +52,12 @@
     }
 
     function tooltips($uibTooltipProvider) {
-        var parser = new UAParser();
-        var result = parser.getResult();
-        var touch = result.device && (result.device.type === 'tablet' || result.device.type === 'mobile');
+        const parser = new UAParser();
+        const result = parser.getResult();
+        const touch = result.device && (result.device.type === 'tablet' || result.device.type === 'mobile');
 
         if (touch) {
-            var options = {
+            const options = {
                 trigger: 'none' // default dummy trigger event to show tooltips
             };
 
@@ -77,13 +77,13 @@
 
     function run($rootScope) {
         $rootScope.onload = function () {
-            var page = document.getElementById('page');
+            const page = document.getElementById('page');
             page.className = page.className + " loaded";
         };
     }
 
     function AppController($q, auth, $state, $timeout, config, $rootScope) {
-        var vm = this;
+        const vm = this;
         vm.runBefore = false;
 
         $rootScope.$on('$stateChangeStart', function (event, toState) {

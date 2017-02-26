@@ -33,7 +33,7 @@
         });
 
     function SpielplanSingleSpielController($scope, $state, auth, spiel, BestaetigenDialog, $timeout) {
-        var vm = this;
+        const vm = this;
 
         _.extend(vm, {
             canEdit: auth.isAdmin() || auth.isBearbeiter(),
@@ -104,8 +104,8 @@
             vm.spiel.toreB = undefined;
         }
 
-        var altToreA = vm.spiel.toreA;
-        var altToreB = vm.spiel.toreB;
+        let altToreA = vm.spiel.toreA;
+        let altToreB = vm.spiel.toreB;
 
         function saveSpiel() {
             if (!_.isUndefined(vm.spiel.toreA) && !_.isUndefined(vm.spiel.toreB) && !_.isNull(vm.spiel.toreA) && !_.isNull(vm.spiel.toreB) && (!_.isEqual(altToreA, vm.spiel.toreA) || !_.isEqual(altToreB, vm.spiel.toreB))) {

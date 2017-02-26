@@ -36,7 +36,7 @@
     function GruppeEditierenController(
         $state, $uibModalInstance, team, teamPromise, gewGruppe, spielplan, TeamEditierenDialog, BestaetigenDialog
     ) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         _.extend(vm, {

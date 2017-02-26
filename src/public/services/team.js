@@ -5,7 +5,7 @@
         .module('spi.team', ['spi.routes'])
         .factory('team', ['routes', function (routes) {
 
-            var team = {};
+            const team = {};
 
             team.getAll = function () {
                 return routes.requestGETBase('team');

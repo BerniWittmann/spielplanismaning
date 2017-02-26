@@ -1,13 +1,13 @@
 module.exports = function (sendgrid, env, url, disableEmails) {
-    var express = require('express');
-    var router = express.Router();
+    const express = require('express');
+    const router = express.Router();
 
-    var mongoose = require('mongoose');
-    var Subscriber = mongoose.model('Subscriber');
-    var MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
-    var messages = require('./messages/messages.js')();
-    var helpers = require('./helpers.js')();
-    var handler = require('./handler.js');
+    const mongoose = require('mongoose');
+    const Subscriber = mongoose.model('Subscriber');
+    const MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
+    const messages = require('./messages/messages.js')();
+    const helpers = require('./helpers.js')();
+    const handler = require('./handler.js');
 
     /**
      * @api {post} /email Send Email
@@ -31,7 +31,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
                 return messages.Error(res, err);
             }
 
-            var emails = [];
+            let emails = [];
             subs.forEach(function (sub) {
                 emails.push(sub.email);
             });
@@ -137,7 +137,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      *     }]
      **/
     router.get('/subscriber', function (req, res) {
-        var query = Subscriber.find();
+        const query = Subscriber.find();
         query.deepPopulate('team team.jugend').exec(function (err, subs) {
             return handler.handleErrorAndResponse(err, res, subs);
         });

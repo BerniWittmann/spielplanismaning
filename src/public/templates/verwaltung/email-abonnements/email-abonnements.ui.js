@@ -29,10 +29,10 @@
     }
 
     function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, subscribers) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
-        var emailBlank = {
+        const emailBlank = {
             subject: '',
             text: ''
         };

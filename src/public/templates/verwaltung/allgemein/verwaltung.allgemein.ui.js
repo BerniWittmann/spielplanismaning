@@ -23,7 +23,7 @@
     }
 
     function VerwaltungAllgemeinController(auth) {
-        var vm = this;
+        const vm = this;
         vm.loading = true;
 
         //noinspection JSUnusedGlobalSymbols
