@@ -7,3 +7,4 @@ node_modules/
 /src/public/coverage/
 /config/.env
 /src/public/bower_components/**/*
+src/public/bower_components/*
