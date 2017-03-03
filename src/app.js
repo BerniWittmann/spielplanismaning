@@ -25,6 +25,7 @@ require('./config/passport');
 
 app.set('ENVIRONMENT', process.env.NODE_ENV);
 app.set('MONGODB_URI', process.env.MONGODB_URI);
+app.set('port', (process.env.PORT || 8000));
 
 // connect MongoDB
 mongoose.connect(app.get('MONGODB_URI'), function (err) {
@@ -51,8 +52,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 //noinspection JSCheckFunctionSignatures
 app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
-
-app.set('port', (process.env.PORT || 8000));
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
