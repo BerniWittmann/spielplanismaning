@@ -30,7 +30,7 @@
                     const checksum = payload.checksum;
                     delete payload.checksum;
                     if (!checksum || checksum !== md5.createHash(JSON.stringify(payload))) {
-                        console.warn('Checksums don\'t match');
+                        Logger.warn('Checksums don\'t match');
                         return false;
                     }
                     if (payload.exp > Date.now() / 1000) {
@@ -87,13 +87,15 @@
             };
 
             auth.getRole = function () {
-                const token = auth.getToken();
+                if(auth.isLoggedIn()) {
+                    const token = auth.getToken();
 
-                if (token && !_.isUndefined(token)) {
-                    const payload = JSON.parse($window.atob(token.split('.')[1]));
-                    if (payload.exp > Date.now() / 1000) {
-                        payload.role.name = payload.role.name.toLowerCase();
-                        return payload.role;
+                    if (token && !_.isUndefined(token)) {
+                        const payload = JSON.parse($window.atob(token.split('.')[1]));
+                        if (payload.exp > Date.now() / 1000) {
+                            payload.role.name = payload.role.name.toLowerCase();
+                            return payload.role;
+                        }
                     }
                 }
 
