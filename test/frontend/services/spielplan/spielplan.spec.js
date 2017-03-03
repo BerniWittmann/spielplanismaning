@@ -4,10 +4,6 @@
     var expect = chai.expect;
 
     describe('Service: Spielplan', function () {
-        var mockLogger = {
-            log: function () {
-            }
-        };
         var mockAuth = {
             getToken: function () {
                 return 'TEST';
@@ -19,6 +15,12 @@
         };
         var mockErrorHandler = {
             handleResponseError: function () {}
+        };
+        var mockLogger = {
+            enableLogging: function () {},
+            disableLogging: function () {},
+            log: function () {},
+            warn: function () {}
         };
         beforeEach(module('spi.spielplan'));
 

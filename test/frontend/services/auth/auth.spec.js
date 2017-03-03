@@ -35,6 +35,8 @@
             disableLogging: function () {
             },
             log: function () {
+            },
+            warn: function () {
             }
         };
 
@@ -164,7 +166,7 @@
         });
 
         it('soll prüfen ob ein Nutzer auf einen Bereich zugreifen kann', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg');
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDAsImNoZWNrc3VtIjoiMWNkNWE5NmQyOGM5NzE5YTcyZDI4ZjYwNWFlNDdlZWEifQ.MbNRGSnpCc8xaJ3T6CDC3Mn8NxYU0dkJycml_x7Z6tM');
 
             var result1 = auth.canAccess('admin');
             var result2 = auth.canAccess('bearbeiter');
@@ -174,7 +176,7 @@
         });
 
         it('soll die Rolle laden können', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg');
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDAsImNoZWNrc3VtIjoiMWNkNWE5NmQyOGM5NzE5YTcyZDI4ZjYwNWFlNDdlZWEifQ.MbNRGSnpCc8xaJ3T6CDC3Mn8NxYU0dkJycml_x7Z6tM');
 
             var role = auth.getRole();
 
@@ -194,14 +196,14 @@
         });
 
         it('soll zurückgeben ob User ein Admin ist', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg');
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDAsImNoZWNrc3VtIjoiMWNkNWE5NmQyOGM5NzE5YTcyZDI4ZjYwNWFlNDdlZWEifQ.MbNRGSnpCc8xaJ3T6CDC3Mn8NxYU0dkJycml_x7Z6tM');
 
             expect(auth.isAdmin()).to.be.true;
             expect(auth.isBearbeiter()).to.be.false;
         });
 
         it('soll zurückgeben ob User ein Bearbeiter ist', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjowLCJuYW1lIjoiQmVhcmJlaXRlciJ9LCJleHAiOjk5OTk5OTk5OTksImlhdCI6MTQ2OTQ1MzE0MH0.s-MDlitppMFkKZvAx-NWsQQhPNDJL9a0VI3PYSk7k2w');
+            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjowLCJuYW1lIjoiQmVhcmJlaXRlciJ9LCJleHAiOjk5OTk5OTk5OTksImlhdCI6MTQ2OTQ1MzE0MCwiY2hlY2tzdW0iOiJkODUyMTNhNDI2MTRmN2I0NDgxNzI3NzQ5MjU3MzViOCJ9.FS4RmBRC4fnRzovPYHUIo1c_rZw-WxhnrMnAYw05HtU');
 
             expect(auth.isBearbeiter()).to.be.true;
             expect(auth.isAdmin()).to.be.false;
@@ -216,11 +218,13 @@
             };
 
             var q = {
-                when: function () {},
-                reject: function () {}
+                when: function () {
+                },
+                reject: function () {
+                }
             };
             before(function () {
-                storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDB9.S7Cfr8ZcB4v5l0OAQc3-jCrXkb4O7-I_qzGjykSwsQg');
+                storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0Njk0NTMxNDAsImNoZWNrc3VtIjoiMWNkNWE5NmQyOGM5NzE5YTcyZDI4ZjYwNWFlNDdlZWEifQ.MbNRGSnpCc8xaJ3T6CDC3Mn8NxYU0dkJycml_x7Z6tM');
             });
 
             it('wenn keine State-Daten angegeben sind, soll die Route zugänglich sein', function () {
@@ -281,7 +285,7 @@
                 expect(spyResolve).to.have.been.called();
             });
 
-            it('wenn die benötigte Rolle nicht erfüllt ist, soll die Route nicht zugänglich sein', inject(function($timeout) {
+            it('wenn die benötigte Rolle nicht erfüllt ist, soll die Route nicht zugänglich sein', inject(function ($timeout) {
                 toState.data = {
                     requiredRoles: ['bearbeiter']
                 };
@@ -299,7 +303,7 @@
                 expect(spyResolve).not.to.have.been.called();
             }));
 
-            it('wenn Nutzer gar keine Rolle hat, soll die Route nicht zugänglich sein', inject(function($timeout) {
+            it('wenn Nutzer gar keine Rolle hat, soll die Route nicht zugänglich sein', inject(function ($timeout) {
                 toState.data = {
                     requiredRoles: ['bearbeiter']
                 };
@@ -345,7 +349,11 @@
             var password = 'password';
             var token = '123abc';
             var response = 'SUCCESS';
-            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/password-reset', {username: username, password: password, token: token}).respond(201, response);
+            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/password-reset', {
+                username: username,
+                password: password,
+                token: token
+            }).respond(201, response);
 
             auth.resetPassword(username, token, password).then(function (res) {
                 responseTest = res.data;

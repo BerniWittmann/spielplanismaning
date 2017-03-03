@@ -3,7 +3,7 @@
 
     angular
         .module('spi.constants', [])
-        .constant('LOG_PREFIX', 'Spielplan-Ismaning Log: ')
+        .constant('LOG_PREFIX', 'Spielplan-Ismaning')
         .constant('LOG_MAX_STRING_LENGTH', 70)
         .constant('JUGEND_FARBEN', [
             {

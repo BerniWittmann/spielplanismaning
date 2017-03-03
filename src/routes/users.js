@@ -146,7 +146,13 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
             user.generateResetToken();
 
-            return helpers.saveUserAndSendMail(user, res, mailGenerator.passwordForgotMail);
+            return User.findOneAndUpdate({$or: [{'username': email}, {'email': email}]}, { $set: { resetTokenExp: user.resetTokenExp, resetToken: user.resetToken }}, {new: true}, function (err, userNew) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
+
+                return helpers.saveUserAndSendMail(userNew, res, mailGenerator.passwordForgotMail);
+            });
         });
     });
 
@@ -165,7 +171,8 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiUse SuccessMessage
      **/
     router.put('/password-reset/check', function (req, res) {
-        User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
+        return User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
+            console.error(err);
             if (!user) {
                 return messages.ErrorInvalidToken(res);
             }
@@ -211,7 +218,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 user.setPassword(req.body.password);
                 user.removeResetToken();
 
-                return user.save(function (err) {
+                return User.findOneAndUpdate({'username': user.username}, { $set: { hash: user.hash, salt: user.salt, resetToken: user.resetToken, resetTokenExp: user.resetTokenExp }}, {new: true}, function (err) {
                     return handler.handleErrorAndSuccess(err, res);
                 });
             } else {

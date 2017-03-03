@@ -90,6 +90,12 @@
             $watch: function () {
             }
         };
+        var mockLogger = {
+            enableLogging: function () {},
+            disableLogging: function () {},
+            log: function () {},
+            warn: function () {}
+        };
         var mockSpiele;
         var mockSpiel;
         var injector;
@@ -106,17 +112,16 @@
         beforeEach(function () {
             module(function ($provide) {
                 $provide.value('errorHandler', mockErrorHandler);
+                $provide.value('Logger', mockLogger);
             });
         });
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
         }, 'spi.templates.spielplan.ui'));
         beforeEach(module('htmlModule'));
-        beforeEach(module('spi.logger'));
         beforeEach(module('spi.components.bestaetigen-modal.ui'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
-            $provide.value('Logger', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
