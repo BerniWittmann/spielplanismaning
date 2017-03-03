@@ -27,10 +27,10 @@ module.exports = function (secret) {
                 type: Number
             }
         },
-        hash: String,
-        salt: String,
         resetToken: String,
-        resetTokenExp: Date
+        resetTokenExp: String,
+        hash: String,
+        salt: String
     });
 
     UserSchema.methods.generateJWT = function () {
@@ -51,9 +51,9 @@ module.exports = function (secret) {
     };
 
     UserSchema.methods.setPassword = function (password) {
-        this.salt = crypto.randomBytes(16).toString('hex');
+        this.salt = crypto.randomBytes(32).toString('hex');
         //noinspection JSUnresolvedVariable
-        this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+        this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
     };
 
     UserSchema.methods.setRandomPassword = function () {
@@ -70,14 +70,14 @@ module.exports = function (secret) {
     };
 
     UserSchema.methods.validPassword = function (password) {
-        const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+        const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 
         return this.hash === hash;
     };
 
     UserSchema.methods.generateResetToken = function () {
         this.resetToken = tokenGenerator.generate();
-        this.resetTokenExp = moment().add(1, 'd').toDate();
+        this.resetTokenExp = moment().add(1, 'd').toISOString();
         return this.resetToken;
     };
 
@@ -87,7 +87,7 @@ module.exports = function (secret) {
     };
 
     UserSchema.methods.validateResetToken = function (token) {
-        if (token) {
+        if (token && this.resetToken && this.resetTokenExp) {
             if (_.isEqual(token, this.resetToken)) {
                 if (this.resetTokenExp) {
                     if (moment().isSameOrBefore(this.resetTokenExp)) {
