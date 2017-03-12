@@ -2,6 +2,31 @@ module.exports = function (env) {
     const express = require('express');
     const version = require('../../package.json').version;
     const router = express.Router();
+
+    /**
+     * @api {get} /config/ Config
+     * @apiName GetConfig
+     * @apiDescription Gibt die aktuelle Config der App zurück
+     * @apiGroup Config
+     *
+     * @apiSuccess {String} version Version of the app.
+     * @apiSuccess {String} env Environment of the app.
+     * @apiSuccess {Boolean} lockdown Lockdownmode
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "1.0.0"
+     *     }
+     **/
+    router.get('/', function (req, res) {
+        return res.json({
+            version: version,
+            env: env.NODE_ENV,
+            lockdown: env.LOCKDOWNMODE === 'true'
+        });
+    });
+
     /**
      * @api {get} /config/version Version
      * @apiName GetVersion

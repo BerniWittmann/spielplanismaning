@@ -40,6 +40,9 @@
                     }
                 },
                 config: {
+                    base: function () {
+                        return ENDPOINT_BASE + '/config';
+                    },
                     env: function () {
                         return ENDPOINT_BASE + '/config/env';
                     },

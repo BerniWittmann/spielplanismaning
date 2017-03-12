@@ -11,10 +11,11 @@
         var httpBackend;
         var response;
         var responseTest;
-        var env = 'testing';
-        var version = '1.0.0';
-        var kontakte = [{name: 'Name', email: 'Test@test.de', turnier: 'Test-Turnier'}];
-        var lockdown = true;
+        var configData = {
+            env: 'testing',
+            version: '1.0.0',
+            lockdown: true
+        };
         var config;
 
         beforeEach(inject(function (_config_, $httpBackend) {
@@ -32,8 +33,18 @@
             }
         });
 
+        it('soll die Config laden', function () {
+            response = configData;
+            httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
+
+            config.getConfig().then(function (res) {
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
+            });
+        });
+
         it('soll die Env-Variable laden', function () {
-            response = env;
+            response = configData.env;
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/env').respond(201, response);
 
             config.getEnv().then(function (res) {
@@ -43,7 +54,7 @@
         });
 
         it('soll die Version laden', function () {
-            response = version;
+            response = configData.version;
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/version').respond(201, response);
 
             config.getVersion().then(function (res) {
@@ -52,18 +63,8 @@
             });
         });
 
-        it('soll die Kontakte laden', function () {
-            response = kontakte;
-            httpBackend.expectGET(ENDPOINT_BASE_URL + '/kontakt').respond(201, response);
-
-            config.getKontakte().then(function (res) {
-                responseTest = res;
-                expect(_.isEqual(res, response)).to.be.true;
-            });
-        });
-
         it('soll den LockdownMode laden', function () {
-            response = lockdown;
+            response = configData.lockdown;
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/lockdownmode').respond(201, response);
 
             config.getLockdown().then(function (res) {

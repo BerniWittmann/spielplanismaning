@@ -44,7 +44,10 @@
                 register: function () {
                     var deferred = $q.defer();
                     if (mockAuth.bereitsRegistriert) {
-                        deferred.reject({ERROR: {code: 11000}});
+                        deferred.reject({
+                            MESSAGEKEY: 'ERROR_USER_ALREADY_EXISTS',
+                            MESSAGE: 'Benutzer test existiert bereits'
+                        });
                     } else {
                         deferred.resolve();
                     }
@@ -128,7 +131,7 @@
 
             var result = element.find('.alert-danger');
             expect(result).to.exist;
-            expect(result.text()).to.contain('Dieser Username oder diese Email existiert bereits');
+            expect(result.text()).to.contain('Benutzer test existiert bereits');
         });
 
         it('soll einen Nutzer löschen können', function () {

@@ -75,7 +75,8 @@
         });
     }
 
-    function run($rootScope) {
+    function run($rootScope, config) {
+        config.getConfig();
         $rootScope.onload = function () {
             const page = document.getElementById('page');
             page.className = page.className + " loaded";
