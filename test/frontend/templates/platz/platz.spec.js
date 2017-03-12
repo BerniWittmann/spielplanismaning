@@ -39,26 +39,34 @@
             jugend: 'jgd2'
         }];
         var mockState = {
+            called: false,
             go: function () {
+                mockState.called = true;
+            }
+        };
+        var mockErrorHandler = {
+            called: false,
+            handleResponseError: function () {
+                mockErrorHandler.called = true;
             }
         };
         var mockSpiele;
+        var mockConfig;
         var mockStateParams = {
             platznummer: 1
         };
 
-        var mockErrorHandler = {
-            handleResponseError: function () {}
-        };
         var injector;
 
         function resolve(value) {
-            return {forStateAndView: function (state, view) {
-                var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
-                var res = viewDefinition.resolve[value];
-                $rootScope.$digest();
-                return injector.invoke(res);
-            }};
+            return {
+                forStateAndView: function (state, view) {
+                    var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                    var res = viewDefinition.resolve[value];
+                    $rootScope.$digest();
+                    return injector.invoke(res);
+                }
+            };
         }
 
         beforeEach(module('ui.router', function ($stateProvider) {
@@ -67,6 +75,7 @@
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
+            $provide.value('config', mockConfig);
             $provide.value('Logger', {});
         }));
 
@@ -96,6 +105,11 @@
             mockSpiele = {
                 getAll: function () {
                     return $q.when(spiele);
+                }
+            };
+            mockConfig = {
+                getPlaetze: function () {
+                    return $q.when(3);
                 }
             };
 
@@ -135,16 +149,45 @@
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiele);
             });
+            it('soll AnzahlPlätze resolven', function () {
+                var promise = resolve('anzahlPlaetze').forStateAndView('spi.platz');
+                var res = promise.$$state.value;
+                expect(res).to.equal(3);
+            });
         });
 
-        it('soll der Platz angezeigt werden', function () {
-            render();
-            expect(element.find('h3').text()).to.contain('Platz 1');
+        describe('es wird ein gültiger Platz aufgerufen', function () {
+            before(function () {
+                mockStateParams.platznummer = 1;
+            });
+
+            it('soll der Platz angezeigt werden', function () {
+                render();
+                expect(element.find('h3').text()).to.contain('Platz 1');
+            });
+
+            it('soll die Spiele des Platzes laden', function () {
+                render();
+                expect(ctrl.spiele.length).to.be.equal(3);
+            });
         });
 
-        it('soll die Spiele des Platzes laden', function () {
-            render();
-            expect(ctrl.spiele.length).to.be.equal(3);
-        });
+        describe('es wird ein ungültiger Platz aufgerufen', function () {
+            before(function () {
+                mockStateParams.platznummer = 4;
+            });
+
+            it('soll zur Home-Seite navigieren', function () {
+                render();
+
+                expect(mockState.called).to.be.true;
+            });
+
+            it('soll einen Fehler anzeigen', function () {
+                render();
+
+                expect(mockErrorHandler.called).to.be.true;
+            });
+        })
     });
 }());
