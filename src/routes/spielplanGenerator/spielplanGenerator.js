@@ -15,7 +15,7 @@ module.exports = function () {
         const maxLeereSpieleStreak = 6;
         const spiele = [];
         let spieleGesamt;
-        const plaetze = 3;
+        const plaetze = parseInt(process.env.PLAETZE, 10);
 
         let zeit;
         let zeiten;
@@ -49,7 +49,7 @@ module.exports = function () {
                 let lastPlayingTeams = [];
                 let geradeSpielendeTeams = [];
                 let i = 1;
-                let platz = plaetze; //Bei 3 anfangen macht calcPlatz einfacher
+                let platz = plaetze; //Bei n anfangen macht calcPlatz einfacher
                 let leerdurchgelaufeneGruppen = 0;
                 let datum;
 
@@ -117,7 +117,7 @@ module.exports = function () {
                                     console.log('Spielplanerstellung: Spiel Nr.' + i + ' für Gruppe ' + gruppe.name + ' erstellt.');
                                     i++;
                                     leereSpieleStreak = 0;
-                                    if (i > 1 && (i - 1) % 3 === 0) {
+                                    if (i > 1 && (i - 1) % plaetze === 0) {
                                         lastPlayingTeams = geradeSpielendeTeams;
                                         geradeSpielendeTeams = [];
                                     }
@@ -135,11 +135,7 @@ module.exports = function () {
                         leeresSpiel();
                     }
                 }
-                if (_.last(spiele).platz === 1) {
-                    for (let j = 0; j < 2; j++) {
-                        leeresSpiel();
-                    }
-                } else if (_.last(spiele).platz === 2) {
+                for (let j = 0; j < (plaetze - _.last(spiele).platz); j++) {
                     leeresSpiel();
                 }
 

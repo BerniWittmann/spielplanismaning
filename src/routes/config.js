@@ -23,7 +23,8 @@ module.exports = function (env) {
         return res.json({
             version: version,
             env: env.NODE_ENV,
-            lockdown: env.LOCKDOWNMODE === 'true'
+            lockdown: env.LOCKDOWNMODE === 'true',
+            plaetze: env.PLAETZE
         });
     });
 
@@ -98,6 +99,24 @@ module.exports = function (env) {
      **/
     router.get('/lockdownmode', function (req, res) {
         return res.json(env.LOCKDOWNMODE === 'true');
+    });
+
+    /**
+     * @api {get} /config/plaetze PLätze
+     * @apiName GetConfig
+     * @apiDescription Gibt die Anzahl der Plätze zurück
+     * @apiGroup Config
+     *
+     * @apiSuccess {Number} body Anzahl Plätze
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       3
+     *     }
+     **/
+    router.get('/plaetze', function (req, res) {
+        return res.json(env.PLAETZE);
     });
 
     return router;

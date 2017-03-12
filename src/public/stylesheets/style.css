@@ -96,7 +96,7 @@ input[type=number] {
     color: gray;
 }
 
-#spielplan > tbody > tr:nth-child(3n+3) > td {
+#spielplan > tbody > .last-platz-spiel > td {
     border-bottom: 2px solid #ddd;
 }
 

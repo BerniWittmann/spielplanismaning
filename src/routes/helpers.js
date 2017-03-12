@@ -164,9 +164,10 @@ module.exports = function () {
     }
 
     function checkSpielOrderChangeAllowed(spiele) {
+        const plaetze = parseInt(process.env.PLAETZE, 10);
         let teamsParallel = [];
-        for(let i = 0; i < spiele.length; i += 3) {
-            for (let j = i; j < i + 3; j++) {
+        for(let i = 0; i < spiele.length; i += plaetze) {
+            for (let j = i; j < i + plaetze; j++) {
                 if (j < spiele.length) {
                     if (spiele[j].teamA && spiele[j].teamB) {
                         teamsParallel.push(spiele[j].teamA._id);
@@ -186,9 +187,10 @@ module.exports = function () {
     }
 
     function calcSpielDateTime(nr, spielplan) {
+        const plaetze = parseInt(process.env.PLAETZE, 10);
         const dailyStartTime = moment(spielplan.startzeit, 'HH:mm');
         const dailyEndTime = moment(spielplan.endzeit, 'HH:mm');
-        const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * 3;
+        const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * plaetze;
         if (spielePerDay < 0) {
             return undefined;
         }
@@ -202,8 +204,8 @@ module.exports = function () {
         }
 
         const date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
-        const time = dailyStartTime.add(Math.floor(offsetSpiele / 3) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
-        const platz = (offsetSpiele % 3) + 1;
+        const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
+        const platz = (offsetSpiele % plaetze) + 1;
         return {
             date: date.format('DD.MM.YYYY'),
             time: time.format('HH:mm'),
