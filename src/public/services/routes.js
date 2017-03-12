@@ -54,6 +54,9 @@
                     },
                     lockdownMode: function () {
                         return ENDPOINT_BASE + '/config/lockdownmode';
+                    },
+                    plaetze: function () {
+                        return ENDPOINT_BASE + '/config/plaetze';
                     }
                 },
                 email: {

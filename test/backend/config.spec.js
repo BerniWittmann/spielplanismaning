@@ -10,11 +10,12 @@ describe('Route: Config', function () {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
-            expect(response.body).to.have.keys(['version', 'env', 'lockdown']);
+            expect(response.body).to.have.keys(['version', 'env', 'lockdown', 'plaetze']);
             expect(response.body).to.deep.equal({
                 version: version,
                 env: 'testing',
-                lockdown: true
+                lockdown: true,
+                plaetze: '3'
             });
             return done();
         });
@@ -46,6 +47,16 @@ describe('Route: Config', function () {
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
             expect(response.body).to.equal('testing');
+            return done();
+        });
+    });
+
+    it('gibt die Anzahl PLätze zurück', function (done) {
+        request(server).get('/api/config/plaetze').end(function (err, response) {
+            if (err) return done(err);
+            expect(response).not.to.be.undefined;
+            expect(response.statusCode).to.equal(200);
+            expect(response.body).to.equal('3');
             return done();
         });
     });

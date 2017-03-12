@@ -14,7 +14,8 @@
         var configData = {
             env: 'testing',
             version: '1.0.0',
-            lockdown: true
+            lockdown: true,
+            plaetze: '3'
         };
         var config;
 
@@ -39,6 +40,7 @@
 
             config.getConfig().then(function (res) {
                 responseTest = res;
+                response.plaetze = parseInt(response.plaetze, 10);
                 expect(_.isEqual(res, response)).to.be.true;
             });
         });
@@ -68,6 +70,16 @@
             httpBackend.expectGET(ENDPOINT_BASE_URL + '/lockdownmode').respond(201, response);
 
             config.getLockdown().then(function (res) {
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
+            });
+        });
+
+        it('soll die Plätze laden', function () {
+            response = configData.plaetze;
+            httpBackend.expectGET(ENDPOINT_BASE_URL + '/plaetze').respond(201, response);
+
+            config.getPlaetze().then(function (res) {
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });

@@ -8,7 +8,8 @@
             const config = {
                 env: undefined,
                 version: undefined,
-                lockdown: undefined
+                lockdown: undefined,
+                plaetze: undefined
             };
 
             function getConfig() {
@@ -16,6 +17,7 @@
                     config.env = data.env || config.env;
                     config.version = data.version || config.version;
                     config.lockdown = _.isUndefined(data.lockdown) ? config.lockdown : data.lockdown;
+                    config.plaetze = parseInt(data.plaetze, 10) || config.plaetze;
                     return config;
                 });
             }
@@ -45,11 +47,21 @@
                 });
             }
 
+            function getPlaetze() {
+                if (config.plaetze) return $q.when(config.plaetze);
+
+                return routes.requestGET(routes.urls.config.plaetze()).then(function (data) {
+                    config.plaetze = parseInt(data, 10);
+                    return config.plaetze;
+                });
+            }
+
             return {
                 getConfig: getConfig,
                 getEnv: getEnv,
                 getVersion: getVersion,
-                getLockdown: getLockdown
+                getLockdown: getLockdown,
+                getPlaetze: getPlaetze
             };
         }]);
 
