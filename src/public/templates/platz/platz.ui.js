@@ -18,16 +18,20 @@
                 resolve: {
                     spiele: function (spiel) {
                         return spiel.getAll();
+                    },
+                    anzahlPlaetze: function (config) {
+                        return config.getPlaetze();
                     }
                 }
             });
     }
 
-    function PlatzController(spiele, $stateParams, errorHandler, ANZAHL_PLAETZE) {
+    function PlatzController(spiele, $stateParams, errorHandler, anzahlPlaetze, $state) {
         const vm = this;
         vm.loading = true;
 
-        if (!$stateParams.platznummer || $stateParams.platznummer > ANZAHL_PLAETZE || $stateParams.platznummer <= 0) {
+        if (!$stateParams.platznummer || $stateParams.platznummer > anzahlPlaetze || $stateParams.platznummer <= 0) {
+            $state.go('spi.home');
             return errorHandler.handleResponseError({
                 MESSAGE: 'Platz nicht gefunden',
                 STATUSCODE: 404,

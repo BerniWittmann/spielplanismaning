@@ -88,7 +88,7 @@
                 $state: mockState,
                 $stateParams: mockStateParams,
                 errorHandler: mockErrorHandler,
-                ANZAHL_PLAETZE: 3
+                anzahlPlaetze: 3
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
