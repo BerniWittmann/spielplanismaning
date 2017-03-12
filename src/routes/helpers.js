@@ -107,6 +107,9 @@ module.exports = function () {
     function saveUserAndSendMail(user, res, mail) {
         return user.save(function (err) {
             if (err) {
+                if (err.code === 11000) {
+                    return messages.ErrorUserExistiertBereits(res, user.username);
+                }
                 return messages.Error(res, err);
             }
 

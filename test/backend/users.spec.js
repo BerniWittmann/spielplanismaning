@@ -69,9 +69,9 @@ describe('Route: Users', function () {
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;
-                expect(res.statusCode).to.equal(500);
-                expect(res.body.MESSAGEKEY).to.equal('ERROR');
-                expect(res.body.ERROR.code).to.equal(11000);
+                expect(res.statusCode).to.equal(409);
+                expect(res.body.MESSAGEKEY).to.equal('ERROR_USER_ALREADY_EXISTS');
+                expect(res.body.MESSAGE).to.equal('Benutzer test-user existiert bereits');
                 return done();
             });
     });

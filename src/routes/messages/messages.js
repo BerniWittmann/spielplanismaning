@@ -75,6 +75,9 @@ module.exports = function () {
         },
         ErrorZeitenUngueltig: function (res) {
             send(require('./ErrorZeitenUngueltig.js'), res);
+        },
+        ErrorUserExistiertBereits: function (res, username) {
+            send(require('./ErrorUserExistiertBereits.js')(username), res);
         }
     };
 };

@@ -27,7 +27,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
      * @apiParam {String} role Rolle des neuen Nutzers.
      *
      * @apiUse ErrorUnbekannteRolle
-     *
+     * @apiUse ErrorUserExistiertBereits
      * @apiUse ErrorBadRequest
      *
      * @apiUse SuccessMessage

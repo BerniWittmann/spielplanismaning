@@ -51,11 +51,7 @@
                     vm.registerMsg = vm.user.username + ' wurde registriert.';
                     vm.user = {};
                 }, function (error) {
-                    if (error.ERROR.code === 11000) {
-                        vm.registerErr = 'Dieser Username oder diese Email existiert bereits';
-                    } else {
-                        vm.registerErr = error;
-                    }
+                    vm.registerErr = error.MESSAGE;
                 });
             }
         }
