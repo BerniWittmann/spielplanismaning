@@ -18,13 +18,16 @@
                 resolve: {
                     spiele: function (spiel) {
                         return spiel.getAll();
+                    },
+                    anzahlPlaetze: function (config) {
+                        return config.getPlaetze();
                     }
                 }
             });
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth, toastr) {
+    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze) {
         const vm = this;
         vm.loading = true;
 
@@ -56,11 +59,16 @@
             saveOrder: saveOrder,
             errorIndex: undefined,
             checkRowInvalid: checkRowInvalid,
-            abortEdit: abortEdit
+            abortEdit: abortEdit,
+            isLastPlatz: isLastPlatz
         });
 
         function checkRowInvalid(index) {
             return vm.errorIndex >= 0 && index >= vm.errorIndex && index < (vm.errorIndex + 3);
+        }
+
+        function isLastPlatz(spiel) {
+            return spiel.platz === anzahlPlaetze;
         }
 
         function toggleEdit() {
