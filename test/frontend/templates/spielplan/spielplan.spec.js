@@ -142,7 +142,8 @@
                 $scope: mockScope,
                 $state: mockState,
                 spiel: mockSpiel,
-                auth: mockAuth
+                auth: mockAuth,
+                anzahlPlaetze: 3
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

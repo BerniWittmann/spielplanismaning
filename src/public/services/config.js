@@ -12,6 +12,25 @@
                 plaetze: undefined
             };
 
+            function parseToInt(str) {
+                if (typeof str === 'string' || str instanceof String) {
+                    if (str.match(/^([0-9]+)$/)) {
+                        return parseInt(str, 10);
+                    }
+                    return str;
+                }
+                return str;
+            }
+
+            function getConfigParam(name) {
+                if (name !== 'lockdown' && config[name]) return $q.when(config[name]);
+
+                return routes.requestGET(routes.urls.config[name]()).then(function (data) {
+                    config[name] = parseToInt(data);
+                    return config[name];
+                });
+            }
+
             function getConfig() {
                 return routes.requestGET(routes.urls.config.base()).then(function (data) {
                     config.env = data.env || config.env;
@@ -23,37 +42,19 @@
             }
 
             function getEnv() {
-                if (config.env) return $q.when(config.env);
-
-                return routes.requestGET(routes.urls.config.env()).then(function (data) {
-                    config.env = data;
-                    return config.env;
-                });
+                return getConfigParam('env');
             }
 
             function getVersion() {
-                if (config.version) return $q.when(config.version);
-
-                return routes.requestGET(routes.urls.config.version()).then(function (data) {
-                    config.version = data;
-                    return config.version;
-                });
+                return getConfigParam('version');
             }
 
             function getLockdown() {
-                return routes.requestGET(routes.urls.config.lockdownMode()).then(function (data) {
-                    config.lockdown = data;
-                    return config.lockdown;
-                });
+                return getConfigParam('lockdown');
             }
 
             function getPlaetze() {
-                if (config.plaetze) return $q.when(config.plaetze);
-
-                return routes.requestGET(routes.urls.config.plaetze()).then(function (data) {
-                    config.plaetze = parseInt(data, 10);
-                    return config.plaetze;
-                });
+                return getConfigParam('plaetze');
             }
 
             return {
