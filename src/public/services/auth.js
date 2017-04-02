@@ -3,14 +3,15 @@
 
     angular
         .module('spi.auth', ['spi.auth.token', 'spi.routes', 'spi.logger', 'angular-md5'])
-        .factory('auth', ['routes', '$state', 'authToken', '$q', '$window', '$timeout', 'md5', 'Logger', function (routes,
-                                                                                                                   $state,
-                                                                                                                   authToken,
-                                                                                                                   $q,
-                                                                                                                   $window,
-                                                                                                                   $timeout,
-                                                                                                                   md5,
-                                                                                                                   Logger) {
+        .factory('auth', ['routes', '$state', '$rootScope', 'authToken', '$q', '$window', '$timeout', 'md5', 'Logger', function (routes,
+                                                                                                                                 $state,
+                                                                                                                                 $rootScope,
+                                                                                                                                 authToken,
+                                                                                                                                 $q,
+                                                                                                                                 $window,
+                                                                                                                                 $timeout,
+                                                                                                                                 md5,
+                                                                                                                                 Logger) {
             const auth = {};
             auth.saveToken = authToken.saveToken;
 
@@ -31,10 +32,20 @@
                     delete payload.checksum;
                     if (!checksum || checksum !== md5.createHash(JSON.stringify(payload))) {
                         Logger.warn('Checksums don\'t match');
+                        if ($rootScope.ravenEnabled) {
+                            Raven.captureMessage('Checksums manipulated', {
+                                level: warning,
+                                extra: payload
+                            });
+                        }
+
                         return false;
                     }
                     if (payload.exp > Date.now() / 1000) {
                         Logger.enableLogging();
+                        if ($rootScope.ravenEnabled) {
+                            Raven.setUserContext(payload);
+                        }
                         return true;
                     }
                     return false;
@@ -66,6 +77,9 @@
                 return routes.requestPOST(routes.urls.users.login(), user).then(function (res) {
                     if (res && res.token) {
                         auth.saveToken(res.token);
+                        if ($rootScope.ravenEnabled) {
+                            Raven.setUserContext(res.token);
+                        }
                     }
                     return res;
                 }, function (err) {
@@ -83,11 +97,14 @@
 
             auth.logOut = function () {
                 authToken.removeToken();
+                if ($rootScope.ravenEnabled) {
+                    Raven.setUserContext();
+                }
                 $state.go('spi.home');
             };
 
             auth.getRole = function () {
-                if(auth.isLoggedIn()) {
+                if (auth.isLoggedIn()) {
                     const token = auth.getToken();
 
                     if (token && !_.isUndefined(token)) {
@@ -172,5 +189,7 @@
             };
 
             return auth;
-        }]);
+        }
+        ])
+    ;
 })();

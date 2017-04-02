@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular
+    const app = angular
         .module('spi', [
             /* module-injector */
             'ngAnimate',
@@ -76,7 +76,14 @@
     }
 
     function run($rootScope, config) {
-        config.getConfig();
+        $rootScope.ravenEnabled = false;
+        config.getConfig().then(function (data) {
+            console.log(data.env);
+            if (data.env === 'production') {
+                $rootScope.ravenEnabled = true;
+                app.requires.push('ngRaven');
+            }
+        });
         $rootScope.onload = function () {
             const page = document.getElementById('page');
             page.className = page.className + " loaded";

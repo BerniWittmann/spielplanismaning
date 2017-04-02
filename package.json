@@ -60,6 +60,7 @@
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
+    "raven": "^1.2.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.2",
     "sendgrid": "^2.0.0",

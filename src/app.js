@@ -8,6 +8,15 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+const Raven = require('raven');
+const version = require('../package.json').version;
+if (process.env.NODE_ENV === 'production') {
+    Raven.config(process.env.SENTRY_URL, {
+        release: version,
+        environment: process.env.NODE_ENV
+    }).install();
+}
+
 const sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
 const secret = process.env.SECRET;
@@ -40,6 +49,10 @@ mongoose.connect(app.get('MONGODB_URI'), function (err) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(Raven.requestHandler());
+}
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 //noinspection JSUnresolvedFunction
@@ -65,6 +78,10 @@ require('./routes/middleware/badRequestHandler.js')(app);
 
 //Setup Routes
 require('./routes/routes.js')(app, sendgrid, secret);
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(Raven.errorHandler());
+}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -54,6 +54,20 @@
     <script src="bower_components/angular-flatpickr/dist/ng-flatpickr.min.js"></script>
     <script src="bower_components/ua-parser-js/dist/ua-parser.min.js"></script>
 
+    <% if(sentryEnabled) { %>
+    <script src="bower_components/raven-js/dist/raven.min.js"></script>
+    <script src="bower_components/raven-js/dist/plugins/angular.min.js"></script>
+    <script>
+        Raven
+            .config('<%= sentryPublicUrl %>', {
+                    release: "<%= version %>",
+                    environment: "<%= environment %>"
+            })
+            .addPlugin(Raven.Plugins.Angular)
+            .install();
+    </script>
+    <% } %>
+
     <!-- injector:js -->
     <!-- endinjector -->
 </head>
