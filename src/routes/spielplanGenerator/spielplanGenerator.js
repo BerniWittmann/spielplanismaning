@@ -15,7 +15,7 @@ module.exports = function () {
         const maxLeereSpieleStreak = 6;
         const spiele = [];
         let spieleGesamt;
-        const plaetze = parseInt(process.env.PLAETZE, 10);
+        const plaetze = parseInt(process.env.PLAETZE, 10) || 3;
 
         let zeit;
         let zeiten;
@@ -78,10 +78,10 @@ module.exports = function () {
                 while (i <= spieleGesamt) {
                     leerdurchgelaufeneGruppen = 0;
                     if (leereSpieleStreak >= maxLeereSpieleStreak) {
-                        //Throw error
+                        console.error('Spielerstellung gescheitert: Zu viele leere Spiele');
+                        return cb(new Error('Zu viele leere Spiele'));
                     }
 
-                    /* jshint loopfunc: true */
                     _.forEach(gruppen, function (gruppe) {
                         if (helper.checkSpieleFuerGruppeUebrig(gruppe, spiele)) {
                             console.log('Spielerstellung Nr. ' + i + ': gestartet');
@@ -121,7 +121,7 @@ module.exports = function () {
                                         lastPlayingTeams = geradeSpielendeTeams;
                                         geradeSpielendeTeams = [];
                                     }
-                                }else {
+                                } else {
                                     leerdurchgelaufeneGruppen++;
                                 }
                             } else {
@@ -132,10 +132,14 @@ module.exports = function () {
                         }
                     });
                     if(leerdurchgelaufeneGruppen === gruppen.length) {
+                        if (leereSpieleStreak >= maxLeereSpieleStreak) {
+                            console.error('Spielerstellung gescheitert: Zu viele leere Spiele');
+                            return cb(new Error('Zu viele leere Spiele'));
+                        }
                         leeresSpiel();
                     }
                 }
-                for (let j = 0; j < (plaetze - _.last(spiele).platz); j++) {
+                for (let j = 0; j <= (plaetze - _.last(spiele).platz); j++) {
                     leeresSpiel();
                 }
 
