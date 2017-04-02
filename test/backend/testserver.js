@@ -48,6 +48,7 @@ module.exports = function () {
     var spielplan = require('../../src/routes/spielplan')();
     var teams = require('../../src/routes/teams')();
     var ansprechpartner = require('../../src/routes/ansprechpartner')();
+    var notfound = require('../../src/routes/notfound')();
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
@@ -68,6 +69,7 @@ module.exports = function () {
     app.use('/api/spielplan', spielplan);
     app.use('/api/teams', teams);
     app.use('/api/ansprechpartner', ansprechpartner);
+    app.use(/\/api\/.*/, notfound);
     app.use(/\/.*/, routes);
 
     var databaseSetup = require('./database-setup/database-setup')(process.env.MONGODB_URI);
