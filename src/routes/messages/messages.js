@@ -78,6 +78,9 @@ module.exports = function () {
         },
         ErrorUserExistiertBereits: function (res, username) {
             send(require('./ErrorUserExistiertBereits.js')(username), res);
+        },
+        ErrorNotFound: function (res) {
+            send(require('./ErrorNotFound.js')(), res);
         }
     };
 };

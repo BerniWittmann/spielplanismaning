@@ -9,6 +9,7 @@ module.exports = function (app, sendgrid, secret) {
     const spiele = require('./spiele.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
     const spielplan = require('./spielplan.js')();
     const ansprechpartner = require('./ansprechpartner.js')();
+    const notFound = require('./notfound.js')();
 
     const API_PREFIX = '/api';
     app.use(API_PREFIX + '/users', users);
@@ -20,5 +21,6 @@ module.exports = function (app, sendgrid, secret) {
     app.use(API_PREFIX + '/spiele', spiele);
     app.use(API_PREFIX + '/spielplan', spielplan);
     app.use(API_PREFIX + '/ansprechpartner', ansprechpartner);
+    app.use(/\/api\/.*/, notFound);
     app.use(/\/.*/, routes);
 };
