@@ -96,6 +96,11 @@
                 $state.go('spi.platz', {
                     platznummer: platznummer
                 });
+            },
+            gotoDate: function (date) {
+                $state.go('spi.datum', {
+                    datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
+                });
             }
         });
 

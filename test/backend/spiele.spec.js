@@ -103,6 +103,34 @@ describe('Route: Spiele', function () {
             });
     });
 
+    it('soll die Spiele nach Platz laden', function (done) {
+        request(server)
+            .get('/api/spiele?platz=1')
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                expect(response.body).to.be.a('Array');
+                expect(response.body).to.have.lengthOf(9);
+                return done();
+            });
+    });
+
+    it('soll die Spiele nach Datum laden', function (done) {
+        request(server)
+            .get('/api/spiele?date=2017-02-01')
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                expect(response.body).to.be.a('Array');
+                expect(response.body).to.have.lengthOf(0);
+                return done();
+            });
+    });
+
     it('wenn die Gruppe ungültig ist, soll ein Fehler geworfen werden', function (done) {
         var spiel = {
             jugend: jugendid

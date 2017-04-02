@@ -209,6 +209,17 @@
             });
         });
 
+        it('Bei Klick auf das Datum wird man zum Datum weitergeleitet', function () {
+            var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[0]);
+            var spy = chai.spy.on(stateMock, 'go');
+
+            result.triggerHandler('click');
+
+            expect(spy).to.have.been.called.with('spi.datum', {
+                datum: '1970-01-01'
+            });
+        });
+
         it('das ausgewählt Team wird gehighlited', function () {
             var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[5]);
 

@@ -22,9 +22,11 @@ module.exports = function () {
             }]);
         } else if (req.query.gruppe) {
             query = model.find({gruppe: req.query.gruppe});
-        }
-        else if (req.query.jugend) {
+        } else if (req.query.jugend) {
             query = model.find({jugend: req.query.jugend});
+        } else if (req.query.date) {
+            const day = moment(req.query.date, 'YYYY-MM-DD');
+            query = model.find({datum: day.format('DD.MM.YYYY')});
         }
         return {
             query: query,
