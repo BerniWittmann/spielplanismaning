@@ -311,6 +311,17 @@
             });
         });
 
+        it('Bei Klick auf das Datum wird man zum Datum weitergeleitet', function () {
+            var result = angular.element(element.find('tr').find('td')[1]);
+            var spy = chai.spy.on(stateMock, 'go');
+
+            result.triggerHandler('click');
+
+            expect(spy).to.have.been.called.with('spi.datum', {
+                datum: '1970-01-01'
+            });
+        });
+
         it('soll die Gruppe ausblenden können', function () {
             showGruppe = false;
             recompile();
