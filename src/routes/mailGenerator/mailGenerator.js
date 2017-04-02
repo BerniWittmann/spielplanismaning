@@ -42,7 +42,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     spielausgang: spielausgang,
                     spielUrl: url + 'spiel/' + spiel._id,
                     unsubscribelink: url + 'teams/' + team._id + '/deabonnieren',
-                    kontaktUrl: url + 'kontakt'
+                    kontaktUrl: url + 'kontakt',
+                    imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
 
                 const html = ejs.render(template, data);
@@ -87,7 +88,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     teambname: teambname,
                     spielUrl: url + 'spiel/' + spiel._id,
                     unsubscribelink: url + 'teams/' + team._id + '/deabonnieren',
-                    kontaktUrl: url + 'kontakt'
+                    kontaktUrl: url + 'kontakt',
+                    imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
 
                 const html = ejs.render(template, data);
@@ -120,7 +122,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const data = {
                     subject: subject,
                     body: body,
-                    kontaktUrl: url + 'kontakt'
+                    kontaktUrl: url + 'kontakt',
+                    imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
 
                 const html = ejs.render(template, data);
@@ -162,7 +165,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     kontaktUrl: url + 'kontakt',
                     username: user.username,
                     email: email,
-                    baseUrl: url
+                    baseUrl: url,
+                    imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
                 const html = ejs.render(template, data);
 
@@ -201,7 +205,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
                 const data = {
                     resetUrl: url + 'reset-password?token=' + user.resetToken,
-                    kontaktUrl: url + 'kontakt'
+                    kontaktUrl: url + 'kontakt',
+                    imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
                 const html = ejs.render(template, data);
 
