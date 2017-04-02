@@ -3,7 +3,8 @@
   "version": "1.7.3",
   "private": true,
   "scripts": {
-    "start": "bower install && gulp serve:dist"
+    "start": "gulp serve:dist",
+    "postinstall": "bower install"
   },
   "dependencies": {
     "angular": "^1.5.5",
