@@ -34,16 +34,20 @@
                 return routes.requestPUT(routes.urls.spielplan.zeiten(), zeiten);
             };
 
-            spielplan.createSpielplan = function () {
-                return routes.requestPUT(routes.urls.spielplan.base(), {keep: false}).then(function (res) {
-                    toastr.success('Spielplan wurde neu generiert', 'Spielplan generiert');
+            function generateSpielplan(keep) {
+                return routes.requestPUT(routes.urls.spielplan.base(), {keep: keep}).then(function () {
+                    const title = keep ? 'Spielplan aktualisiert' : 'Spielplan generiert';
+                    const message = keep ? 'Spielplan wurde aktualisiert' : 'Spielplan wurde neu generiert';
+                    toastr.success(message, title);
                 });
+            }
+
+            spielplan.createSpielplan = function () {
+                return generateSpielplan(false);
             };
 
             spielplan.regenerateSpielplan = function () {
-                return routes.requestPUT(routes.urls.spielplan.base(), {keep: true}).then(function (res) {
-                    toastr.success('Spielplan wurde aktualisiert', 'Spielplan aktualisiert');
-                });
+                return generateSpielplan(true);
             };
 
             return spielplan;

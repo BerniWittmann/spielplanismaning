@@ -153,12 +153,7 @@ function updateAllSpiele(spiele, cb) {
             return cb(err);
         }
 
-        return async.each(spiele, function (spiel, callback) {
-            Spiel.create(spiel, function (err) {
-                if(err) return callback(err);
-                return callback();
-            });
-        }, function (err) {
+        return saveSpiele(spiele, function (err) {
             if(err) return cb(err);
             return cb();
         });
@@ -190,7 +185,7 @@ function resetErgebnisse(cb) {
 }
 
 function saveSpiele(spiele, cb) {
-    async.each(spiele, function (spiel, callback) {
+    return async.each(spiele, function (spiel, callback) {
         Spiel.create(spiel, function (err) {
             if(err) return callback(err);
             return callback();

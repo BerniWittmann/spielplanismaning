@@ -110,7 +110,7 @@ module.exports = function () {
                 if (leerdurchgelaufeneGruppen === gruppen.length) {
                     if (leereSpieleStreak >= maxLeereSpieleStreak) {
                         console.error('Spielerstellung gescheitert: Zu viele leere Spiele');
-                        return cb(new Error('Zu viele leere Spiele'));
+                        return cb(new Error('Spielerstellung gescheitert: Zu viele leere Spiele'));
                     }
                     leeresSpiel();
                 }
