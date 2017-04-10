@@ -7,13 +7,18 @@
             const errorHandler = {};
 
             errorHandler.handleResponseError = function (err) {
-                toastr.error(err.MESSAGE, 'Fehler');
-                if ($rootScope.ravenEnabled) {
-                    Raven.captureMessage('Error: ' + err.MESSAGEKEY, {
-                        level: 'error',
-                        extra: err
-                    });
+                if (err) {
+                    toastr.error(err.MESSAGE, 'Fehler');
+                    if ($rootScope.ravenEnabled) {
+                        Raven.captureMessage('Error: ' + err.MESSAGEKEY, {
+                            level: 'error',
+                            extra: err
+                        });
+                    }
+                } else {
+                    toastr.warning('Bitte prüfen Sie ihre Internet-Verbindung', 'Keine Internet-Verbindung');
                 }
+
                 return $q.reject(err);
             };
 
