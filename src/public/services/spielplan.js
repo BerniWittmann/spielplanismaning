@@ -38,6 +38,10 @@
                 return routes.requestPUT(routes.urls.spielplan.base(), undefined);
             };
 
+            spielplan.regenerateSpielplan = function () {
+                return routes.requestPUT(routes.urls.spielplan.base(), {keep: true});
+            };
+
             return spielplan;
         }]);
 })();

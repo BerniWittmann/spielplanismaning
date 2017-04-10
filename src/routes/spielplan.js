@@ -56,7 +56,13 @@ module.exports = function () {
      * @apiUse SpielplanErstelltMessage
      **/
     router.put('/', function (req, res) {
-        spielplanGenerator.generateNew(function (err) {
+        let generator = spielplanGenerator.generateNew;
+
+        if (req.body.keep) {
+            generator = spielplanGenerator.regenerate;
+        }
+
+        generator(function (err) {
             return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });

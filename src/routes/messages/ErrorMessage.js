@@ -20,6 +20,6 @@ module.exports = function (err) {
         MESSAGE: 'Error',
         STATUSCODE: 500,
         MESSAGEKEY: 'ERROR',
-        ERROR: err
+        ERROR: _.isUndefined(err) || _.isUndefined(err.message) ? err : err.message
     };
 };

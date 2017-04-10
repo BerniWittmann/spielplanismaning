@@ -84,8 +84,7 @@
 
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-4 col-md-offset-4">
-        <form data-ng-submit="vm.generateSpielplan()" style="margin-top:30px;">
-            <button type="submit" class="btn btn-primary center-block margin-top-25" id="generate-spielplan-btn">Spielplan neu generieren</button>
-        </form>
+        <button data-ng-click="vm.generateSpielplan()" class="btn btn-primary center-block margin-top-25" id="generate-spielplan-btn">Spielplan neu generieren</button>
+        <button data-ng-click="vm.regenerateSpielplan()" class="btn btn-primary center-block margin-top-25" id="regenerate-spielplan-btn">Spielplan generieren (mit Erhalt beendeter Spiele)</button>
     </div>
 </div>
