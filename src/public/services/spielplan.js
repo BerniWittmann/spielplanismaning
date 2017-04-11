@@ -35,10 +35,11 @@
             };
 
             function generateSpielplan(keep) {
-                return routes.requestPUT(routes.urls.spielplan.base(), {keep: keep}).then(function () {
+                return routes.requestPUT(routes.urls.spielplan.base(), {keep: keep}).then(function (res) {
                     const title = keep ? 'Spielplan aktualisiert' : 'Spielplan generiert';
                     const message = keep ? 'Spielplan wurde aktualisiert' : 'Spielplan wurde neu generiert';
                     toastr.success(message, title);
+                    return res;
                 });
             }
 

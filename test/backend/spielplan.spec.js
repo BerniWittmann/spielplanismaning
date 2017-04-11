@@ -183,6 +183,26 @@ describe('Route: Spielplan', function () {
             });
     });
 
+    it('soll den Spielplan mit Erhalt von Spielen regenerieren', function (done) {
+        request(server)
+            .put('/api/spielplan')
+            .send({keep: true})
+            .set('Authorization', server.adminToken)
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                expect(response.body.MESSAGEKEY).to.equal('SPIELPLAN_CREATED_MESSAGE');
+                expect(response.body.STATUSCODE).to.equal(200);
+                mongoose.model('Spiel').find().exec(function (err, res) {
+                    if (err) throw err;
+                    expect(res).to.have.lengthOf(9);
+                    return done();
+                });
+            });
+    });
+
     after(function (done) {
         server.disconnectDB(done);
     });

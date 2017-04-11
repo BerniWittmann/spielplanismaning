@@ -11,7 +11,8 @@
             go: function () {}
         };
         var mockToastr = {
-            error: function () {}
+            error: function () {},
+            warning: function () {}
         };
 
         var error = {
@@ -36,6 +37,14 @@
             errorHandler.handleResponseError(error);
 
             expect(spy_toastr).to.have.been.called.with(error.MESSAGE);
+        });
+
+        it('soll eine Internet-Verbindung-Fehlermeldung anzeigen', function () {
+            var spy_toastr = chai.spy.on(mockToastr, 'warning');
+
+            errorHandler.handleResponseError(undefined);
+
+            expect(spy_toastr).to.have.been.called.with('Bitte prüfen Sie ihre Internet-Verbindung', 'Keine Internet-Verbindung');
         });
     });
 }());

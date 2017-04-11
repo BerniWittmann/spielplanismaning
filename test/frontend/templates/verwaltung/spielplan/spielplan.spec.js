@@ -25,7 +25,8 @@
                 startdatum: '01.01.1970',
                 enddatum: '31.01.2000'
             },
-            createSpielplan: function () {}
+            createSpielplan: function () {},
+            regenerateSpielplan: function () {}
         };
         var mockToastr = {
             warning: function() {},
@@ -175,6 +176,18 @@
             expect(btn.text()).to.equal('Spielplan neu generieren');
 
             ctrl.generateSpielplan();
+            scope.$digest();
+            expect(spySpielplan).to.have.been.called();
+        });
+
+        it('Soll einen Button zur Generierung mit Erhalt beendeter Spiele haben', function () {
+            render();
+            var spySpielplan = chai.spy.on(mockSpielplan, 'regenerateSpielplan');
+            var btn = element.find('#regenerate-spielplan-btn');
+            expect(btn).to.exist;
+            expect(btn.text()).to.equal('Spielplan generieren (mit Erhalt beendeter Spiele)');
+
+            ctrl.regenerateSpielplan();
             scope.$digest();
             expect(spySpielplan).to.have.been.called();
         });

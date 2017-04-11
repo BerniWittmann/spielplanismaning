@@ -87,5 +87,33 @@
                 expect(_.isEqual(res, response)).to.be.true;
             });
         });
+
+        it('Der Spielplan wird neu generiert', function () {
+            response = 'SUCCESS';
+            httpBackend.expectPUT(ENDPOINT_BASE_URL, function(postData) {
+                var data = JSON.parse(postData);
+                expect(data.keep).not.to.be.true;
+                return true;
+            }).respond(200, response);
+
+            spielplan.createSpielplan().then(function (res) {
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
+            });
+        });
+
+        it('Der Spielplan wird neu generiert mit Erhalt von Spielen', function () {
+            response = 'SUCCESS';
+            httpBackend.expectPUT(ENDPOINT_BASE_URL, function(postData) {
+                var data = JSON.parse(postData);
+                expect(data.keep).to.be.true;
+                return true;
+            }).respond(200, response);
+
+            spielplan.regenerateSpielplan().then(function (res) {
+                responseTest = res;
+                expect(_.isEqual(res, response)).to.be.true;
+            });
+        });
     });
 }());
