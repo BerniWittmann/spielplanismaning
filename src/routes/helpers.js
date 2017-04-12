@@ -6,6 +6,8 @@ module.exports = function () {
     const jsonwebtoken = require('jsonwebtoken');
     const md5 = require('md5');
     const moment = require('moment');
+    const mongoose = require('mongoose');
+    const Spiel = mongoose.model('Spiel');
 
     function getEntityQuery(model, req) {
         let query = model.find();
@@ -215,6 +217,26 @@ module.exports = function () {
         }
     }
 
+    function getSpielErgebnisse(cb) {
+        return Spiel.find({}).exec(function (err, spiele) {
+            if (err) return cb(err, undefined);
+
+            const ergebnisse = [];
+            spiele.forEach(function (spiel) {
+                if (spiel.beendet) {
+                    ergebnisse.push({
+                        teamA: spiel.teamA,
+                        teamB: spiel.teamB,
+                        toreA: spiel.toreA,
+                        toreB: spiel.toreB
+                    });
+                }
+            });
+
+            return cb(undefined, ergebnisse);
+        });
+    }
+
     return {
         getEntityQuery: getEntityQuery,
         resetErgebnis: resetErgebnis,
@@ -227,6 +249,7 @@ module.exports = function () {
         getRequiredRouteConfig: getRequiredRouteConfig,
         addEntity: addEntity,
         checkSpielOrderChangeAllowed: checkSpielOrderChangeAllowed,
-        calcSpielDateTime: calcSpielDateTime
+        calcSpielDateTime: calcSpielDateTime,
+        getSpielErgebnisse: getSpielErgebnisse
     }
 };

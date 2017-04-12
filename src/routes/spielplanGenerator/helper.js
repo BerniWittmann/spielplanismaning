@@ -129,12 +129,34 @@ function getGruppen(cb) {
     });
 }
 
+function getAllSpiele(cb) {
+    return Spiel.find({}).exec(function (err, data) {
+        if (err) {
+            return cb(err);
+        }
+        return cb(undefined, data);
+    });
+}
+
 function deleteSpiele(cb) {
     Spiel.remove({}).exec(function (err) {
         if(err) {
             return cb(err);
         }
         return cb();
+    });
+}
+
+function updateAllSpiele(spiele, cb) {
+    return Spiel.remove({}).exec(function (err) {
+        if(err) {
+            return cb(err);
+        }
+
+        return saveSpiele(spiele, function (err) {
+            if(err) return cb(err);
+            return cb();
+        });
     });
 }
 
@@ -163,13 +185,20 @@ function resetErgebnisse(cb) {
 }
 
 function saveSpiele(spiele, cb) {
-    async.each(spiele, function (spiel, callback) {
+    return async.each(spiele, function (spiel, callback) {
         Spiel.create(spiel, function (err) {
             if(err) return callback(err);
             return callback();
         });
     }, function (err) {
         if(err) return cb(err);
+        return cb();
+    });
+}
+
+function deleteNotCompletedSpiele(cb) {
+    return Spiel.remove({beendet: false}, function (err) {
+        if (err) return cb(err);
         return cb();
     });
 }
@@ -186,5 +215,8 @@ module.exports = {
     getGruppen: getGruppen,
     deleteSpiele: deleteSpiele,
     resetErgebnisse: resetErgebnisse,
-    saveSpiele: saveSpiele
+    saveSpiele: saveSpiele,
+    deleteNotCompletedSpiele: deleteNotCompletedSpiele,
+    getAllSpiele: getAllSpiele,
+    updateAllSpiele: updateAllSpiele
 };

@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.spielplan', ['spi.routes'])
-        .factory('spielplan', ['routes', function (routes) {
+        .module('spi.spielplan', ['spi.routes', 'toastr'])
+        .factory('spielplan', ['routes', 'toastr', function (routes, toastr) {
 
             const spielplan = {
                 startzeit: undefined,
@@ -34,8 +34,21 @@
                 return routes.requestPUT(routes.urls.spielplan.zeiten(), zeiten);
             };
 
+            function generateSpielplan(keep) {
+                return routes.requestPUT(routes.urls.spielplan.base(), {keep: keep}).then(function (res) {
+                    const title = keep ? 'Spielplan aktualisiert' : 'Spielplan generiert';
+                    const message = keep ? 'Spielplan wurde aktualisiert' : 'Spielplan wurde neu generiert';
+                    toastr.success(message, title);
+                    return res;
+                });
+            }
+
             spielplan.createSpielplan = function () {
-                return routes.requestPUT(routes.urls.spielplan.base(), undefined);
+                return generateSpielplan(false);
+            };
+
+            spielplan.regenerateSpielplan = function () {
+                return generateSpielplan(true);
             };
 
             return spielplan;

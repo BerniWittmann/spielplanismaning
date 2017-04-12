@@ -53,6 +53,9 @@
             generateSpielplan: function () {
                 spielplan.createSpielplan();
             },
+            regenerateSpielplan: function () {
+                spielplan.regenerateSpielplan();
+            },
             datePickerOptions: {
                 mode: 'range',
                 dateFormat: 'd.m.Y',
