@@ -1,4 +1,5 @@
 module.exports = function () {
+    const logger = require('winston').loggers.get('apiAnsprechpartner');
     const express = require('express');
     const router = express.Router();
 
@@ -121,15 +122,19 @@ module.exports = function () {
             }
 
             if (req.body.name) {
+                logger.verbose('Set Name to %s', req.body.name);
                 ansprechpartner.name = req.body.name;
             }
             if (req.body.email) {
+                logger.verbose('Set E-Mail to %s', req.body.email);
                 ansprechpartner.email = req.body.email;
             }
             if (req.body.turnier) {
+                logger.verbose('Set Turnier to %s', req.body.turnier);
                 ansprechpartner.turnier = req.body.turnier;
             }
 
+            logger.verbose('Save', {obj: ansprechpartner});
             ansprechpartner.save(function (err, ansprechpartner) {
                 return handler.handleErrorAndResponse(err, res, ansprechpartner);
             });

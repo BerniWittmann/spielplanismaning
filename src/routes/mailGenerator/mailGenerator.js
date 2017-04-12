@@ -1,4 +1,5 @@
 module.exports = function (sendgrid, env, url, disableMails) {
+    const logger = require('winston').loggers.get('mailGenerator');
     const _ = require('lodash');
     const constants = require('./constants.js');
     const ejs = require('ejs');
@@ -8,6 +9,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const mailGenerator = {};
 
     mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
+        logger.verbose('Sending Ergebnis-Update to %d Subscribers', emails.length);
         if (emails.length > 0) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'ergebnisUpdate.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -53,11 +55,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 sendMail(mail, cb);
             });
         } else {
+            logger.verbose('No Subscribers found, so no Mail was sent');
             return cb(null, {});
         }
     };
 
     mailGenerator.sendSpielReminder = function (team, spiel, emails, cb) {
+        logger.verbose('Sending Spiel-Reminder to %d Subscribers', emails.length);
         if (emails.length > 0) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'spielReminder.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -99,11 +103,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 sendMail(mail, cb);
             });
         } else {
+            logger.verbose('No Subscribers found, so no Mail was sent');
             return cb(null, {});
         }
     };
 
     mailGenerator.sendDefaultMail = function (emails, subject, body, cb) {
+        logger.verbose('Sending Plain-Email to %d Subscribers', emails.length);
         if (emails.length > 0) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'default.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -133,11 +139,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 sendMail(mail, cb);
             });
         } else {
+            logger.verbose('No Subscribers found, so no Mail was sent');
             return cb(null, {});
         }
     };
 
     mailGenerator.registerMail = function (user, cb) {
+        logger.verbose('Sending Register-Mail');
         if (user) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'register.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -176,11 +184,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 sendMail(mail, cb, true);
             });
         } else {
+            logger.warn('No User given, so no Mail was sent');
             return cb(null, {});
         }
     };
 
     mailGenerator.passwordForgotMail = function (user, cb) {
+        logger.verbose('Sending Password-Forgot-Email');
         if (user) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'passwordForgot.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -215,11 +225,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 sendMail(mail, cb, true);
             });
         } else {
+            logger.warn('No User given, so no Mail was sent');
             return cb(null, {});
         }
     };
 
     mailGenerator.bugReportMail = function (data, cb) {
+        logger.verbose('Sending Bug-Report');
         const templatePath = path.join(__dirname, emailTemplatesFolderName, 'bugReport.ejs');
         return fs.readFile(templatePath, 'utf-8', function (err, template) {
             if (err) {
@@ -256,11 +268,14 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
         if (disableMails !== 'true') {
             if (!ignoreEnvironment && env !== 'production') {
-                mail.setTos(['isibeach@byom.de']);
-                mail.setSmtpapiTos(['isibeach@byom.de']);
+                const email = 'isibeach@byom.de';
+                logger.verbose('E-Mail redirected to Test-Email Account %s', email);
+                mail.setTos([email]);
+                mail.setSmtpapiTos([email]);
             }
             sendgrid.send(mail, cb);
         } else {
+            logger.verbose('Mails are disabled');
             return cb(null, {});
         }
     }

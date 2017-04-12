@@ -1,4 +1,5 @@
 module.exports = function () {
+    const logger = require('winston').loggers.get('apiSpiele');
     const express = require('express');
     const router = express.Router();
 
@@ -56,13 +57,17 @@ module.exports = function () {
      * @apiUse SpielplanErstelltMessage
      **/
     router.put('/', function (req, res) {
+        logger.verbose('Create Spielplan');
         let generator = spielplanGenerator.generateNew;
 
         if (req.body.keep) {
+            logger.verbose('Keeping complete Spiele');
             generator = spielplanGenerator.regenerate;
         }
 
+        logger.verbose('Start Generator');
         generator(function (err) {
+            logger.verbose('Generator finished');
             return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });
@@ -90,10 +95,13 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.put('/zeiten', function (req, res) {
+        logger.verbose('Check for valid Times');
         if (moment(req.body.startdatum, 'DD.MM.YYYY').isAfter(moment(req.body.enddatum, 'DD.MM.YYYY')) || moment(req.body.startzeit, 'HH:mm').isAfter(moment(req.body.endzeit, 'HH:mm'))) {
+            logger.warning('Times are not valid', req.body);
             return messages.ErrorZeitenUngueltig(res);
         }
 
+        logger.verbose('Update Times');
         Spielplan.findOneAndUpdate({}, req.body, {
             upsert: true
         }, function (err) {
@@ -104,14 +112,17 @@ module.exports = function () {
                     return messages.Error(res, err);
                 }
 
+                logger.verbose('Update Spiele according to new Times');
                 spiele = spiele.sort(compareNumbers);
                 async.eachSeries(spiele, function (singlespiel, asyncdone) {
+                    logger.silly('Updating Spiel %s'. singlespiel._id);
                     const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body);
                     singlespiel.uhrzeit = dateTimeObject.time;
                     singlespiel.datum = dateTimeObject.date;
                     singlespiel.platz = dateTimeObject.platz;
                     singlespiel.save(asyncdone);
                 }, function (err) {
+                    logger.verbose('Updated all Spiele');
                     return handler.handleErrorAndSuccess(err, res);
                 });
 

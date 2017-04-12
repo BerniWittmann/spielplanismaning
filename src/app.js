@@ -17,6 +17,16 @@ if (process.env.NODE_ENV === 'production') {
     }).install();
 }
 
+
+const winston = require('winston');
+const expressWinston = require('express-winston');
+const loglevel = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug')
+require('./config/logging.js')(loglevel);
+const appLogger = winston.loggers.get('app');
+appLogger.info('Current Version: %s', version);
+appLogger.info('Log Level: %s', loglevel.toUpperCase());
+appLogger.info('App is running in %s Mode', process.env.NODE_ENV.toUpperCase());
+
 const sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
 const secret = process.env.SECRET;
@@ -39,9 +49,9 @@ app.set('port', (process.env.PORT || 8000));
 // connect MongoDB
 mongoose.connect(app.get('MONGODB_URI'), function (err) {
     if (!err) {
-        console.log('Connected to Database on ' + app.get('MONGODB_URI'));
+        appLogger.info('Connected to Database on %s', app.get('MONGODB_URI'));
     } else {
-        console.log(err); //failed to connect
+        appLogger.error(err); //failed to connect
     }
 });
 
@@ -53,7 +63,19 @@ if (process.env.NODE_ENV === 'production') {
     app.use(Raven.requestHandler());
 }
 
-app.use(logger('dev'));
+app.use(expressWinston.logger({
+    transports: [
+        new winston.transports.Console({
+            json: false,
+            colorize: true
+        })
+    ],
+    meta: false,
+    expressFormat: true,
+    colorize: true,
+    level: 'info',
+    statusLevels: true
+}));
 app.use(bodyParser.json());
 //noinspection JSUnresolvedFunction
 app.use(bodyParser.urlencoded({
@@ -67,7 +89,7 @@ app.use(passport.initialize());
 app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 
 app.listen(app.get('port'), function () {
-    console.log('Node app is running on port', app.get('port'));
+    appLogger.info('Server is listening on port %d', app.get('port'));
 });
 
 //Setup API Authorization
@@ -83,10 +105,24 @@ if (process.env.NODE_ENV === 'production') {
     app.use(Raven.errorHandler());
 }
 
+app.use(expressWinston.errorLogger({
+    transports: [
+        new winston.transports.Console({
+            json: false,
+            colorize: true
+        })
+    ],
+    baseMeta: {test: 'val', foo: 'bar'},
+    level: 'error',
+    msg: '{{req.method}} {{req.path}} {{res.statusCode}}: {{err.message}} \n',
+    metaField: 'error'
+}));
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     const err = new Error('Not Found');
     err.status = 404;
+    appLogger.error('Error 404 Not Found', {error: err});
     next(err);
 });
 
@@ -96,6 +132,7 @@ app.use(function (req, res, next) {
 // will print stacktrace
 if (app.get('ENVIRONMENT') === 'development') {
     app.use(function (err, req, res) {
+        appLogger.error('Error ' + err.status || 500 + ' ' + err.name, {error: err});
         res.status(err.status || 500);
         res.render('error', {
             message: err.message
@@ -107,6 +144,7 @@ if (app.get('ENVIRONMENT') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res) {
+    appLogger.error('Error ' + err.status || 500 + ' ' + err.name, {error: err});
     res.status(err.status || 500);
     res.render('error', {
         message: err.message

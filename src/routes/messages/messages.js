@@ -1,5 +1,15 @@
 module.exports = function () {
+    const logger = require('winston').loggers.get('api');
     function send(obj, res) {
+        let level = 'warn';
+        if (obj.STATUSCODE < 400) {
+            level = 'verbose';
+        } else if (obj.STATUSCODE < 500) {
+            level = 'warn';
+        } else {
+            level = 'error';
+        }
+        logger.log(level, 'Message: %d %s \n', obj.STATUSCODE, obj.MESSAGE, obj);
         return res.status(obj.STATUSCODE).json(obj);
     }
 

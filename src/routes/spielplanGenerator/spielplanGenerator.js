@@ -1,4 +1,5 @@
 module.exports = function () {
+    const logger = require('winston').loggers.get('spielplanGenerator');
     /* eslint no-loop-func: 0 */
 
     const moment = require('moment');
@@ -10,48 +11,72 @@ module.exports = function () {
     const spielplanGenerator = {};
 
     function generate(payload, cb) {
-        const zeiten = payload.zeiten, gruppen = payload.gruppen, spiele = payload.spiele;
-        let lastPlayingTeams = payload.lastPlayingTeams, geradeSpielendeTeams = payload.geradeSpielendeTeams, i = payload.i;
+        logger.verbose('Generator Started');
+        const properties = helper.configureProperties(payload);
+        const plaetze = properties.plaetze,
+            zeiten = properties.zeiten,
+            gruppen = properties.gruppen,
+            maxLeereSpieleStreak = properties.maxLeereSpieleStreak;
 
-        const leereSpiele = _.countBy(spiele, 'beendet')['undefined'] || 0;
-
-        const plaetze = parseInt(process.env.PLAETZE, 10) || 3;
-        const maxLeereSpieleStreak = plaetze * 2;
-        let zeit = moment(zeiten.startzeit, 'HH:mm');
-        let spieleGesamt = helper.calcSpieleGesamt(gruppen) + leereSpiele;
-        let platz = plaetze, leerdurchgelaufeneGruppen = 0, datum, leereSpieleStreak = 0;
+        let spiele = properties.spiele,
+            i = properties.i,
+            teamA = properties.teamA,
+            teamB = properties.teamB,
+            lastPlayingTeams = properties.lastPlayingTeams,
+            geradeSpielendeTeams = properties.geradeSpielendeTeams,
+            platz = properties.platz,
+            zeit = properties.zeit,
+            datum = properties.datum,
+            leerdurchgelaufeneGruppen = properties.leerdurchgelaufeneGruppen,
+            leereSpieleStreak = properties.leereSpieleStreak,
+            spieleGesamt = properties.spieleGesamt;
 
         const addSpiel = function (spiel) {
-            spiele.push(spiel);
-            i++;
+            const data = helper.addSpiel(spiel, spiele, i);
+            spiele = data.spiele;
+            i = data.i;
+            teamA = data.teamA;
+            teamB = data.teamB;
         };
 
         const shiftTeams = function () {
-            if (i > 1 && (i - 1) % plaetze === 0) {
-                lastPlayingTeams = geradeSpielendeTeams;
-                geradeSpielendeTeams = [];
-            }
+            const data = helper.shiftTeams(i, plaetze, geradeSpielendeTeams, lastPlayingTeams);
+            lastPlayingTeams = data.lastPlayingTeams;
+            geradeSpielendeTeams = data.geradeSpielendeTeams;
         };
 
         if (spieleGesamt > 0) {
-            console.log('Spielplanerstellung: Anzahl Spiele: ' + spieleGesamt);
-
             const leeresSpiel = function () {
-                console.log('Spielplanerstellung: Spiel Nr.' + i + ': Leeres Spiel');
-                const dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
-                platz = dateTimeObj.platz;
-                zeit = dateTimeObj.time;
-                datum = dateTimeObj.date;
+                calcSpielDateTime(i);
                 addSpiel({
                     nummer: i,
                     platz: platz,
                     datum: datum,
                     uhrzeit: zeit
                 });
-                spieleGesamt++;
-                leereSpieleStreak++;
-
+                const data = helper.leeresSpiel(spieleGesamt, leereSpieleStreak, i);
+                spieleGesamt = data.spieleGesamt;
+                leereSpieleStreak = data.leereSpieleStreak;
                 shiftTeams();
+            };
+
+            const calcSpielDateTime = function (i) {
+                const data = helper.calcSpielDateTime(i, zeiten);
+                platz = data.platz;
+                zeit = data.zeit;
+                datum = data.datum;
+            };
+
+            const getTeam = function(gruppe, gegner, name) {
+                const data = helper.getTeam(gruppe, gegner, geradeSpielendeTeams, lastPlayingTeams, spiele, name, i);
+                geradeSpielendeTeams = data.geradeSpielendeTeams;
+                if (gegner) {
+                    //TeamB
+                    teamB = data.team;
+                } else {
+                    //teamA
+                    teamA = data.team;
+                }
             };
 
             while (i <= spieleGesamt) {
@@ -59,49 +84,35 @@ module.exports = function () {
                 if (leereSpieleStreak >= maxLeereSpieleStreak) {
                     //Throw error
                     const errorMessage = 'Spielplanerstellung fehlgeschlagen! Zu viele leere Spiele hintereinander.';
-                    console.error(errorMessage);
+                    logger.error('Spielplan-Generation failed! Too many empty Spiele');
                     return cb(new Error(errorMessage));
                 }
 
                 gruppen.forEach(function (gruppe) {
                     if (helper.checkSpieleFuerGruppeUebrig(gruppe, spiele)) {
-                        console.log('Spielerstellung Nr. ' + i + ': gestartet');
-                        const teamA = helper.getTeamWithoutLast(gruppe, geradeSpielendeTeams, lastPlayingTeams, spiele);
-                        if (!_.isUndefined(teamA)) {
-                            geradeSpielendeTeams = helper.addLastTeam(teamA, geradeSpielendeTeams);
-                            console.log('Spielerstellung Nr. ' + i + ': TeamA gewählt: ' + teamA.name);
+                        logger.verbose('Spiel #%d: Started', i);
+                        logger.verbose('Spiel #%d: Gruppe %s', i, gruppe.name);
 
-                            const teamB = helper.getPossibleGegner(gruppe, teamA, geradeSpielendeTeams, lastPlayingTeams, spiele);
-                            if (!_.isUndefined(teamB)) {
-                                geradeSpielendeTeams = helper.addLastTeam(teamB, geradeSpielendeTeams);
-                                console.log('Spielerstellung Nr. ' + i + ': TeamB gewählt: ' + teamB.name);
+                        getTeam(gruppe, undefined, 'TeamA');
+                        getTeam(gruppe, teamA, 'TeamB');
 
-                                const dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
-                                if (!dateTimeObj) {
-                                    console.error('Couldn\'t calculate spiel data');
-                                }
-                                platz = dateTimeObj.platz;
-                                zeit = dateTimeObj.time;
-                                datum = dateTimeObj.date;
+                        if (!_.isUndefined(teamA) && !_.isUndefined(teamB)) {
+                            calcSpielDateTime(i);
 
-                                console.log('Spielerstellung Nr. ' + i + ': Platz vergeben: ' + platz);
-                                console.log('Spielerstellung Nr. ' + i + ': Spielzeit angesetzt: ' + datum + ' ' + zeit);
-
-                                addSpiel({
-                                    nummer: i,
-                                    platz: platz,
-                                    uhrzeit: zeit,
-                                    datum: datum,
-                                    gruppe: gruppe._id,
-                                    jugend: gruppe.jugend._id,
-                                    teamA: teamA._id,
-                                    teamB: teamB._id
-                                });
-                                console.log('Spielplanerstellung: Spiel Nr.' + (i - 1)  + ' für Gruppe ' + gruppe.name + ' erstellt.');
-                                leereSpieleStreak = 0;
-                                shiftTeams();
-                                return;
-                            }
+                            addSpiel({
+                                nummer: i,
+                                platz: platz,
+                                uhrzeit: zeit,
+                                datum: datum,
+                                gruppe: gruppe._id,
+                                jugend: gruppe.jugend._id,
+                                teamA: teamA._id,
+                                teamB: teamB._id
+                            });
+                            logger.verbose('Spiel #%d: Done', i - 1);
+                            leereSpieleStreak = 0;
+                            shiftTeams();
+                            return;
                         }
                     }
                     leerdurchgelaufeneGruppen++;
@@ -109,14 +120,16 @@ module.exports = function () {
 
                 if (leerdurchgelaufeneGruppen === gruppen.length) {
                     if (leereSpieleStreak >= maxLeereSpieleStreak) {
-                        console.error('Spielerstellung gescheitert: Zu viele leere Spiele');
-                        return cb(new Error('Spielerstellung gescheitert: Zu viele leere Spiele'));
+                        const errorMessage = 'Spielplanerstellung fehlgeschlagen! Zu viele leere Spiele hintereinander.';
+                        logger.error('Spielplan-Generation failed! Too many empty Spiele');
+                        return cb(new Error(errorMessage));
                     }
                     leeresSpiel();
                 }
             }
 
             if (_.last(spiele).platz < plaetze) {
+                logger.verbose('Filling up last Plätze with empty Spielen');
                 for (let j = 0; j <= (plaetze - _.last(spiele).platz); j++) {
                     leeresSpiel();
                 }
@@ -127,10 +140,12 @@ module.exports = function () {
     }
 
     spielplanGenerator.generateNew = function (cb) {
+        logger.verbose('Generate a complete new Spielplan');
         let zeiten;
         let gruppen;
         return async.parallel([
             function (callback) {
+                logger.verbose('Loading Times');
                 helper.getZeiten(function (err, data) {
                     if (err) return callback(err);
                     zeiten = data;
@@ -138,6 +153,7 @@ module.exports = function () {
                 });
             },
             function (callback) {
+                logger.verbose('Loading Gruppen');
                 helper.getGruppen(function (err, data) {
                     if (err) return callback(err);
                     gruppen = data;
@@ -156,13 +172,16 @@ module.exports = function () {
                 i: 1
             }, function (err, spiele) {
                 if (err) {
+                    logger.error('Generator errored', err);
                     return cb(err);
                 }
 
+                logger.info('Spielplan-Generator generated %d Spiele', spiele.length);
                 return helper.updateAllSpiele(spiele, function (err) {
                     if (err) return cb(err);
-                    console.log('Alle Spiele gespeichert');
+                    logger.verbose('Saved All Games');
 
+                    logger.verbose('Resetting Results');
                     return helper.resetErgebnisse(function (err) {
                         if (err) return cb(err);
 
@@ -183,12 +202,14 @@ module.exports = function () {
     }
 
     spielplanGenerator.regenerate = function (cb) {
+        logger.verbose('Generate Spielplan with keeping completed games');
         let zeiten;
         let gruppen;
         let spiele;
 
         return async.parallel([
             function (callback) {
+                logger.verbose('Loading Times');
                 helper.getZeiten(function (err, data) {
                     if (err) return callback(err);
                     zeiten = data;
@@ -196,6 +217,7 @@ module.exports = function () {
                 });
             },
             function (callback) {
+                logger.verbose('Loading Gruppen');
                 helper.getGruppen(function (err, data) {
                     if (err) return callback(err);
                     gruppen = data;
@@ -203,6 +225,7 @@ module.exports = function () {
                 });
             },
             function (callback) {
+                logger.verbose('Loading Games');
                 helper.getAllSpiele(function (err, data) {
                     if (err) return callback(err);
                     spiele = data;
@@ -218,12 +241,14 @@ module.exports = function () {
                 teams = teams.concat(gruppe.teams);
             });
 
+            logger.verbose('filter completed games');
             let beendeteSpiele = _.sortBy(_.filter(spiele, function (spiel) {
                 return spiel.beendet;
             }), 'nummer');
 
             const maxNr = _.maxBy(beendeteSpiele, 'nummer');
 
+            logger.verbose('Fill-Up with empty Games');
             if (maxNr && maxNr.nummer !== beendeteSpiele.length) {
                 const arr = [];
                 for (let i = 1; i <= maxNr.nummer; i++) {
@@ -242,6 +267,7 @@ module.exports = function () {
                 beendeteSpiele = arr;
             }
 
+            logger.verbose('Calculate new Date/Time/Platz for Spiele');
             beendeteSpiele = beendeteSpiele.map(function (spiel) {
                 const dateTimeObject = helpers.calcSpielDateTime(spiel.nummer, zeiten);
                 spiel.uhrzeit = dateTimeObject.time;
@@ -251,6 +277,7 @@ module.exports = function () {
             });
 
             if (beendeteSpiele.length === 0) {
+                logger.verbose('No completed games. Using normal generator');
                 return spielplanGenerator.generateNew(cb);
             }
 
@@ -271,12 +298,14 @@ module.exports = function () {
                 i: beendeteSpiele.length + 1
             }, function (err, spiele) {
                 if (err) {
+                    logger.error('Generator errored', err);
                     return cb(err);
                 }
 
+                logger.info('Spielplan-Generator generated %d Spiele', spiele.length);
                 return helper.updateAllSpiele(spiele, function (err) {
                     if (err) return cb(err);
-                    console.log('Alle Spiele gespeichert');
+                    logger.verbose('Saved All Games');
                     return cb();
                 });
             });

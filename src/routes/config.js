@@ -1,4 +1,5 @@
 module.exports = function (env) {
+    const logger = require('winston').loggers.get('apiConfig');
     const express = require('express');
     const version = require('../../package.json').version;
     const router = express.Router();
@@ -20,12 +21,14 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/', function (req, res) {
-        return res.json({
+        const config = {
             version: version,
             env: env.NODE_ENV,
             lockdown: env.LOCKDOWNMODE === 'true',
             plaetze: env.PLAETZE
-        });
+        };
+        logger.verbose('Summary', {config: config});
+        return res.json(config);
     });
 
     /**
@@ -43,6 +46,7 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/version', function (req, res) {
+        logger.verbose('Version %s', version);
         return res.json(version);
     });
 
@@ -73,6 +77,7 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/env', function (req, res) {
+        logger.verbose('Environment %s', env.NODE_ENV);
         res.json(env.NODE_ENV);
     });
 
@@ -98,6 +103,7 @@ module.exports = function (env) {
      *
      **/
     router.get('/lockdownmode', function (req, res) {
+        logger.verbose('Lockdown-Mode %s', env.LOCKDOWNMODE === 'true');
         return res.json(env.LOCKDOWNMODE === 'true');
     });
 
@@ -116,6 +122,7 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/plaetze', function (req, res) {
+        logger.verbose('Plätze %d', env.PLAETZE);
         return res.json(env.PLAETZE);
     });
 

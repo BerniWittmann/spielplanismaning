@@ -1,5 +1,5 @@
 module.exports = function () {
-
+    const logger = require('winston').loggers.get('apiHelper');
     const messages = require('./messages/messages.js')();
     const _ = require('lodash');
     const handler = require('./handler.js');
@@ -10,23 +10,29 @@ module.exports = function () {
     const Spiel = mongoose.model('Spiel');
 
     function getEntityQuery(model, req) {
+        logger.silly('Getting Entity Query');
         let query = model.find();
         let searchById = false;
         if (req.query.id) {
+            logger.silly('Query by ID');
             searchById = true;
             query = model.findById(req.query.id);
         } else if (req.query.team) {
             //noinspection JSUnresolvedFunction
+            logger.silly('Query by Team');
             query = model.find({}).or([{
                 teamA: req.query.team
             }, {
                 teamB: req.query.team
             }]);
         } else if (req.query.gruppe) {
+            logger.silly('Query by Gruppe');
             query = model.find({gruppe: req.query.gruppe});
         } else if (req.query.jugend) {
+            logger.silly('Query by Jugend');
             query = model.find({jugend: req.query.jugend});
         } else if (req.query.date) {
+             logger.silly('Query by Date');
             const day = moment(req.query.date, 'YYYY-MM-DD');
             query = model.find({datum: day.format('DD.MM.YYYY')});
         }
@@ -53,6 +59,7 @@ module.exports = function () {
 
     function getEntity(model, population, notFoundMessage, res, req) {
         const {query, searchById} = getEntityQuery(model, req);
+        logger.silly('Getting Entity %s', model.modelName);
         query.deepPopulate(population).exec(function (err, data) {
             return handler.handleQueryResponse(err, data, res, searchById, notFoundMessage);
         });
@@ -94,17 +101,21 @@ module.exports = function () {
     }
 
     function verifyToken(req, secret) {
+        logger.verbose('Verifying Token');
         let obj;
         try {
             obj = jsonwebtoken.verify(req.get('Authorization'), secret);
         } catch (err) {
+            logger.warn('Token not valid!');
             return undefined;
         }
         const checksum = obj.checksum;
         delete obj.checksum;
         if (checksum && md5(JSON.stringify(obj)) === checksum) {
+            logger.verbose('Token is valid');
             return obj;
         }
+        logger.warn('Checksums didn\'t match');
         return undefined;
     }
 
@@ -112,11 +123,13 @@ module.exports = function () {
         return user.save(function (err) {
             if (err) {
                 if (err.code === 11000) {
+                    logger.warn('User %s already exists', user.username);
                     return messages.ErrorUserExistiertBereits(res, user.username);
                 }
                 return messages.Error(res, err);
             }
 
+            logger.verbose('Sending Mail');
             return mail(user, function (err) {
                 return handler.handleErrorAndSuccess(err, res);
             });
@@ -133,15 +146,18 @@ module.exports = function () {
     }
 
     function getRequiredRouteConfig(routes, path, method, configKey) {
+        logger.silly('Getting Route Config');
         path = removeLastSlashFromPath(path);
         let route = routes[path];
 
         if (_.isUndefined(route) || _.isNull(route)) {
+            logger.silly('No Route-Config Found');
             return []
         }
 
         route = _.cloneDeep(route[configKey]);
 
+        logger.silly('Check Route is for all Methods');
         if (_.isArray(route)) {
             return route;
         }
@@ -154,6 +170,8 @@ module.exports = function () {
             return [];
         }
 
+        logger.silly('Get Route Config for Method');
+
         const routeconfig = route[method];
 
         if (_.isArray(routeconfig)) {
@@ -164,13 +182,17 @@ module.exports = function () {
             return routeconfig.split(' ');
         }
 
+        logger.silly('No Route-Config Found');
         return [];
     }
 
     function checkSpielOrderChangeAllowed(spiele) {
+        logger.verbose('Check Spiel Order Allowed');
         const plaetze = parseInt(process.env.PLAETZE, 10);
+        logger.verbose('Calculated %d Plätze', plaetze);
         let teamsParallel = [];
         for(let i = 0; i < spiele.length; i += plaetze) {
+            logger.verbose('Adding Teams to Array for every Spiel');
             for (let j = i; j < i + plaetze; j++) {
                 if (j < spiele.length) {
                     if (spiele[j].teamA && spiele[j].teamB) {
@@ -180,36 +202,49 @@ module.exports = function () {
                 }
             }
 
+            logger.verbose('Check if Team is duplicate');
             if (_.uniq(teamsParallel).length !== teamsParallel.length) {
-                console.warn(i);
+                logger.warn('Duplicate Team found at index %d. The Spiel-Order is not valid', i);
                 return i;
             }
             teamsParallel = [];
         }
 
+        logger.verbose('Spiel Order is Valid');
         return -1;
     }
 
     function calcSpielDateTime(nr, spielplan) {
+        logger.silly('Calculate Date and Time for a Spiel');
         const plaetze = parseInt(process.env.PLAETZE, 10);
+        logger.silly('Calculated %d Plätze', plaetze);
         const dailyStartTime = moment(spielplan.startzeit, 'HH:mm');
         const dailyEndTime = moment(spielplan.endzeit, 'HH:mm');
         const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * plaetze;
+        logger.silly('Calculated %d Spiele per Day', spielePerDay);
         if (spielePerDay < 0) {
+            logger.warn('Less than 0 Spiele per Day were calculated');
             return undefined;
         }
         const offsetDays = Math.floor((nr - 1) / spielePerDay);
+        logger.silly('Calculated offset of %d days for the Spiel', offsetDays);
         if (offsetDays < 0) {
+            logger.warn('Negative Offset of Days!');
             return undefined;
         }
         const offsetSpiele = (nr - 1) % spielePerDay;
+        logger.silly('Calculated offset of %d Spiele within the day', offsetSpiele);
         if (offsetSpiele < 0) {
+            logger.warn('Negative Offset of Spiele!');
             return undefined;
         }
 
         const date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
         const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
         const platz = (offsetSpiele % plaetze) + 1;
+        logger.silly('Calculated Date: %s', date.format('DD.MM.YYYY'));
+        logger.silly('Calculated Time: %s', time.format('HH:mm'));
+        logger.silly('Calculated Platz: %d', platz);
         return {
             date: date.format('DD.MM.YYYY'),
             time: time.format('HH:mm'),

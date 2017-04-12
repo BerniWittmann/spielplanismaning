@@ -1,4 +1,5 @@
 module.exports = function () {
+    const logger = require('winston').loggers.get('apiGruppen');
     const express = require('express');
     const router = express.Router();
 
@@ -81,26 +82,33 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
+        logger.verbose('Creating Gruppe %s', req.body.name);
         const gruppe = new Gruppe(req.body);
+        logger.verbose('Setting Jugend %s', req.query.jugend);
         gruppe.jugend = req.query.jugend;
         const query = Jugend.findById(gruppe.jugend);
 
         query.exec(function (err, jugend) {
             if(!jugend) {
+                logger.warn('Jugend %s not found', req.query.jugend);
                 return messages.ErrorBadRequest(res);
             }
             if (err) {
                 return messages.Error(res, err);
             }
             if (jugend.gruppen.length >= 4) {
+                logger.warn('Maximum amount of Gruppen in Jugend reached');
                 return messages.ErrorMaxZahlGruppe(res);
             } else {
+                logger.verbose('Saving Gruppe %s', req.body.name);
                 gruppe.save(function (err, gruppe) {
                     if (err) {
                         return messages.Error(res, err);
                     }
+                    logger.verbose('Gruppe saved');
 
                     jugend.pushGruppe(gruppe, function (err) {
+                        logger.verbose('Add Gruppe to Jugend');
                         return handler.handleErrorAndResponse(err, res, gruppe);
                     });
                 });
@@ -127,6 +135,7 @@ module.exports = function () {
     router.delete('/', function (req, res) {
         Gruppe.findById(req.query.id, function (err, gruppe) {
             if(!gruppe) {
+                logger.warn('Gruppe %s not found', req.query.id);
                 return messages.ErrorGruppeNotFound(res, err);
             }
 
@@ -143,9 +152,12 @@ module.exports = function () {
                     if (err) {
                         return messages.Error(res, err);
                     }
+                    logger.verbose('Removed Gruppe from Jugend');
 
                     return helpers.removeEntityBy(Team, 'gruppe', gruppe, res, function () {
+                        logger.verbose('Removed All Teams from this Gruppe');
                         return helpers.removeEntityBy(Gruppe, '_id', gruppe, res, function (err) {
+                            logger.verbose('Removed Gruppe');
                             return handler.handleErrorAndDeleted(err, res);
                         })
                     });
