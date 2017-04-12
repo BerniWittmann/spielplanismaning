@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
 const concatCss = require('gulp-concat-css');
-const clean = require('gulp-clean');
 const cleanCss = require('gulp-clean-css');
 const gp_uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
@@ -11,6 +10,7 @@ const templateCache = require('gulp-angular-templatecache');
 const htmlmin = require('gulp-htmlmin');
 const ngAnnotate = require('gulp-ng-annotate');
 let sourcemaps = require('gulp-sourcemaps');
+const del = require('del');
 
 
 let uglify = false;
@@ -28,18 +28,16 @@ gulp.task('build:dist', function (done) {
 });
 
 gulp.task('build:sequence', function (done) {
-    return runSequence('clean:build', ['build:css', 'build:js', 'build:images', 'build:favicon', 'build:html', 'build:bower', 'build:etc'], 'inject', 'build:views', 'clean:tmp', done);
+    return runSequence('clean:build', ['build:css', 'build:js', 'build:images', 'build:favicon', 'build:html', 'build:etc'], 'inject', 'build:views', 'clean:tmp', done);
 });
 
 // clean dist
 gulp.task('clean:build', function () {
-    return gulp.src('./dist', {read: false})
-        .pipe(clean());
+    return del(['./dist/*', '!./dist/public', './dist/public/*', '!./dist/public/bower_components/**']);
 });
 
 gulp.task('clean:tmp', function () {
-    return gulp.src('./tmp', {read: false})
-        .pipe(clean());
+    return del(['./tmp/**']);
 });
 
 // build css

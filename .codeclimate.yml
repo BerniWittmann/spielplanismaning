@@ -21,6 +21,7 @@ exclude_paths:
   - docs/**/*
   - gulp-tasks/*
   - src/public/bower_components/**/*
+  - dist/*
   - gulpfile.js
 ratings: 
   paths: 
