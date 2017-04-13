@@ -121,25 +121,28 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            if (req.body.name) {
-                logger.verbose('Set Name to %s', req.body.name);
-                ansprechpartner.name = req.body.name;
-            }
-            if (req.body.email) {
-                logger.verbose('Set E-Mail to %s', req.body.email);
-                ansprechpartner.email = req.body.email;
-            }
-            if (req.body.turnier) {
-                logger.verbose('Set Turnier to %s', req.body.turnier);
-                ansprechpartner.turnier = req.body.turnier;
-            }
+            logger.verbose('Updating Ansprechpartner', req.body);
 
-            logger.verbose('Save', {obj: ansprechpartner});
+            ['name', 'email', 'turnier'].forEach(function (property) {
+                if (req.body[property]) {
+                    logger.silly('Set %s to %s', property, req.body[property]);
+                    ansprechpartner[property] = req.body[property];
+                }
+            });
+
+            logger.silly('Save', ansprechpartner);
             ansprechpartner.save(function (err, ansprechpartner) {
                 return handler.handleErrorAndResponse(err, res, ansprechpartner);
             });
         });
     });
+
+    function setProperty(body, property) {
+        if (body[property]) {
+            logger.verbose('Set Name to %s', req.body.name);
+            ansprechpartner.name = req.body.name;
+        }
+    }
 
     return router;
 };

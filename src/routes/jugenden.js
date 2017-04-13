@@ -140,7 +140,6 @@ module.exports = function () {
                 return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, res, function () {
                     logger.verbose('Removed All Gruppen from this Jugend');
                     return helpers.removeEntityBy(Jugend, '_id', req.query.id, res, function (err) {
-                        logger.verbose('Deleted Jugend');
                         return handler.handleErrorAndDeleted(err, res);
                     });
                 });

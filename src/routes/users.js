@@ -41,7 +41,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         user.username = req.body.username;
         user.email = req.body.email;
         if (!user.setRole(req.body.role)) {
-            logger.warning('Unkown Role');
+            logger.warn('Unkown Role');
             return messages.ErrorUnbekannteRolle(res);
         }
 
@@ -90,7 +90,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                     token: user.generateJWT()
                 });
             } else {
-                logger.warning('Login failed');
+                logger.warn('Login failed');
                 return messages.ErrorFalscheAnmeldedaten(res);
             }
         })(req, res, next);
@@ -117,7 +117,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
     router.put('/delete', function (req, res) {
         logger.verbose('Checking User is deleteable');
         if (req.body.username === 'berni') {
-            logger.warning('User is not deleteable');
+            logger.warn('User is not deleteable');
             return messages.ErrorUserNichtLoeschbar(res);
         }
         User.find({
@@ -130,7 +130,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 logger.verbose('Deleted User');
                 return messages.Deleted(res);
             } else {
-                logger.warning('User %s Not Found', req.body.username);
+                logger.warn('User %s Not Found', req.body.username);
                 return messages.ErrorUserNotFound(res, req.body.username);
             }
         });
@@ -154,7 +154,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         logger.verbose('Requesting new Password for User with E-Mail %s', email);
         User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
             if (!user) {
-                logger.warning('User not found');
+                logger.warn('User not found');
                 //Still sending success to prevent brute-forcing for a correct username
                 return messages.Success(res);
             }
@@ -195,7 +195,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         logger.verbose('Checking Reset Token %s', req.body.token);
         return User.findOne({'resetToken': req.body.token}).exec(function (err, user) {
             if (!user) {
-                logger.warning('Token Not Found');
+                logger.warn('Token Not Found');
                 return messages.ErrorInvalidToken(res);
             }
             if (err) {
@@ -206,7 +206,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                 logger.verbose('Token Valid');
                 return messages.Success(res);
             } else {
-                logger.warning('Token Invalid');
+                logger.warn('Token Invalid');
                 return messages.ErrorInvalidToken(res);
             }
         });
@@ -233,7 +233,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         logger.verbose('Set new Password for User');
         User.findOne({'username': req.body.username}).exec(function (err, user) {
             if (!user) {
-                logger.warning('User Not Found');
+                logger.warn('User Not Found');
                 return messages.ErrorUserNotFound(res, req.body.username);
             }
             if (err) {
@@ -252,7 +252,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
                     return handler.handleErrorAndSuccess(err, res);
                 });
             } else {
-                logger.warning('Token Invalid');
+                logger.warn('Token Invalid');
                 return messages.ErrorInvalidToken(res);
             }
         });
@@ -294,7 +294,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
         User.findOne({username: user.username}).exec(function (err, userDB) {
             if (err || !userDB) {
-                logger.warning('User not Found');
+                logger.warn('User not Found');
                 return messages.ErrorForbidden(res);
             }
 

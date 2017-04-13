@@ -109,7 +109,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
         logger.warn('This method is deprecated');
         logger.verbose('Delete Spiel %s', req.query.id);
         return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
-            logger.verbose('Deleted Spiel');
             return handler.handleErrorAndDeleted(err, res);
         });
     });

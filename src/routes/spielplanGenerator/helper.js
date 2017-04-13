@@ -20,6 +20,10 @@ function calcSpieleGesamt(gruppen) {
     return sum;
 }
 
+function getPlaetze() {
+    return parseInt(process.env.PLAETZE, 10) || 3;
+}
+
 function getTeamWithoutLast(gruppe, geradeSpielendeTeams, lastPlayingTeams, spiele) {
     let teams = [];
     _.extend(teams, gruppe.teams);
@@ -149,8 +153,12 @@ function deleteSpiele(cb) {
     });
 }
 
-function updateAllSpiele(spiele, cb) {
-    return Spiel.remove({}).exec(function (err) {
+function updateAllSpiele(spiele, keep, cb) {
+    let query = deleteSpiele;
+    if (keep) {
+        query = deleteNotCompletedSpiele;
+    }
+    return query(function (err) {
         if (err) {
             return cb(err);
         }
@@ -259,7 +267,7 @@ function getTeam(gruppe, gegner, geradeSpielendeTeams, lastPlayingTeams, spiele,
 
 function configureProperties(payload) {
     logger.silly('Running with Payload', payload);
-    const plaetze = parseInt(process.env.PLAETZE, 10) || 3;
+    const plaetze = getPlaetze();
     logger.verbose('Using %d Plätze', plaetze);
     const gruppen = payload.gruppen;
     const spiele = payload.spiele;
@@ -287,6 +295,99 @@ function configureProperties(payload) {
     }
 }
 
+function filterTeams(spiele, teams) {
+    return teams.filter(function (team) {
+        const spieleDesTeams = spiele.find(function (spiel) {
+            return _.isEqual(spiel.teamA, team._id) || _.isEqual(spiel.teamB, team._id);
+        });
+        return !_.isUndefined(spieleDesTeams);
+    });
+}
+
+function fillBeendeteSpieleWithEmpty(beendeteSpiele) {
+    const maxNr = _.maxBy(beendeteSpiele, 'nummer');
+    if (maxNr && maxNr.nummer !== beendeteSpiele.length) {
+        const arr = [];
+        for (let i = 1; i <= maxNr.nummer; i++) {
+            let spiel = _.find(beendeteSpiele, function (single) {
+                return single.nummer === i;
+            });
+
+            if (!spiel) {
+                spiel = {
+                    nummer: i
+                };
+            }
+
+            arr.push(spiel);
+        }
+        beendeteSpiele = arr;
+    }
+
+    return beendeteSpiele;
+}
+
+function filterCompleteSpiele(spiele) {
+    return _.sortBy(_.filter(spiele, function (spiel) {
+        return spiel.beendet;
+    }), 'nummer');
+}
+
+function recalculateDateTimePlatzForSpiele(spiele, zeiten) {
+    if (spiele && zeiten) {
+        return spiele.map(function (spiel) {
+            const dateTimeObject = helpers.calcSpielDateTime(spiel.nummer, zeiten);
+            spiel.uhrzeit = dateTimeObject.time;
+            spiel.datum = dateTimeObject.date;
+            spiel.platz = dateTimeObject.platz;
+            return spiel;
+        });
+    }
+    return undefined
+}
+
+function calculatePresetSpielplanData(data) {
+    let teams = [];
+
+    data.gruppen.forEach(function (gruppe) {
+        teams = teams.concat(gruppe.teams);
+    });
+
+    logger.verbose('Filter completed games');
+    let beendeteSpiele = filterCompleteSpiele(data.spiele);
+
+    logger.verbose('Fill-Up with empty Games');
+    beendeteSpiele = fillBeendeteSpieleWithEmpty(beendeteSpiele);
+
+    logger.verbose('Calculate new Date/Time/Platz for Spiele');
+    beendeteSpiele = recalculateDateTimePlatzForSpiele(beendeteSpiele, data.zeiten);
+
+    if (beendeteSpiele.length === 0) {
+        logger.verbose('No completed games. Using normal generator');
+        return {
+            spiele: [],
+            lastPlayingTeams: [],
+            geradeSpielendeTeams: [],
+            i: 1
+        };
+    }
+
+    let geradeSpielendeTeams = filterTeams(beendeteSpiele.slice(-3), teams);
+    let lastPlayingTeams = filterTeams(beendeteSpiele.slice(-6, Math.max(beendeteSpiele.length - 3, 0)), teams);
+
+    if (beendeteSpiele.length % getPlaetze() === 0) {
+        lastPlayingTeams = geradeSpielendeTeams;
+        geradeSpielendeTeams = [];
+    }
+
+    return {
+        spiele: beendeteSpiele,
+        lastPlayingTeams: lastPlayingTeams,
+        geradeSpielendeTeams: geradeSpielendeTeams,
+        i: beendeteSpiele.length + 1
+    }
+}
+
 module.exports = {
     calcSpieleGesamt: calcSpieleGesamt,
     getTeamWithoutLast: getTeamWithoutLast,
@@ -308,5 +409,11 @@ module.exports = {
     leeresSpiel: leeresSpiel,
     calcSpielDateTime: calcSpielDateTime,
     getTeam: getTeam,
-    configureProperties: configureProperties
+    configureProperties: configureProperties,
+    filterTeams: filterTeams,
+    fillBeendeteSpieleWithEmpty: fillBeendeteSpieleWithEmpty,
+    filterCompleteSpiele: filterCompleteSpiele,
+    recalculateDateTimePlatzForSpiele: recalculateDateTimePlatzForSpiele,
+    calculatePresetSpielplanData: calculatePresetSpielplanData,
+    getPlaetze: getPlaetze
 };

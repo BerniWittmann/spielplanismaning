@@ -25,6 +25,7 @@ branches:
 cache:
   directories:
     - node_modules
+    - dist/public/bower_components
 deploy:
   provider: heroku
   api_key:

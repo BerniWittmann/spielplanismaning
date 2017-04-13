@@ -101,7 +101,7 @@ module.exports = function () {
     }
 
     function verifyToken(req, secret) {
-        logger.verbose('Verifying Token');
+        logger.silly('Verifying Token');
         let obj;
         try {
             obj = jsonwebtoken.verify(req.get('Authorization'), secret);
@@ -112,7 +112,7 @@ module.exports = function () {
         const checksum = obj.checksum;
         delete obj.checksum;
         if (checksum && md5(JSON.stringify(obj)) === checksum) {
-            logger.verbose('Token is valid');
+            logger.silly('Token is valid');
             return obj;
         }
         logger.warn('Checksums didn\'t match');
