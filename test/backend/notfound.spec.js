@@ -21,7 +21,6 @@ describe('Route: notFound', function () {
            getRequestByMethod(method, '/api/invalid')
                .end(function (err, response) {
                    if (err) return done(err);
-                   console.log(response);
                    expect(response.status).to.equal(404);
                    expect(response.body.MESSAGE).to.equal('Nicht gefunden');
                    expect(response.body.MESSAGEKEY).to.equal('ERROR_NOT_FOUND');

@@ -1,5 +1,9 @@
 module.exports = function () {
     require('dotenv').config({path: 'config/test.env'});
+    const winston = require('winston');
+    const loglevel = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug')
+    require('./../../src/config/logging.js')(loglevel);
+    const appLogger = winston.loggers.get('app');
     var express = require('express');
     var app = express();
     var mongoose = require('mongoose');
@@ -7,8 +11,7 @@ module.exports = function () {
 
     var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
     sendgrid.send = function (mail, cb) {
-        console.log('Mail sent.');
-        console.log(mail);
+        appLogger.verbose('Mail sent.', mail);
         return cb();
     };
 

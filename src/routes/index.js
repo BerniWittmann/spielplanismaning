@@ -8,7 +8,7 @@ module.exports = function () {
             version: version,
             environment: process.env.NODE_ENV,
             sentryEnabled: process.env.NODE_ENV === 'production',
-            sentryPublicUrl: process.env.c
+            sentryPublicUrl: process.env.SENTRY_PUBLIC_URL
         });
     });
 

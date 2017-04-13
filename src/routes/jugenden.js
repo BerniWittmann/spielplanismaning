@@ -1,4 +1,5 @@
 module.exports = function () {
+    const logger = require('winston').loggers.get('apiJugenden');
     const express = require('express');
     const router = express.Router();
 
@@ -75,12 +76,14 @@ module.exports = function () {
      *
      **/
     router.post('/', function (req, res) {
+        logger.verbose('Creating Jugend %s', req.body.name);
         const jugend = new Jugend(req.body);
 
         jugend.save(function (err, jugend) {
             if (err) {
                 return messages.Error(res, err);
             }
+            logger.verbose('Jugend created');
             const gruppe = new Gruppe({
                 name: "Gruppe A"
                 , jugend: jugend._id
@@ -97,6 +100,8 @@ module.exports = function () {
                     if (err) {
                         return messages.Error(res, err);
                     }
+
+                    logger.verbose('Added default Gruppe');
 
                     jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
                         return handler.handleErrorAndResponse(err, res, jgd);
@@ -123,6 +128,7 @@ module.exports = function () {
     router.delete('/', function (req, res) {
         Jugend.findById(req.query.id, function (err, jgd) {
             if (!jgd) {
+                logger.warn('Jugend %s not found', req.query.id);
                 return messages.ErrorBadRequest(res);
             }
             if (err) {
@@ -130,7 +136,9 @@ module.exports = function () {
             }
 
             return helpers.removeEntityBy(Team, 'jugend', req.query.id, res, function () {
+                logger.verbose('Removed All Teams from this Jugend');
                 return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, res, function () {
+                    logger.verbose('Removed All Gruppen from this Jugend');
                     return helpers.removeEntityBy(Jugend, '_id', req.query.id, res, function (err) {
                         return handler.handleErrorAndDeleted(err, res);
                     });
@@ -167,19 +175,25 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
             if (!req.query.id) {
+                logger.verbose('Get Tore from all Jugenden');
+                logger.verbose('%d Jugenden found', jugenden.length);
                 jugenden.forEach(function (jugend) {
                     jugend.teams.forEach(function (team) {
                         teams.push(team);
                     });
                 });
             } else {
+                logger.verbose('Get Tore from certain Jugend %s', req.query.id);
+
                 jugenden.teams.forEach(function (team) {
                     teams.push(team);
                 });
             }
+            logger.verbose('%d Teams found', teams.length);
             teams.forEach(function (team) {
                 tore += team.tore;
             });
+            logger.verbose('%d Tore counted', tore);
             return res.json(tore);
         });
     });

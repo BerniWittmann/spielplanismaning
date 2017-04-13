@@ -1,4 +1,5 @@
 module.exports = function (sendgrid, env, url, disableEmails) {
+    const logger = require('winston').loggers.get('apiEmail');
     const express = require('express');
     const router = express.Router();
 
@@ -41,6 +42,9 @@ module.exports = function (sendgrid, env, url, disableEmails) {
             }
 
             emails = emails.filter(onlyUnique);
+
+            logger.verbose('Found %d E-Mail-Addresses', emails.length);
+            logger.verbose('Sending E-Mail', {subject: req.body.subject, text: req.body.text});
 
             //noinspection JSUnresolvedFunction
             MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err) {
@@ -92,6 +96,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/subscriber', function (req, res) {
+        logger.verbose('Deleting Subscriber with email %s', req.query.email, {team: req.query.team});
         Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err) {
             return handler.handleErrorAndDeleted(err, res)
         });

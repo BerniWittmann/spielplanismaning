@@ -1,8 +1,10 @@
 const messages = require('./messages/messages.js')();
 const _ = require('lodash');
+const logger = require('winston').loggers.get('api');
 
 function handleErrorAndResponse(err, res, data) {
     if (err) {
+        logger.warn('Error %d: %s' , err.status, err.message, err);
         return messages.Error(res, err);
     }
 
@@ -11,6 +13,7 @@ function handleErrorAndResponse(err, res, data) {
 
 function handleErrorAndMessage(err, res, message) {
     if (err) {
+        logger.warn('Error %d: %s' , err.status, err.message, err);
         return messages.Error(res, err);
     }
 
@@ -30,6 +33,7 @@ function handleQueryResponse(err, data, res, searchById, notFoundError) {
         return notFoundError(res, err);
     }
     if (err) {
+        logger.warn('Error %d: %s' , err.status, err.message, err);
         return messages.Error(res, err);
     }
 

@@ -1,4 +1,5 @@
 module.exports = function (sendgrid, env, url, disableMails) {
+    const logger = require('winston').loggers.get('apiSpiele');
     const express = require('express');
     const router = express.Router();
 
@@ -76,11 +77,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.post('/', function (req, res) {
+        logger.warn('This method is deprecated');
+        logger.verbose('Create new Spiel', req.body);
+
         const spiel = new Spiel(req.body);
         spiel.jugend = req.body.jugend;
         spiel.gruppe = req.body.gruppe;
 
         spiel.save(function (err, spiel) {
+            logger.verbose('Saved Spiel');
             return handler.handleErrorAndResponse(err, res, spiel);
         });
     });
@@ -101,6 +106,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.delete('/', function (req, res) {
+        logger.warn('This method is deprecated');
+        logger.verbose('Delete Spiel %s', req.query.id);
         return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
             return handler.handleErrorAndDeleted(err, res);
         });
@@ -119,14 +126,18 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.put('/alle', function (req, res) {
-        //TODO Entweder kann das gelöscht werden, oder es kommt später wieder zum Einsatz z.B: beim Verschieben der Spiele
+        logger.warn('This method is deprecated');
+
         const spiele = req.body;
+        logger.verbose('%d Spiele should be updated', spiele.length);
         async.eachSeries(spiele, function (singlespiel, asyncdone) {
+            logger.silly('Updating Spiel %s', singlespiel._id);
             const spiel = new Spiel(singlespiel);
             spiel.jugend = singlespiel.jugend;
             spiel.gruppe = singlespiel.gruppe;
             spiel.save(asyncdone);
         }, function (err) {
+            logger.verbose('Updated all Spiele');
             return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });
@@ -143,6 +154,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.delete('/alle', function (req, res) {
+        logger.verbose('Removing all Spiele');
         Spiel.remove({}, function (err) {
             return handler.handleErrorAndDeleted(err, res);
         });
@@ -164,6 +176,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/tore', function (req, res) {
+        logger.verbose('Reset Spiel %s', req.query.id);
         const query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
@@ -183,12 +196,15 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
                 async.parallel([
                     function (cb) {
+                        logger.silly('Reset Spiel for Team A (%s)', spiel.teamA.name);
                         helpers.resetErgebnis(res, spiel, oldData, 'teamA', cb);
                     },
                     function (cb) {
+                        logger.silly('Reset Spiel for Team B (%s)', spiel.teamB.name);
                         helpers.resetErgebnis(res, spiel, oldData, 'teamB', cb);
                     }
                 ], function (err) {
+                    logger.verbose('Reseted Spiel');
                     handler.handleErrorAndResponse(err, res, spiel);
                 });
             });
@@ -214,6 +230,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
+        logger.verbose('Set Result for Spiel %s', req.query.id);
         const query = Spiel.findById(req.query.id);
         query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
             if (err) {
@@ -228,6 +245,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     return messages.Error(res, err);
                 }
 
+                logger.silly('Set Spiel-Result for Team A (%s)', spiel.teamA.name);
                 //Set Ergebnis Team A
                 spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (err,
                                                                                                                                                             teamA) {
@@ -235,6 +253,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         return messages.Error(res, err);
                     }
 
+                    logger.silly('Set Spiel-Result for Team A (%s)', spiel.teamA.name);
                     //Set Ergebnis Team B
                     spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err,
                                                                                                                                                                 teamB) {
@@ -243,6 +262,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         }
 
                         function sendNextSpielUpdates(cb) {
+                            logger.verbose('Check if Spiel-Reminder for next Games should be sent');
                             return Spiel.findOne({
                                 nummer: spiel.nummer + 6
                             }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
@@ -251,6 +271,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                 }
                                 if (nextspiel) {
                                     if (!nextspiel.beendet) {
+                                        logger.verbose('Send Spiel-Reminder for next Games');
                                         notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
                                     } else {
                                         return cb(null, {});
@@ -268,6 +289,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                     return messages.Error(res, err);
                                 }
 
+                                logger.verbose('Send Spiel-Result Update to Subscribers');
                                 return notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
                                     return handler.handleErrorAndResponse(err, res, spiel);
                                 });
@@ -296,8 +318,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.put('/order', function (req, res) {
         const spiele = req.body;
 
+        logger.verbose('Checking if new order is valid');
         const errorIndex = helpers.checkSpielOrderChangeAllowed(spiele);
         if (errorIndex >= 0) {
+            logger.verbose('Order is invalid at index %d', errorIndex);
             return messages.ErrorSpielplanUngueltig(res, errorIndex);
         }
 
@@ -307,25 +331,29 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 return messages.Error(res, err);
             }
 
+            logger.verbose('Update Spiele with new Order');
             async.eachSeries(spiele, function (singlespiel, asyncdone) {
                 const index = spiele.indexOf(singlespiel);
+                logger.silly('Update Spiel %s', singlespiel._id);
                 Spiel.findById(singlespiel._id).exec(function (err, spiel) {
                     if (err) {
                         return asyncdone(err);
                     }
-
+                    logger.silly('Calculating New Spiel Date/Time/Place');
                     const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
 
                     spiel.datum = dateTimePlace.date;
                     spiel.uhrzeit = dateTimePlace.time;
                     spiel.platz = dateTimePlace.platz;
                     spiel.nummer = index + 1;
+                    logger.silly('Save new Spiel Data');
                     spiel.save(asyncdone);
                 });
             }, function (err) {
                 if (err) {
                     return messages.Error(res, err);
                 }
+                logger.verbose('All Spiele updated');
 
                 Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, neueSpiele) {
                     if (err) {
