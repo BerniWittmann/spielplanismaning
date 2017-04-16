@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const Raven = require('raven');
 const version = require('../package.json').version;
@@ -80,6 +81,9 @@ app.use(bodyParser.json());
 //noinspection JSUnresolvedFunction
 app.use(bodyParser.urlencoded({
     extended: false
+}));
+app.use(mongoSanitize({
+    replaceWith: '_'
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
