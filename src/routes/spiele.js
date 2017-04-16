@@ -270,7 +270,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                     return messages.Error(res, err);
                                 }
                                 if (nextspiel) {
-                                    if (!nextspiel.beendet) {
+                                    if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
                                         logger.verbose('Send Spiel-Reminder for next Games');
                                         notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
                                     } else {
