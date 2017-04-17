@@ -38,7 +38,7 @@
                     <p data-ng-message="required">Rolle ist ein Pflichtfeld</p>
                 </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="registerForm.$invalid">Anlegen</button>
+            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="registerForm.$invalid" analytics-on="click" analytics-event="User Register">Anlegen</button>
         </form>
     </div>
 </div>
@@ -57,7 +57,7 @@
                     <p data-ng-message="minlength">Username ist zu kurz</p>
                 </span>
             </div>
-            <button type="submit" class="btn btn-primary center-block" data-ng-disabled="deleteForm.$invalid">Löschen</button>
+            <button type="submit" class="btn btn-primary center-block" analytics-on="click" analytics-event="User Delete" data-ng-disabled="deleteForm.$invalid">Löschen</button>
         </form>
     </div>
 </div>
