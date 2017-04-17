@@ -9,7 +9,8 @@ module.exports = function (app) {
     const routes = require('./routeConfig.js');
     const Joi = require('joi');
     const options = {
-        abortEarly: false
+        abortEarly: false,
+        allowUnknown: true
     };
 
     const handleBadRequest = function (req, res, next) {
