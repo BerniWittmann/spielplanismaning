@@ -46,7 +46,6 @@ module.exports = function (secret) {
             exp: parseInt(exp.getTime() / 1000, 10),
             iat: parseInt(today.getTime() / 1000, 10)
         };
-        obj.checksum = md5(JSON.stringify(obj));
         return jwt.sign(obj, secret);
     };
 

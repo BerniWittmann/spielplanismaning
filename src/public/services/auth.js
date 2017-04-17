@@ -28,19 +28,6 @@
                         console.warn(err);
                         return false;
                     }
-                    const checksum = payload.checksum;
-                    delete payload.checksum;
-                    if (!checksum || checksum !== md5.createHash(JSON.stringify(payload))) {
-                        Logger.warn('Checksums don\'t match');
-                        if ($rootScope.ravenEnabled) {
-                            Raven.captureMessage('Checksums manipulated', {
-                                level: 'warning',
-                                extra: payload
-                            });
-                        }
-
-                        return false;
-                    }
                     if (payload.exp > Date.now() / 1000) {
                         Logger.enableLogging();
                         if ($rootScope.ravenEnabled) {

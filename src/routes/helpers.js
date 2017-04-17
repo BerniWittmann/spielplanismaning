@@ -109,14 +109,8 @@ module.exports = function () {
             logger.warn('Token not valid!');
             return undefined;
         }
-        const checksum = obj.checksum;
-        delete obj.checksum;
-        if (checksum && md5(JSON.stringify(obj)) === checksum) {
-            logger.silly('Token is valid');
-            return obj;
-        }
-        logger.warn('Checksums didn\'t match');
-        return undefined;
+        logger.silly('Token is valid');
+        return obj;
     }
 
     function saveUserAndSendMail(user, res, mail) {
