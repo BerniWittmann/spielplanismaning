@@ -109,14 +109,8 @@ module.exports = function () {
             logger.warn('Token not valid!');
             return undefined;
         }
-        const checksum = obj.checksum;
-        delete obj.checksum;
-        if (checksum && md5(JSON.stringify(obj)) === checksum) {
-            logger.silly('Token is valid');
-            return obj;
-        }
-        logger.warn('Checksums didn\'t match');
-        return undefined;
+        logger.silly('Token is valid');
+        return obj;
     }
 
     function saveUserAndSendMail(user, res, mail) {
@@ -152,7 +146,7 @@ module.exports = function () {
 
         if (_.isUndefined(route) || _.isNull(route)) {
             logger.silly('No Route-Config Found');
-            return []
+            return undefined;
         }
 
         route = _.cloneDeep(route[configKey]);
@@ -167,14 +161,14 @@ module.exports = function () {
         }
 
         if (_.isUndefined(route) || _.isNull(route)) {
-            return [];
+            return undefined;
         }
 
         logger.silly('Get Route Config for Method');
 
         const routeconfig = route[method];
 
-        if (_.isArray(routeconfig)) {
+        if (_.isArray(routeconfig) || _.isObject(route)) {
             return routeconfig;
         }
 
@@ -183,7 +177,7 @@ module.exports = function () {
         }
 
         logger.silly('No Route-Config Found');
-        return [];
+        return undefined;
     }
 
     function checkSpielOrderChangeAllowed(spiele) {

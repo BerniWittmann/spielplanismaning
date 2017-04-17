@@ -99,14 +99,6 @@
             expect(result).to.be.equal('berni');
         });
 
-        it('soll verhindern, dass der Token manipuliert werden kann', function () {
-            storage.set(TOKENNAME, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjowLCJuYW1lIjoiQmVhcmJlaXRlciJ9LCJleHAiOjk5OTk5OTk5OTksImlhdCI6MTQ2OTQ1MzE0MCwiY2hlY2tzdW0iOiIxY2Q1YTk2ZDI4Yzk3MTlhNzJkMjhmNjA1YWU0N2VlYSJ9.zz9vgGtfnVejhTlFU-woXq9CVxLSoMzRRrB1sX5L1H4');
-
-            var result = auth.isLoggedIn();
-
-            expect(result).to.be.false;
-        });
-
         it('soll einen neuen Nutzer registrieren können', function () {
             var user = {
                 name: 'neuerNutzer',

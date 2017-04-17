@@ -91,7 +91,7 @@ module.exports = function () {
         query.exec(function (err, jugend) {
             if(!jugend) {
                 logger.warn('Jugend %s not found', req.query.jugend);
-                return messages.ErrorBadRequest(res);
+                return messages.ErrorBadRequest(res, ['Jugend not found']);
             }
             if (err) {
                 return messages.Error(res, err);

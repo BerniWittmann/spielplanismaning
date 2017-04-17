@@ -243,6 +243,12 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (!data.email) {
                 data.email = data.username;
             }
+            if (!data.role) {
+                data.role = 'Nicht eingeloggt';
+            }
+            if (!data.username) {
+                data.username = 'Nicht eingeloggt';
+            }
             const mail = new sendgrid.Email();
             mail.setTos(constants.BUG_REPORT_EMAIL_TO);
             mail.setSmtpapiTos(constants.BUG_REPORT_EMAIL_TO);

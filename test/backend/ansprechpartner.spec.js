@@ -212,8 +212,8 @@ describe('Route: Ansprechpartner', function () {
                 .end(function (err, response) {
                     if (err) return done(err);
                     expect(response).not.to.be.undefined;
-                    expect(response.statusCode).to.equal(404);
-                    expect(response.body.MESSAGEKEY).to.be.equal('ERROR_ANSPRECHPARTNER_NOT_FOUND');
+                    expect(response.statusCode).to.equal(400);
+                    expect(response.body.MESSAGEKEY).to.be.equal('ERROR_BAD_REQUEST');
                     return done();
                 });
         });

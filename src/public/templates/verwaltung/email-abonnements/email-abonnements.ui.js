@@ -63,8 +63,8 @@
         _.extend(vm.email, emailBlank);
 
         _.forEach(vm.abonnements, function (o) {
-            o.jugendName = o.team.jugend.name;
-            o.teamName = o.team.name;
+            o.jugendName = o.team ? o.team.jugend.name : '';
+            o.teamName = o.team ? o.team.name : '';
         });
 
         _.extend(vm, {

@@ -56,8 +56,8 @@ module.exports = function () {
         ErrorNotAuthorized: function (res) {
             send(require('./ErrorNotAuthorizedMessage.js'), res);
         },
-        ErrorBadRequest: function (res) {
-            send(require('./ErrorBadRequest.js'), res);
+        ErrorBadRequest: function (res, reason) {
+            send(require('./ErrorBadRequest.js')(reason), res);
         },
         ErrorJugendNotFound: function (res, err) {
             send(require('./ErrorJugendNotFoundMessage.js')(err), res);
