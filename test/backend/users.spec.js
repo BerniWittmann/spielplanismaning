@@ -27,7 +27,11 @@ describe('Route: Users', function () {
         request(server)
             .post('/api/users/register')
             .set('Authorization', server.adminToken)
-            .send(user)
+            .send({
+                username: user.username,
+                email: user.email,
+                role: user.role
+            })
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -87,7 +91,10 @@ describe('Route: Users', function () {
 
                 request(server)
                     .post('/api/users/login')
-                    .send(user)
+                    .send({
+                        username: user.username,
+                        password: user.password
+                    })
                     .end(function (err, res) {
                         if (err) return done(err);
                         expect(res).not.to.be.undefined;

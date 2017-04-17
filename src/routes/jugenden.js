@@ -129,7 +129,7 @@ module.exports = function () {
         Jugend.findById(req.query.id, function (err, jgd) {
             if (!jgd) {
                 logger.warn('Jugend %s not found', req.query.id);
-                return messages.ErrorBadRequest(res);
+                return messages.ErrorBadRequest(res, ['Jugend not found']);
             }
             if (err) {
                 return messages.Error(res, err);

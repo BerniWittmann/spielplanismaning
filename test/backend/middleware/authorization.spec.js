@@ -10,7 +10,7 @@ var async = require('async');
 var path = require('path');
 var helpers = require('../../../src/routes/helpers.js')();
 var fs = require('fs');
-var routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/../../../src/routes/middleware/routeConfig.json'), 'utf8'));
+var routes = require('../../../src/routes/middleware/routeConfig.js');
 
 describe('API Authorization', function () {
     var token;

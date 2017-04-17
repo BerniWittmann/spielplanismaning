@@ -8,7 +8,7 @@ module.exports = function (app, secret) {
     const helpers = require('../helpers.js')();
     const fs = require('fs');
     const path = require('path');
-    const routes = JSON.parse(fs.readFileSync(path.join(__dirname, '/routeConfig.json'), 'utf8'));
+    const routes = require('./routeConfig.js');
 
     const authenticate = function (req, res, next) {
         const requiredRoles = helpers.getRequiredRouteConfig(routes, req.path, req.method, 'AUTH');
@@ -42,7 +42,7 @@ module.exports = function (app, secret) {
 
             const roleName = user.role.name.toLowerCase();
             if (!_.isEqual(roleName, userDB.role.name.toLowerCase())) {
-                logger.warn('User-Roles don\'t match! ', {userDB: userDB, user: user});
+                logger.warn('User-Roles don\'t match! %s %s', userDB.role.name, user.role.name, {user: user});
                 return messages.ErrorForbidden(res);
             }
 

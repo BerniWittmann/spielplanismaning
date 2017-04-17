@@ -247,22 +247,22 @@ describe('Helpers', function () {
 
         it('soll einzelne Methoden verwalten', function () {
             var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'PUT', 'PARAMS');
-            expect(result).to.deep.equal(data);
+            expect(result).to.deep.equal(data.join(' '));
         });
 
         it('soll bei einer falschen Methode ein leeres Array zurückgeben', function () {
             var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'POST', 'AUTH');
-            expect(result).to.deep.equal([]);
+            expect(result).to.be.undefined;
         });
 
         it('soll bei einer falschen Route ein leeres Array zurückgeben', function () {
             var result = helpers.getRequiredRouteConfig(routes, 'test/route/false', 'GET', 'AUTH');
-            expect(result).to.deep.equal([]);
+            expect(result).to.be.undefined;
         });
 
         it('soll bei einem falschen KEY ein leeres Array zurückgeben', function () {
             var result = helpers.getRequiredRouteConfig(routes, 'test/route/method', 'GET', 'WRONG');
-            expect(result).to.deep.equal([]);
+            expect(result).to.be.undefined;
         });
 
         it('soll einn zusätzlichen String am Ende des Pfads handlen', function () {

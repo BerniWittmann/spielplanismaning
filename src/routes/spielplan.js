@@ -116,7 +116,6 @@ module.exports = function () {
                 spiele = spiele.sort(compareNumbers);
                 async.eachSeries(spiele, function (singlespiel, asyncdone) {
                     if (singlespiel) {
-                        console.log(singlespiel);
                         logger.silly('Updating Spiel #%d', singlespiel.nummer);
                         const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body);
                         singlespiel.uhrzeit = dateTimeObject.time;

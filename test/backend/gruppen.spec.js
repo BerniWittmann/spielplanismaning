@@ -174,7 +174,7 @@ describe('Route: Gruppen', function () {
             .set('Authorization', server.adminToken)
             .end(function (err, res) {
                 if (err) throw err;
-                expect(res).not.to.be.unfined;
+                expect(res).not.to.be.undefined;
                 expect(res.statusCode).to.equal(400);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR_BAD_REQUEST');
                 return done();
@@ -183,7 +183,7 @@ describe('Route: Gruppen', function () {
 
     it('wenn die Gruppenid zum löschen falsch ist, soll ein Fehler geworfen werden', function (done) {
         request(server)
-            .del('/api/gruppen?id=' + 'iafja1SicherNICHTRICHTIG')
+            .del('/api/gruppen?id=' + 'aaaa1111bbbb2222cccc3333')
             .set('Authorization', server.adminToken)
             .end(function (err, res) {
                 if (err) throw err;

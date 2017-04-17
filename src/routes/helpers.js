@@ -146,7 +146,7 @@ module.exports = function () {
 
         if (_.isUndefined(route) || _.isNull(route)) {
             logger.silly('No Route-Config Found');
-            return []
+            return undefined;
         }
 
         route = _.cloneDeep(route[configKey]);
@@ -161,14 +161,14 @@ module.exports = function () {
         }
 
         if (_.isUndefined(route) || _.isNull(route)) {
-            return [];
+            return undefined;
         }
 
         logger.silly('Get Route Config for Method');
 
         const routeconfig = route[method];
 
-        if (_.isArray(routeconfig)) {
+        if (_.isArray(routeconfig) || _.isObject(route)) {
             return routeconfig;
         }
 
@@ -177,7 +177,7 @@ module.exports = function () {
         }
 
         logger.silly('No Route-Config Found');
-        return [];
+        return undefined;
     }
 
     function checkSpielOrderChangeAllowed(spiele) {

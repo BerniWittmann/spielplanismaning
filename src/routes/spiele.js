@@ -236,6 +236,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (err) {
                 return messages.Error(res, err);
             }
+            if (!spiel) {
+                logger.error('Spiel %s not found', req.query.id);
+                return messages.Error(res, err);
+            }
             const toreAOld = spiel.toreA;
             const toreBOld = spiel.toreB;
             const punkteAOld = spiel.punkteA;
