@@ -34,7 +34,7 @@
                         Logger.warn('Checksums don\'t match');
                         if ($rootScope.ravenEnabled) {
                             Raven.captureMessage('Checksums manipulated', {
-                                level: warning,
+                                level: 'warning',
                                 extra: payload
                             });
                         }
