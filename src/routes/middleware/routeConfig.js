@@ -212,6 +212,13 @@ module.exports = {
             "PUT": [
                 "admin"
             ]
+        },
+        "PARAMS": {
+            "PUT": {
+                body: {
+                    keep: Joi.boolean().optional()
+                }
+            }
         }
     },
     "/api/spielplan/zeiten": {
