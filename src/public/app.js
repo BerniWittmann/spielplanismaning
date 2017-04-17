@@ -4,6 +4,8 @@
     const app = angular
         .module('spi', [
             /* module-injector */
+            'angulartics',
+            'angulartics.google.analytics',
             'ngAnimate',
             'spi.config',
             'spi.auth',
@@ -77,14 +79,10 @@
 
     function run($rootScope, config) {
         $rootScope.ravenEnabled = false;
-        $rootScope.analyticsEnabled = false;
         config.getConfig().then(function (data) {
             if (data.env !== 'development') {
                 $rootScope.ravenEnabled = true;
-                $rootScope.analyticsEnabled = true;
                 app.requires.push('ngRaven');
-                app.requires.push('angulartics');
-                app.requires.push('angulartics.google.analytics');
             }
         });
         $rootScope.onload = function () {
