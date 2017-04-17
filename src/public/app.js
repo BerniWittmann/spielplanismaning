@@ -77,10 +77,14 @@
 
     function run($rootScope, config) {
         $rootScope.ravenEnabled = false;
+        $rootScope.analyticsEnabled = false;
         config.getConfig().then(function (data) {
             if (data.env === 'production') {
                 $rootScope.ravenEnabled = true;
+                $rootScope.analyticsEnabled = true;
                 app.requires.push('ngRaven');
+                app.requires.push('angulartics');
+                app.requires.push('angulartics.google.analytics');
             }
         });
         $rootScope.onload = function () {
