@@ -7,8 +7,9 @@ module.exports = function () {
         return res.render('index', {
             version: version,
             environment: process.env.NODE_ENV,
-            sentryEnabled: process.env.NODE_ENV === 'production',
-            sentryPublicUrl: process.env.SENTRY_PUBLIC_URL
+            sentryEnabled: process.env.NODE_ENV !== 'development',
+            sentryPublicUrl: process.env.SENTRY_PUBLIC_URL,
+            googleAnalyticsCode: process.env.GOOGLE_ANALYTICS_CODE
         });
     });
 

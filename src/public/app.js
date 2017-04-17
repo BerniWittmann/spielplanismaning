@@ -78,7 +78,7 @@
     function run($rootScope, config) {
         $rootScope.ravenEnabled = false;
         config.getConfig().then(function (data) {
-            if (data.env === 'production') {
+            if (data.env !== 'development') {
                 $rootScope.ravenEnabled = true;
                 app.requires.push('ngRaven');
             }
