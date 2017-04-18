@@ -49,7 +49,19 @@ const SpielSchema = new mongoose.Schema({
     beendet: {
         type: Boolean,
         default: false
-    }
+    },
+    fromA: {
+        type: Schema.ObjectId,
+        refPath: 'fromType'
+    },
+    fromB: {
+        type: Schema.ObjectId,
+        refPath: 'fromType'
+    },
+    fromType: String,
+    rankA: Number,
+    rankB: Number,
+    label: String
 });
 
 SpielSchema.methods.setTore = function (toreA, toreB, cb) {

@@ -96,7 +96,7 @@ module.exports = function () {
             if (err) {
                 return messages.Error(res, err);
             }
-            if (jugend.gruppen.length >= 4) {
+            if (jugend.gruppen.length >= 2) {
                 logger.warn('Maximum amount of Gruppen in Jugend reached');
                 return messages.ErrorMaxZahlGruppe(res);
             } else {

@@ -60,7 +60,7 @@ module.exports = function () {
     function getEntity(model, population, notFoundMessage, res, req) {
         const {query, searchById} = getEntityQuery(model, req);
         logger.silly('Getting Entity %s', model.modelName);
-        query.deepPopulate(population).exec(function (err, data) {
+        query.deepPopulate(population).populate('fromA fromB').exec(function (err, data) {
             return handler.handleQueryResponse(err, data, res, searchById, notFoundMessage);
         });
     }
@@ -266,6 +266,19 @@ module.exports = function () {
         });
     }
 
+    function sortTeams(teams) {
+        return teams.sort(function (a, b) {
+            let result = a.punkte - b.punkte;
+            if (result === 0) {
+                result = (a.tore - a.gtore) - (b.tore - b.gtore);
+                if (result === 0) {
+                    result = a.tore - b.tore;
+                }
+            }
+            return result * -1;
+        });
+    }
+
     return {
         getEntityQuery: getEntityQuery,
         resetErgebnis: resetErgebnis,
@@ -279,6 +292,7 @@ module.exports = function () {
         addEntity: addEntity,
         checkSpielOrderChangeAllowed: checkSpielOrderChangeAllowed,
         calcSpielDateTime: calcSpielDateTime,
-        getSpielErgebnisse: getSpielErgebnisse
+        getSpielErgebnisse: getSpielErgebnisse,
+        sortTeams: sortTeams
     }
 };

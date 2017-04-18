@@ -178,7 +178,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.delete('/tore', function (req, res) {
         logger.verbose('Reset Spiel %s', req.query.id);
         const query = Spiel.findById(req.query.id);
-        query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
+        query.deepPopulate('gruppe jugend teamA teamB').populate('fromA fromB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
             }
@@ -232,7 +232,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.put('/tore', function (req, res) {
         logger.verbose('Set Result for Spiel %s', req.query.id);
         const query = Spiel.findById(req.query.id);
-        query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
+        query.deepPopulate('gruppe jugend teamA teamB').populate('fromA fromB').exec(function (err, spiel) {
             if (err) {
                 return messages.Error(res, err);
             }
@@ -359,7 +359,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
                 logger.verbose('All Spiele updated');
 
-                Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, neueSpiele) {
+                Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').populate('fromA fromB').exec(function (err, neueSpiele) {
                     if (err) {
                         return messages.Error(res, err);
                     }

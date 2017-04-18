@@ -388,6 +388,73 @@ function calculatePresetSpielplanData(data) {
     }
 }
 
+function getGruppenWithSameJugend(gruppen) {
+    const jugenden = _.groupBy(gruppen, 'jugend._id');
+    return _.pickBy(jugenden, function (jugend) {
+        return jugend.length > 1;
+    });
+}
+
+function getMaxGruppenProJugend(gruppen) {
+    return _.reduce(getGruppenWithSameJugend(gruppen), function (max, current) {
+        if (current && current.length > max) {
+            return current.length;
+        }
+        return max;
+    }, 0);
+}
+
+function checkGenerateEndRunde(gruppen) {
+    return getMaxGruppenProJugend(gruppen) > 1;
+}
+
+function calcTeamsAdvance(gruppenByJugend) {
+    const result = process.env.TEAMS_ADVANCE || 99999;
+    let max = 99999;
+    _.forIn(gruppenByJugend, function (gruppen) {
+        gruppen.forEach(function (gruppe) {
+            max = gruppe.teams.length < max ? gruppe.teams.length : max;
+        });
+    });
+
+    return Math.min(Math.max(result, 0), max);
+}
+
+function getSpielUmLabel(rankA, rankB) {
+    if (rankA !== rankB || rankA < 1) {
+        return undefined;
+    }
+    let i = 1;
+    let result = 1;
+    while (i < rankA) {
+        result += 2;
+        i++;
+    }
+    if (result === 1) {
+        return 'Finale';
+    }
+    return 'Spiel um Platz ' + result;
+}
+
+function fillLastEmptySpiele(spiele, zeiten) {
+    const plaetze = getPlaetze();
+    if (_.last(spiele).platz < plaetze) {
+        logger.verbose('Filling up last Plätze with empty Spielen');
+        const start = spiele.length + 1;
+        for (let j = 0; j <= (plaetze - _.last(spiele).platz); j++) {
+            const i = start + j;
+            const dateTimeObj = calcSpielDateTime(i, zeiten);
+            spiele.push({
+                nummer: i,
+                uhrzeit: dateTimeObj.zeit,
+                datum: dateTimeObj.datum,
+                platz: dateTimeObj.platz
+            });
+        }
+    }
+    return spiele;
+}
+
 module.exports = {
     calcSpieleGesamt: calcSpieleGesamt,
     getTeamWithoutLast: getTeamWithoutLast,
@@ -415,5 +482,11 @@ module.exports = {
     filterCompleteSpiele: filterCompleteSpiele,
     recalculateDateTimePlatzForSpiele: recalculateDateTimePlatzForSpiele,
     calculatePresetSpielplanData: calculatePresetSpielplanData,
-    getPlaetze: getPlaetze
+    getPlaetze: getPlaetze,
+    checkGenerateEndRunde: checkGenerateEndRunde,
+    getGruppenWithSameJugend: getGruppenWithSameJugend,
+    calcTeamsAdvance: calcTeamsAdvance,
+    getSpielUmLabel: getSpielUmLabel,
+    fillLastEmptySpiele: fillLastEmptySpiele,
+    getMaxGruppenProJugend: getMaxGruppenProJugend
 };

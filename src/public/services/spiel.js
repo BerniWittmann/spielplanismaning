@@ -58,6 +58,29 @@
                 return routes.requestPUT(routes.urls.spiele.order(), spiele);
             };
 
+            spiel.getTeamDisplay = function (game, teamStr) {
+                if (game['team' + teamStr]) {
+                    return game['team' + teamStr].name;
+                } else if (game['from' + teamStr]) {
+                    if (game.fromType === 'Spiel') {
+                        return 'Gewinner Spiel ' + game['from' + teamStr].nummer;
+                    }
+                    return game['rank' + teamStr] + '. ' + game['from' + teamStr].name;
+                } else {
+                    return '';
+                }
+            };
+
+            spiel.getGruppeDisplay = function (game) {
+                if (game.label) {
+                    return game.label;
+                } else if (game.gruppe) {
+                    return game.gruppe.name
+                } else {
+                    return '';
+                }
+            };
+
             return spiel;
         }]);
 

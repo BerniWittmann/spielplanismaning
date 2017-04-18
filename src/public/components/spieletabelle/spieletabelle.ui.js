@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('spi.components.spieletabelle.ui', ['spi.components.jugendlabel.ui'])
+        .module('spi.components.spieletabelle.ui', ['spi.components.jugendlabel.ui', 'spi.spiel'])
         .controller('SpieleTabellenController', SpieleTabellenController)
         .component('spiSpieleTabelle', {
             templateUrl: 'components/spieletabelle/spieletabelle.html',
@@ -14,29 +14,38 @@
             controllerAs: 'vm'
         });
 
-    function SpieleTabellenController($state) {
+    function SpieleTabellenController($state, spiel) {
         const vm = this;
 
         _.extend(vm, {
-            gotoTeam: function (team) {
-                $state.go('spi.tgj.team', {
-                    teamid: team._id
-                });
+            gotoTeam: function (team, $event) {
+                if (team) {
+                    $event.stopPropagation();
+                    $state.go('spi.tgj.team', {
+                        teamid: team._id
+                    });
+                }
             },
-            gotoGruppe: function (gruppe) {
-                $state.go('spi.tgj.gruppe', {
-                    gruppeid: gruppe._id
-                });
+            gotoGruppe: function (gruppe, $event) {
+                if (gruppe) {
+                    $event.stopPropagation();
+                    $state.go('spi.tgj.gruppe', {
+                        gruppeid: gruppe._id
+                    });
+                }
             },
-            gotoJugend: function (jugend) {
-                $state.go('spi.tgj.jugend', {
-                    jugendid: jugend._id
-                });
+            gotoJugend: function (jugend, $event) {
+                if (jugend) {
+                    $event.stopPropagation();
+                    $state.go('spi.tgj.jugend', {
+                        jugendid: jugend._id
+                    });
+                }
             },
-            gotoSpiel: function (spiel) {
-                if (spiel.jugend) {
+            gotoSpiel: function (game) {
+                if (game.jugend) {
                     $state.go('spi.spiel', {
-                        spielid: spiel._id
+                        spielid: game._id
                     });
                 }
             },
@@ -49,6 +58,15 @@
                 $state.go('spi.datum', {
                     datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
                 });
+            },
+            displayGruppe: function (game) {
+                return spiel.getGruppeDisplay(game);
+            },
+            displayTeamA: function(game) {
+                return spiel.getTeamDisplay(game, 'A');
+            },
+            displayTeamB: function(game) {
+                return spiel.getTeamDisplay(game, 'B');
             }
         });
     }

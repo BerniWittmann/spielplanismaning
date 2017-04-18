@@ -6,7 +6,6 @@ const helper = require('./helper.js');
 const helpers = require('../helpers.js')();
 
 module.exports = function (payload, cb) {
-
     const properties = helper.configureProperties(payload);
     const plaetze = properties.plaetze,
         zeiten = properties.zeiten,
@@ -130,13 +129,6 @@ module.exports = function (payload, cb) {
                 if (leereSpieleStreak >= maxLeereSpieleStreak) {
                     return failure('tooManyEmptySpiele');
                 }
-                leeresSpiel();
-            }
-        }
-
-        if (_.last(spiele).platz < plaetze) {
-            logger.verbose('Filling up last Plätze with empty Spielen');
-            for (let j = 0; j <= (plaetze - _.last(spiele).platz); j++) {
                 leeresSpiel();
             }
         }

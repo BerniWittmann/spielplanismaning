@@ -42,6 +42,15 @@
             showGruppe: $scope.showGruppe,
             showJugend: $scope.showJugend,
             isEditing: false,
+            displayGruppe: function () {
+                return spiel.getGruppeDisplay($scope.spiSingleSpiel);
+            },
+            displayTeamA: function() {
+                return spiel.getTeamDisplay($scope.spiSingleSpiel, 'A');
+            },
+            displayTeamB: function() {
+                return spiel.getTeamDisplay($scope.spiSingleSpiel, 'B');
+            },
             edit: function () {
                 if (vm.canEdit) {
                     vm.isEditing = true;
@@ -71,22 +80,25 @@
             askDelete: function () {
                 return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
             },
-            gotoTeam: function (team) {
+            gotoTeam: function (team, $event) {
                 if (team) {
+                    $event.stopPropagation();
                     $state.go('spi.tgj.team', {
                         teamid: team._id
                     });
                 }
             },
-            gotoGruppe: function (gruppe) {
+            gotoGruppe: function (gruppe, $event) {
                 if (gruppe) {
+                    $event.stopPropagation();
                     $state.go('spi.tgj.gruppe', {
                         gruppeid: gruppe._id
                     });
                 }
             },
-            gotoJugend: function (jugend) {
+            gotoJugend: function (jugend, $event) {
                 if (jugend) {
+                    $event.stopPropagation();
                     $state.go('spi.tgj.jugend', {
                         jugendid: jugend._id
                     });

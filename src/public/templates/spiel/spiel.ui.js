@@ -57,16 +57,27 @@
         }
     }
 
-    function SpielController($state, aktivesSpiel) {
+    function SpielController($state, aktivesSpiel, spiel) {
         const vm = this;
         vm.loading = true;
 
         _.extend(vm, {
             spiel: aktivesSpiel,
             gotoTeam: function (team) {
-                $state.go('spi.tgj.team', {
-                    teamid: team._id
-                });
+                if (team) {
+                    $state.go('spi.tgj.team', {
+                        teamid: team._id
+                    });
+                }
+            },
+            displayGruppe: function () {
+                return spiel.getGruppeDisplay(aktivesSpiel);
+            },
+            displayTeamA: function() {
+                return spiel.getTeamDisplay(aktivesSpiel, 'A');
+            },
+            displayTeamB: function() {
+                return spiel.getTeamDisplay(aktivesSpiel, 'B');
             }
         });
 

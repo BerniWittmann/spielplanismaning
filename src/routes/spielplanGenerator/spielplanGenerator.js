@@ -20,12 +20,30 @@ module.exports = function () {
     function generate(payload, cb) {
         logger.verbose('Generator Started');
 
-        return require('./generateGruppenPhase.js')(payload, cb);
+        return require('./generateGruppenPhase.js')(payload, function (err, spiele) {
+            if (err) return cb(err);
+
+            const callback = function (err, spiele) {
+                if (err) return cb(err);
+
+                spiele = helper.fillLastEmptySpiele(spiele, payload.zeiten);
+
+                return cb(null, spiele);
+            };
+
+            const maxGruppenProJugend = helper.getMaxGruppenProJugend(payload.gruppen);
+            if (maxGruppenProJugend === 2) {
+                return require('./generateEndRunde.js')({spiele: spiele, gruppen: payload.gruppen, zeiten: payload.zeiten}, callback);
+            } else {
+                logger.warn('Not implemented yet');
+                return callback(null, spiele);
+            }
+        });
     }
 
     function create(payload, keep, cb) {
         return generate(payload, function (err, spiele) {
-            if (err) {
+            if (err || !spiele) {
                 logger.error('Generator errored', err);
                 return cb(err);
             }
