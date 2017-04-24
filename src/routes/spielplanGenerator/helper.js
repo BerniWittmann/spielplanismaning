@@ -589,6 +589,7 @@ function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
     }
 
     const groups = [];
+    console.log(maxTeamsAdvance);
     return async.times(maxTeamsAdvance, function (i, next) {
         const nummer = i + 1;
         logger.verbose('Generating Zwischengruppe ' + nummer);
@@ -657,6 +658,105 @@ function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
     });
 }
 
+function calcDateTimeForEndrundeSpiele(spiele, start, zeiten) {
+    return spiele.map(function (spiel, index) {
+        const i = start + index;
+        const dateTimeObject = calcSpielDateTime(i, zeiten);
+        spiel.nummer = i;
+        spiel.datum = dateTimeObject.datum;
+        spiel.platz = dateTimeObject.platz;
+        spiel.uhrzeit = dateTimeObject.zeit;
+        return spiel;
+    });
+}
+
+function createSpiel(gruppen, rankA, rankB, jugendid, label) {
+    logger.verbose('Generating Spiel: ' + label);
+    return {
+        _id: mongoose.Types.ObjectId(),
+        fromA: gruppen[0]._id,
+        fromB: gruppen[1]._id,
+        fromType: 'Gruppe',
+        rankA: rankA,
+        rankB: rankB,
+        label: label,
+        jugend: jugendid
+    }
+}
+
+function createSpielFromSpiel(spielA, spielB, rankA, rankB, jugendid, label) {
+    logger.verbose('Generating Spiel: ' + label);
+    return {
+        fromA: spielA._id,
+        fromB: spielB._id,
+        fromType: 'Spiel',
+        rankA: rankA,
+        rankB: rankB,
+        label: label,
+        jugend: jugendid
+    }
+}
+
+function generateZwischenGruppenHelper(gruppen, maxTeamsAdvance, zeiten, cb) {
+    let relevantGruppen = [];
+
+    const gruppenByJugend = getGruppenWithSameJugend(gruppen);
+    return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
+        return generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, function (err, groups) {
+            if (err) return callback(err);
+
+            relevantGruppen = relevantGruppen.concat(groups);
+            return callback();
+        });
+    }, function (err) {
+        if (err) return cb(err);
+
+        return require('./generateGruppenPhase.js')({
+            zeiten: zeiten,
+            gruppen: relevantGruppen,
+            spiele: [],
+            lastPlayingTeams: [],
+            geradeSpielendeTeams: [],
+            i: 1
+        }, function (err, spiele) {
+            if (err) return cb(err);
+
+            spiele = fillLastEmptySpiele(spiele, zeiten, spielLabels.ZWISCHENRUNDENSPIEL);
+            return cb(null, relevantGruppen, spiele);
+        });
+    });
+}
+
+function calculateFinalspiele(gruppen, jugendid) {
+    // HF 1 HF 2 + Finale + Spiel um Platz 3
+    const spiele = [];
+
+    // HF
+    const hf1 = createSpiel(gruppen, 1, 2, jugendid, spielLabels.HALBFINALE);
+    const hf2 = createSpiel(gruppen, 2, 1, jugendid, spielLabels.HALBFINALE);
+    spiele.push(hf1, hf2);
+    // Finale
+    spiele.push(createSpielFromSpiel(hf1, hf2, 1, 1, jugendid, spielLabels.FINALE));
+
+    // Spiel um Platz 3
+    spiele.push(createSpielFromSpiel(hf1, hf2, 0, 0, jugendid, getSpielUmLabel(2, 2)));
+
+    return spiele;
+}
+
+function calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance) {
+    // Spiel um Platz 5 etc.
+    const spiele = [];
+    let rank = 3;
+    while (rank <= maxTeamsAdvance * gruppen.length) {
+        const label = getSpielUmLabel(rank, rank);
+        spiele.push(createSpiel(gruppen, rank, rank, jugendid, label));
+        rank++;
+    }
+
+    return spiele;
+}
+
 module.exports = {
     calcSpieleGesamt: calcSpieleGesamt,
     getTeamWithoutLast: getTeamWithoutLast,
@@ -695,5 +795,10 @@ module.exports = {
     fillEndrundeSpieleWithEmpty: fillEndrundeSpieleWithEmpty,
     removeZwischenRundenGruppe: removeZwischenRundenGruppe,
     calcSpielLabel: calcSpielLabel,
-    generateZwischenGruppen: generateZwischenGruppen
+    generateZwischenGruppen: generateZwischenGruppen,
+    calcDateTimeForEndrundeSpiele: calcDateTimeForEndrundeSpiele,
+    createSpiel: createSpiel,
+    generateZwischenGruppenHelper: generateZwischenGruppenHelper,
+    calculateFinalspiele: calculateFinalspiele,
+    calculatePlatzierungsspiele: calculatePlatzierungsspiele
 };
