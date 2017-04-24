@@ -33,7 +33,10 @@
 
         _.extend(vm, {
             gesamt: jugendTore,
-            jugenden: jugenden
+            jugenden: jugenden,
+            calcTableWidth: function (jugend) {
+                return Math.max((12/jugend.gruppen.length), 4);
+            }
         });
 
         _.forEach(vm.jugenden, function (jgd) {

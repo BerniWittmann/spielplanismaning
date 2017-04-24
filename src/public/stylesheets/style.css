@@ -278,3 +278,12 @@ td .form-group {
 .table-clickable tbody tr, .table-clickable tbody tr td {
     cursor:pointer
 }
+
+spi-panel-titel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+spi-panel-title spi-jugend-label {
+    display: flex;
+}

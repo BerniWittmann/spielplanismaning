@@ -19,9 +19,9 @@
             <table>
                 <tr data-ng-repeat="gruppe in vm.gruppen">
                     <td><a data-ui-sref="spi.tgj.gruppe({gruppeid: gruppe._id})">{{gruppe.name}}</a></td>
-                    <td data-ng-if="vm.canEdit" class="padding-left-15" data-ng-click="vm.askDeleteGruppe(gruppe)"
+                    <td data-ng-if="vm.gruppeIsEditable(gruppe)" class="padding-left-15" data-ng-click="vm.askDeleteGruppe(gruppe)"
                         data-uib-tooltip="Gruppe löschen" analytics-on="click" analytics-event="Delete Gruppe"><i class="icon-hover fa fa-remove"></i></td>
-                    <td data-ng-if="vm.canEdit" class="padding-left-5" data-ng-click="vm.editGruppe(gruppe)"
+                    <td data-ng-if="vm.gruppeIsEditable(gruppe)" class="padding-left-5" data-ng-click="vm.editGruppe(gruppe)"
                         data-uib-tooltip="Gruppe bearbeiten" analytics-on="click" analytics-event="Edit Gruppe"><i class="icon-hover fa fa-pencil"></i></td>
                 </tr>
             </table>

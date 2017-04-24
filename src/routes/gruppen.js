@@ -147,6 +147,11 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
+            if (gruppe.type !== 'normal') {
+                logger.warn('Gruppe %s kann nicht gelöscht werden', gruppe.name);
+                return messages.ErrorBadRequest(res);
+            }
+
             Jugend.findById(gruppe.jugend, function (err, jugend) {
                 if (err) {
                     return messages.Error(res, err);

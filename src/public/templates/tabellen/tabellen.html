@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-md-{{12/jugend.gruppen.length}}" data-ng-repeat="gruppe in jugend.gruppen">
+            <div class="col-md-12 col-md-{{vm.calcTableWidth(jugend)}}" data-ng-repeat="gruppe in jugend.gruppen">
                 <h5>{{gruppe.name}}</h5>
                 <spi-tabelle data-teams="gruppe.teams"></spi-tabelle>
             </div>
