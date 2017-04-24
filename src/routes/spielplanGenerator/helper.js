@@ -530,6 +530,18 @@ function fillEndrundeSpieleWithEmpty(spiele) {
     return spiele;
 }
 
+function removeZwischenRundenGruppenUndSpiele(callback) {
+    return removeZwischenRundenGruppe(function (err) {
+        if (err) return callback(err);
+
+        return removeEndSpiele(callback);
+    });
+}
+
+function removeEndSpiele(callback) {
+    return Spiel.remove({label: {$ne: 'normal'}}, callback);
+}
+
 function removeZwischenRundenGruppe(callback) {
     return Gruppen.find({type: 'zwischenrunde'}, function (err, gruppen) {
         if (err) {
@@ -757,6 +769,26 @@ function calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance) {
     return spiele;
 }
 
+function checkEndrundeStarted(callback) {
+    return Spiel.find({label: {$ne: 'normal'}}).exec(function (err, spiele) {
+        if (err) return callback(err);
+
+        if (!spiele || spiele.length === 0) {
+            return callback(null, false);
+        }
+
+        const endrundeSpieleBeendet = spiele.filter(function (single) {
+            return single.beendet;
+        });
+
+        if (endrundeSpieleBeendet.length > 0) {
+            return callback(null, true);
+        }
+
+        return callback(null, false);
+    });
+}
+
 module.exports = {
     calcSpieleGesamt: calcSpieleGesamt,
     getTeamWithoutLast: getTeamWithoutLast,
@@ -800,5 +832,7 @@ module.exports = {
     createSpiel: createSpiel,
     generateZwischenGruppenHelper: generateZwischenGruppenHelper,
     calculateFinalspiele: calculateFinalspiele,
-    calculatePlatzierungsspiele: calculatePlatzierungsspiele
+    calculatePlatzierungsspiele: calculatePlatzierungsspiele,
+    removeZwischenRundenGruppenUndSpiele: removeZwischenRundenGruppenUndSpiele,
+    checkEndrundeStarted: checkEndrundeStarted
 };

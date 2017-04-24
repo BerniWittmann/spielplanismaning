@@ -60,7 +60,7 @@ module.exports = function () {
     spielplanGenerator.generateNew = function (cb) {
         logger.verbose('Generate a complete new Spielplan');
         const data = {};
-        return helper.removeZwischenRundenGruppe(function (err) {
+        return helper.removeZwischenRundenGruppenUndSpiele(function (err) {
             if (err) return cb(err);
             return async.parallel([
                 function (callback) {
@@ -96,30 +96,42 @@ module.exports = function () {
     spielplanGenerator.regenerate = function (cb) {
         logger.verbose('Generate Spielplan with keeping completed games');
         const data = {};
-        return async.parallel([
-            function (callback) {
-                loadDataFromHelper('getZeiten', 'zeiten', data, callback);
-            },
-            function (callback) {
-                loadDataFromHelper('getGruppen', 'gruppen', data, callback);
-            },
-            function (callback) {
-                loadDataFromHelper('getAllSpiele', 'spiele', data, callback);
-            }
-        ], function (err) {
+        return helper.checkEndrundeStarted(function (err, result) {
             if (err) return cb(err);
 
-            const presetData = helper.calculatePresetSpielplanData(data);
+            if (result) {
+                logger.warn('Endrunde already started - not able to keep spiele.');
+                return cb('Endrunde already started - not able to keep spiele.');
+            }
 
-            return create({
-                zeiten: data.zeiten,
-                gruppen: data.gruppen,
-                spiele: presetData.spiele,
-                lastPlayingTeams: presetData.lastPlayingTeams,
-                geradeSpielendeTeams: presetData.geradeSpielendeTeams,
-                i: presetData.i
-            }, true, function (err) {
-                return cb(err);
+            return helper.removeZwischenRundenGruppenUndSpiele(function (err) {
+                if (err) return cb(err);
+                return async.parallel([
+                    function (callback) {
+                        loadDataFromHelper('getZeiten', 'zeiten', data, callback);
+                    },
+                    function (callback) {
+                        loadDataFromHelper('getGruppen', 'gruppen', data, callback);
+                    },
+                    function (callback) {
+                        loadDataFromHelper('getAllSpiele', 'spiele', data, callback);
+                    }
+                ], function (err) {
+                    if (err) return cb(err);
+
+                    const presetData = helper.calculatePresetSpielplanData(data);
+
+                    return create({
+                        zeiten: data.zeiten,
+                        gruppen: data.gruppen,
+                        spiele: presetData.spiele,
+                        lastPlayingTeams: presetData.lastPlayingTeams,
+                        geradeSpielendeTeams: presetData.geradeSpielendeTeams,
+                        i: presetData.i
+                    }, true, function (err) {
+                        return cb(err);
+                    });
+                });
             });
         });
     };

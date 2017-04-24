@@ -113,7 +113,8 @@
                 $state.go('spi.datum', {
                     datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
                 });
-            }
+            },
+            spielIsNotFilled: spielIsNotFilled()
         });
 
         if (!vm.spiel.beendet && vm.spiel.toreA === 0 && vm.spiel.toreB === 0) {
@@ -134,6 +135,11 @@
                     vm.isEditing = false;
                 });
             }
+        }
+
+        function spielIsNotFilled() {
+            const spiel = $scope.spiSingleSpiel;
+            return !spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name;
         }
     }
 

@@ -75,7 +75,7 @@
                         const t = teams.find(function (single) {
                             return single._id.toString() === game['team' + teamStr]._id.toString();
                         });
-                        if (t.from) {
+                        if (t && t.from) {
                             return game['team' + teamStr].rank + '. ' + t.from.name;
                         }
                     }

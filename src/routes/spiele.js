@@ -183,6 +183,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 return messages.Error(res, err);
             }
 
+            if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
+                return messages.ErrorSpielNotFilled(res);
+            }
+
             const oldData = {
                 toreA: spiel.toreA,
                 toreB: spiel.toreB,
@@ -239,6 +243,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (!spiel) {
                 logger.error('Spiel %s not found', req.query.id);
                 return messages.Error(res, err);
+            }
+            if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
+                return messages.ErrorSpielNotFilled(res);
             }
             const toreAOld = spiel.toreA;
             const toreBOld = spiel.toreB;

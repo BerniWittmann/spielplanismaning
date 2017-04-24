@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.spielplan.ui', [
-            'ui.router', 'spi.spielplan', 'angular-flatpickr', 'toastr'
+            'ui.router', 'spi.spielplan', 'angular-flatpickr', 'toastr', 'spi.spiel'
         ])
         .config(states)
         .controller('VerwaltungSpielplanController', VerwaltungSpielplanController);
@@ -19,6 +19,9 @@
                 resolve: {
                     zeiten: function (spielplan) {
                         return spielplan.getZeiten();
+                    },
+                    spiele: function (spiel) {
+                        return spiel.getAll();
                     }
                 },
                 data: {
@@ -27,7 +30,7 @@
             });
     }
 
-    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr) {
+    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr, spiele) {
         const vm = this;
         vm.loading = true;
         const d = new Date();
@@ -54,6 +57,9 @@
                 spielplan.createSpielplan();
             },
             regenerateSpielplan: function () {
+                if (vm.endRundeStarted) {
+                    return toastr.warning('Spielplan kann nicht mehr mit Erhalt generiert werden.', 'Endrunde hat bereits begonnen.');
+                }
                 spielplan.regenerateSpielplan();
             },
             datePickerOptions: {
@@ -66,6 +72,10 @@
             startdate: undefined,
             enddate: undefined
         });
+
+        vm.endRundeStarted = spiele.filter(function (single) {
+            return single.label !== 'normal' && single.beendet;
+        }).length > 0;
 
         if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
             if (moment(zeiten.startzeit, 'HH:mm').isValid()) {
