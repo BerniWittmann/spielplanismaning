@@ -27,16 +27,16 @@
 
     }
 
-    function SpieleDruckController($state, spiele) {
+    function SpieleDruckController($state, spiele, spiel) {
         const vm = this;
         vm.loading = true;
 
         _.extend(vm, {
             spiele: _.sortBy(_.filter(spiele, function (spiel) {
-                return !_.isUndefined(spiel.teamA) && !_.isUndefined(spiel.teamB);
+                return spiel.teamA || spiel.teamB || spiel.fromA || spiel.fromB;
             }), ['platz', 'nummer']),
             gotoTeam: function (gewaehltesteam) {
-                if (gewaehltesteam) {
+                if (gewaehltesteam && gewaehltesteam.name) {
                     $state.go('spi.tgj.team', {
                         teamid: gewaehltesteam._id
                     });
@@ -48,6 +48,15 @@
                         gruppeid: gewaehltegruppe._id
                     });
                 }
+            },
+            displayGruppe: function (game) {
+                return spiel.getGruppeDisplay(game);
+            },
+            displayTeamA: function(game) {
+                return spiel.getTeamDisplay(game, 'A');
+            },
+            displayTeamB: function(game) {
+                return spiel.getTeamDisplay(game, 'B');
             }
         });
 
