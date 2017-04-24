@@ -5,6 +5,7 @@ module.exports = function () {
     const _ = require('lodash');
     const helper = require('./helper.js');
     const helpers = require('../helpers.js')();
+    const spielLabels = require('./spielLabels.js');
 
     const spielplanGenerator = {};
 
@@ -23,21 +24,19 @@ module.exports = function () {
         return require('./generateGruppenPhase.js')(payload, function (err, spiele) {
             if (err) return cb(err);
 
-            const callback = function (err, spiele) {
+            spiele = helper.fillLastEmptySpiele(spiele, payload.zeiten, spielLabels.NORMAL);
+
+            return require('./generateEndRunde.js')({
+                spiele: spiele,
+                gruppen: payload.gruppen,
+                zeiten: payload.zeiten
+            }, function (err, spiele) {
                 if (err) return cb(err);
 
-                spiele = helper.fillLastEmptySpiele(spiele, payload.zeiten);
+                spiele = helper.fillLastEmptySpiele(spiele, payload.zeiten, spielLabels.NORMAL);
 
                 return cb(null, spiele);
-            };
-
-            const maxGruppenProJugend = helper.getMaxGruppenProJugend(payload.gruppen);
-            if (maxGruppenProJugend === 2) {
-                return require('./generateEndRunde.js')({spiele: spiele, gruppen: payload.gruppen, zeiten: payload.zeiten}, callback);
-            } else {
-                logger.warn('Not implemented yet');
-                return callback(null, spiele);
-            }
+            });
         });
     }
 
@@ -61,31 +60,34 @@ module.exports = function () {
     spielplanGenerator.generateNew = function (cb) {
         logger.verbose('Generate a complete new Spielplan');
         const data = {};
-        return async.parallel([
-            function (callback) {
-                loadDataFromHelper('getZeiten', 'zeiten', data, callback);
-            },
-            function (callback) {
-                loadDataFromHelper('getGruppen', 'gruppen', data, callback);
-            }
-        ], function (err) {
+        return helper.removeZwischenRundenGruppe(function (err) {
             if (err) return cb(err);
-
-            return create({
-                zeiten: data.zeiten,
-                gruppen: data.gruppen,
-                spiele: [],
-                lastPlayingTeams: [],
-                geradeSpielendeTeams: [],
-                i: 1
-            }, false, function (err) {
-                if (err) {
-                    return cb(err);
+            return async.parallel([
+                function (callback) {
+                    loadDataFromHelper('getZeiten', 'zeiten', data, callback);
+                },
+                function (callback) {
+                    loadDataFromHelper('getGruppen', 'gruppen', data, callback);
                 }
+            ], function (err) {
+                if (err) return cb(err);
 
-                logger.verbose('Resetting Results');
-                return helper.resetErgebnisse(function (err) {
-                    return cb(err);
+                return create({
+                    zeiten: data.zeiten,
+                    gruppen: data.gruppen,
+                    spiele: [],
+                    lastPlayingTeams: [],
+                    geradeSpielendeTeams: [],
+                    i: 1
+                }, false, function (err) {
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    logger.verbose('Resetting Results');
+                    return helper.resetErgebnisse(function (err) {
+                        return cb(err);
+                    });
                 });
             });
         });

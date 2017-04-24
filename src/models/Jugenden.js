@@ -21,7 +21,10 @@ JugendSchema.methods.pushGruppe = function (Gruppe, cb) {
 };
 
 JugendSchema.methods.removeGruppe = function (gruppe, cb) {
-    this.gruppen.splice(this.gruppen.indexOf(gruppe), 1);
+    const gruppen = this.gruppen;
+    this.gruppen = gruppen.filter(function (single) {
+        return single && single.toString() !== gruppe.toString();
+    });
     //noinspection JSUnresolvedFunction
     this.save(cb);
 };

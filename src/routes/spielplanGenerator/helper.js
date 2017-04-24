@@ -9,6 +9,8 @@ const Spielplan = mongoose.model('Spielplan');
 const Spiel = mongoose.model('Spiel');
 const Gruppen = mongoose.model('Gruppe');
 const Team = mongoose.model('Team');
+const Jugend = mongoose.model('Jugend');
+const spielLabels = require('./spielLabels.js');
 
 function calcSpieleGesamt(gruppen) {
     let sum = 0;
@@ -431,12 +433,12 @@ function getSpielUmLabel(rankA, rankB) {
         i++;
     }
     if (result === 1) {
-        return 'Finale';
+        return spielLabels.FINALE;
     }
-    return 'Spiel um Platz ' + result;
+    return spielLabels.SPIEL_UM + result;
 }
 
-function fillLastEmptySpiele(spiele, zeiten) {
+function fillLastEmptySpiele(spiele, zeiten, label) {
     const plaetze = getPlaetze();
     if (_.last(spiele).platz < plaetze) {
         logger.verbose('Filling up last Plätze with empty Spielen');
@@ -448,11 +450,211 @@ function fillLastEmptySpiele(spiele, zeiten) {
                 nummer: i,
                 uhrzeit: dateTimeObj.zeit,
                 datum: dateTimeObj.datum,
-                platz: dateTimeObj.platz
+                platz: dateTimeObj.platz,
+                label: label
             });
         }
     }
     return spiele;
+}
+
+function calcSortForZwischenrunde(a, b) {
+    if (a.label === spielLabels.ZWISCHENRUNDENSPIEL && a.label !== b.label) {
+        return -1;
+    } else if (b.label === spielLabels.ZWISCHENRUNDENSPIEL && a.label !== b.label) {
+        return 1;
+    }
+    return a.nummer - b.nummer;
+}
+function calcSortForFinale(a, b) {
+    if (a.label === spielLabels.FINALE && a.label !== b.label) {
+        return 1;
+    } else if (b.label === spielLabels.FINALE && a.label !== b.label) {
+        return -1;
+    }
+    return 0;
+}
+function calcSortForHalbFinale(a, b) {
+    if (a.label === spielLabels.HALBFINALE && a.label !== b.label) {
+        return b.rankA >= 3 ? 1 : -1;
+    } else if (b.label === spielLabels.HALBFINALE && a.label !== b.label) {
+        return a.rankA >= 3 ? -1 : 1;
+    }
+    return 0;
+}
+
+
+function sortEndrundeSpiele(a, b) {
+    if (a.label === spielLabels.ZWISCHENRUNDENSPIEL || b.label === spielLabels.ZWISCHENRUNDENSPIEL) {
+        return calcSortForZwischenrunde(a, b);
+    }
+    if (a.label === spielLabels.FINALE || b.label === spielLabels.FINALE) {
+        return calcSortForFinale(a, b);
+    }
+    if (a.label === spielLabels.HALBFINALE || b.label === spielLabels.HALBFINALE) {
+        return calcSortForHalbFinale(a, b);
+    }
+    if (a.label && b.label && a.label !== b.label) {
+        return a.label < b.label;
+    }
+    return 0;
+}
+
+function getLastZwischenrundeSpielIndex(spiele) {
+    return _.findLastIndex(spiele, function (spiel) {
+        return !spiel.label;
+    });
+}
+
+function getLastHalbfinaleIndex(spiele) {
+    return _.findLastIndex(spiele, function (spiel) {
+        return spiel.label === spielLabels.HALBFINALE;
+    });
+}
+
+function fillWithEmptyEndrundeByFunction(spiele, fn) {
+    const index = fn(spiele);
+    const plaetze = getPlaetze();
+    const diff = (index + 1) % plaetze;
+    if(index > 0 && diff !== 0) {
+        for (let i = 1; i <= (3 - diff); i++) {
+            spiele.splice((index + i), 0, {label: spielLabels.ZWISCHENRUNDENSPIEL});
+        }
+    }
+    return spiele;
+}
+
+function fillEndrundeSpieleWithEmpty(spiele) {
+    spiele = fillWithEmptyEndrundeByFunction(spiele, getLastZwischenrundeSpielIndex);
+    spiele = fillWithEmptyEndrundeByFunction(spiele, getLastHalbfinaleIndex);
+    return spiele;
+}
+
+function removeZwischenRundenGruppe(callback) {
+    return Gruppen.find({type: 'zwischenrunde'}, function (err, gruppen) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!gruppen || gruppen.length === 0) {
+            return callback();
+        }
+
+        return async.eachSeries(gruppen, function (gruppe, cb) {
+            return Jugend.findById(gruppe.jugend, function (err, jugend) {
+                if (err) {
+                    return cb(err);
+                }
+
+                if (!jugend) {
+                    return cb();
+                }
+
+                return jugend.removeGruppe(gruppe._id.toString(), function (err) {
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    return helpers.removeEntityBy(Spiel, 'gruppe', gruppe._id.toString(), {}, function (err) {
+                        if (err) return cb(err);
+
+                        return helpers.removeEntityBy(Gruppen, '_id', gruppe._id.toString(), {}, function (err) {
+                            if (err) {
+                                return cb(err);
+                            }
+
+                            return cb();
+                        });
+                    });
+                });
+            });
+        }, function (err) {
+            if (err) return callback(err);
+
+            return callback();
+        });
+
+    });
+}
+
+function calcSpielLabel(gruppe) {
+    return gruppe.type === 'normal' ? spielLabels.NORMAL : spielLabels.ZWISCHENRUNDENSPIEL
+}
+
+function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
+    const gruppenLength = gruppen.length;
+    const relevantGruppen = [];
+    if (gruppenLength <= 2) {
+        return callback(null, []);
+    }
+
+    const groups = [];
+    return async.times(maxTeamsAdvance, function (i, next) {
+        const nummer = i + 1;
+        logger.verbose('Generating Zwischengruppe ' + nummer);
+        const teams = [];
+
+        for (let seq = 0; seq < gruppenLength; seq++) {
+            teams.push({
+                _id: mongoose.Types.ObjectId(),
+                rank: ((nummer + seq) % 2 + 1),
+                fromType: 'Gruppe',
+                from: gruppen[seq],
+                isPlaceholder: true
+            });
+        }
+
+        const gruppe = new Gruppen({
+            _id: mongoose.Types.ObjectId(),
+            name: 'Zwischenrunde Gruppe ' + nummer,
+            type: 'zwischenrunde',
+            jugend: jugendid,
+            teams: teams
+        });
+        logger.silly('Setting Jugend %s', jugendid);
+        gruppe.jugend = jugendid;
+        const query = Jugend.findById(gruppe.jugend);
+
+        return query.exec(function (err, jugend) {
+            if (err) {
+                return next(err);
+            }
+            return gruppe.save(function (err, gruppe) {
+                if (err) {
+                    return next(err);
+                }
+                logger.silly('Gruppe saved');
+
+                return jugend.pushGruppe(gruppe, function (err) {
+                    if (err) return next(err);
+
+                    groups.push(gruppe);
+
+                    return async.eachSeries(teams, function (team, callback) {
+                        const t = new Team(team);
+                        t.save(function (err) {
+                            if (err) return callback(err);
+
+                            return callback();
+                        });
+                    }, function (err) {
+                        if (err) return next(err);
+
+                        return gruppe.deepPopulate('teams jugend', function (err, gruppe) {
+                            if (err) return next(err);
+
+                            relevantGruppen.push(gruppe);
+                            return next();
+                        });
+                    });
+                });
+            });
+        });
+    }, function (err) {
+        if (err) return callback(err);
+
+        return callback(null, relevantGruppen);
+    });
 }
 
 module.exports = {
@@ -488,5 +690,10 @@ module.exports = {
     calcTeamsAdvance: calcTeamsAdvance,
     getSpielUmLabel: getSpielUmLabel,
     fillLastEmptySpiele: fillLastEmptySpiele,
-    getMaxGruppenProJugend: getMaxGruppenProJugend
+    getMaxGruppenProJugend: getMaxGruppenProJugend,
+    sortEndrundeSpiele: sortEndrundeSpiele,
+    fillEndrundeSpieleWithEmpty: fillEndrundeSpieleWithEmpty,
+    removeZwischenRundenGruppe: removeZwischenRundenGruppe,
+    calcSpielLabel: calcSpielLabel,
+    generateZwischenGruppen: generateZwischenGruppen
 };

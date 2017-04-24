@@ -2,12 +2,22 @@
     'use strict';
 
     angular
-        .module('spi.spiel', ['spi.routes'])
-        .factory('spiel', ['Logger', 'routes', function (Logger, routes) {
+        .module('spi.spiel', ['spi.routes', 'spi.team'])
+        .factory('spiel', ['Logger', 'routes', 'team', function (Logger, routes, team) {
 
             const spiel = {};
 
+            let teams;
+
+            function loadTeams() {
+                team.getAll().then(function (res) {
+                    teams = res;
+                });
+            }
+            loadTeams();
+
             spiel.getAll = function () {
+                loadTeams();
                 return routes.requestGETBase('spiele');
             };
 
@@ -16,6 +26,7 @@
             };
 
             function getByParam(param, id) {
+                loadTeams();
                 const params = {};
                 params[param] = id;
                 return routes.requestGETBaseParam('spiele', params);
@@ -60,10 +71,24 @@
 
             spiel.getTeamDisplay = function (game, teamStr) {
                 if (game['team' + teamStr]) {
+                    if (game['team' + teamStr].isPlaceholder && !game['team' + teamStr].name) {
+                        const t = teams.find(function (single) {
+                            return single._id.toString() === game['team' + teamStr]._id.toString();
+                        });
+                        if (t.from) {
+                            return game['team' + teamStr].rank + '. ' + t.from.name;
+                        }
+                    }
                     return game['team' + teamStr].name;
                 } else if (game['from' + teamStr]) {
                     if (game.fromType === 'Spiel') {
-                        return 'Gewinner Spiel ' + game['from' + teamStr].nummer;
+                        let winOrLose;
+                        if (game['rank' + teamStr] > 0) {
+                            winOrLose = 'Gewinner';
+                        } else {
+                            winOrLose = 'Verlierer';
+                        }
+                        return winOrLose + ' Spiel ' + game['from' + teamStr].nummer;
                     }
                     return game['rank' + teamStr] + '. ' + game['from' + teamStr].name;
                 } else {
@@ -72,7 +97,7 @@
             };
 
             spiel.getGruppeDisplay = function (game) {
-                if (game.label) {
+                if (game.label && game.label !== 'Zwischenrunde' && game.label !== 'normal') {
                     return game.label;
                 } else if (game.gruppe) {
                     return game.gruppe.name

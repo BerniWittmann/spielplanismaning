@@ -19,7 +19,7 @@
 
         _.extend(vm, {
             gotoTeam: function (team, $event) {
-                if (team) {
+                if (team && team.name) {
                     $event.stopPropagation();
                     $state.go('spi.tgj.team', {
                         teamid: team._id

@@ -52,7 +52,9 @@
             o.tordiff = o.tore - o.gtore;
         });
         
-        vm.teams = _.sortBy(vm.teams, ['jugendName', 'gruppenName', 'name']);
+        vm.teams = _.sortBy(vm.teams, ['jugendName', 'gruppenName', 'name']).filter(function(single) {
+            return !single.isPlaceholder;
+        });
         
         _.extend(vm, {
             tableParams: new NgTableParams({

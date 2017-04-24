@@ -26,6 +26,16 @@ const TeamSchema = new mongoose.Schema({
     gpunkte: {
         type: Number,
         default: 0
+    },
+    from: {
+        type: Schema.ObjectId,
+        refPath: 'fromType'
+    },
+    fromType: String,
+    rank: Number,
+    isPlaceholder: {
+        type: Boolean,
+        default: false
     }
 });
 

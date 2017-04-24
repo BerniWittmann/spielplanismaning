@@ -96,7 +96,11 @@ module.exports = function () {
             if (err) {
                 return messages.Error(res, err);
             }
-            if (jugend.gruppen.length >= 2) {
+
+            const normalGroups = jugend.gruppen.filter(function(single) {
+                return single.type === 'normal';
+            });
+            if (normalGroups.length >= 4) {
                 logger.warn('Maximum amount of Gruppen in Jugend reached');
                 return messages.ErrorMaxZahlGruppe(res);
             } else {

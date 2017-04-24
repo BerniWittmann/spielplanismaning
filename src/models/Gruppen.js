@@ -6,7 +6,10 @@ const GruppenSchema = new mongoose.Schema({
     name: String,
     teams: [{type: Schema.ObjectId, ref: 'Team'}],
     jugend: {type: Schema.ObjectId, ref: 'Jugend'},
-    type: String
+    type: {
+        type: String,
+        default: 'normal'
+    }
 });
 
 GruppenSchema.methods.pushTeams = function (team, cb) {

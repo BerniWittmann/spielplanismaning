@@ -27,9 +27,14 @@
 
     }
 
-    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, team) {
+    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, team, $state, toastr) {
         const vm = this;
         vm.loading = true;
+
+        if (!aktivesTeam.name) {
+            toastr.error('Team nicht gefunden');
+            $state.go('spi.home');
+        }
 
         _.extend(vm, {
             team: aktivesTeam,

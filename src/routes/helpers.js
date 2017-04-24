@@ -60,7 +60,7 @@ module.exports = function () {
     function getEntity(model, population, notFoundMessage, res, req) {
         const {query, searchById} = getEntityQuery(model, req);
         logger.silly('Getting Entity %s', model.modelName);
-        query.deepPopulate(population).populate('fromA fromB').exec(function (err, data) {
+        query.deepPopulate(population).populate('fromA fromB from').exec(function (err, data) {
             return handler.handleQueryResponse(err, data, res, searchById, notFoundMessage);
         });
     }

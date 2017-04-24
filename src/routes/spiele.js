@@ -56,7 +56,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
-        return helpers.getEntity(Spiel, 'gruppe jugend teamA teamB gewinner', messages.ErrorSpielNotFound, res, req);
+        return helpers.getEntity(Spiel, 'gruppe jugend teamA teamB gewinner fromA fromB teamA.from teamB.from', messages.ErrorSpielNotFound, res, req);
     });
 
     /**

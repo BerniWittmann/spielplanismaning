@@ -81,7 +81,7 @@
                 return BestaetigenDialog.open('Wirklich dieses Ergebnis zurücksetzen?', vm.deleteSpiel);
             },
             gotoTeam: function (team, $event) {
-                if (team) {
+                if (team && team.name) {
                     $event.stopPropagation();
                     $state.go('spi.tgj.team', {
                         teamid: team._id
