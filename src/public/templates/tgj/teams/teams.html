@@ -8,7 +8,7 @@
 
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
-        <div class="table-responsive" data-ng-if="vm.tableParams.total() > 0">
+        <div class="table-responsive" data-ng-if="vm.teams.length > 0">
             <table data-ng-table="vm.tableParams" class="table table-condensed table-striped table-hover table-clickable"
                    data-show-filter="true">
                 <tr data-ng-repeat="team in $data" data-ng-click="vm.gotoTeam(team)" class="text-center">
@@ -31,6 +31,7 @@
                     <td data-title="'P+'" data-sortable="'punkte'" data-filter="{punkte: 'number'}">{{team.punkte}}</td>
                     <td data-title="'P-'" data-sortable="'gpunkte'" data-filter="{gpunkte: 'number'}">{{team.gpunkte}}
                     </td>
+                    <td data-title="'Spiele'" data-sortable="'spiele'" data-filter="{spiele: 'number'}">{{team.spiele}}</td>
                 </tr>
             </table>
         </div>

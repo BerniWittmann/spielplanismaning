@@ -167,7 +167,7 @@ input[type=number] {
 }
 
 .highlightTeam {
-    background-color: #E8E8E8;
+    background-color: #E8E8E8 !important;
 }
 
 .highlightTeamName {

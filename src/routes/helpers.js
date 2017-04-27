@@ -483,10 +483,10 @@ function teamCalcErgebnisse(team, gruppe, cb) {
 
         return async.each(spiele, function (spiel, next) {
             const isTeamA = spiel.teamA.toString() === team._id.toString();
-            result.punkte += spiel['punkte' + isTeamA ? 'A' : 'B'];
-            result.gpunkte += spiel['punkte' + isTeamA ? 'B' : 'A'];
-            result.tore += spiel['tore' + isTeamA ? 'A' : 'B'];
-            result.gtore += spiel['tore' + isTeamA ? 'B' : 'A'];
+            result.punkte += spiel['punkte' + (isTeamA ? 'A' : 'B')];
+            result.gpunkte += spiel['punkte' + (isTeamA ? 'B' : 'A')];
+            result.tore += spiel['tore' + (isTeamA ? 'A' : 'B')];
+            result.gtore += spiel['tore' + (isTeamA ? 'B' : 'A')];
             return next();
         }, function (err) {
             if (err) return cb(err);

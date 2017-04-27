@@ -22,6 +22,10 @@
             vm.key = 'all';
         }
 
+        vm.checkIsHighlighted = function (team) {
+            return team._id.toString() === vm.highlightedTeam._id.toString();
+        };
+
         vm.$onChanges = function (changeObj) {
             if (!_.isUndefined(changeObj.teams) && !_.isUndefined(changeObj.teams.currentValue)) {
                 vm.teams = changeObj.teams.currentValue.filter(function (single) {
@@ -33,6 +37,7 @@
                     single.gpunkte = results.gpunkte;
                     single.tore = results.tore;
                     single.gtore = results.gtore;
+                    single.spiele = results.spiele;
                     return single;
                 }).sort(compare);
             }

@@ -56,10 +56,12 @@
             o.jugendName = o.jugend ? o.jugend.name: '';
             o.gruppenName = o.gruppe ? o.gruppe.name : '';
             if (o.ergebnisse && o.ergebnisse.all) {
-                o.tore = o.ergebnisse.all.tore;
-                o.gtore = o.ergebnisse.all.gtore;
-                o.punkte = o.ergebnisse.all.punkte;
-                o.gpunkte = o.ergebnisse.all.gpunkte;
+                const results = o.ergebnisse.all;
+                o.tore = results.tore;
+                o.gtore = results.gtore;
+                o.punkte = results.punkte;
+                o.gpunkte = results.gpunkte;
+                o.spiele = results.spiele;
             }
             o.tordiff = o.tore - o.gtore;
             return o;
