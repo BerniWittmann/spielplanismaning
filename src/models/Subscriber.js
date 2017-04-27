@@ -19,4 +19,17 @@ SubscriberSchema.statics.getByTeam = function search(teamid, cb) {
     }).exec(cb);
 };
 
+SubscriberSchema.methods.fill = function (cb) {
+    const self = this;
+    if (self.team && self.team._id) {
+        return self.team.fill(function (err, team) {
+            if (err) return cb(err);
+
+            self.team = team;
+            return cb(null, self);
+        });
+    }
+    return cb(null, self);
+};
+
 mongoose.model('Subscriber', SubscriberSchema);

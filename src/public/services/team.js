@@ -27,10 +27,6 @@
                 return routes.requestDELETE(routes.urls.team.base(), teamid);
             };
 
-            team.resetErgebnisse = function () {
-                return routes.requestPUT(routes.urls.team.resetErgebnisse(), undefined);
-            };
-
             team.updateName = function (team, name) {
                 team.name = name;
                 return routes.requestPUTID(routes.urls.team.base(), team._id, team);

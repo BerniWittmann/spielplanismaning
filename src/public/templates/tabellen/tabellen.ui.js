@@ -36,6 +36,9 @@
             jugenden: jugenden,
             calcTableWidth: function (jugend) {
                 return Math.max((12/jugend.gruppen.length), 4);
+            },
+            getResultKey: function (gruppe) {
+                return gruppe.type !== 'normal' ? 'zwischenGruppe' : 'gruppe';
             }
         });
 

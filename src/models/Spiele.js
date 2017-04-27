@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const async = require('async');
 
 const SpielSchema = new mongoose.Schema({
     nummer: Number,
@@ -194,6 +195,38 @@ SpielSchema.methods.setPunkteB = function (punkteB, cb) {
     this.set('punkteB', punkteB);
     //noinspection JSUnresolvedFunction
     this.save(cb);
+};
+
+SpielSchema.statics.updateTeamInSpiele = function (oldTeam, newTeam, cb) {
+    const self = this;
+    return async.each(['teamA', 'teamB'], function (t, next) {
+        const query = {
+            beendet: false
+        };
+        const update = {};
+        query[t] = oldTeam;
+        update[t] = newTeam;
+        self.update(query, update, {multi: true}, next);
+    }, cb);
+};
+
+SpielSchema.methods.fill = function (cb) {
+    const self = this;
+    return async.each(['teamA', 'teamB', 'gewinner'], function (t, next) {
+        if (self[t] && self[t]._id) {
+            return self[t].fill(function (err, team) {
+                if (err) return cb(err);
+
+                self.set(t, team);
+                return next();
+            });
+        }
+        return next();
+    }, function (err) {
+        if (err) return cb(err);
+
+        return cb(null, self);
+    });
 };
 
 const deepPopulate = require('mongoose-deep-populate')(mongoose);

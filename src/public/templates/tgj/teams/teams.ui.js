@@ -47,13 +47,22 @@
         });
 
         _.forEach(vm.teams, function (o) {
-            o.jugendName = o.jugend.name;
-            o.gruppenName = o.gruppe.name;
-            o.tordiff = o.tore - o.gtore;
+
         });
         
         vm.teams = _.sortBy(vm.teams, ['jugendName', 'gruppenName', 'name']).filter(function(single) {
             return !single.isPlaceholder;
+        }).map(function (o) {
+            o.jugendName = o.jugend ? o.jugend.name: '';
+            o.gruppenName = o.gruppe ? o.gruppe.name : '';
+            if (o.ergebnisse && o.ergebnisse.all) {
+                o.tore = o.ergebnisse.all.tore;
+                o.gtore = o.ergebnisse.all.gtore;
+                o.punkte = o.ergebnisse.all.punkte;
+                o.gpunkte = o.ergebnisse.all.gpunkte;
+            }
+            o.tordiff = o.tore - o.gtore;
+            return o;
         });
         
         _.extend(vm, {

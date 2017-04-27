@@ -4,7 +4,7 @@ module.exports = function () {
     const async = require('async');
     const _ = require('lodash');
     const helper = require('./helper.js');
-    const helpers = require('../helpers.js')();
+    const helpers = require('../helpers.js');
     const spielLabels = require('./spielLabels.js');
 
     const spielplanGenerator = {};
@@ -72,6 +72,11 @@ module.exports = function () {
             ], function (err) {
                 if (err) return cb(err);
 
+                if (!data.gruppen || data.gruppen.length === 0) {
+                    logger.warn('Keine Gruppen für Spielplanerstellung gefunden');
+                    return cb();
+                }
+
                 return create({
                     zeiten: data.zeiten,
                     gruppen: data.gruppen,
@@ -79,16 +84,7 @@ module.exports = function () {
                     lastPlayingTeams: [],
                     geradeSpielendeTeams: [],
                     i: 1
-                }, false, function (err) {
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    logger.verbose('Resetting Results');
-                    return helper.resetErgebnisse(function (err) {
-                        return cb(err);
-                    });
-                });
+                }, false, cb);
             });
         });
     };
@@ -119,6 +115,11 @@ module.exports = function () {
                 ], function (err) {
                     if (err) return cb(err);
 
+                    if (!data.gruppen || data.gruppen.length === 0) {
+                        logger.warn('Keine Gruppen für Spielplanerstellung gefunden');
+                        return cb();
+                    }
+
                     const presetData = helper.calculatePresetSpielplanData(data);
 
                     return create({
@@ -128,9 +129,7 @@ module.exports = function () {
                         lastPlayingTeams: presetData.lastPlayingTeams,
                         geradeSpielendeTeams: presetData.geradeSpielendeTeams,
                         i: presetData.i
-                    }, true, function (err) {
-                        return cb(err);
-                    });
+                    }, true, cb);
                 });
             });
         });

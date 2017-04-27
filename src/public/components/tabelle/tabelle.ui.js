@@ -8,7 +8,8 @@
             templateUrl: 'components/tabelle/tabelle.html',
             bindings: {
                 teams: '<',
-                highlightedTeam: '<'
+                highlightedTeam: '<',
+                key: '<'
             },
             controller: 'TabelleController',
             controllerAs: 'vm'
@@ -17,9 +18,23 @@
     function TabelleController() {
         const vm = this;
 
+        if (!vm.key) {
+            vm.key = 'all';
+        }
+
         vm.$onChanges = function (changeObj) {
             if (!_.isUndefined(changeObj.teams) && !_.isUndefined(changeObj.teams.currentValue)) {
-                vm.teams = changeObj.teams.currentValue.sort(compare);
+                vm.teams = changeObj.teams.currentValue.filter(function (single) {
+                    return single && !single.isPlaceholder;
+                }).map(function (single) {
+                    if (!single.ergebnisse || !single.ergebnisse[vm.key]) return single;
+                    const results = single.ergebnisse[vm.key];
+                    single.punkte = results.punkte;
+                    single.gpunkte = results.gpunkte;
+                    single.tore = results.tore;
+                    single.gtore = results.gtore;
+                    return single;
+                }).sort(compare);
             }
         };
 

@@ -13,7 +13,7 @@ module.exports = function () {
     const messages = require('./messages/messages.js')();
     const spielplanGenerator = require('./spielplanGenerator/spielplanGenerator')();
     const handler = require('./handler.js');
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
 
     /**
      * @api {get} /spielplan Get Spielplan
@@ -68,6 +68,12 @@ module.exports = function () {
         logger.verbose('Start Generator');
         generator(function (err) {
             logger.verbose('Generator finished');
+            if (err) {
+                if (err.message !== 'SpieleGesamt calulation returned invalid value') {
+                    return messages.Error(err);
+                }
+                err = null;
+            }
             return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
         });
     });

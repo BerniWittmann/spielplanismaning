@@ -8,7 +8,7 @@ var User = mongoose.model('User');
 var _ = require('lodash');
 var async = require('async');
 var path = require('path');
-var helpers = require('../../../src/routes/helpers.js')();
+var helpers = require('../../../src/routes/helpers.js');
 var fs = require('fs');
 var routes = require('../../../src/routes/middleware/routeConfig.js');
 

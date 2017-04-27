@@ -3,7 +3,7 @@ const moment = require('moment');
 const async = require('async');
 const _ = require('lodash');
 const helper = require('./helper.js');
-const helpers = require('../helpers.js')();
+const helpers = require('../helpers.js');
 
 module.exports = function (payload, cb) {
     const properties = helper.configureProperties(payload);

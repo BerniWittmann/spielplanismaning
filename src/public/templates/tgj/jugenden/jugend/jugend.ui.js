@@ -36,6 +36,10 @@
             spiele: _.sortBy(spiele, ['nummer'])
         });
 
+        vm.getGruppeKey = function (gruppe) {
+            return gruppe.type === 'normal' ? 'gruppe' : 'zwischenGruppe';
+        };
+
         vm.loading = false;
     }
 })();

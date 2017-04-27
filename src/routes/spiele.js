@@ -13,7 +13,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
     const messages = require('./messages/messages.js')();
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     function notifySubscribers(spiel, fn, callback) {
@@ -187,30 +187,9 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 return messages.ErrorSpielNotFilled(res);
             }
 
-            const oldData = {
-                toreA: spiel.toreA,
-                toreB: spiel.toreB,
-                punkteA: spiel.punkteA,
-                punkteB: spiel.punkteB
-            };
             spiel.reset(function (err, spiel) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-
-                async.parallel([
-                    function (cb) {
-                        logger.silly('Reset Spiel for Team A (%s)', spiel.teamA.name);
-                        helpers.resetErgebnis(res, spiel, oldData, 'teamA', cb);
-                    },
-                    function (cb) {
-                        logger.silly('Reset Spiel for Team B (%s)', spiel.teamB.name);
-                        helpers.resetErgebnis(res, spiel, oldData, 'teamB', cb);
-                    }
-                ], function (err) {
-                    logger.verbose('Reseted Spiel');
-                    handler.handleErrorAndResponse(err, res, spiel);
-                });
+                logger.verbose('Reseted Spiel');
+                handler.handleErrorAndResponse(err, res, spiel);
             });
         });
     });
@@ -247,68 +226,53 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
                 return messages.ErrorSpielNotFilled(res);
             }
-            const toreAOld = spiel.toreA;
-            const toreBOld = spiel.toreB;
-            const punkteAOld = spiel.punkteA;
-            const punkteBOld = spiel.punkteB;
+
             spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
                 if (err) {
                     return messages.Error(res, err);
                 }
 
-                logger.silly('Set Spiel-Result for Team A (%s)', spiel.teamA.name);
-                //Set Ergebnis Team A
-                spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (err,
-                                                                                                                                                            teamA) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    logger.silly('Set Spiel-Result for Team A (%s)', spiel.teamA.name);
-                    //Set Ergebnis Team B
-                    spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err,
-                                                                                                                                                                teamB) {
+                function sendNextSpielUpdates(cb) {
+                    logger.verbose('Check if Spiel-Reminder for next Games should be sent');
+                    return Spiel.findOne({
+                        nummer: spiel.nummer + 6
+                    }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
                         if (err) {
                             return messages.Error(res, err);
                         }
-
-                        function sendNextSpielUpdates(cb) {
-                            logger.verbose('Check if Spiel-Reminder for next Games should be sent');
-                            return Spiel.findOne({
-                                nummer: spiel.nummer + 6
-                            }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
-                                if (err) {
-                                    return messages.Error(res, err);
-                                }
-                                if (nextspiel) {
-                                    if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
-                                        logger.verbose('Send Spiel-Reminder for next Games');
-                                        notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
-                                    } else {
-                                        return cb(null, {});
-                                    }
-                                } else {
-                                    return cb(null, {});
-                                }
-
-                            });
-                        }
-
-                        if (disableMails !== 'true') {
-                            return sendNextSpielUpdates(function (err) {
-                                if (err) {
-                                    return messages.Error(res, err);
-                                }
-
-                                logger.verbose('Send Spiel-Result Update to Subscribers');
-                                return notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
-                                    return handler.handleErrorAndResponse(err, res, spiel);
-                                });
-                            });
+                        if (nextspiel) {
+                            if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
+                                logger.verbose('Send Spiel-Reminder for next Games');
+                                notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
+                            } else {
+                                return cb(null, {});
+                            }
                         } else {
-                            return res.json(spiel);
+                            return cb(null, {});
                         }
+
                     });
+                }
+
+                return helpers.fillSpiele(function (err) {
+                    if (err) logger.warn(err);
+
+                    logger.verbose('Filled Spiele');
+
+                    if (disableMails !== 'true') {
+                        return sendNextSpielUpdates(function (err) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+
+                            logger.verbose('Send Spiel-Result Update to Subscribers');
+                            return notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
+                                return handler.handleErrorAndResponse(err, res, spiel);
+                            });
+                        });
+                    } else {
+                        return res.json(spiel);
+                    }
                 });
             });
         });

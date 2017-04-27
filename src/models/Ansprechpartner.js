@@ -6,6 +6,10 @@ const AnsprechpartnerSchema = new mongoose.Schema({
     email: String
 });
 
+AnsprechpartnerSchema.methods.fill = function (cb) {
+    return cb(null, this);
+};
+
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 AnsprechpartnerSchema.plugin(deepPopulate, {});
 

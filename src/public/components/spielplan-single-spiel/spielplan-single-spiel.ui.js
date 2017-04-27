@@ -133,6 +133,7 @@
                     altToreB = res.toreB;
                     vm.spiel = res;
                     vm.isEditing = false;
+                    $scope.$emit('updatedTore');
                 });
             }
         }

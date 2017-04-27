@@ -14,6 +14,7 @@
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spielplan', mockSpielplan);
+            $provide.value('spiel', mockSpiel);
         }));
 
         var mockSpielplan = {
@@ -27,6 +28,16 @@
             },
             createSpielplan: function () {},
             regenerateSpielplan: function () {}
+        };
+        var mockSpiel = {
+            spiele: [{
+                label: 'normal', beendet: false
+            },{
+                label: 'normal', beendet: false
+            }],
+            getAll: function () {
+                return mockSpiel.spiele
+            }
         };
         var mockToastr = {
             warning: function() {},
@@ -74,6 +85,7 @@
             var ctrl = scope.vm = $controller('VerwaltungSpielplanController', {
                 spielplan: mockSpielplan,
                 zeiten: mockSpielplan.zeiten,
+                spiele: mockSpiel.spiele,
                 $scope: scope,
                 toastr: mockToastr
             });

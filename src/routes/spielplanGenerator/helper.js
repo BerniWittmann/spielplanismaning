@@ -3,7 +3,7 @@ const logger = require('winston').loggers.get('spielplanGenerator');
 const mongoose = require('mongoose');
 const async = require('async');
 const moment = require('moment');
-const helpers = require('../helpers.js')();
+const helpers = require('../helpers.js');
 
 const Spielplan = mongoose.model('Spielplan');
 const Spiel = mongoose.model('Spiel');
@@ -167,30 +167,6 @@ function updateAllSpiele(spiele, keep, cb) {
 
         return saveSpiele(spiele, function (err) {
             if (err) return cb(err);
-            return cb();
-        });
-    });
-}
-
-function resetErgebnisse(cb) {
-    Team.find().exec(function (err, teams) {
-        if (err) {
-            return cb(err);
-        }
-
-        async.each(teams, function (team, callback) {
-            team.resetErgebnis(function (err) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback();
-            });
-        }, function (err) {
-            if (err) {
-                return cb(err);
-            }
-
             return cb();
         });
     });
@@ -583,7 +559,11 @@ function removeZwischenRundenGruppe(callback) {
         }, function (err) {
             if (err) return callback(err);
 
-            return callback();
+            return helpers.removeEntityBy(Team, 'isPlaceholder', true, {}, function (err) {
+                if (err) return callback(err);
+
+                return callback();
+            });
         });
 
     });
@@ -601,11 +581,12 @@ function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
     }
 
     const groups = [];
-    console.log(maxTeamsAdvance);
     return async.times(maxTeamsAdvance, function (i, next) {
         const nummer = i + 1;
         logger.verbose('Generating Zwischengruppe ' + nummer);
         const teams = [];
+
+        const gruppenID = mongoose.Types.ObjectId();
 
         for (let seq = 0; seq < gruppenLength; seq++) {
             teams.push({
@@ -613,12 +594,14 @@ function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
                 rank: ((nummer + seq) % 2 + 1),
                 fromType: 'Gruppe',
                 from: gruppen[seq],
-                isPlaceholder: true
+                isPlaceholder: true,
+                gruppe: gruppenID,
+                jugend: jugendid
             });
         }
 
         const gruppe = new Gruppen({
-            _id: mongoose.Types.ObjectId(),
+            _id: gruppenID,
             name: 'Zwischenrunde Gruppe ' + nummer,
             type: 'zwischenrunde',
             jugend: jugendid,
@@ -723,6 +706,10 @@ function generateZwischenGruppenHelper(gruppen, maxTeamsAdvance, zeiten, cb) {
     }, function (err) {
         if (err) return cb(err);
 
+        if (!relevantGruppen || relevantGruppen.length === 0) {
+            return cb(null, gruppen, []);
+        }
+
         return require('./generateGruppenPhase.js')({
             zeiten: zeiten,
             gruppen: relevantGruppen,
@@ -760,10 +747,13 @@ function calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance) {
     // Spiel um Platz 5 etc.
     const spiele = [];
     let rank = 3;
-    while (rank <= maxTeamsAdvance * gruppen.length) {
+    const min = gruppen.reduce(function (min, gruppe) {
+        return min > gruppe.teams.length ? gruppe.teams.length : min;
+    }, Number.MAX_SAFE_INTEGER);
+    while (rank <= min) {
         const label = getSpielUmLabel(rank, rank);
         spiele.push(createSpiel(gruppen, rank, rank, jugendid, label));
-        rank++;
+        rank++
     }
 
     return spiele;
@@ -800,7 +790,6 @@ module.exports = {
     getZeiten: getZeiten,
     getGruppen: getGruppen,
     deleteSpiele: deleteSpiele,
-    resetErgebnisse: resetErgebnisse,
     saveSpiele: saveSpiele,
     deleteNotCompletedSpiele: deleteNotCompletedSpiele,
     getAllSpiele: getAllSpiele,

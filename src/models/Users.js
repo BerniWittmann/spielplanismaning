@@ -106,6 +106,10 @@ module.exports = function (secret) {
         this.email = email;
     };
 
+    UserSchema.methods.fill = function (cb) {
+        return cb(null, this);
+    };
+
     const deepPopulate = require('mongoose-deep-populate')(mongoose);
     UserSchema.plugin(deepPopulate, {});
 

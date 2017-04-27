@@ -106,13 +106,19 @@
             $provide = _$provide_;
         }));
 
-        beforeEach(inject(function ($rootScope, $compile) {
+        beforeEach(inject(function ($rootScope, $compile, $httpBackend) {
             scope = $rootScope.$new();
             scope.spiele = spiele;
             scope.highlightedTeam = highlightedTeam;
             $provide.service('$state', function () {
                 return stateMock;
             });
+            $provide.service('Logger', function () {
+                return {
+                    log: function () {}
+                };
+            });
+            $httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             element = $compile('<spi-spiele-tabelle data-spiele="spiele" data-highlighted-team="highlightedTeam"></spi-spiele-tabelle>')(scope);
             scope.$digest();
             controller = element.controller("spiSpieleTabelle");

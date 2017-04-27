@@ -128,6 +128,12 @@
             vm.spieleByDate = _.groupBy(_.sortBy(newVal, ['nummer']), 'datum');
         });
 
+        $scope.$on('updatedTore', function () {
+           spiel.getAll().then(function (spiele) {
+               vm.spiele = _.sortBy(spiele, ['nummer']);
+           });
+        });
+
         vm.loading = false;
     }
 })();

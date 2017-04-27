@@ -46,6 +46,15 @@
         });
         team.getByGruppe(vm.team.gruppe._id, vm.team.jugend._id).then(function (res) {
             vm.teams = res;
+            if (vm.team.zwischengruppe) {
+                return team.getByGruppe(vm.team.zwischengruppe._id, vm.team.jugend._id).then(function (res) {
+                    vm.zwischengruppenTeams = res.filter(function (single) {
+                        return !single.isPlaceholder;
+                    });
+                    vm.loading = false;
+                });
+            }
+
             vm.loading = false;
         });
 

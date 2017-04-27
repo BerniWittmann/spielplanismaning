@@ -55,8 +55,9 @@
         }];
 
         beforeEach(inject(function (_spiel_, $httpBackend) {
-            spiel = _spiel_;
             httpBackend = $httpBackend;
+            httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
+            spiel = _spiel_;
             response = undefined;
         }));
 
@@ -71,6 +72,7 @@
 
         it('soll alle Spiele laden', function () {
             response = mockSpiele;
+            httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
 
             spiel.getAll().then(function (res) {
@@ -91,6 +93,7 @@
 
         it('soll ein bestimmtes Spiel laden', function () {
             response = mockSpiele[0];
+            httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
             spiel.get('1').then(function (res) {
@@ -101,6 +104,7 @@
 
         it('soll alle Spiele nach Jugend laden', function () {
             response = [mockSpiele[0], mockSpiele[1]];
+            httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL + '?jugend=123').respond(201, response);
 
             spiel.getByJugend('123').then(function (res) {
@@ -112,6 +116,7 @@
 
         it('soll alle Spiele nach Gruppe laden', function () {
             response = [mockSpiele[0], mockSpiele[1]];
+            httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL + '?gruppe=1234').respond(201, response);
 
             spiel.getByGruppe('1234').then(function (res) {

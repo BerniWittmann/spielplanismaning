@@ -26,7 +26,14 @@
 
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-12">
-        <h4>Aktuelle Tabelle</h4>
-        <spi-tabelle data-teams="vm.teams" data-highlighted-team="vm.team"></spi-tabelle>
+        <h4>Tabelle {{vm.team.gruppe.name}}</h4>
+        <spi-tabelle data-teams="vm.teams" data-highlighted-team="vm.team" key="'gruppe'"></spi-tabelle>
+    </div>
+</div>
+
+<div class="row" data-ng-if="!vm.loading && vm.team.zwischengruppe">
+    <div class="col-md-12">
+        <h4>Tabelle {{vm.team.zwischengruppe.name}}</h4>
+        <spi-tabelle data-teams="vm.zwischengruppenTeams" data-highlighted-team="vm.team" key="'zwischenGruppe'"></spi-tabelle>
     </div>
 </div>

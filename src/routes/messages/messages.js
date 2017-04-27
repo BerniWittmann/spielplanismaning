@@ -94,6 +94,9 @@ module.exports = function () {
         },
         ErrorSpielNotFilled: function (res) {
             send(require('./ErrorSpielNotFilled.js'), res);
+        },
+        ErrorDeprecated: function (res) {
+            send(require('./ErrorDeprecated.js'), res);
         }
     };
 };
