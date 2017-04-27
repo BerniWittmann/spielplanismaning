@@ -23,6 +23,7 @@
         }
 
         vm.checkIsHighlighted = function (team) {
+            if (!team || !vm.highlightedTeam) return false;
             return team._id.toString() === vm.highlightedTeam._id.toString();
         };
 
