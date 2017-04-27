@@ -197,8 +197,8 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            logger.verbose('Set Name to %s', req.body.name);
-            team.name = req.body.name;
+            team = helpers.updateDocByKeys(team, ['name', 'anmeldungsId'], req.body);
+
             team.save(function (err, team) {
                 return handler.handleErrorAndResponse(err, res, team);
             });

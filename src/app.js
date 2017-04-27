@@ -18,21 +18,23 @@ if (process.env.NODE_ENV === 'production') {
     }).install();
 }
 
-function handleException(err) {
-    logger.error(err);
-    if (process.env.NODE_ENV === 'production') {
-        Raven.captureException(err);
-    }
-}
-
-process.on('uncaughtException', handleException);
-process.on('unhandledRejection', handleException);
-
 const winston = require('winston');
 const expressWinston = require('express-winston');
 const loglevel = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug')
 require('./config/logging.js')(loglevel);
 const appLogger = winston.loggers.get('app');
+
+function handleException(err) {
+    appLogger.error(err);
+    if (process.env.NODE_ENV === 'production') {
+        Raven.captureException(err);
+    }
+    throw err;
+}
+
+process.on('uncaughtException', handleException);
+process.on('unhandledRejection', handleException);
+
 appLogger.info('Current Version: %s', version);
 appLogger.info('Log Level: %s', loglevel.toUpperCase());
 appLogger.info('App is running in %s Mode', process.env.NODE_ENV.toUpperCase());

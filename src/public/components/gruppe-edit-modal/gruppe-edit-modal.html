@@ -30,6 +30,14 @@
                         <p data-ng-message="minlength">Der Name ist zu kurz</p>
                     </span>
                 </div>
+                <div class="form-group" data-ng-class="{ 'has-error': teamForm.anmeldungsId.$touched && teamForm.anmeldungsId.$invalid }">
+                    <input type="text" class="form-control" placeholder="ID Anmeldung" data-ng-model="vm.team.anmeldungsId"
+                           data-ng-minlength="3" name="anmeldungsId" ng-model-options="{ debounce: 300 }">
+                    <span class="help-block" data-ng-messages="teamForm.anmeldungsId.$error"
+                          data-ng-if="teamForm.anmeldungsId.$touched">
+                        <p data-ng-message="minlength">Die ID ist zu kurz</p>
+                    </span>
+                </div>
                 <button data-ng-disabled="vm.loading" type="submit" class="btn btn-primary" data-ng-disabled="teamForm.$invalid" analytics-on="click" analytics-event="Add Team">anlegen</button>
             </form>
         </div>

@@ -115,7 +115,7 @@
             neuesTeam.name = 'Neuer Name';
             httpBackend.expectPUT(ENDPOINT_BASE_URL + '?id=1', neuesTeam).respond(201, response);
 
-            team.updateName(response, 'Neuer Name').then(function (res) {
+            team.update(response, {name: 'Neuer Name'}).then(function (res) {
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });

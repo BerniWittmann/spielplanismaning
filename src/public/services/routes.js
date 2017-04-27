@@ -112,6 +112,11 @@
                     resetErgebnisse: function () {
                         return ENDPOINT_BASE + '/teams/resetErgebnisse';
                     }
+                },
+                anmeldung: {
+                    base: function () {
+                        return 'https://beachanmeldung.herokuapp.com/api/teams'
+                    }
                 }
             };
 

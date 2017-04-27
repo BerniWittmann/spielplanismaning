@@ -580,6 +580,16 @@ function checkEndrundeStarted(callback) {
     });
 }
 
+function updateDocByKeys(doc, keys, data) {
+    keys.forEach(function (key) {
+        if (data[key]) {
+            logger.silly('Set %s to %s', key, data[key]);
+            doc[key] = data[key];
+        }
+    });
+    return doc;
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     getEntity: getEntity,
@@ -598,5 +608,6 @@ module.exports = {
     gruppeFindPlace: gruppeFindPlace,
     teamCalcErgebnisse: teamCalcErgebnisse,
     checkSpielChangeable: checkSpielChangeable,
-    checkEndrundeStarted: checkEndrundeStarted
+    checkEndrundeStarted: checkEndrundeStarted,
+    updateDocByKeys: updateDocByKeys
 };

@@ -3,7 +3,7 @@
 
     angular
         .module('spi.components.gruppe-edit-modal.ui', [
-            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.components.team-edit-modal.ui', 'spi.components.bestaetigen-modal.ui'
+            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.components.team-edit-modal.ui', 'spi.components.bestaetigen-modal.ui', 'spi.anmeldung'
         ])
         .service('GruppeEditierenDialog', GruppeEditierenDialog)
         .controller('GruppeEditierenController', GruppeEditierenController);
@@ -34,7 +34,7 @@
     }
 
     function GruppeEditierenController(
-        $state, $uibModalInstance, team, teamPromise, gewGruppe, spielplan, TeamEditierenDialog, BestaetigenDialog
+        $state, $uibModalInstance, team, teamPromise, gewGruppe, spielplan, TeamEditierenDialog, BestaetigenDialog, anmeldung, $scope
     ) {
         const vm = this;
         vm.loading = true;
@@ -107,5 +107,15 @@
         function abbrechen() {
             $uibModalInstance.dismiss('cancel');
         }
+
+        $scope.$watch('vm.team.anmeldungsId', function () {
+            if (vm.team.anmeldungsId) {
+                anmeldung.get(vm.team.anmeldungsId).then(function (res) {
+                    if (res._id && res.displayName) {
+                        vm.team.name = res.displayName;
+                    }
+                });
+            }
+        });
     }
 })();

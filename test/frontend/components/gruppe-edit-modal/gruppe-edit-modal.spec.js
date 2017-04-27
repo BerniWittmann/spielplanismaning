@@ -52,6 +52,16 @@
         }
     };
 
+    var mockAnmeldung = {
+        get: function (id) {
+            return {_id: 1, displayName: 'test'};
+        }
+    };
+
+    var mockScope = {
+        $watch: function () {}
+    };
+
     var team;
 
     describe('Component: Gruppe-Edit-Modal', function () {
@@ -83,7 +93,9 @@
                 spielplan: spielplan,
                 TeamEditierenDialog: TeamEditierenDialog,
                 BestaetigenDialog: BestaetigenDialog,
-                teamPromise: mockTeams
+                teamPromise: mockTeams,
+                aanmeldung: mockAnmeldung,
+                $scope: mockScope
             });
 
         }));

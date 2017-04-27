@@ -99,7 +99,11 @@
         var $provide;
         var stateMock = {
             go: function () {
-            }
+            },
+            current: {
+                name: 'state'
+            },
+            href: function () {}
         };
 
         beforeEach(module(function (_$provide_) {
