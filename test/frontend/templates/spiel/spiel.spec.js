@@ -82,6 +82,12 @@
                     var deferred = $q.defer();
                     deferred.resolve(spiel);
                     return deferred.promise;
+                },
+                getGruppeDisplay: function (spiel) {
+                    return spiel.gruppe.name;
+                },
+                getTeamDisplay: function (spiel, letter) {
+                    return spiel['team' + letter].name;
                 }
             };
 

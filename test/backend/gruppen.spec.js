@@ -135,39 +135,6 @@ describe('Route: Gruppen', function () {
             });
     });
 
-    it('soll beim Hinzufügen einer Fünften Gruppe einen Fehler werfen', function (done) {
-        //Test vorbereitung
-        var gruppe = {
-            name: 'Gruppe D'
-        };
-        request(server)
-            .post('/api/gruppen?jugend=' + jugendid.toString())
-            .set('Authorization', server.adminToken)
-            .send(gruppe)
-            .expect(200)
-            .end(function (err) {
-                if (err) throw err;
-
-                //Eigentliche Testausführung
-                gruppe = {
-                    name: 'Letzte Gruppe'
-                };
-                return request(server)
-                    .post('/api/gruppen?jugend=' + jugendid.toString())
-                    .send(gruppe)
-                    .set('Authorization', server.adminToken)
-                    .set('Accept', 'application/json')
-                    .end(function (err, response) {
-                        if (err) return done(err);
-                        expect(response).not.to.be.undefined;
-                        expect(response.statusCode).to.equal(418);
-                        expect(response.body.MESSAGE).to.exist;
-                        expect(response.body.MESSAGEKEY).to.be.equal('ERROR_GROUP_MAX_AMOUNT');
-                        return done();
-                    });
-            });
-    });
-
     it('wenn die Gruppenid zum löschen fehlt, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .del('/api/gruppen?id=')

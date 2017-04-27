@@ -9,7 +9,7 @@ module.exports = function () {
     const Team = mongoose.model('Team');
 
     const messages = require('./messages/messages.js')();
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     /**
@@ -96,7 +96,11 @@ module.exports = function () {
             if (err) {
                 return messages.Error(res, err);
             }
-            if (jugend.gruppen.length >= 4) {
+
+            const normalGroups = jugend.gruppen.filter(function(single) {
+                return single.type === 'normal';
+            });
+            if (normalGroups.length >= 4) {
                 logger.warn('Maximum amount of Gruppen in Jugend reached');
                 return messages.ErrorMaxZahlGruppe(res);
             } else {
@@ -141,6 +145,11 @@ module.exports = function () {
 
             if (err) {
                 return messages.Error(res, err);
+            }
+
+            if (gruppe.type !== 'normal') {
+                logger.warn('Gruppe %s kann nicht gelöscht werden', gruppe.name);
+                return messages.ErrorBadRequest(res);
             }
 
             Jugend.findById(gruppe.jugend, function (err, jugend) {

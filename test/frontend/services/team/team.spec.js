@@ -109,16 +109,6 @@
             });
         });
 
-        it('soll die Ergebnisse zurücksetzen', function () {
-            response = 'Ergebnisse zurückgesetzt';
-            httpBackend.expectPUT(ENDPOINT_BASE_URL + '/resetErgebnisse').respond(201, response);
-
-            team.resetErgebnisse().then(function (res) {
-                responseTest = res;
-                expect(_.isEqual(res, response)).to.be.true;
-            });
-        });
-
         it('soll den Namen eines Teams ändern können', function () {
             response = mockTeams[0];
             var neuesTeam = response;

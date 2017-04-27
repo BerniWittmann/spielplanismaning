@@ -29,13 +29,18 @@
             deleteJugend: deleteJugend,
             editGruppe: editGruppe,
             askDeleteJugend: askDeleteJugend,
-            askDeleteGruppe: askDeleteGruppe
+            askDeleteGruppe: askDeleteGruppe,
+            gruppeIsEditable: gruppeIsEditable
         });
 
         vm.loading = false;
 
         function canEdit() {
             return auth.isAdmin() && $state.includes('spi.verwaltung');
+        }
+
+        function gruppeIsEditable(gruppe) {
+            return gruppe.type === 'normal' && vm.canEdit;
         }
 
         function askDeleteGruppe(gruppe) {
@@ -82,7 +87,7 @@
             if (!vm.loading && form.$valid) {
                 vm.loading = true;
                 vm.error = undefined;
-                gruppe.create(vm.jugend._id, vm.gruppe).error(function (error) {
+                gruppe.create(vm.jugend._id, vm.gruppe).catch(function (error) {
                     vm.error = error;
                     vm.loading = false;
                 }).then(function (res) {

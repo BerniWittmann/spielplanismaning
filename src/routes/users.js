@@ -11,7 +11,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
 
     const messages = require('./messages/messages.js')();
     const mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     /**

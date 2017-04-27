@@ -194,29 +194,6 @@ describe('Route: Teams', function () {
             });
     });
 
-    it('soll die Ergebnisse aller Teams zurücksetzen', function (done) {
-        request(server)
-            .put('/api/teams/resetErgebnisse')
-            .set('Authorization', server.adminToken)
-            .set('Accept', 'application/json')
-            .end(function (err, response) {
-                if (err) return done(err);
-                expect(response).not.to.be.undefined;
-                expect(response.statusCode).to.equal(200);
-                expect(response.body.MESSAGEKEY).to.be.equal('RESET_MESSAGE');
-                mongoose.model('Team').find().exec(function (err, res) {
-                    if (err) throw err;
-                    res.forEach(function (team) {
-                        expect(team.tore).to.be.equal(0);
-                        expect(team.gtore).to.be.equal(0);
-                        expect(team.punkte).to.be.equal(0);
-                        expect(team.gpunkte).to.be.equal(0);
-                    });
-                    return done();
-                });
-            });
-    });
-
     after(function (done) {
         server.disconnectDB(done);
     });

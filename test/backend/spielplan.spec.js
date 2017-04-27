@@ -177,7 +177,7 @@ describe('Route: Spielplan', function () {
                 expect(response.body.STATUSCODE).to.equal(200);
                 mongoose.model('Spiel').find().exec(function (err, res) {
                     if (err) throw err;
-                    expect(res).to.have.lengthOf(9);
+                    expect(res).to.have.lengthOf(15);
                     return done();
                 });
             });
@@ -197,7 +197,7 @@ describe('Route: Spielplan', function () {
                 expect(response.body.STATUSCODE).to.equal(200);
                 mongoose.model('Spiel').find().exec(function (err, res) {
                     if (err) throw err;
-                    expect(res).to.have.lengthOf(9);
+                    expect(res).to.have.lengthOf(15);
                     return done();
                 });
             });

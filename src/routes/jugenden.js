@@ -7,9 +7,10 @@ module.exports = function () {
     const Gruppe = mongoose.model('Gruppe');
     const Jugend = mongoose.model('Jugend');
     const Team = mongoose.model('Team');
+    const Spiel = mongoose.model('Spiel');
 
     const messages = require('./messages/messages.js')();
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     /**
@@ -164,34 +165,20 @@ module.exports = function () {
      *     }
      **/
     router.get('/tore', function (req, res) {
-        let query = Jugend.find();
+        let query = Spiel.find();
         if (req.query.id) {
-            query = Jugend.findById(req.query.id);
+            query = Spiel.find({'jugend': req.query.id});
         }
         let tore = 0;
-        const teams = [];
-        query.deepPopulate('teams').exec(function (err, jugenden) {
+        query.exec(function (err, spiele) {
             if (err) {
                 return messages.Error(res, err);
             }
-            if (!req.query.id) {
-                logger.verbose('Get Tore from all Jugenden');
-                logger.verbose('%d Jugenden found', jugenden.length);
-                jugenden.forEach(function (jugend) {
-                    jugend.teams.forEach(function (team) {
-                        teams.push(team);
-                    });
-                });
-            } else {
-                logger.verbose('Get Tore from certain Jugend %s', req.query.id);
-
-                jugenden.teams.forEach(function (team) {
-                    teams.push(team);
-                });
-            }
-            logger.verbose('%d Teams found', teams.length);
-            teams.forEach(function (team) {
-                tore += team.tore;
+            spiele.forEach(function (spiel) {
+                if (spiel.beendet) {
+                    tore += spiel.toreA;
+                    tore += spiel.toreB;
+                }
             });
             logger.verbose('%d Tore counted', tore);
             return res.json(tore);

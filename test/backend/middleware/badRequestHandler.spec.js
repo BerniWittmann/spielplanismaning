@@ -7,7 +7,7 @@ var User = mongoose.model('User');
 var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
-var helpers = require('../../../src/routes/helpers.js')();
+var helpers = require('../../../src/routes/helpers.js');
 var routes = require('../../../src/routes/middleware/routeConfig.js');
 
 describe('Bad Request Handler', function () {

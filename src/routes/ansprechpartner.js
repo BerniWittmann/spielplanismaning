@@ -7,7 +7,7 @@ module.exports = function () {
     const Ansprechpartner = mongoose.model('Ansprechpartner');
 
     const messages = require('./messages/messages.js')();
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     /**

@@ -3,12 +3,14 @@ const logger = require('winston').loggers.get('spielplanGenerator');
 const mongoose = require('mongoose');
 const async = require('async');
 const moment = require('moment');
-const helpers = require('../helpers.js')();
+const helpers = require('../helpers.js');
 
 const Spielplan = mongoose.model('Spielplan');
 const Spiel = mongoose.model('Spiel');
 const Gruppen = mongoose.model('Gruppe');
 const Team = mongoose.model('Team');
+const Jugend = mongoose.model('Jugend');
+const spielLabels = require('./spielLabels.js');
 
 function calcSpieleGesamt(gruppen) {
     let sum = 0;
@@ -165,30 +167,6 @@ function updateAllSpiele(spiele, keep, cb) {
 
         return saveSpiele(spiele, function (err) {
             if (err) return cb(err);
-            return cb();
-        });
-    });
-}
-
-function resetErgebnisse(cb) {
-    Team.find().exec(function (err, teams) {
-        if (err) {
-            return cb(err);
-        }
-
-        async.each(teams, function (team, callback) {
-            team.resetErgebnis(function (err) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback();
-            });
-        }, function (err) {
-            if (err) {
-                return cb(err);
-            }
-
             return cb();
         });
     });
@@ -388,6 +366,403 @@ function calculatePresetSpielplanData(data) {
     }
 }
 
+function getGruppenWithSameJugend(gruppen) {
+    const jugenden = _.groupBy(gruppen, 'jugend._id');
+    return _.pickBy(jugenden, function (jugend) {
+        return jugend.length > 1;
+    });
+}
+
+function getMaxGruppenProJugend(gruppen) {
+    return _.reduce(getGruppenWithSameJugend(gruppen), function (max, current) {
+        if (current && current.length > max) {
+            return current.length;
+        }
+        return max;
+    }, 0);
+}
+
+function checkGenerateEndRunde(gruppen) {
+    return getMaxGruppenProJugend(gruppen) > 1;
+}
+
+function calcTeamsAdvance(gruppenByJugend) {
+    const result = process.env.TEAMS_ADVANCE || 99999;
+    let max = 99999;
+    _.forIn(gruppenByJugend, function (gruppen) {
+        gruppen.forEach(function (gruppe) {
+            max = gruppe.teams.length < max ? gruppe.teams.length : max;
+        });
+    });
+
+    return Math.min(Math.max(result, 0), max);
+}
+
+function getSpielUmLabel(rankA, rankB) {
+    if (rankA !== rankB || rankA < 1) {
+        return undefined;
+    }
+    let i = 1;
+    let result = 1;
+    while (i < rankA) {
+        result += 2;
+        i++;
+    }
+    if (result === 1) {
+        return spielLabels.FINALE;
+    }
+    return spielLabels.SPIEL_UM + result;
+}
+
+function fillLastEmptySpiele(spiele, zeiten, label) {
+    const plaetze = getPlaetze();
+    if (_.last(spiele).platz < plaetze) {
+        logger.verbose('Filling up last Plätze with empty Spielen');
+        const start = spiele.length + 1;
+        for (let j = 0; j <= (plaetze - _.last(spiele).platz); j++) {
+            const i = start + j;
+            const dateTimeObj = calcSpielDateTime(i, zeiten);
+            spiele.push({
+                nummer: i,
+                uhrzeit: dateTimeObj.zeit,
+                datum: dateTimeObj.datum,
+                platz: dateTimeObj.platz,
+                label: label
+            });
+        }
+    }
+    return spiele;
+}
+
+function calcSortForZwischenrunde(a, b) {
+    if (a.label === spielLabels.ZWISCHENRUNDENSPIEL && a.label !== b.label) {
+        return -1;
+    } else if (b.label === spielLabels.ZWISCHENRUNDENSPIEL && a.label !== b.label) {
+        return 1;
+    }
+    return a.nummer - b.nummer;
+}
+function calcSortForFinale(a, b) {
+    if (a.label === spielLabels.FINALE && a.label !== b.label) {
+        return 1;
+    } else if (b.label === spielLabels.FINALE && a.label !== b.label) {
+        return -1;
+    }
+    return 0;
+}
+function calcSortForHalbFinale(a, b) {
+    if (a.label === spielLabels.HALBFINALE && a.label !== b.label) {
+        return b.rankA >= 3 ? 1 : -1;
+    } else if (b.label === spielLabels.HALBFINALE && a.label !== b.label) {
+        return a.rankA >= 3 ? -1 : 1;
+    }
+    return 0;
+}
+
+
+function sortEndrundeSpiele(a, b) {
+    if (a.label === spielLabels.ZWISCHENRUNDENSPIEL || b.label === spielLabels.ZWISCHENRUNDENSPIEL) {
+        return calcSortForZwischenrunde(a, b);
+    }
+    if (a.label === spielLabels.FINALE || b.label === spielLabels.FINALE) {
+        return calcSortForFinale(a, b);
+    }
+    if (a.label === spielLabels.HALBFINALE || b.label === spielLabels.HALBFINALE) {
+        return calcSortForHalbFinale(a, b);
+    }
+    if (a.label && b.label && a.label !== b.label) {
+        return a.label < b.label;
+    }
+    return 0;
+}
+
+function getLastZwischenrundeSpielIndex(spiele) {
+    return _.findLastIndex(spiele, function (spiel) {
+        return !spiel.label;
+    });
+}
+
+function getLastHalbfinaleIndex(spiele) {
+    return _.findLastIndex(spiele, function (spiel) {
+        return spiel.label === spielLabels.HALBFINALE;
+    });
+}
+
+function fillWithEmptyEndrundeByFunction(spiele, fn) {
+    const index = fn(spiele);
+    const plaetze = getPlaetze();
+    const diff = (index + 1) % plaetze;
+    if(index > 0 && diff !== 0) {
+        for (let i = 1; i <= (3 - diff); i++) {
+            spiele.splice((index + i), 0, {label: spielLabels.ZWISCHENRUNDENSPIEL});
+        }
+    }
+    return spiele;
+}
+
+function fillEndrundeSpieleWithEmpty(spiele) {
+    spiele = fillWithEmptyEndrundeByFunction(spiele, getLastZwischenrundeSpielIndex);
+    spiele = fillWithEmptyEndrundeByFunction(spiele, getLastHalbfinaleIndex);
+    return spiele;
+}
+
+function removeZwischenRundenGruppenUndSpiele(callback) {
+    return removeZwischenRundenGruppe(function (err) {
+        if (err) return callback(err);
+
+        return removeEndSpiele(callback);
+    });
+}
+
+function removeEndSpiele(callback) {
+    return Spiel.remove({label: {$ne: 'normal'}}, callback);
+}
+
+function removeZwischenRundenGruppe(callback) {
+    return Gruppen.find({type: 'zwischenrunde'}, function (err, gruppen) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!gruppen || gruppen.length === 0) {
+            return callback();
+        }
+
+        return async.eachSeries(gruppen, function (gruppe, cb) {
+            return Jugend.findById(gruppe.jugend, function (err, jugend) {
+                if (err) {
+                    return cb(err);
+                }
+
+                if (!jugend) {
+                    return cb();
+                }
+
+                return jugend.removeGruppe(gruppe._id.toString(), function (err) {
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    return helpers.removeEntityBy(Spiel, 'gruppe', gruppe._id.toString(), {}, function (err) {
+                        if (err) return cb(err);
+
+                        return helpers.removeEntityBy(Gruppen, '_id', gruppe._id.toString(), {}, function (err) {
+                            if (err) {
+                                return cb(err);
+                            }
+
+                            return cb();
+                        });
+                    });
+                });
+            });
+        }, function (err) {
+            if (err) return callback(err);
+
+            return helpers.removeEntityBy(Team, 'isPlaceholder', true, {}, function (err) {
+                if (err) return callback(err);
+
+                return callback();
+            });
+        });
+
+    });
+}
+
+function calcSpielLabel(gruppe) {
+    return gruppe.type === 'normal' ? spielLabels.NORMAL : spielLabels.ZWISCHENRUNDENSPIEL
+}
+
+function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
+    const gruppenLength = gruppen.length;
+    const relevantGruppen = [];
+    if (gruppenLength <= 2) {
+        return callback(null, []);
+    }
+
+    const groups = [];
+    return async.times(maxTeamsAdvance, function (i, next) {
+        const nummer = i + 1;
+        logger.verbose('Generating Zwischengruppe ' + nummer);
+        const teams = [];
+
+        const gruppenID = mongoose.Types.ObjectId();
+
+        for (let seq = 0; seq < gruppenLength; seq++) {
+            teams.push({
+                _id: mongoose.Types.ObjectId(),
+                rank: ((nummer + seq) % 2 + 1),
+                fromType: 'Gruppe',
+                from: gruppen[seq],
+                isPlaceholder: true,
+                gruppe: gruppenID,
+                jugend: jugendid
+            });
+        }
+
+        const gruppe = new Gruppen({
+            _id: gruppenID,
+            name: 'Zwischenrunde Gruppe ' + nummer,
+            type: 'zwischenrunde',
+            jugend: jugendid,
+            teams: teams
+        });
+        logger.silly('Setting Jugend %s', jugendid);
+        gruppe.jugend = jugendid;
+        const query = Jugend.findById(gruppe.jugend);
+
+        return query.exec(function (err, jugend) {
+            if (err) {
+                return next(err);
+            }
+            return gruppe.save(function (err, gruppe) {
+                if (err) {
+                    return next(err);
+                }
+                logger.silly('Gruppe saved');
+
+                return jugend.pushGruppe(gruppe, function (err) {
+                    if (err) return next(err);
+
+                    groups.push(gruppe);
+
+                    return async.eachSeries(teams, function (team, callback) {
+                        const t = new Team(team);
+                        t.save(function (err) {
+                            if (err) return callback(err);
+
+                            return callback();
+                        });
+                    }, function (err) {
+                        if (err) return next(err);
+
+                        return gruppe.deepPopulate('teams jugend', function (err, gruppe) {
+                            if (err) return next(err);
+
+                            relevantGruppen.push(gruppe);
+                            return next();
+                        });
+                    });
+                });
+            });
+        });
+    }, function (err) {
+        if (err) return callback(err);
+
+        return callback(null, relevantGruppen);
+    });
+}
+
+function calcDateTimeForEndrundeSpiele(spiele, start, zeiten) {
+    return spiele.map(function (spiel, index) {
+        const i = start + index;
+        const dateTimeObject = calcSpielDateTime(i, zeiten);
+        spiel.nummer = i;
+        spiel.datum = dateTimeObject.datum;
+        spiel.platz = dateTimeObject.platz;
+        spiel.uhrzeit = dateTimeObject.zeit;
+        return spiel;
+    });
+}
+
+function createSpiel(gruppen, rankA, rankB, jugendid, label) {
+    logger.verbose('Generating Spiel: ' + label);
+    return {
+        _id: mongoose.Types.ObjectId(),
+        fromA: gruppen[0]._id,
+        fromB: gruppen[1]._id,
+        fromType: 'Gruppe',
+        rankA: rankA,
+        rankB: rankB,
+        label: label,
+        jugend: jugendid
+    }
+}
+
+function createSpielFromSpiel(spielA, spielB, rankA, rankB, jugendid, label) {
+    logger.verbose('Generating Spiel: ' + label);
+    return {
+        fromA: spielA._id,
+        fromB: spielB._id,
+        fromType: 'Spiel',
+        rankA: rankA,
+        rankB: rankB,
+        label: label,
+        jugend: jugendid
+    }
+}
+
+function generateZwischenGruppenHelper(gruppen, maxTeamsAdvance, zeiten, cb) {
+    let relevantGruppen = [];
+
+    const gruppenByJugend = getGruppenWithSameJugend(gruppen);
+    return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
+        return generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, function (err, groups) {
+            if (err) return callback(err);
+
+            relevantGruppen = relevantGruppen.concat(groups);
+            return callback();
+        });
+    }, function (err) {
+        if (err) return cb(err);
+
+        if (!relevantGruppen || relevantGruppen.length === 0) {
+            return cb(null, gruppen, []);
+        }
+
+        return require('./generateGruppenPhase.js')({
+            zeiten: zeiten,
+            gruppen: relevantGruppen,
+            spiele: [],
+            lastPlayingTeams: [],
+            geradeSpielendeTeams: [],
+            i: 1
+        }, function (err, spiele) {
+            if (err) return cb(err);
+
+            spiele = fillLastEmptySpiele(spiele, zeiten, spielLabels.ZWISCHENRUNDENSPIEL);
+            return cb(null, relevantGruppen, spiele);
+        });
+    });
+}
+
+function calculateFinalspiele(gruppen, jugendid) {
+    // HF 1 HF 2 + Finale + Spiel um Platz 3
+    const spiele = [];
+
+    // HF
+    const hf1 = createSpiel(gruppen, 1, 2, jugendid, spielLabels.HALBFINALE);
+    const hf2 = createSpiel(gruppen, 2, 1, jugendid, spielLabels.HALBFINALE);
+    spiele.push(hf1, hf2);
+    // Finale
+    spiele.push(createSpielFromSpiel(hf1, hf2, 1, 1, jugendid, spielLabels.FINALE));
+
+    // Spiel um Platz 3
+    spiele.push(createSpielFromSpiel(hf1, hf2, 0, 0, jugendid, getSpielUmLabel(2, 2)));
+
+    return spiele;
+}
+
+function calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance) {
+    // Spiel um Platz 5 etc.
+    const spiele = [];
+    let rank = 3;
+    const min = gruppen.reduce(function (min, gruppe) {
+        return min > gruppe.teams.length ? gruppe.teams.length : min;
+    }, Number.MAX_SAFE_INTEGER);
+    while (rank <= min) {
+        const label = getSpielUmLabel(rank, rank);
+        spiele.push(createSpiel(gruppen, rank, rank, jugendid, label));
+        rank++
+    }
+
+    return spiele;
+}
+
+function checkEndrundeStarted(callback) {
+    return helpers.checkEndrundeStarted(callback);
+}
+
 module.exports = {
     calcSpieleGesamt: calcSpieleGesamt,
     getTeamWithoutLast: getTeamWithoutLast,
@@ -399,7 +774,6 @@ module.exports = {
     getZeiten: getZeiten,
     getGruppen: getGruppen,
     deleteSpiele: deleteSpiele,
-    resetErgebnisse: resetErgebnisse,
     saveSpiele: saveSpiele,
     deleteNotCompletedSpiele: deleteNotCompletedSpiele,
     getAllSpiele: getAllSpiele,
@@ -415,5 +789,23 @@ module.exports = {
     filterCompleteSpiele: filterCompleteSpiele,
     recalculateDateTimePlatzForSpiele: recalculateDateTimePlatzForSpiele,
     calculatePresetSpielplanData: calculatePresetSpielplanData,
-    getPlaetze: getPlaetze
+    getPlaetze: getPlaetze,
+    checkGenerateEndRunde: checkGenerateEndRunde,
+    getGruppenWithSameJugend: getGruppenWithSameJugend,
+    calcTeamsAdvance: calcTeamsAdvance,
+    getSpielUmLabel: getSpielUmLabel,
+    fillLastEmptySpiele: fillLastEmptySpiele,
+    getMaxGruppenProJugend: getMaxGruppenProJugend,
+    sortEndrundeSpiele: sortEndrundeSpiele,
+    fillEndrundeSpieleWithEmpty: fillEndrundeSpieleWithEmpty,
+    removeZwischenRundenGruppe: removeZwischenRundenGruppe,
+    calcSpielLabel: calcSpielLabel,
+    generateZwischenGruppen: generateZwischenGruppen,
+    calcDateTimeForEndrundeSpiele: calcDateTimeForEndrundeSpiele,
+    createSpiel: createSpiel,
+    generateZwischenGruppenHelper: generateZwischenGruppenHelper,
+    calculateFinalspiele: calculateFinalspiele,
+    calculatePlatzierungsspiele: calculatePlatzierungsspiele,
+    removeZwischenRundenGruppenUndSpiele: removeZwischenRundenGruppenUndSpiele,
+    checkEndrundeStarted: checkEndrundeStarted
 };

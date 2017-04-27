@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
-var helpers = require('../../src/routes/helpers.js')();
 var server = require('./testserver.js')();
+var helpers = require('../../src/routes/helpers.js');
 
 describe('Helpers', function () {
     describe('soll die Datenbank query basierend auf Parametern laden', function () {
@@ -61,50 +61,6 @@ describe('Helpers', function () {
             var data = helpers.getEntityQuery(model, req);
             expect(data.searchById).to.be.false;
             expect(data.query).to.equal('jugend');
-        });
-    });
-
-    describe('soll das Team-Ergebnis zurücksetzen können', function () {
-        function resetErgebnisTest(tA, tAo, tB, tBo, pA, pAo, pB, pBo, callback) {
-            expect(tA).to.equal(0);
-            expect(tB).to.equal(0);
-            expect(pA).to.equal(0);
-            expect(pB).to.equal(0);
-            expect(tAo).to.be.above(0);
-            expect(tBo).to.be.above(0);
-            expect(pAo).to.be.above(0);
-            expect(pBo).to.be.above(0);
-            callback();
-        }
-
-        var spiel = {
-            teamA: {
-                setErgebnis: resetErgebnisTest
-            },
-            teamB: {
-                setErgebnis: resetErgebnisTest
-            }
-        };
-        var mock = {
-            callback: function () {
-                mock.called = true;
-            },
-            called: false
-        };
-        var oldData = {
-            toreA: 5,
-            toreB: 5,
-            punkteA: 1,
-            punkteB: 1
-        };
-        it('soll das Ergebnis für Team A zurücksetzen', function () {
-            helpers.resetErgebnis({}, spiel, oldData, 'teamA', mock.callback);
-            expect(mock.called).to.be.true;
-        });
-
-        it('soll das Ergebnis für Team B zurücksetzen', function () {
-            helpers.resetErgebnis({}, spiel, oldData, 'teamB', mock.callback);
-            expect(mock.called).to.be.true;
         });
     });
 
@@ -868,5 +824,109 @@ describe('Helpers', function () {
             });
         });
     });
+
+    describe('Platz Tabelle Kalkulation', function () {
+        const gruppeFindPlace = helpers.gruppeFindPlace;
+        const maxTeams = 4;
+        let teams, spiele;
+
+        function checkPlaetze() {
+            for (let i = 1; i <= maxTeams; i++) {
+                it('Es soll Platz ' + i + ' korrekt geladen werden', function () {
+                    const result = gruppeFindPlace(teams, spiele, i, 'all');
+
+                    expect(result._id).to.equal(i.toString());
+                });
+            }
+        }
+
+        function initTeamsUndSpiele() {
+            teams = [
+                {
+                    _id: '1',
+                    ergebnisse: {
+                        all: {
+                            punkte: 4,
+                            gpunkte: 0,
+                            tore: 2,
+                            gtore: 0
+                        }
+                    }
+                },
+                {
+                    _id: '2',
+                    ergebnisse: {
+                        all: {
+                            punkte: 2,
+                            gpunkte: 2,
+                            tore: 2,
+                            gtore: 1
+                        }
+                    }
+                }, {
+                    _id: '3',
+                    ergebnisse: {
+                        all: {
+                            punkte: 2,
+                            gpunkte: 4,
+                            tore: 1,
+                            gtore: 2
+                        }
+                    }
+                }, {
+                    _id: '4',
+                    ergebnisse: {
+                        all: {
+                            punkte: 0,
+                            gpunkte: 6,
+                            tore: 0,
+                            gtore: 3
+                        }
+                    }
+                }];
+            spiele = [];
+            let nummer = 1;
+            for (let a = 1; a < maxTeams; a++) {
+                for (let b = 2; b <= maxTeams; b++) {
+                    spiele.push({
+                        _id: 's' + nummer,
+                        teamA: a,
+                        teamB: b,
+                        beendet: true,
+                        unentschieden: false,
+                        punkteB: 0,
+                        punkteA: 2,
+                        toreB: 0,
+                        toreA: 1,
+                        gewinner: a
+                    });
+                    nummer++;
+                }
+            }
+        }
+
+        describe('Es sind bereits alle Spiele gespielt', function () {
+            beforeEach(function () {
+                initTeamsUndSpiele();
+            });
+
+            checkPlaetze();
+        });
+
+        describe('Es sind noch nicht alle Spiel gespielt', function () {
+            beforeEach(function () {
+                initTeamsUndSpiele();
+                spiele[0].beendet = false
+            });
+
+            for (let i = 1; i <= maxTeams; i++) {
+                it('Es soll Platz ' + i + ' korrekt geladen werden', function () {
+                    const result = gruppeFindPlace(teams, spiele, i, 'all');
+
+                    expect(result).to.be.undefined;
+                });
+            }
+        });
+    })
 });
 

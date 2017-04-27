@@ -3,10 +3,9 @@ const moment = require('moment');
 const async = require('async');
 const _ = require('lodash');
 const helper = require('./helper.js');
-const helpers = require('../helpers.js')();
+const helpers = require('../helpers.js');
 
 module.exports = function (payload, cb) {
-
     const properties = helper.configureProperties(payload);
     const plaetze = properties.plaetze,
         zeiten = properties.zeiten,
@@ -40,13 +39,14 @@ module.exports = function (payload, cb) {
         geradeSpielendeTeams = data.geradeSpielendeTeams;
     }
 
-    function leeresSpiel() {
+    function leeresSpiel(gruppe) {
         calcSpielDateTime(i);
         addSpiel({
             nummer: i,
             platz: platz,
             datum: datum,
-            uhrzeit: zeit
+            uhrzeit: zeit,
+            label: helper.calcSpielLabel(gruppe)
         });
         const data = helper.leeresSpiel(spieleGesamt, leereSpieleStreak, i);
         spieleGesamt = data.spieleGesamt;
@@ -105,7 +105,8 @@ module.exports = function (payload, cb) {
                     gruppe: gruppe._id,
                     jugend: gruppe.jugend._id,
                     teamA: teamA._id,
-                    teamB: teamB._id
+                    teamB: teamB._id,
+                    label: helper.calcSpielLabel(gruppe)
                 });
                 logger.verbose('Spiel #%d: Done', i - 1);
                 leereSpieleStreak = 0;
@@ -130,14 +131,7 @@ module.exports = function (payload, cb) {
                 if (leereSpieleStreak >= maxLeereSpieleStreak) {
                     return failure('tooManyEmptySpiele');
                 }
-                leeresSpiel();
-            }
-        }
-
-        if (_.last(spiele).platz < plaetze) {
-            logger.verbose('Filling up last Plätze with empty Spielen');
-            for (let j = 0; j <= (plaetze - _.last(spiele).platz); j++) {
-                leeresSpiel();
+                leeresSpiel(gruppen[0]);
             }
         }
 

@@ -46,6 +46,11 @@
         var mockSpiel;
         var injector;
         var mockGruppe;
+        var mockTeam = {
+            getByGruppe: function () {
+                return gruppe.teams;
+            }
+        }
         function resolve(value) {
             return {forStateAndView: function (state, view) {
                 var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
@@ -64,6 +69,7 @@
             $provide.value('spiel', mockSpiel);
             $provide.value('gruppe', mockGruppe);
             $provide.value('aktiveGruppe', gruppe);
+            $provide.value('team', mockTeam);
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -83,6 +89,12 @@
                     var deferred = $q.defer();
                     deferred.resolve(spiele);
                     return deferred.promise;
+                },
+                getGruppeDisplay: function (gruppe) {
+                    return 'Gruppe 1';
+                },
+                getTeamDisplay: function (spiel, letter) {
+                    return 'Team ' + spiel['team' + letter];
                 }
             };
 
@@ -94,7 +106,8 @@
 
             var ctrl = scope.vm = $controller('GruppeController', {
                 aktiveGruppe: gruppe,
-                spiele: spiele
+                spiele: spiele,
+                teams: gruppe.teams
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -145,6 +158,7 @@
 
         it('soll den Gruppennamen anzeigen', function () {
             render();
+            console.log(element.find('h3').text())
             expect(element.find('h3').text()).to.contain('Gruppe 1');
         });
 
@@ -153,6 +167,7 @@
             expect(element.find('spi-spiele-tabelle')).to.exist;
             var result = element.find('spi-spiele-tabelle').find('tbody').find('tr');
             expect(result).to.have.lengthOf(3);
+            console.log(result);
             expect(angular.element(angular.element(result[0]).find('td')[1]).text()).to.contain('09:00');
             expect(angular.element(angular.element(result[1]).find('td')[1]).text()).to.contain('09:10');
             expect(angular.element(angular.element(result[2]).find('td')[1]).text()).to.contain('09:20');

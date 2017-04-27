@@ -13,7 +13,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const MailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableMails);
 
     const messages = require('./messages/messages.js')();
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     function notifySubscribers(spiel, fn, callback) {
@@ -56,7 +56,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse spielResponse
      **/
     router.get('/', function (req, res) {
-        return helpers.getEntity(Spiel, 'gruppe jugend teamA teamB gewinner', messages.ErrorSpielNotFound, res, req);
+        return helpers.getEntity(Spiel, 'gruppe jugend teamA teamB gewinner fromA fromB teamA.from teamB.from', messages.ErrorSpielNotFound, res, req);
     });
 
     /**
@@ -177,33 +177,22 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.delete('/tore', function (req, res) {
         logger.verbose('Reset Spiel %s', req.query.id);
-        const query = Spiel.findById(req.query.id);
-        query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
-            if (err) {
-                return messages.Error(res, err);
-            }
 
-            const oldData = {
-                toreA: spiel.toreA,
-                toreB: spiel.toreB,
-                punkteA: spiel.punkteA,
-                punkteB: spiel.punkteB
-            };
-            spiel.reset(function (err, spiel) {
+        return helpers.checkSpielChangeable(req.query.id, function (err, result) {
+            if (err) return messages.Error(res, err);
+
+            if (!result) return messages.ErrorSpielNotChangeable(res);
+
+            return Spiel.findById(req.query.id).deepPopulate('gruppe jugend teamA teamB').populate('fromA fromB').exec(function (err, spiel) {
                 if (err) {
                     return messages.Error(res, err);
                 }
 
-                async.parallel([
-                    function (cb) {
-                        logger.silly('Reset Spiel for Team A (%s)', spiel.teamA.name);
-                        helpers.resetErgebnis(res, spiel, oldData, 'teamA', cb);
-                    },
-                    function (cb) {
-                        logger.silly('Reset Spiel for Team B (%s)', spiel.teamB.name);
-                        helpers.resetErgebnis(res, spiel, oldData, 'teamB', cb);
-                    }
-                ], function (err) {
+                if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
+                    return messages.ErrorSpielNotFilled(res);
+                }
+
+                return spiel.reset(function (err, spiel) {
                     logger.verbose('Reseted Spiel');
                     handler.handleErrorAndResponse(err, res, spiel);
                 });
@@ -231,61 +220,54 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.put('/tore', function (req, res) {
         logger.verbose('Set Result for Spiel %s', req.query.id);
-        const query = Spiel.findById(req.query.id);
-        query.deepPopulate('gruppe jugend teamA teamB').exec(function (err, spiel) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-            if (!spiel) {
-                logger.error('Spiel %s not found', req.query.id);
-                return messages.Error(res, err);
-            }
-            const toreAOld = spiel.toreA;
-            const toreBOld = spiel.toreB;
-            const punkteAOld = spiel.punkteA;
-            const punkteBOld = spiel.punkteB;
-            spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
+        return helpers.checkSpielChangeable(req.query.id, function (err, result) {
+            if (err) return messages.Error(res, err);
+
+            if (!result) return messages.ErrorSpielNotChangeable(res);
+            const query = Spiel.findById(req.query.id);
+            query.deepPopulate('gruppe jugend teamA teamB').populate('fromA fromB').exec(function (err, spiel) {
                 if (err) {
                     return messages.Error(res, err);
                 }
+                if (!spiel) {
+                    logger.error('Spiel %s not found', req.query.id);
+                    return messages.Error(res, err);
+                }
+                if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
+                    return messages.ErrorSpielNotFilled(res);
+                }
 
-                logger.silly('Set Spiel-Result for Team A (%s)', spiel.teamA.name);
-                //Set Ergebnis Team A
-                spiel.teamA.setErgebnis(req.body.toreA, toreAOld, req.body.toreB, toreBOld, spiel.punkteA, punkteAOld, spiel.punkteB, punkteBOld, function (err,
-                                                                                                                                                            teamA) {
+                spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
                     if (err) {
                         return messages.Error(res, err);
                     }
 
-                    logger.silly('Set Spiel-Result for Team A (%s)', spiel.teamA.name);
-                    //Set Ergebnis Team B
-                    spiel.teamB.setErgebnis(req.body.toreB, toreBOld, req.body.toreA, toreAOld, spiel.punkteB, punkteBOld, spiel.punkteA, punkteAOld, function (err,
-                                                                                                                                                                teamB) {
-                        if (err) {
-                            return messages.Error(res, err);
-                        }
-
-                        function sendNextSpielUpdates(cb) {
-                            logger.verbose('Check if Spiel-Reminder for next Games should be sent');
-                            return Spiel.findOne({
-                                nummer: spiel.nummer + 6
-                            }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
-                                if (err) {
-                                    return messages.Error(res, err);
-                                }
-                                if (nextspiel) {
-                                    if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
-                                        logger.verbose('Send Spiel-Reminder for next Games');
-                                        notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
-                                    } else {
-                                        return cb(null, {});
-                                    }
+                    function sendNextSpielUpdates(cb) {
+                        logger.verbose('Check if Spiel-Reminder for next Games should be sent');
+                        return Spiel.findOne({
+                            nummer: spiel.nummer + 6
+                        }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+                            if (nextspiel) {
+                                if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
+                                    logger.verbose('Send Spiel-Reminder for next Games');
+                                    notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
                                 } else {
                                     return cb(null, {});
                                 }
+                            } else {
+                                return cb(null, {});
+                            }
 
-                            });
-                        }
+                        });
+                    }
+
+                    return helpers.fillSpiele(function (err) {
+                        if (err) logger.warn(err);
+
+                        logger.verbose('Filled Spiele');
 
                         if (disableMails !== 'true') {
                             return sendNextSpielUpdates(function (err) {
@@ -359,7 +341,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
                 logger.verbose('All Spiele updated');
 
-                Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').exec(function (err, neueSpiele) {
+                Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').populate('fromA fromB').exec(function (err, neueSpiele) {
                     if (err) {
                         return messages.Error(res, err);
                     }

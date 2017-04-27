@@ -96,6 +96,12 @@
             mockSpiele = {
                 getAll: function () {
                     return $q.when(spiele);
+                },
+                getGruppeDisplay: function (spiel) {
+                    return spiel.gruppe.name;
+                },
+                getTeamDisplay: function (spiel, letter) {
+                    return spiel['team' + letter].name;
                 }
             };
 

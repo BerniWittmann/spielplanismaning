@@ -9,7 +9,7 @@ module.exports = function () {
     const async = require('async');
 
     const messages = require('./messages/messages.js')();
-    const helpers = require('./helpers.js')();
+    const helpers = require('./helpers.js');
     const handler = require('./handler.js');
 
     /**
@@ -49,7 +49,7 @@ module.exports = function () {
      *     }
      **/
     router.get('/', function (req, res) {
-        return helpers.getEntity(Team, 'gruppe jugend', messages.ErrorTeamNotFound, res, req);
+        return helpers.getEntity(Team, 'gruppe jugend gruppe.teams zwischengruppe zwischengruppe.teams', messages.ErrorTeamNotFound, res, req);
     });
 
     /**
@@ -215,29 +215,10 @@ module.exports = function () {
      * @apiUse AuthHeader
      *
      * @apiUse ResetMessage
+     * @apiUse Deprecated
      **/
     router.put('/resetErgebnisse', function (req, res) {
-        const query = Team.find();
-        query.exec(function (err, teams) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            logger.verbose('Reset Ergebnisse for all Teams (%d)', teams.length);
-            async.each(teams, function (team, cb) {
-                logger.silly('Reset Ergebnis for Team %s', team._id);
-                team.resetErgebnis(function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-
-                    return cb();
-                });
-            }, function (err) {
-                logger.verbose('Resetted Results of all Teams');
-                return handler.handleErrorAndMessage(err, res, messages.Reset);
-            });
-        });
+        return messages.ErrorDeprecated(res);
     });
 
     return router;

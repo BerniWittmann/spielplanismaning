@@ -91,6 +91,12 @@
                     },
                     updateTore: function (spiel) {
                         return $q.when(spiel);
+                    },
+                    getGruppeDisplay: function (spiel) {
+                        return spiel.gruppe.name;
+                    },
+                    getTeamDisplay: function (spiel, letter) {
+                        return spiel['team' + letter];
                     }
                 };
                 return mockSpiel;

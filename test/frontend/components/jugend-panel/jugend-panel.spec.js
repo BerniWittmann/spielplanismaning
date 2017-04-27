@@ -30,10 +30,12 @@
             ],
             gruppen: [{
                 _id: 1234,
-                name: 'Test Gruppe 1'
+                name: 'Test Gruppe 1',
+                type: 'normal'
             }, {
                 _id: 1235,
-                name: 'Test Gruppe 2'
+                name: 'Test Gruppe 2',
+                type: 'normal'
             }],
             name: 'Test Jugend',
             color: 'gelb'

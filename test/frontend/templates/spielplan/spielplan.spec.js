@@ -88,7 +88,8 @@
         };
         var mockScope = {
             $watch: function () {
-            }
+            },
+            $on: function () {}
         };
         var mockLogger = {
             enableLogging: function () {},
@@ -151,6 +152,12 @@
             mockSpiele = {
                 getAll: function () {
                     return $q.when(spiele);
+                },
+                getGruppeDisplay: function (spiel) {
+                    return 'Gruppe';
+                },
+                getTeamDisplay: function (spiel, letter) {
+                    return spiel['team' + letter] ? spiel['team' + letter].name : '';
                 }
             };
 

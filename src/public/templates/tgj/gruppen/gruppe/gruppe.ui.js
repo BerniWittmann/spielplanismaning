@@ -21,17 +21,22 @@
                     },
                     spiele: function (spiel, aktiveGruppe) {
                         return spiel.getByGruppe(aktiveGruppe._id, aktiveGruppe.jugend._id);
+                    },
+                    teams: function (team, $stateParams) {
+                        return team.getByGruppe($stateParams.gruppeid);
                     }
                 }
             });
     }
 
-    function GruppeController(aktiveGruppe, spiele) {
+    function GruppeController(aktiveGruppe, spiele, teams) {
         const vm = this;
         vm.loading = true;
 
         _.extend(vm, {
-            gruppe: aktiveGruppe
+            gruppe: aktiveGruppe,
+            teams: teams,
+            key: aktiveGruppe.type === 'normal' ? 'gruppe' : 'zwischenGruppe'
         });
 
         vm.spiele = _.sortBy(spiele, ['nummer']);

@@ -2,7 +2,7 @@
     <div class="col-xs-12 page-header">
         <h3>Spiel #{{vm.spiel.nummer}}
             <small><span><spi-jugend-label jugend="vm.spiel.jugend"></spi-jugend-label></span> <span
-                    class="padding-left-15">{{vm.spiel.gruppe.name}}</span></small>
+                    class="padding-left-15">{{vm.displayGruppe()}}</span></small>
         </h3>
     </div>
 </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="row">
             <div class="col-xs-4">
-                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)" id="spiel-teamA">{{vm.spiel.teamA.name}}</h3>
+                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)" id="spiel-teamA">{{vm.displayTeamA()}}</h3>
             </div>
             <div class="col-xs-4">
                 <div data-ng-if="vm.spiel.beendet" id="spiel-stand">
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="col-xs-4">
-                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamB)" id="spiel-teamB">{{vm.spiel.teamB.name}}</h3>
+                <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamB)" id="spiel-teamB">{{vm.displayTeamB()}}</h3>
             </div>
         </div>
     </div>

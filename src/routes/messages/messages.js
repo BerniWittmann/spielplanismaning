@@ -91,6 +91,15 @@ module.exports = function () {
         },
         ErrorNotFound: function (res) {
             send(require('./ErrorNotFound.js')(), res);
+        },
+        ErrorSpielNotFilled: function (res) {
+            send(require('./ErrorSpielNotFilled.js'), res);
+        },
+        ErrorDeprecated: function (res) {
+            send(require('./ErrorDeprecated.js'), res);
+        },
+        ErrorSpielNotChangeable: function (res) {
+            send(require('./ErrorSpielNotChangeable.js'), res);
         }
     };
 };
