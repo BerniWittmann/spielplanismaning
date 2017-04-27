@@ -355,14 +355,18 @@ function fillSpielFromGruppe(spiel, cb) {
         B: undefined
     };
     return async.each(['A', 'B'], function (letter, next) {
-        return Team.find({gruppe: spiel['from' + letter]._id}).exec(function (err, teams) {
+        return Team.find({$or: [{gruppe: spiel['from' + letter]._id}, {zwischengruppe: spiel['from' + letter].id}]}).exec(function (err, teams) {
             if (err) return next(err);
 
-            return Spiel.find({gruppe: spiel['from' + letter]._id}).exec(function (err, spiele) {
+            return fill(teams, function (err, teams) {
                 if (err) return next(err);
 
-                calculatedTeams[letter] = gruppeFindPlace(teams, spiele, spiel['rank' + letter], spiel['from' + letter].type);
-                return next();
+                return Spiel.find({gruppe: spiel['from' + letter]._id}).exec(function (err, spiele) {
+                    if (err) return next(err);
+
+                    calculatedTeams[letter] = gruppeFindPlace(teams, spiele, spiel['rank' + letter], spiel['from' + letter].type);
+                    return next();
+                });
             });
         });
     }, function (err) {
@@ -424,9 +428,9 @@ function fillSpiele(callback) {
             if (!spiel.from && !spiel.fromType) {
                 return cb();
             }
-            if (spiel.fromType === 'Spiel' && !(spiel.teamA && spiel.teamB)) {
+            if (spiel.fromType === 'Spiel' && !spiel.beendet) {
                 return fillSpielFromSpiel(spiel, cb);
-            } else if (spiel.fromType === 'Gruppe' && !(spiel.teamA && spiel.teamB)) {
+            } else if (spiel.fromType === 'Gruppe' && !spiel.beendet) {
                 return fillSpielFromGruppe(spiel, cb);
             }
             return cb('Invalid fromType ' + spiel.fromType);
@@ -527,6 +531,61 @@ function fill(entity, cb) {
     return cb('Not able to fill');
 }
 
+function checkSpielnextBeendet(spiel, cb) {
+    let checks = [{fromA: spiel._id}, {fromB: spiel._id}];
+    if (spiel.gruppe && spiel.gruppe._id) {
+        checks = checks.concat([{fromA: spiel.gruppe._id}, {fromB: spiel.gruppe._id}]);
+    }
+    return Spiel.find({$or: checks}).exec(function (err, spiele) {
+        if (err) return cb(err);
+
+        const beendete = spiele.filter(function (single) {
+            return single.beendet;
+        });
+
+        return cb(null, beendete.length === 0);
+    });
+}
+
+function checkSpielChangeable(spielid, cb) {
+    return Spiel.findById(spielid).populate('gruppe').exec(function (err, spiel) {
+        if (err) return cb(err);
+
+        if (spiel.label === 'normal') {
+            return checkEndrundeStarted(function (err, res) {
+                if (err) return cb(err);
+
+                if (res) {
+                    return cb(null, false);
+                }
+
+                return checkSpielnextBeendet(spiel, cb);
+            });
+        }
+        return checkSpielnextBeendet(spiel, cb);
+    })
+}
+
+function checkEndrundeStarted(callback) {
+    return Spiel.find({label: {$ne: 'normal'}}).exec(function (err, spiele) {
+        if (err) return callback(err);
+
+        if (!spiele || spiele.length === 0) {
+            return callback(null, false);
+        }
+
+        const endrundeSpieleBeendet = spiele.filter(function (single) {
+            return single.beendet;
+        });
+
+        if (endrundeSpieleBeendet.length > 0) {
+            return callback(null, true);
+        }
+
+        return callback(null, false);
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     getEntity: getEntity,
@@ -543,5 +602,7 @@ module.exports = {
     sortTeams: sortTeams,
     fillSpiele: fillSpiele,
     gruppeFindPlace: gruppeFindPlace,
-    teamCalcErgebnisse: teamCalcErgebnisse
+    teamCalcErgebnisse: teamCalcErgebnisse,
+    checkSpielChangeable: checkSpielChangeable,
+    checkEndrundeStarted: checkEndrundeStarted
 };

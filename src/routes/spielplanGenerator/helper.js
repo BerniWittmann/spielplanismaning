@@ -760,23 +760,7 @@ function calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance) {
 }
 
 function checkEndrundeStarted(callback) {
-    return Spiel.find({label: {$ne: 'normal'}}).exec(function (err, spiele) {
-        if (err) return callback(err);
-
-        if (!spiele || spiele.length === 0) {
-            return callback(null, false);
-        }
-
-        const endrundeSpieleBeendet = spiele.filter(function (single) {
-            return single.beendet;
-        });
-
-        if (endrundeSpieleBeendet.length > 0) {
-            return callback(null, true);
-        }
-
-        return callback(null, false);
-    });
+    return helpers.checkEndrundeStarted(callback);
 }
 
 module.exports = {

@@ -97,6 +97,9 @@ module.exports = function () {
         },
         ErrorDeprecated: function (res) {
             send(require('./ErrorDeprecated.js'), res);
+        },
+        ErrorSpielNotChangeable: function (res) {
+            send(require('./ErrorSpielNotChangeable.js'), res);
         }
     };
 };
