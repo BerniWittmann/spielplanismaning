@@ -60,34 +60,10 @@ JugendSchema.statics.removeTeam = function (jugendid, teamid, cb) {
 
 JugendSchema.methods.fill = function (cb) {
     const self = this;
-    return async.eachOf(self.teams, function (t, index, next) {
-        if (t && t._id) {
-            return t.fill(function (err, team) {
-                if (err) return next(err);
-
-                self.teams[index] = team;
-                self.set('teams', self.teams);
-                return next();
-            });
-        }
-    }, function (err) {
+    return helper.fillOfEntity(self, 'teams', function (err, self) {
         if (err) return cb(err);
 
-        return async.eachOf(self.gruppen, function (g, index, next) {
-            if (g && g._id) {
-                return g.fill(function (err, gruppe) {
-                    if (err) return next(err);
-
-                    self.gruppen[index] = gruppe;
-                    self.set('gruppen', self.gruppen);
-                    return next();
-                });
-            }
-        }, function (err) {
-            if (err) return cb(err);
-
-            return cb(null, self);
-        });
+        return helper.fillOfEntity(self, 'gruppen', cb);
     });
 };
 
@@ -95,3 +71,4 @@ const deepPopulate = require('mongoose-deep-populate')(mongoose);
 JugendSchema.plugin(deepPopulate, {});
 
 mongoose.model('Jugend', JugendSchema);
+const helper = require('./helper.js');

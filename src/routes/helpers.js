@@ -7,10 +7,10 @@ const jsonwebtoken = require('jsonwebtoken');
 const md5 = require('md5');
 const moment = require('moment');
 const mongoose = require('mongoose');
-const Spiel = mongoose.model('Spiel');
 const Team = mongoose.model('Team');
 const Gruppe = mongoose.model('Gruppe');
 const Jugend = mongoose.model('Jugend');
+const Spiel = mongoose.model('Spiel');
 
 function getEntityQuery(model, req) {
     logger.silly('Getting Entity Query');
@@ -100,18 +100,18 @@ function removeLastSlashFromPath(path) {
     return path;
 }
 
-    function verifyToken(req, secret) {
-        logger.silly('Verifying Token');
-        let obj;
-        try {
-            obj = jsonwebtoken.verify(req.get('Authorization'), secret);
-        } catch (err) {
-            logger.warn('Token not valid!');
-            return undefined;
-        }
-        logger.silly('Token is valid');
-        return obj;
+function verifyToken(req, secret) {
+    logger.silly('Verifying Token');
+    let obj;
+    try {
+        obj = jsonwebtoken.verify(req.get('Authorization'), secret);
+    } catch (err) {
+        logger.warn('Token not valid!');
+        return undefined;
     }
+    logger.silly('Token is valid');
+    return obj;
+}
 
 function saveUserAndSendMail(user, res, mail) {
     return user.save(function (err) {
@@ -176,9 +176,9 @@ function getRequiredRouteConfig(routes, path, method, configKey) {
         return routeconfig.split(' ');
     }
 
-        logger.silly('No Route-Config Found');
-        return undefined;
-    }
+    logger.silly('No Route-Config Found');
+    return undefined;
+}
 
 function checkSpielOrderChangeAllowed(spiele) {
     logger.verbose('Check Spiel Order Allowed');
@@ -482,17 +482,11 @@ function teamCalcErgebnisse(team, gruppe, cb) {
         };
 
         return async.each(spiele, function (spiel, next) {
-            if (spiel.teamA.toString() === team._id.toString()) {
-                result.punkte += spiel.punkteA;
-                result.gpunkte += spiel.punkteB;
-                result.tore += spiel.toreA;
-                result.gtore += spiel.toreB;
-            } else {
-                result.punkte += spiel.punkteB;
-                result.gpunkte += spiel.punkteA;
-                result.tore += spiel.toreB;
-                result.gtore += spiel.toreA;
-            }
+            const isTeamA = spiel.teamA.toString() === team._id.toString();
+            result.punkte += spiel['punkte' + isTeamA ? 'A' : 'B'];
+            result.gpunkte += spiel['punkte' + isTeamA ? 'B' : 'A'];
+            result.tore += spiel['tore' + isTeamA ? 'A' : 'B'];
+            result.gtore += spiel['tore' + isTeamA ? 'B' : 'A'];
             return next();
         }, function (err) {
             if (err) return cb(err);

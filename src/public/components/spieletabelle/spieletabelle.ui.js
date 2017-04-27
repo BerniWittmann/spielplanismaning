@@ -20,44 +20,41 @@
         _.extend(vm, {
             gotoTeam: function (team, $event) {
                 if (team && team.name) {
-                    $event.stopPropagation();
-                    $state.go('spi.tgj.team', {
+                    gotoState('spi.tgj.team', {
                         teamid: team._id
-                    });
+                    }, $event);
                 }
             },
             gotoGruppe: function (gruppe, $event) {
                 if (gruppe) {
-                    $event.stopPropagation();
-                    $state.go('spi.tgj.gruppe', {
+                    gotoState('spi.tgj.gruppe', {
                         gruppeid: gruppe._id
-                    });
+                    }, $event);
                 }
             },
             gotoJugend: function (jugend, $event) {
                 if (jugend) {
-                    $event.stopPropagation();
-                    $state.go('spi.tgj.jugend', {
+                    gotoState('spi.tgj.jugend', {
                         jugendid: jugend._id
-                    });
+                    }, $event);
                 }
             },
             gotoSpiel: function (game) {
                 if (game.jugend) {
-                    $state.go('spi.spiel', {
+                    gotoState('spi.spiel', {
                         spielid: game._id
-                    });
+                    }, undefined);
                 }
             },
             gotoPlatz: function (platznummer) {
-                $state.go('spi.platz', {
+                gotoState('spi.platz', {
                     platznummer: platznummer + ''
-                });
+                }, undefined);
             },
             gotoDate: function (date) {
-                $state.go('spi.datum', {
+                gotoState('spi.datum', {
                     datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
-                });
+                }, undefined);
             },
             displayGruppe: function (game) {
                 return spiel.getGruppeDisplay(game);
@@ -69,5 +66,12 @@
                 return spiel.getTeamDisplay(game, 'B');
             }
         });
+
+        function gotoState(state, param, $event) {
+            if ($event) {
+                $event.stopPropagation();
+            }
+            $state.go(state, param);
+        }
     }
 })();

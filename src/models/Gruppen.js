@@ -47,24 +47,11 @@ GruppenSchema.statics.updateTeamInGruppe = function (gruppenid, oldTeam, newTeam
 
 GruppenSchema.methods.fill = function (cb) {
     const self = this;
-    return async.eachOf(self.teams, function (t, index, next) {
-        if (t && t._id) {
-            return t.fill(function (err, team) {
-                if (err) return cb(err);
-
-                self.teams[index] = team;
-                self.set('teams', self.teams);
-                return next();
-            });
-        }
-    }, function (err) {
-        if (err) return cb(err);
-
-        return cb(null, self);
-    });
+    return helper.fillOfEntity(self, 'teams', cb);
 };
 
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
 GruppenSchema.plugin(deepPopulate, {});
 
 mongoose.model('Gruppe', GruppenSchema);
+const helper = require('./helper.js');
