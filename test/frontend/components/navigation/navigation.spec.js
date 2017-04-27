@@ -16,7 +16,11 @@
             },
             includes: function (name) {
                 return _.isEqual(name, mockState.currentStateName);
-            }
+            },
+            current: {
+                name: 'spi.home'
+            },
+            href: function () {}
         };
         var mockAuth = {
             userLoggedIn: true,

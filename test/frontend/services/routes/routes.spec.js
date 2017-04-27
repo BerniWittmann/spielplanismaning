@@ -129,7 +129,7 @@
         });
 
         it('soll die Urls zur Verfügung stellen', function () {
-            expect(routes.urls).to.have.keys(['users', 'config', 'email', 'gruppen', 'jugenden', 'spiele', 'spielplan', 'team', 'ansprechpartner']);
+            expect(routes.urls).to.have.keys(['users', 'config', 'email', 'gruppen', 'jugenden', 'spiele', 'spielplan', 'team', 'ansprechpartner', 'anmeldung']);
             expect(routes.urls.email.base()).to.equal('/api/email');
             expect(routes.urls.users.resetPasswordCheck()).to.equal('/api/users/password-reset/check');
         });

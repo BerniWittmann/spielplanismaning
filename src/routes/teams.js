@@ -197,8 +197,15 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            logger.verbose('Set Name to %s', req.body.name);
-            team.name = req.body.name;
+            const keys = ['name', 'anmeldungsId'];
+
+            keys.forEach(function (key) {
+               if (req.body[key]) {
+                   logger.verbose('Set %s to %s', key, req.body[key]);
+                   team[key] = req.body[key];
+               }
+            });
+
             team.save(function (err, team) {
                 return handler.handleErrorAndResponse(err, res, team);
             });

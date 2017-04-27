@@ -38,13 +38,18 @@
             abbrechen: function () {
                 $uibModalInstance.dismiss('cancel');
             },
-            name: gewTeam.name
+            name: gewTeam.name,
+            anmeldungsId: gewTeam.anmeldungsId
         });
 
         function save(form) {
             if (form.$valid) {
                 vm.loading = true;
-                team.updateName(vm.team, vm.name).then(function (res) {
+                const data = {
+                    name: vm.name,
+                    anmeldungsId: vm.anmeldungsId
+                };
+                team.update(vm.team, data).then(function (res) {
                     vm.loading = false;
                     $uibModalInstance.close(res);
                 });

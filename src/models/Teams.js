@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const async = require('async');
 const _ = require('lodash');
+const logger = require('winston').loggers.get('model');
+const request = require('request');
+const moment = require('moment');
 
 const TeamSchema = new mongoose.Schema({
     name: String,
@@ -29,7 +32,9 @@ const TeamSchema = new mongoose.Schema({
     isPlaceholder: {
         type: Boolean,
         default: false
-    }
+    },
+    anmeldungsId: String,
+    anmeldungsObjectString: String
 }, {
     toObject: {
         virtuals: true
@@ -37,6 +42,13 @@ const TeamSchema = new mongoose.Schema({
     toJSON: {
         virtuals: true
     }
+});
+
+TeamSchema.virtual('anmeldungsObject').get(function () {
+    if (!this.anmeldungsObjectString || this.anmeldungsObjectString.length === 0) {
+        return {};
+    }
+    return JSON.parse(this.anmeldungsObjectString);
 });
 
 TeamSchema.methods.changeName = function (name, cb) {
@@ -73,6 +85,40 @@ TeamSchema.methods.fill = function(callback) {
         if (err) return callback(err);
 
         team.set('ergebnisse', results);
+
+        let getAnmeldungsObjectAgain = false;
+        const anmeldungsObject = team.anmeldungsObjectString ? JSON.parse(team.anmeldungsObjectString) : undefined;
+        if (!anmeldungsObject || _.isEmpty(anmeldungsObject)) {
+            getAnmeldungsObjectAgain = true;
+        } else {
+            if (!anmeldungsObject.expires || moment().isAfter(moment(anmeldungsObject.expires, moment.ISO_8601))) {
+                getAnmeldungsObjectAgain = true;
+            }
+        }
+
+        if (team.anmeldungsId && getAnmeldungsObjectAgain) {
+            logger.verbose('Getting new AnmeldungsObject from Anmeldung for Team %s', team._id);
+            return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId, function (err, status, body) {
+                if (err) {
+                    logger.warn('Error when retrieving Team from Anmeldung', err);
+                }
+
+                body = JSON.parse(body);
+
+                if (status.statusCode < 400 && body && body._id) {
+                    _.assign(body, {'expires': moment().add(1, 'd').toISOString()});
+                    team.anmeldungsObjectString = JSON.stringify(body);
+                    return team.save(function (err, team) {
+                        if (err) {
+                            logger.warn(err);
+                        }
+
+                        return callback(null, team);
+                    });
+                }
+                return callback(null, team);
+            });
+        }
         return callback(null, team);
     });
 };

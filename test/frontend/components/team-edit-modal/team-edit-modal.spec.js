@@ -28,7 +28,7 @@
             };
 
             mockTeam = {
-                updateName: function () {
+                update: function () {
                     return $q.when();
                 }
             };
@@ -48,11 +48,11 @@
 
         it('Der name des Teams kann geändert werden', function () {
             controller.name = 'Neuer Name';
-            var spy = chai.spy.on(mockTeam, 'updateName');
+            var spy = chai.spy.on(mockTeam, 'update');
 
             controller.save(form);
 
-            expect(spy).to.have.been.called.with(gewaehltesTeam, 'Neuer Name');
+            expect(spy).to.have.been.called.with(gewaehltesTeam, {name: 'Neuer Name', anmeldungsId: undefined});
         });
     });
 }());

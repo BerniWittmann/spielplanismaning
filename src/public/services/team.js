@@ -27,8 +27,8 @@
                 return routes.requestDELETE(routes.urls.team.base(), teamid);
             };
 
-            team.updateName = function (team, name) {
-                team.name = name;
+            team.update = function (team, data) {
+                _.assign(team, data);
                 return routes.requestPUTID(routes.urls.team.base(), team._id, team);
             };
 

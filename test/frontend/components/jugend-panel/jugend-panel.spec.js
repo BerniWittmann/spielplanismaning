@@ -70,7 +70,11 @@
             },
             includes: function (statename) {
                 return statename.indexOf('spi.verwaltung') != -1;
-            }
+            },
+            current: {
+                name: 'state'
+            },
+            href: function () {}
         };
 
         var mockGruppe;
