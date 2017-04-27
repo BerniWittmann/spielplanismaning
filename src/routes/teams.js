@@ -197,14 +197,7 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            const keys = ['name', 'anmeldungsId'];
-
-            keys.forEach(function (key) {
-               if (req.body[key]) {
-                   logger.verbose('Set %s to %s', key, req.body[key]);
-                   team[key] = req.body[key];
-               }
-            });
+            team = helpers.updateDocByKeys(team, ['name', 'anmeldungsId'], req.body);
 
             team.save(function (err, team) {
                 return handler.handleErrorAndResponse(err, res, team);

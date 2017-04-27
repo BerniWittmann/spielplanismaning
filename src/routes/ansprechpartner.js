@@ -123,12 +123,7 @@ module.exports = function () {
 
             logger.verbose('Updating Ansprechpartner', req.body);
 
-            ['name', 'email', 'turnier'].forEach(function (property) {
-                if (req.body[property]) {
-                    logger.silly('Set %s to %s', property, req.body[property]);
-                    ansprechpartner[property] = req.body[property];
-                }
-            });
+            ansprechpartner = helpers.updateDocByKeys(ansprechpartner, ['name', 'email', 'turnier'], req.body);
 
             logger.silly('Save', ansprechpartner);
             ansprechpartner.save(function (err, ansprechpartner) {
@@ -136,13 +131,6 @@ module.exports = function () {
             });
         });
     });
-
-    function setProperty(body, property) {
-        if (body[property]) {
-            logger.verbose('Set Name to %s', req.body.name);
-            ansprechpartner.name = req.body.name;
-        }
-    }
 
     return router;
 };
