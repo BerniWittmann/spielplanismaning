@@ -18,6 +18,15 @@ if (process.env.NODE_ENV === 'production') {
     }).install();
 }
 
+function handleException(err) {
+    logger.error(err);
+    if (process.env.NODE_ENV === 'production') {
+        Raven.captureException(err);
+    }
+}
+
+process.on('uncaughtException', handleException);
+process.on('unhandledRejection', handleException);
 
 const winston = require('winston');
 const expressWinston = require('express-winston');
