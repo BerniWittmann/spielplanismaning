@@ -27,14 +27,13 @@
 
     }
 
-    function SpieleDruckController($state, spiele, spiel) {
+    function SpieleDruckController($state, spiele, spiel, $scope) {
         const vm = this;
         vm.loading = true;
 
+        vm.mode = 'all';
         _.extend(vm, {
-            spiele: _.sortBy(_.filter(spiele, function (spiel) {
-                return spiel.teamA || spiel.teamB || spiel.fromA || spiel.fromB;
-            }), ['platz', 'nummer']),
+            spiele: getSpiele(spiele),
             gotoTeam: function (gewaehltesteam) {
                 if (gewaehltesteam && gewaehltesteam.name) {
                     $state.go('spi.tgj.team', {
@@ -58,6 +57,19 @@
             displayTeamB: function(game) {
                 return spiel.getTeamDisplay(game, 'B');
             }
+        });
+
+        function getSpiele(games) {
+            return _.sortBy(_.filter(games, function (spiel) {
+                if (vm.mode !== 'all' && spiel.beendet) {
+                    return false;
+                }
+                return spiel.teamA || spiel.teamB || spiel.fromA || spiel.fromB;
+            }), ['platz', 'nummer'])
+        }
+
+        $scope.$watch('vm.mode', function () {
+            vm.spiele = getSpiele(spiele);
         });
 
         vm.loading = false;

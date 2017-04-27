@@ -59,6 +59,9 @@
         };
         var injector;
         var mockSpiele;
+        var mockScope = {
+            $watch: function () {}
+        };
 
         function resolve(value) {
             return {
@@ -107,7 +110,8 @@
 
             var ctrl = scope.vm = $controller('SpieleDruckController', {
                 spiele: spiele,
-                $state: mockState
+                $state: mockState,
+                $scope: mockScope
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

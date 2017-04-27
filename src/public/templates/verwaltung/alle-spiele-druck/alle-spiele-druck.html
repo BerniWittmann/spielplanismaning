@@ -4,6 +4,10 @@
     </div>
 </div>
 <p class="hidden-print">Diese Seite dient dazu, alle Spiele für die Kampfgerichte auszudrucken. Am besten Safari verwenden, um Fehler im Layout zu vermeiden.</p>
+<select class="hidden-print" data-ng-model="vm.mode">
+    <option selected value="all">Alle Spiele</option>
+    <option value="nichtBeendete">Noch nicht gespielte Spiele</option>
+</select>
 <spi-loader loading="vm.loading"></spi-loader>
 <div data-ng-if="!vm.loading">
     <div class="spiel-print" data-ng-repeat="spiel in vm.spiele track by $index">
