@@ -109,7 +109,8 @@
             mockTeams = {
                 getAll: function () {
                     return $q.when(teams);
-                }
+                },
+                reloadAnmeldeObjekte: function() {}
             };
             mockJugend = {
                 create: function () {
@@ -142,7 +143,8 @@
                 teams: teams,
                 $timeout: mockTimeout,
                 $window: mockWindow,
-                jugenden: jugenden
+                jugenden: jugenden,
+                team: mockTeams
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
