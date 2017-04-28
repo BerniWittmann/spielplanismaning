@@ -107,6 +107,8 @@ app.listen(app.get('port'), function () {
     appLogger.info('Server is listening on port %d', app.get('port'));
 });
 
+app.use(require('./routes/middleware/allowCrossDomain.js'));
+
 //Setup API Authorization
 require('./routes/middleware/authorization.js')(app, secret);
 
