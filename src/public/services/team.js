@@ -32,6 +32,10 @@
                 return routes.requestPUTID(routes.urls.team.base(), team._id, team);
             };
 
+            team.reloadAnmeldeObjekte = function () {
+                return routes.requestPUT(routes.urls.team.reloadAnmeldeObjekte(), undefined);
+            }
+
             return team;
         }]);
 

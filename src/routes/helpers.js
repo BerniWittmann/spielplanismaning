@@ -11,6 +11,7 @@ const Team = mongoose.model('Team');
 const Gruppe = mongoose.model('Gruppe');
 const Jugend = mongoose.model('Jugend');
 const Spiel = mongoose.model('Spiel');
+const request = require('request');
 
 function getEntityQuery(model, req) {
     logger.silly('Getting Entity Query');
@@ -590,6 +591,40 @@ function updateDocByKeys(doc, keys, data) {
     return doc;
 }
 
+function reloadAnmeldeObjects(cb) {
+    return Team.find({anmeldungsId: {$ne: null}}, function (err, teams) {
+        if (err) return cb(err);
+
+        return async.each(teams, function (team, next) {
+            return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId, function (err, status, body) {
+                if (err) {
+                    logger.warn('Error when retrieving Team from Anmeldung', err);
+                    return next();
+                }
+
+                body = JSON.parse(body);
+
+                if (status.statusCode < 400 && body && body._id) {
+                    _.assign(body, {'expires': moment().add(1, 'd').toISOString()});
+                    team.anmeldungsObjectString = JSON.stringify(body);
+                    return team.save(function (err) {
+                        if (err) {
+                            logger.warn(err);
+                        }
+
+                        return next();
+                    });
+                }
+                return next();
+            });
+        }, function (err) {
+            if (err) return cb(err);
+
+            return cb();
+        });
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     getEntity: getEntity,
@@ -609,5 +644,6 @@ module.exports = {
     teamCalcErgebnisse: teamCalcErgebnisse,
     checkSpielChangeable: checkSpielChangeable,
     checkEndrundeStarted: checkEndrundeStarted,
-    updateDocByKeys: updateDocByKeys
+    updateDocByKeys: updateDocByKeys,
+    reloadAnmeldeObjects: reloadAnmeldeObjects
 };

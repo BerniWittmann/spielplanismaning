@@ -30,7 +30,7 @@
 
     }
 
-    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, jugenden, teams, JUGEND_FARBEN) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, jugenden, teams, JUGEND_FARBEN, team) {
         const vm = this;
         vm.loading = true;
 
@@ -51,7 +51,8 @@
                 }
             },
             isLoggedIn: auth.isAdmin(),
-            farben: JUGEND_FARBEN
+            farben: JUGEND_FARBEN,
+            refreshAnmeldeObjects: team.reloadAnmeldeObjekte
         });
 
         vm.loading = false;

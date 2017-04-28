@@ -124,6 +124,11 @@ module.exports = {
             "admin"
         ]
     },
+    "/api/teams/reloadAnmeldeObjekte": {
+        "AUTH": [
+            "admin"
+        ]
+    },
     "/api/jugenden": {
         "AUTH": {
             "POST": [

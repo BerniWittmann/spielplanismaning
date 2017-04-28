@@ -221,5 +221,22 @@ module.exports = function () {
         return messages.ErrorDeprecated(res);
     });
 
+    /**
+     * @api {put} /teams/reloadAnmeldeObjekte Reload AnmeldeObjekte
+     * @apiName ReloadAnmeldeObject
+     * @apiDescription Aktualisert die Anmeldeobjekte der Teams
+     * @apiGroup Teams
+     *
+     * @apiPermission Admin
+     * @apiUse AuthHeader
+     *
+     * @apiUse SuccessMessage
+     **/
+    router.put('/reloadAnmeldeObjekte', function (req, res) {
+        return helpers.reloadAnmeldeObjects(function (err) {
+            return handler.handleErrorAndSuccess(err,res);
+        });
+    });
+
     return router;
 };

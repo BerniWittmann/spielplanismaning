@@ -111,6 +111,9 @@
                     },
                     resetErgebnisse: function () {
                         return ENDPOINT_BASE + '/teams/resetErgebnisse';
+                    },
+                    reloadAnmeldeObjekte: function () {
+                        return ENDPOINT_BASE + '/teams/reloadAnmeldeObjekte'
                     }
                 },
                 anmeldung: {

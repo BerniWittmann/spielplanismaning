@@ -106,7 +106,7 @@ TeamSchema.methods.fill = function(callback) {
                 body = JSON.parse(body);
 
                 if (status.statusCode < 400 && body && body._id) {
-                    _.assign(body, {'expires': moment().add(1, 'd').toISOString()});
+                    _.assign(body, {'expires': moment().add(3, 'h').toISOString()});
                     team.anmeldungsObjectString = JSON.stringify(body);
                     return team.save(function (err, team) {
                         if (err) {
