@@ -25,7 +25,8 @@ module.exports = function (env) {
             version: version,
             env: env.NODE_ENV,
             lockdown: env.LOCKDOWNMODE === 'true',
-            plaetze: env.PLAETZE
+            plaetze: env.PLAETZE,
+            spielmodus: env.SPIEL_MODE
         };
         logger.verbose('Summary', {config: config});
         return res.json(config);
@@ -124,6 +125,25 @@ module.exports = function (env) {
     router.get('/plaetze', function (req, res) {
         logger.verbose('Plätze %d', env.PLAETZE);
         return res.json(env.PLAETZE);
+    });
+
+    /**
+     * @api {get} /config/spielmodus SpielModus
+     * @apiName GetConfig
+     * @apiDescription Gibt den Spielmodus zurück
+     * @apiGroup Config
+     *
+     * @apiSuccess {String} body Spielmodus
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       complex
+     *     }
+     **/
+    router.get('/spielmodus', function (req, res) {
+        logger.verbose('Spielmodus %s', env.SPIEL_MODE);
+        return res.json(env.SPIEL_MODE);
     });
 
     return router;
