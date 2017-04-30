@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const async = require('async');
+const _ = require('lodash');
 
 const SpielSchema = new mongoose.Schema({
     nummer: Number,
@@ -22,6 +23,20 @@ const SpielSchema = new mongoose.Schema({
     teamB: {
         type: Schema.ObjectId,
         ref: 'Team'
+    },
+    complex: {
+        hz1: {
+            toreA: Number,
+            toreB: Number
+        },
+        hz2: {
+            toreA: Number,
+            toreB: Number
+        },
+        hz3: {
+            toreA: Number,
+            toreB: Number
+        }
     },
     toreA: {
         type: Number,
@@ -65,21 +80,21 @@ const SpielSchema = new mongoose.Schema({
     label: String
 });
 
-SpielSchema.methods.setTore = function (toreA, toreB, cb) {
+SpielSchema.methods.setToreNormal = function (toreA, toreB, cb) {
     this.setToreA(toreA, function (err, spiel) {
         if (err) {
-            throw err;
+            return cb(err);
         }
 
         spiel.setToreB(toreB, function (err, spiel) {
             if (err) {
-                throw err;
+                return cb(err);
             }
 
             if (spiel.toreA > spiel.toreB) {
                 spiel.setPunkte(2, 0, function (err, spiel) {
                     if (err) {
-                        throw err;
+                        return cb(err);
                     }
 
                     spiel.save(cb);
@@ -87,14 +102,14 @@ SpielSchema.methods.setTore = function (toreA, toreB, cb) {
             } else if (spiel.toreA < spiel.toreB) {
                 spiel.setPunkte(0, 2, function (err, spiel) {
                     if (err) {
-                        throw err;
+                        return cb(err);
                     }
                     spiel.save(cb);
                 });
             } else {
                 spiel.setPunkte(1, 1, function (err, spiel) {
                     if (err) {
-                        throw err;
+                        return cb(err);
                     }
                     spiel.save(cb);
                 });
@@ -103,25 +118,93 @@ SpielSchema.methods.setTore = function (toreA, toreB, cb) {
     });
 };
 
+SpielSchema.methods.setToreComplex = function(data, cb) {
+    console.log(data);
+    if (!data.hz1 || !data.hz2) {
+        return cb(new Error('Keine Halbzeit Daten gefunden'));
+    }
+
+    this.set('complex', {
+        hz1: data.hz1,
+        hz2: data.hz2,
+        hz3: data.hz3
+    });
+
+    let punkteA = 0;
+    let punkteB = 0;
+
+    _.forEach(['hz1', 'hz2', 'hz3'], function (hz) {
+        const hzData = data[hz];
+
+        if (hzData && hzData.toreA && hzData.toreB) {
+            if (hzData.toreA > hzData.toreB) {
+                punkteA++;
+            } else if (hzData.toreA < hzData.toreB) {
+                punkteB++;
+            } else {
+                punkteA++;
+                punkteB++;
+            }
+        }
+    });
+
+    return this.setPunkte(punkteA, punkteB, function (err, spiel) {
+        if (err) {
+            return cb(err);
+        }
+        spiel.save(cb);
+    });
+};
+
+SpielSchema.methods.setTore = function (data, cb) {
+    if (process.env.SPIEL_MODE === 'complex') {
+        return this.setToreComplex(data, cb);
+    }
+    return this.setToreNormal(data.toreA, data.toreB, cb);
+};
+
 SpielSchema.methods.reset = function (cb) {
     this.setToreA(0, function (err, spiel) {
         if (err) {
-            throw err;
+            return cb(err);
         }
 
         spiel.setToreB(0, function (err, spiel) {
             if (err) {
-                throw err;
+                return cb(err);
             }
-            spiel.resetPunkte(function (err, spiel) {
-                if (err) {
-                    throw err;
-                }
 
-                spiel.save(cb);
+            spiel.resetHalbzeiten(function (err, spiel) {
+                if (err) return cb(err);
+
+                spiel.resetPunkte(function (err, spiel) {
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    spiel.save(cb);
+                });
             });
         });
     });
+};
+
+SpielSchema.methods.resetHalbzeiten = function (cb) {
+    this.set('complex', {
+        hz1: {
+            toreA: 0,
+            toreB: 0
+        },
+        hz2: {
+            toreA: 0,
+            toreB: 0
+        },
+        hz3: {
+            toreA: 0,
+            toreB: 0
+        }
+    });
+    this.save(cb);
 };
 
 SpielSchema.methods.setToreA = function (toreA, cb) {
@@ -149,13 +232,13 @@ SpielSchema.methods.setPunkte = function (punkteA, punkteB, cb) {
                 throw err;
             }
 
-            if (spiel.punkteA === 2 && spiel.punkteB === 0) {
+            if (spiel.punkteA > spiel.punkteB) {
                 spiel.unentschieden = false;
                 spiel.gewinner = spiel.teamA;
-            } else if (spiel.punkteA === 0 && spiel.punkteB === 2) {
+            } else if (spiel.punkteA < spiel.punkteB ) {
                 spiel.unentschieden = false;
                 spiel.gewinner = spiel.teamB;
-            } else if (spiel.punkteA === 1 && spiel.punkteB === 1) {
+            } else if (spiel.punkteA === spiel.punkteB) {
                 spiel.unentschieden = true;
             }
             spiel.beendet = true;

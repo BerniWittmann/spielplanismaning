@@ -237,7 +237,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     return messages.ErrorSpielNotFilled(res);
                 }
 
-                spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
+                spiel.setTore(req.body, function (err, spiel) {
                     if (err) {
                         return messages.Error(res, err);
                     }
