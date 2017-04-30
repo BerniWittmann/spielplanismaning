@@ -5,7 +5,7 @@
 
     describe('Service: Jugend', function () {
         beforeEach(module('spi.jugend'));
-        var ENDPOINT_BASE_URL = '/api/jugenden';
+        var ENDPOINT_BASE_URL = '/api/turniere';
 
         var httpBackend;
         var jugend;

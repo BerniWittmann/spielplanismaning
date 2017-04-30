@@ -77,10 +77,10 @@
                 },
                 jugenden: {
                     base: function () {
-                        return ENDPOINT_BASE + '/jugenden';
+                        return ENDPOINT_BASE + '/turniere';
                     },
                     tore: function () {
-                        return ENDPOINT_BASE + '/jugenden/tore';
+                        return ENDPOINT_BASE + '/turniere/tore';
                     }
                 },
                 spiele: {

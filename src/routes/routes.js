@@ -17,7 +17,7 @@ module.exports = function (app, sendgrid, secret) {
     app.use(API_PREFIX + '/config', config);
     app.use(API_PREFIX + '/teams', teams);
     app.use(API_PREFIX + '/gruppen', gruppen);
-    app.use(API_PREFIX + '/jugenden', jugenden);
+    app.use(API_PREFIX + '/turniere', jugenden);
     app.use(API_PREFIX + '/spiele', spiele);
     app.use(API_PREFIX + '/spielplan', spielplan);
     app.use(API_PREFIX + '/ansprechpartner', ansprechpartner);

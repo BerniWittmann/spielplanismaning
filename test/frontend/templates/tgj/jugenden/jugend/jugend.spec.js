@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Template: Jugend', function () {
-        var URL = '/jugenden/';
+        var URL = '/turniere/';
         var STATE_NAME = 'spi.tgj.jugend';
 
         var jugend = {

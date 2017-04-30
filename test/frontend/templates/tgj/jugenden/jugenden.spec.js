@@ -5,7 +5,7 @@
 
     describe('Template: Jugenden', function () {
         beforeEach(module('spi.constants'));
-        var URL = '/jugenden';
+        var URL = '/turniere';
         var STATE_NAME = 'spi.tgj.jugenden';
 
         var jugenden = [{
