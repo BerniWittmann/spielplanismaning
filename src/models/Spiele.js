@@ -120,23 +120,23 @@ SpielSchema.methods.setToreNormal = function (toreA, toreB, cb) {
 
 SpielSchema.methods.setToreComplex = function(data, cb) {
     console.log(data);
-    if (!data.hz1 || !data.hz2) {
+    if (!data.complex || !data.complex.hz1 || !data.complex.hz2 ) {
         return cb(new Error('Keine Halbzeit Daten gefunden'));
     }
 
     this.set('complex', {
-        hz1: data.hz1,
-        hz2: data.hz2,
-        hz3: data.hz3
+        hz1: data.complex.hz1,
+        hz2: data.complex.hz2,
+        hz3: data.complex.hz3
     });
 
     let punkteA = 0;
     let punkteB = 0;
 
     _.forEach(['hz1', 'hz2', 'hz3'], function (hz) {
-        const hzData = data[hz];
+        const hzData = data.complex[hz];
 
-        if (hzData && hzData.toreA && hzData.toreB) {
+        if (hzData && hzData.toreA && hzData.toreB && hzData.toreA >= 0 && hzData.toreB >= 0) {
             if (hzData.toreA > hzData.toreB) {
                 punkteA++;
             } else if (hzData.toreA < hzData.toreB) {

@@ -56,7 +56,6 @@
             edit: function () {
                 if (vm.canEdit) {
                     if (vm.isComplexMode) {
-                        console.log('Go');
                         return $state.go('spi.spiel', {
                             spielid: $scope.spiSingleSpiel._id,
                             edit: true
