@@ -15,7 +15,8 @@
                 scope: {
                     'spiSingleSpiel': '=',
                     'showJugend': '=',
-                    'showGruppe': '='
+                    'showGruppe': '=',
+                    'isComplexMode': '='
                 }
             };
         })
@@ -41,6 +42,7 @@
             spiel: $scope.spiSingleSpiel,
             showGruppe: $scope.showGruppe,
             showJugend: $scope.showJugend,
+            isComplexMode: $scope.isComplexMode,
             isEditing: false,
             displayGruppe: function () {
                 return spiel.getGruppeDisplay($scope.spiSingleSpiel);
@@ -53,6 +55,13 @@
             },
             edit: function () {
                 if (vm.canEdit) {
+                    if (vm.isComplexMode) {
+                        console.log('Go');
+                        return $state.go('spi.spiel', {
+                            spielid: $scope.spiSingleSpiel._id,
+                            edit: true
+                        });
+                    }
                     vm.isEditing = true;
                     $timeout(function () {
                         $scope.$broadcast("focusTextInput");
@@ -111,8 +120,23 @@
                     datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
                 }, undefined)
             },
-            spielIsNotFilled: spielIsNotFilled()
+            spielIsNotFilled: spielIsNotFilled(),
+            ergebnisDisplay: '   :   '
         });
+
+        function calcErgebnisDisplay() {
+            if (!vm.spiel.beendet) {
+                vm.ergebnisDisplay = '   :   ';
+                return;
+            }
+            if (vm.isComplexMode) {
+                vm.ergebnisDisplay = vm.spiel.punkteA + ' : ' + vm.spiel.punkteB
+            } else {
+                vm.ergebnisDisplay = vm.spiel.toreA + ' : ' + vm.spiel.toreB
+            }
+        }
+
+        calcErgebnisDisplay();
 
         function gotoState(state, param, $event) {
             if ($event) {

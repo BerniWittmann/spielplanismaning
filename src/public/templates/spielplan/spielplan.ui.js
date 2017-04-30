@@ -21,13 +21,16 @@
                     },
                     anzahlPlaetze: function (config) {
                         return config.getPlaetze();
+                    },
+                    spielModus: function (config) {
+                        return config.getSpielmodus();
                     }
                 }
             });
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze) {
+    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus) {
         const vm = this;
         vm.loading = true;
 
@@ -60,7 +63,8 @@
             errorIndex: undefined,
             checkRowInvalid: checkRowInvalid,
             abortEdit: abortEdit,
-            isLastPlatz: isLastPlatz
+            isLastPlatz: isLastPlatz,
+            isComplexMode: spielModus === 'complex'
         });
 
         function checkRowInvalid(index) {
