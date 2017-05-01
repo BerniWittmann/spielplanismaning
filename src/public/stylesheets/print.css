@@ -58,4 +58,28 @@
         padding-top: 5px;
         font-size: 16px;
     }
+
+    .spiel-druck-halbzeiten-table, .spiel-druck-halbzeiten-table tr, .spiel-druck-halbzeiten-table td {
+        border: 1px solid #333;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-punkte {
+        min-width: 50px;
+    }
+    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-placeholder {
+        height: 100px;
+    }
+    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title {
+        padding: 5px 5px 5px 20px;
+    }
+    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title table, .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title tr, .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title td{
+        border: none;
+    }
+
+    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title-punkte-label {
+        font-size: small;
+        font-style: italic;
+    }
 }
