@@ -119,7 +119,6 @@ SpielSchema.methods.setToreNormal = function (toreA, toreB, cb) {
 };
 
 SpielSchema.methods.setToreComplex = function(data, cb) {
-    console.log(data);
     if (!data.complex || !data.complex.hz1 || !data.complex.hz2 ) {
         return cb(new Error('Keine Halbzeit Daten gefunden'));
     }

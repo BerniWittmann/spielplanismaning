@@ -143,7 +143,7 @@
         }
 
         function checkHZValid(data) {
-            if (!data.toreA || !(data.toreA >= 0) || !data.toreB || !(data.toreB >= 0)) {
+            if (!(data.toreA >= 0) || !(data.toreB >= 0)) {
                 return false;
             }
             if (data.toreA === data.toreB) {
