@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.spiele-druck.ui', [
-            'ui.router', 'spi.spiel', 'spi.auth'
+            'ui.router', 'spi.spiel', 'spi.auth', 'spi.config'
         ])
         .config(states)
         .controller('SpieleDruckController', SpieleDruckController);
@@ -18,6 +18,9 @@
                 resolve: {
                     spiele: function (spiel) {
                         return spiel.getAll();
+                    },
+                    mannschaftslisten: function (config) {
+                        return config.getMannschaftslisten();
                     }
                 },
                 data: {
@@ -27,7 +30,7 @@
 
     }
 
-    function SpieleDruckController($state, spiele, spiel, $scope, $rootScope) {
+    function SpieleDruckController($state, spiele, spiel, $scope, $rootScope, mannschaftslisten) {
         const vm = this;
         vm.loading = true;
 
@@ -51,27 +54,54 @@
             displayGruppe: function (game) {
                 return spiel.getGruppeDisplay(game);
             },
-            displayTeamA: function(game) {
+            displayTeamA: function (game) {
                 return spiel.getTeamDisplay(game, 'A');
             },
-            displayTeamB: function(game) {
+            displayTeamB: function (game) {
                 return spiel.getTeamDisplay(game, 'B');
             },
-            isComplexMode: $rootScope.isComplexMode
+            isComplexMode: $rootScope.isComplexMode,
+            mannschaftslistenEnabled: mannschaftslisten === 'true',
+            getSpielerArray: function (team) {
+                if (!team || !team.anmeldungsObject || !team.anmeldungsObject.spieler) {
+                    return new Array(14);
+                }
+
+                return fillUpSpieler(team.anmeldungsObject.spieler);
+            }
         });
 
         function getSpiele(games) {
-            return _.sortBy(_.filter(games, function (spiel) {
+            return _.orderBy(_.filter(games, function (spiel) {
                 if (vm.mode !== 'all' && spiel.beendet) {
                     return false;
                 }
                 return spiel.teamA || spiel.teamB || spiel.fromA || spiel.fromB;
-            }), ['platz', 'nummer'])
+            }), ['platz', 'nummer'], ['asc', 'desc'])
+        }
+
+        function fillUpSpieler(spieler) {
+            if (spieler.length >= 14) {
+                return _.sortBy(spieler.slice(0, 14), 'nummer');
+            }
+            const length = Math.max(14 - spieler.length, 0);
+            return _.sortBy(spieler.concat(new Array(length)), 'nummer');
         }
 
         $scope.$watch('vm.mode', function () {
             vm.spiele = getSpiele(spiele);
         });
+
+        $scope.trackSpielerFunction = function (spiel, team, letter) {
+            let teamID;
+            if (team) {
+                teamID = team._id;
+            }
+            if (!teamID) {
+                teamID = spiel['from' + letter] + spiel['rank' + letter];
+            }
+            return spiel._id + ':' + teamID + ':';
+        };
 
         vm.loading = false;
     }

@@ -69,7 +69,7 @@
         min-width: 50px;
     }
     .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-placeholder {
-        height: 100px;
+        height: 70px;
     }
     .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title {
         padding: 5px 5px 5px 20px;
@@ -81,5 +81,29 @@
     .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title-punkte-label {
         font-size: small;
         font-style: italic;
+    }
+
+
+    .spieler-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .spieler-table, .spieler-table tr, .spieler-table td, .spieler-table th {
+        border: 1px solid #333;
+    }
+
+    .spieler-table .number-element {
+        min-width: 20px;
+    }
+
+    .spieler-table td, .spieler-table th {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    h3 {
+        margin-top: 5px !important;
     }
 }

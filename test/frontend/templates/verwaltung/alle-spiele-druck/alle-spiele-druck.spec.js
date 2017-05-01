@@ -8,6 +8,7 @@
         var STATE_NAME = 'spi.verwaltung.spiele-druck';
 
         var spiele = [{
+            _id:'s1',
             nummer: 1,
             uhrzeit: '09:00',
             teamA: {
@@ -23,6 +24,7 @@
                 name: 'Gruppe 1'
             }
         }, {
+            _id:'s2',
             nummer: 2,
             uhrzeit: '09:10',
             teamA: {
@@ -38,6 +40,7 @@
                 name: 'Gruppe 1'
             }
         }, {
+            _id:'s3',
             nummer: 3,
             uhrzeit: '09:20',
             teamA: {
@@ -111,7 +114,8 @@
             var ctrl = scope.vm = $controller('SpieleDruckController', {
                 spiele: spiele,
                 $state: mockState,
-                $scope: mockScope
+                $scope: mockScope,
+                mannschaftslisten: 'false'
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -156,11 +160,11 @@
 
         it('es werden die Spiele angezeigt', function () {
             render();
-            var result = element.find('h2');
+            var result = element.find('.spiel-time');
             expect(result).to.have.lengthOf(3);
-            expect(angular.element(result[0]).text()).to.contain('09:00 Uhr');
+            expect(angular.element(result[0]).text()).to.contain('09:20 Uhr');
             expect(angular.element(result[1]).text()).to.contain('09:10 Uhr');
-            expect(angular.element(result[2]).text()).to.contain('09:20 Uhr');
+            expect(angular.element(result[2]).text()).to.contain('09:00 Uhr');
             expect(ctrl.spiele).to.have.lengthOf(3);
         });
 
@@ -181,7 +185,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with({teamid: 't1'});
+            expect(spy).to.have.been.called.with({teamid: 't3'});
         });
 
         it('Beim Klick auf die Team B wird man zu Team B navigiert', function () {
@@ -191,7 +195,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with({teamid: 't2'});
+            expect(spy).to.have.been.called.with({teamid: 't1'});
         });
 
     });
