@@ -14,7 +14,7 @@
             controllerAs: 'vm'
         });
 
-    function SpieleTabellenController($state, spiel) {
+    function SpieleTabellenController($state, spiel, $rootScope) {
         const vm = this;
 
         _.extend(vm, {
@@ -64,7 +64,14 @@
             },
             displayTeamB: function(game) {
                 return spiel.getTeamDisplay(game, 'B');
-            }
+            },
+            getErgebnisDisplay: function (game) {
+                if (vm.isComplexMode) {
+                    return game.punkteA + ' : ' + game.punkteB;
+                }
+                return game.toreA + ' : ' + game.toreB;
+            },
+            isComplexMode: $rootScope.isComplexMode
         });
 
         function gotoState(state, param, $event) {

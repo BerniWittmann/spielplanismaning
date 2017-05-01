@@ -287,3 +287,24 @@ spi-panel-titel {
 spi-panel-title spi-jugend-label {
     display: flex;
 }
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.spielHZInput {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.spielnumberinput {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    text-align: center;
+}

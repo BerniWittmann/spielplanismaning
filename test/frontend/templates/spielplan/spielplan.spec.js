@@ -144,7 +144,8 @@
                 $state: mockState,
                 spiel: mockSpiel,
                 auth: mockAuth,
-                anzahlPlaetze: 3
+                anzahlPlaetze: 3,
+                spielModus: 'normal'
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

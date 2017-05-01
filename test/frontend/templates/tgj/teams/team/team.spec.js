@@ -184,7 +184,7 @@
 
         it('soll ein Button zum Abonnieren angezeigt werden', function () {
             render();
-            var result = element.find('h3 > button');
+            var result = element.find('.page-header > button');
             expect(result).to.exist;
             expect(result.text()).to.contain('Team abonnieren');
             expect(result).not.to.have.class('disabled');
@@ -192,7 +192,7 @@
 
         it('Beim Klick auf den Abonnieren-Button soll das Team abonniert werden können', function () {
             render();
-            var result = element.find('h3 > button');
+            var result = element.find('.page-header > button');
             var spy = chai.spy.on(mockTeamAbonnierenDialog, 'open');
 
             mockEmail.isSubscribed = true;

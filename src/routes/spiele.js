@@ -237,8 +237,11 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     return messages.ErrorSpielNotFilled(res);
                 }
 
-                spiel.setTore(req.body.toreA, req.body.toreB, function (err, spiel) {
+                spiel.setTore(req.body, function (err, spiel) {
                     if (err) {
+                        if (err.message === 'Keine Halbzeit Daten gefunden') {
+                            return messages.ErrorBadRequest(res, err.message);
+                        }
                         return messages.Error(res, err);
                     }
 

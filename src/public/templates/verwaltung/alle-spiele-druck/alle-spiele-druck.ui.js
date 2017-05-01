@@ -27,7 +27,7 @@
 
     }
 
-    function SpieleDruckController($state, spiele, spiel, $scope) {
+    function SpieleDruckController($state, spiele, spiel, $scope, $rootScope) {
         const vm = this;
         vm.loading = true;
 
@@ -56,7 +56,8 @@
             },
             displayTeamB: function(game) {
                 return spiel.getTeamDisplay(game, 'B');
-            }
+            },
+            isComplexMode: $rootScope.isComplexMode
         });
 
         function getSpiele(games) {

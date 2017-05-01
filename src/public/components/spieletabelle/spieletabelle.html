@@ -9,7 +9,7 @@
             <td>Gruppe</td>
             <td>Heim</td>
             <td>Gast</td>
-            <td>Spielstand</td>
+            <td>Ergebnis</td>
         </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
                 data-ng-class="{'highlightTeamName': spiel.teamB && spiel.teamB._id === vm.highlightedTeam._id}">{{vm.displayTeamB(spiel)}}
             </td>
             <td>
-                <div data-ng-if="spiel.jugend && spiel.beendet">{{spiel.toreA}} : {{spiel.toreB}}</div>
+                <div data-ng-if="spiel.jugend && spiel.beendet">{{vm.getErgebnisDisplay(spiel)}}</div>
             </td>
         </tr>
         </tbody>

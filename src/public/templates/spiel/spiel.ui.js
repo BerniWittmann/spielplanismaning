@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.spiel.ui', [
-            'ui.router', 'spi.spiel'
+            'ui.router', 'spi.spiel', 'spi.config', 'spi.auth'
         ])
         .config(states)
         .controller('SpielController', SpielController)
@@ -19,7 +19,13 @@
                 resolve: {
                     aktivesSpiel: function (spiel, $stateParams) {
                         return spiel.get($stateParams.spielid);
+                    },
+                    spielModus: function (config) {
+                        return config.getSpielmodus();
                     }
+                },
+                params: {
+                    edit: false
                 }
             });
 
@@ -57,9 +63,26 @@
         }
     }
 
-    function SpielController($state, aktivesSpiel, spiel) {
+    function SpielController($state, aktivesSpiel, spiel, spielModus, auth, $stateParams, toastr) {
         const vm = this;
         vm.loading = true;
+
+        if (!aktivesSpiel.complex || !aktivesSpiel.complex.hz1 || !aktivesSpiel.complex.hz2 || !aktivesSpiel.complex.hz3) {
+            aktivesSpiel.complex = {
+                hz1: {
+                    toreA: undefined,
+                    toreB: undefined
+                },
+                hz2: {
+                    toreA: undefined,
+                    toreB: undefined
+                },
+                hz3: {
+                    toreA: undefined,
+                    toreB: undefined
+                }
+            }
+        }
 
         _.extend(vm, {
             spiel: aktivesSpiel,
@@ -78,8 +101,78 @@
             },
             displayTeamB: function() {
                 return spiel.getTeamDisplay(aktivesSpiel, 'B');
+            },
+            isComplexMode: spielModus === 'complex',
+            canEdit: auth.isAdmin() || auth.isBearbeiter(),
+            edit: function ()  {
+                if (vm.canEdit && vm.isComplexMode) {
+                    vm.isEditing = true;
+                }
+            },
+            abort: function () {
+                vm.spiel = _.cloneDeep(vm.backupSpiel);
+                vm.isEditing = false;
+            },
+            save: save,
+            isEditing: false,
+            backupSpiel: _.cloneDeep(aktivesSpiel),
+            reset: function () {
+                if (vm.canEdit) {
+                    return spiel.resetSpiel(vm.spiel).then(function (res) {
+                        toastr.success('Spiel wurde zurückgesetzt');
+                        vm.spiel = res;
+                        vm.isEditing = false;
+                    });
+                }
             }
         });
+
+        if (vm.canEdit) {
+            vm.isEditing = $stateParams.edit || false;
+        }
+
+        function save() {
+            if (!checkComplexData(vm.spiel.complex)) {
+                return;
+            }
+            return spiel.updateTore(vm.spiel).then(function (res) {
+                vm.backupSpiel = _.cloneDeep(res);
+                vm.spiel = res;
+                vm.isEditing = false;
+            });
+        }
+
+        function checkHZValid(data) {
+            if (!(data.toreA >= 0) || !(data.toreB >= 0)) {
+                return false;
+            }
+            if (data.toreA === data.toreB) {
+                toastr.warning('Es darf nicht Unentschieden ausgehen', 'Falsche Spiel-Daten eingegeben');
+                return false;
+            }
+            return true;
+        }
+
+        function checkComplexData(data) {
+            if (!data.hz1 || !data.hz2 || !data.hz3) {
+                return false;
+            }
+
+            if (!checkHZValid(data.hz1) || !checkHZValid(data.hz2)) {
+                toastr.warning('Nicht alle Felder ausgefüllt', 'Falsche Spiel-Daten eingegeben');
+                return false;
+            }
+
+            const penaltyValid = checkHZValid(data.hz3);
+            if (data.hz1.toreA > data.hz1.toreB && data.hz2.toreA < data.hz2.toreA || data.hz1.toreA < data.hz1.toreB && data.hz2.toreA > data.hz2.toreB) {
+                if (!penaltyValid) {
+                    toastr.warning('Nicht alle Felder ausgefüllt', 'Falsche Spiel-Daten eingegeben');
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         vm.loading = false;
     }

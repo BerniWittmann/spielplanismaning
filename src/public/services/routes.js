@@ -57,6 +57,9 @@
                     },
                     plaetze: function () {
                         return ENDPOINT_BASE + '/config/plaetze';
+                    },
+                    spielmodus: function () {
+                        return ENDPOINT_BASE + '/config/spielmodus';
                     }
                 },
                 email: {

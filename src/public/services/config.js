@@ -9,7 +9,8 @@
                 env: undefined,
                 version: undefined,
                 lockdown: undefined,
-                plaetze: undefined
+                plaetze: undefined,
+                spielmodus: undefined
             };
 
             function parseToInt(str) {
@@ -37,6 +38,7 @@
                     config.version = data.version || config.version;
                     config.lockdown = _.isUndefined(data.lockdown) ? config.lockdown : data.lockdown;
                     config.plaetze = parseInt(data.plaetze, 10) || config.plaetze;
+                    config.spielmodus = data.spielmodus || config.spielmodus;
                     return config;
                 });
             }
@@ -57,12 +59,17 @@
                 return getConfigParam('plaetze');
             }
 
+            function getSpielmodus() {
+                return getConfigParam('spielmodus')
+            }
+
             return {
                 getConfig: getConfig,
                 getEnv: getEnv,
                 getVersion: getVersion,
                 getLockdown: getLockdown,
-                getPlaetze: getPlaetze
+                getPlaetze: getPlaetze,
+                getSpielmodus: getSpielmodus
             };
         }]);
 

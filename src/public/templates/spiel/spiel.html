@@ -4,6 +4,17 @@
             <small><span><spi-jugend-label jugend="vm.spiel.jugend"></spi-jugend-label></span> <span
                     class="padding-left-15">{{vm.displayGruppe()}}</span></small>
         </h3>
+        <div class="pull-right" data-ng-if="vm.canEdit">
+            <button class="btn btn-primary" data-ng-click="vm.edit()"
+                    data-ng-if="vm.isComplexMode && !vm.isEditing"><i class="fa fa-pencil"></i> Bearbeiten
+            </button>
+            <button class="btn btn-danger" data-ng-click="vm.abort()" data-ng-if="vm.isEditing"><i
+                    class="fa fa-times"></i> Abbrechen
+            </button>
+            <button class="btn btn-success" data-ng-click="vm.save()"
+                    data-ng-if="vm.isEditing && vm.canEdit"><i class="fa fa-check"></i> Speichern
+            </button>
+        </div>
     </div>
 </div>
 
@@ -33,11 +44,97 @@
                 <h3 data-ng-click="vm.gotoTeam(vm.spiel.teamA)" id="spiel-teamA">{{vm.displayTeamA()}}</h3>
             </div>
             <div class="col-xs-4">
-                <div data-ng-if="vm.spiel.beendet" id="spiel-stand">
-                    <div class="score hidden-xs" data-scorea="{{vm.spiel.toreA}}" data-scoreb="{{vm.spiel.toreB}}"
-                          flipcounter="{}">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}</div>
-                    <div class="score-normal visible-xs-block">
-                        {{vm.spiel.toreA}} : {{vm.spiel.toreB}}
+                <div data-ng-if="vm.isComplexMode">
+                    <div data-ng-if="vm.isEditing">
+                        <div>
+                            <p class="lead">Halbzeit 1</p>
+                            <div class="spielHZInput">
+                                <input type="number" min="0" data-ng-model="vm.spiel.complex.hz1.toreA"
+                                       class="spielnumberinput"
+                                       data-ng-click="$event.stopPropagation();" data-focus-on="focusTextInput"
+                                       data-ng-enter="vm.save()"
+                                       title="toreHZ1A">
+                                <span> : </span>
+                                <input type="number" min="0" data-ng-model="vm.spiel.complex.hz1.toreB"
+                                       class="spielnumberinput"
+                                       data-ng-click="$event.stopPropagation();" data-ng-enter="vm.save()"
+                                       title="toreHZ1B">
+                            </div>
+                        </div>
+                        <div>
+                            <p class="lead">Halbzeit 2</p>
+                            <div class="spielHZInput">
+                                <input type="number" min="0" data-ng-model="vm.spiel.complex.hz2.toreA"
+                                       class="spielnumberinput"
+                                       data-ng-click="$event.stopPropagation();" data-focus-on="focusTextInput"
+                                       data-ng-enter="vm.save()"
+                                       title="toreHZ2A">
+                                <span> : </span>
+                                <input type="number" min="0" data-ng-model="vm.spiel.complex.hz2.toreB"
+                                       class="spielnumberinput"
+                                       data-ng-click="$event.stopPropagation();" data-ng-enter="vm.save()"
+                                       title="toreHZ2B">
+
+                            </div>
+                        </div>
+                        <div>
+                            <p class="lead">Penalty</p>
+                            <div class="spielHZInput">
+                                <input type="number" min="0" data-ng-model="vm.spiel.complex.hz3.toreA"
+                                       class="spielnumberinput"
+                                       data-ng-click="$event.stopPropagation();" data-focus-on="focusTextInput"
+                                       data-ng-enter="vm.save()"
+                                       title="toreHZ3A">
+                                <span> : </span>
+                                <input type="number" min="0" data-ng-model="vm.spiel.complex.hz3.toreB"
+                                       class="spielnumberinput"
+                                       data-ng-click="$event.stopPropagation();" data-ng-enter="vm.save()"
+                                       title="toreHZ3B">
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-if="!vm.isEditing && vm.spiel.beendet">
+                        <div data-ng-if="vm.spiel.complex && vm.spiel.complex.hz1" id="spiel-stand-hz1">
+                            <p class="lead">Halbzeit 1</p>
+                            <div class="score hidden-xs" data-scorea="{{vm.spiel.complex.hz1.toreA}}"
+                                 data-scoreb="{{vm.spiel.complex.hz1.toreB}}"
+                                 flipcounter="{}">{{vm.spiel.complex.hz1.toreA}} : {{vm.spiel.complex.hz1.toreB}}
+                            </div>
+                            <div class="score-normal visible-xs-block">
+                                {{vm.spiel.complex.hz1.toreA}} : {{vm.spiel.complex.hz1.toreB}}
+                            </div>
+                        </div>
+                        <div data-ng-if="vm.spiel.complex && vm.spiel.complex.hz2" id="spiel-stand-hz2">
+                            <p class="lead">Halbzeit 2</p>
+                            <div class="score hidden-xs" data-scorea="{{vm.spiel.complex.hz2.toreA}}"
+                                 data-scoreb="{{vm.spiel.complex.hz2.toreB}}"
+                                 flipcounter="{}">{{vm.spiel.complex.hz2.toreA}} : {{vm.spiel.complex.hz2.toreB}}
+                            </div>
+                            <div class="score-normal visible-xs-block">
+                                {{vm.spiel.complex.hz2.toreA}} : {{vm.spiel.complex.hz2.toreB}}
+                            </div>
+                        </div>
+                        <br>
+                        <div data-ng-if="vm.spiel.complex && vm.spiel.complex.hz3 && (vm.spiel.complex.hz3.toreA > 0 || vm.spiel.complex.hz3.toreB > 0)" id="spiel-stand-hz3">
+                            <p class="lead">Penalty</p>
+                            <div class="score hidden-xs" data-scorea="{{vm.spiel.complex.hz3.toreA}}"
+                                 data-scoreb="{{vm.spiel.complex.hz3.toreB}}"
+                                 flipcounter="{}">{{vm.spiel.complex.hz3.toreA}} : {{vm.spiel.complex.hz3.toreB}}
+                            </div>
+                            <div class="score-normal visible-xs-block">
+                                {{vm.spiel.complex.hz3.toreA}} : {{vm.spiel.complex.hz3.toreB}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-if="!vm.isComplexMode">
+                    <div data-ng-if="vm.spiel.beendet" id="spiel-stand">
+                        <div class="score hidden-xs" data-scorea="{{vm.spiel.toreA}}" data-scoreb="{{vm.spiel.toreB}}"
+                             flipcounter="{}">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}
+                        </div>
+                        <div class="score-normal visible-xs-block">
+                            {{vm.spiel.toreA}} : {{vm.spiel.toreB}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,8 +147,14 @@
 
 <div data-ng-if="!vm.loading && vm.spiel.beendet" class="row text-center">
     <div class="col-xs-12">
-        <h5 data-ng-if="vm.spiel.unentschieden" id="spiel-unentschieden">Unentschieden</h5>
-        <h5 data-ng-if="!vm.spiel.unentschieden" data-ng-click="vm.gotoTeam(vm.spiel.gewinner)" id="spiel-gewinner">
-            {{vm.spiel.gewinner.name}} hat gewonnen</h5>
+        <h4 data-ng-if="vm.spiel.unentschieden" id="spiel-unentschieden">Unentschieden</h4>
+        <h4 data-ng-if="!vm.spiel.unentschieden" data-ng-click="vm.gotoTeam(vm.spiel.gewinner)" id="spiel-gewinner">
+            {{vm.spiel.gewinner.name}} hat gewonnen</h4>
+    </div>
+</div>
+
+<div data-ng-if="vm.isEditing && vm.canEdit && vm.spiel.beendet" class="row text-center">
+    <div class="col-xs-12">
+        <button class="btn btn-danger" data-ng-click="vm.reset()"><i class="fa fa-trash"></i> Spiel zurücksetzen</button>
     </div>
 </div>

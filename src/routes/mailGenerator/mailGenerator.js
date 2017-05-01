@@ -35,11 +35,16 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 mail.setText('Ergebnis-Update: ' + team.name + ' hat ' + spielausgang);
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
 
+                const isComplexMode = process.env.SPIEL_MODE === 'complex';
+                const tore = {
+                    toreA: isComplexMode ? spiel.punkteA : spiel.toreA,
+                    toreB: isComplexMode ? spiel.punkteB : spiel.toreA
+                };
                 const data = {
                     teamname: team.name,
                     teamaname: spiel.teamA.name,
-                    toreA: spiel.toreA,
-                    toreB: spiel.toreB,
+                    toreA: tore.toreA,
+                    toreB: tore.toreB,
                     teambname: spiel.teamB.name,
                     spielausgang: spielausgang,
                     spielUrl: url + 'spiel/' + spiel._id,
