@@ -47,6 +47,7 @@
 
         function register(form) {
             if (form.$valid) {
+                form.$setUntouched();
                 auth.register(vm.user).then(function () {
                     vm.registerMsg = vm.user.username + ' wurde registriert.';
                     vm.user = {};
@@ -58,6 +59,7 @@
 
         function deleteUser(form) {
             if (form.$valid) {
+                form.$setUntouched();
                 if (auth.currentUser() === vm.username) {
                     vm.delErr = 'Gerade angemeldeter User kann nicht gelöscht werden.';
                     return vm.delErr;

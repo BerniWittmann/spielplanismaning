@@ -74,6 +74,7 @@
                 vm.sent = true;
                 vm.mail.name = (vm.mail.vorname || '') + ' ' + (vm.mail.nachname || '');
                 vm.mail.datetime = moment().format('DD.MM.YYYY HH:mm');
+                form.$setUntouched();
                 email.sendBugReport(vm.mail).then(function () {
                     vm.sent = true;
                     $timeout(close, 5000);

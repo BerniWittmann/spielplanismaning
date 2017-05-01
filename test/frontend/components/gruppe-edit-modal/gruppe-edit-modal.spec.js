@@ -13,7 +13,7 @@
         go: function () {
         }
     };
-    var form = {$valid: true, $setPristine: function () {}};
+    var form = {$valid: true, $setUntouched: function () {}};
 
     var mockTeams = [
         {

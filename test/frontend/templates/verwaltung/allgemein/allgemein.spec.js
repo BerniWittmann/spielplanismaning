@@ -14,7 +14,7 @@
         beforeEach(module('htmlModule'));
 
         var mockAuth;
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
         var injector;
 
         function resolve(value) {

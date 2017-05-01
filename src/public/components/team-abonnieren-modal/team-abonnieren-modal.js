@@ -51,6 +51,7 @@
             addAbonnent: function (form) {
                 vm.submitted = true;
                 if (form.$valid && !vm.bereitsabonniert) {
+                    form.$setUntouched();
                     email.addSubscriber(vm.abonnent).then(function () {
                         vm.message = {
                             type: 'success',

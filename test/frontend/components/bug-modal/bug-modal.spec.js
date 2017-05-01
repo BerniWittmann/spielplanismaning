@@ -15,7 +15,7 @@
     var username = 'Username';
     var version = '0.0.0';
     var env = 'testing';
-    var form = {$valid: true};
+    var form = {$valid: true, $setUntouched: function () {}};
 
     describe('Component: Bug-Modal', function () {
         beforeEach(module('spi.components.bug-modal.ui'));

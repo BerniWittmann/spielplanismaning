@@ -11,7 +11,7 @@
 
     var gewaehltesTeam;
     var mockTeam;
-    var form = {$valid: true};
+    var form = {$valid: true, $setUntouched: function () {}};
 
     describe('Component: Team-Edit-Modal', function () {
         beforeEach(module('spi.components.team-edit-modal.ui'));

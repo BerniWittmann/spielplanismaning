@@ -19,7 +19,7 @@
                 _id: 'grp2'
             }
         };
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
         var abonnement = [{
             team: '1',
             email: 'test@t.de'

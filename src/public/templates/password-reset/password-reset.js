@@ -75,6 +75,7 @@
         vm.username = undefined;
         vm.resetPassword = function (form) {
             if(form.$valid && vm.password && isValidToken && vm.username && _.isEqual(vm.password, vm.passwordCheck)) {
+                form.$setUntouched();
                 auth.resetPassword(vm.username, $stateParams.token, vm.password).then(function () {
                     toastr.success('Dein Passwort wurde zurückgesetzt, du kannst dich jetzt abmelden.', 'Passwort zurückgesetzt');
                     $state.go('spi.login');

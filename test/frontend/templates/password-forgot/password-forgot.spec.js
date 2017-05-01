@@ -19,7 +19,7 @@
             error: function () {
             }
         };
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
 
         function compileRouteTemplateWithController($injector, state) {
             $rootScope = $injector.get('$rootScope');
