@@ -15,7 +15,8 @@
             env: 'testing',
             version: '1.0.0',
             lockdown: true,
-            plaetze: '3'
+            plaetze: '3',
+            spielmodus: 'normal'
         };
         var config;
 

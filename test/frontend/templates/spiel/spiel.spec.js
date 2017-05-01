@@ -46,6 +46,17 @@
         var mockStateParams = {
             spielid: '1'
         };
+        var mockAuth = {
+            isAdmin: function () {
+                return true;
+            },
+            isBearbeiter: function () {
+                return false;
+            }
+        };
+        var mockToastr = {
+            warning: function () {}
+        };
         var injector;
         function resolve(value) {
             return {forStateAndView: function (state, view) {
@@ -94,7 +105,11 @@
             var ctrl = scope.vm = $controller('SpielController', {
                 aktivesSpiel: spiel,
                 $state: mockState,
-                $stateParams: mockStateParams
+                $stateParams: mockStateParams,
+                spielModus: 'normal',
+                auth: mockAuth,
+                toastr: mockToastr,
+                spiel: mockSpiel
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
