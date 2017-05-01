@@ -3,7 +3,7 @@
 
     angular
         .module('spi.components.gruppe-edit-modal.ui', [
-            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.components.team-edit-modal.ui', 'spi.components.bestaetigen-modal.ui'
+            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.spielplan', 'spi.components.team-edit-modal.ui', 'spi.components.bestaetigen-modal.ui', 'spi.anmeldung'
         ])
         .service('GruppeEditierenDialog', GruppeEditierenDialog)
         .controller('GruppeEditierenController', GruppeEditierenController);
@@ -33,9 +33,7 @@
         }
     }
 
-    function GruppeEditierenController(
-        $state, $uibModalInstance, team, teamPromise, gewGruppe, spielplan, TeamEditierenDialog, BestaetigenDialog
-    ) {
+    function GruppeEditierenController($state, $uibModalInstance, team, teamPromise, gewGruppe, spielplan, TeamEditierenDialog, BestaetigenDialog, $scope, anmeldung) {
         const vm = this;
         vm.loading = true;
 
@@ -49,7 +47,8 @@
             gotoTeam: gotoTeam,
             deleteTeam: deleteTeam,
             editTeam: editTeam,
-            askDeleteTeam: askDeleteTeam
+            askDeleteTeam: askDeleteTeam,
+            objectIdPattern: /^[a-f\d]{24}$/
         });
 
         vm.loading = false;
@@ -107,5 +106,16 @@
         function abbrechen() {
             $uibModalInstance.dismiss('cancel');
         }
+
+        $scope.$watch('vm.team.anmeldungsId', function () {
+            if (vm.team.anmeldungsId) {
+                anmeldung.get(vm.team.anmeldungsId).then(function (res) {
+                    if (res._id && res.displayName) {
+                        vm.team.name = res.displayName;
+                    }
+                });
+            }
+        });
+
     }
 })();

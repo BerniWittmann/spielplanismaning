@@ -6,6 +6,12 @@
         .factory('httpInterceptor', ['authToken', '$q', '$injector', function (authToken, $q, $injector) {
             return {
                 request: function (config) {
+                    const externalRequestRegex = /(http|https)/;
+                    if (config.url && externalRequestRegex.test(config.url)) {
+                        config.headers.Authorization = undefined;
+                        return config;
+                    }
+
                     config.headers.Authorization = authToken.getToken();
 
                     return config;
