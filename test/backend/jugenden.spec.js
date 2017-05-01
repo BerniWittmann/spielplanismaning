@@ -15,7 +15,7 @@ describe('Route: Jugenden', function () {
 
     it('soll alle Jugenden laden können', function (done) {
         request(server)
-            .get('/api/jugenden/')
+            .get('/api/turniere/')
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -29,7 +29,7 @@ describe('Route: Jugenden', function () {
 
     it('soll eine einzelne Jugend laden können', function (done) {
         request(server)
-            .get('/api/jugenden?id=' + jugendid.toString())
+            .get('/api/turniere?id=' + jugendid.toString())
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -44,7 +44,7 @@ describe('Route: Jugenden', function () {
     it('wenn kein Name angegeben ist, soll ein Fehler geworfen werden', function (done) {
         var jugend = {};
         request(server)
-            .post('/api/jugenden')
+            .post('/api/turniere')
             .send(jugend)
             .set('Authorization', server.adminToken)
             .set('Accept', 'application/json')
@@ -62,7 +62,7 @@ describe('Route: Jugenden', function () {
             name: 'Neue Jugend'
         };
         request(server)
-            .post('/api/jugenden')
+            .post('/api/turniere')
             .send(jugend)
             .set('Authorization', server.adminToken)
             .set('Accept', 'application/json')
@@ -85,7 +85,7 @@ describe('Route: Jugenden', function () {
 
     it('soll die Gesamtzahl der Tore laden', function (done) {
         request(server)
-            .get('/api/jugenden/tore')
+            .get('/api/turniere/tore')
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -97,7 +97,7 @@ describe('Route: Jugenden', function () {
 
     it('soll die Tore für eine einzelne Jugend laden', function (done) {
         request(server)
-            .get('/api/jugenden/tore?id=' + jugendid.toString())
+            .get('/api/turniere/tore?id=' + jugendid.toString())
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -109,7 +109,7 @@ describe('Route: Jugenden', function () {
 
     it('wenn keine JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
-            .del('/api/jugenden?id=')
+            .del('/api/turniere?id=')
             .set('Authorization', server.adminToken)
             .end(function (err, response) {
                 if (err) throw err;
@@ -122,7 +122,7 @@ describe('Route: Jugenden', function () {
 
     it('wenn eine falsche JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
-            .del('/api/jugenden?id=DASgibtsN1cht')
+            .del('/api/turniere?id=DASgibtsN1cht')
             .set('Authorization', server.adminToken)
             .end(function (err, response) {
                 if (err) throw err;
@@ -140,7 +140,7 @@ describe('Route: Jugenden', function () {
             if (err) throw err;
             anzahlGruppenVorher = res.length;
             request(server)
-                .del('/api/jugenden?id=' + neueJugendid)
+                .del('/api/turniere?id=' + neueJugendid)
                 .set('Authorization', server.adminToken)
                 .end(function (err, res) {
                     if (err) throw err;

@@ -33,7 +33,7 @@
                         class="fa fa-calendar-o"></i><span class="hidden-sm"> Spielplan</span></a></li>
                 <li data-ng-class="{active: vm.isAktiv('spi.tgj')}" class="dropdown" id="nav-button-tgj">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Jugenden</span><span
+                       aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Turniere</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
                         <li id="nav-button-tgj-teams"><a data-ui-sref="spi.tgj.teams" data-toggle="collapse"
@@ -43,7 +43,7 @@
                                                            data-target=".navbar-collapse.in">Gruppen</a>
                         </li>
                         <li id="nav-button-tgj-jugenden"><a data-ui-sref="spi.tgj.jugenden" data-toggle="collapse"
-                                                            data-target=".navbar-collapse.in">Jugenden</a>
+                                                            data-target=".navbar-collapse.in">Turniere</a>
                         </li>
                     </ul>
                 </li>
@@ -64,7 +64,7 @@
                         </li>
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-teams"><a
                                 data-ui-sref="spi.verwaltung.teams" data-toggle="collapse"
-                                data-target=".navbar-collapse.in">Teams, Gruppen & Jugenden</a></li>
+                                data-target=".navbar-collapse.in">Teams, Gruppen & Turniere</a></li>
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-spielplan"><a
                                 data-ui-sref="spi.verwaltung.spielplan" data-toggle="collapse"
                                 data-target=".navbar-collapse.in">Spielplan</a></li>

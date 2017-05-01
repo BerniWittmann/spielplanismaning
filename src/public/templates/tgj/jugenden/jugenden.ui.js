@@ -11,7 +11,7 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.tgj.jugenden', {
-                url: '/jugenden',
+                url: '/turniere',
                 templateUrl: 'templates/tgj/jugenden/jugenden.html',
                 controller: 'JugendenController',
                 controllerAs: 'vm',

@@ -129,7 +129,7 @@ module.exports = {
             "admin"
         ]
     },
-    "/api/jugenden": {
+    "/api/turniere": {
         "AUTH": {
             "POST": [
                 "admin"
