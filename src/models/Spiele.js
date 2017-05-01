@@ -132,6 +132,8 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
 
     let punkteA = 0;
     let punkteB = 0;
+    let toreA = 0;
+    let toreB = 0;
 
     _.forEach(['hz1', 'hz2', 'hz3'], function (hz) {
         const hzData = data.complex[hz];
@@ -145,6 +147,8 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
                 punkteA++;
                 punkteB++;
             }
+            toreA += hzData.toreA;
+            toreB += hzData.toreB;
         }
     });
 
@@ -152,6 +156,9 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
         if (err) {
             return cb(err);
         }
+
+        spiel.set('toreA', toreA);
+        spiel.set('toreB', toreB);
         spiel.save(cb);
     });
 };
