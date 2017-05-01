@@ -25,7 +25,7 @@
             }};
         }
 
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
         var mockAuth;
         var mockToastr = {
             success: function () {

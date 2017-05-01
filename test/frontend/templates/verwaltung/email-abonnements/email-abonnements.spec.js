@@ -13,7 +13,7 @@
         }, 'spi.templates.verwaltung.email-abonnements.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
         beforeEach(module(function ($provide) {
             $provide.value('email', mockEmail);
         }));

@@ -15,7 +15,7 @@
         var mockToastr = {
             error: function () {}
         };
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
 
         var lockdown = false;
 
@@ -64,7 +64,7 @@
                     return deferred.promise;
                 }
             };
-            var form = {$valid: true};
+            var form = {$valid: true, $setUntouched: function () {}};
 
             mockConfig = {
                 getLockdown: function () {

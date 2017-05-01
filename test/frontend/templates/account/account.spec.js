@@ -16,7 +16,7 @@
                 rank: 0
             }
         };
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
 
         var mockAuthPromise;
 
