@@ -287,3 +287,49 @@ spi-panel-titel {
 spi-panel-title spi-jugend-label {
     display: flex;
 }
+
+.insta-card {
+    background: radial-gradient(rgba(0,0,0,.2), rgba(0,0,0,.1));
+    padding: 10px;
+    float: left;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 3px;
+    width: 240px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.insta-card .body {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, .2);
+    overflow: hidden;
+    padding: 10px 10px;
+    margin: 0 auto;
+    border-radius: 3px 3px 0 0;
+}
+
+.insta-card .body img{
+    width: 100%;
+
+}
+
+.insta-card .foot {
+    background: #EEE;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 0 0 3px 3px;
+    border-top: 0;
+    color: #265E88;
+    font-family: 'Roboto', serif;
+    font-size: 14px;
+    font-weight: 600;
+    height: 60px;
+    max-height: 60px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.insta-card .foot .box, .insta-card .foot .box p {
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
