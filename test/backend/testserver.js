@@ -67,7 +67,7 @@ module.exports = function () {
     app.use('/api/email', email);
     app.use('/api/gruppen', gruppen);
     app.use('/api/config', config);
-    app.use('/api/jugenden', jugenden);
+    app.use('/api/turniere', jugenden);
     app.use('/api/spiele', spiele);
     app.use('/api/spielplan', spielplan);
     app.use('/api/teams', teams);

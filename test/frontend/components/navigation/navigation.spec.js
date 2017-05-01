@@ -88,7 +88,7 @@
         it('soll den Menüpunkt Teams, Gruppen, Jugenden anzeigen', function () {
             var result = element.find('#nav-button-tgj');
             expect(result).to.exist;
-            expect(result.text()).to.include('Teams, Gruppen & Jugenden');
+            expect(result.text()).to.include('Teams, Gruppen & Turniere');
         });
 
         describe('Dropdown Teams, Gruppen Jugenden', function () {
@@ -109,7 +109,7 @@
             it('soll den Link Jugenden anzeigen', function () {
                 var result = element.find('#nav-button-tgj-jugenden');
                 expect(result).to.exist;
-                expect(result.text()).to.include('Jugenden');
+                expect(result.text()).to.include('Turniere');
                 expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.tgj.jugenden');
             });
         });
@@ -162,7 +162,7 @@
                 it('soll den Link Gruppen anzeigen', function () {
                     var result = element.find('#nav-button-verwaltung-teams');
                     expect(result).to.exist;
-                    expect(result.text()).to.include('Teams, Gruppen & Jugenden');
+                    expect(result.text()).to.include('Teams, Gruppen & Turniere');
                     expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.verwaltung.teams');
                 });
 

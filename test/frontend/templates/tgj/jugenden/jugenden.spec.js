@@ -152,7 +152,7 @@
                 expect(element.find('spi-jugend-panel')).not.to.exist;
                 var result = element.find('div.alert-info');
                 expect(result).to.exist;
-                expect(result.text()).to.be.equal('Keine Jugenden gefunden');
+                expect(result.text()).to.be.equal('Keine Turniere gefunden');
             });
         });
     });
