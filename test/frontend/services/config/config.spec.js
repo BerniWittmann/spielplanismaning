@@ -16,7 +16,8 @@
             version: '1.0.0',
             lockdown: true,
             plaetze: '3',
-            spielmodus: 'normal'
+            spielmodus: 'normal',
+            mannschaftslisten: 'true'
         };
         var config;
 

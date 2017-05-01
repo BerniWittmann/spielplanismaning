@@ -26,7 +26,8 @@ module.exports = function (env) {
             env: env.NODE_ENV,
             lockdown: env.LOCKDOWNMODE === 'true',
             plaetze: env.PLAETZE,
-            spielmodus: env.SPIEL_MODE
+            spielmodus: env.SPIEL_MODE,
+            mannschaftslisten: env.MANNSCHAFTSLISTEN_PRINT
         };
         logger.verbose('Summary', {config: config});
         return res.json(config);
@@ -144,6 +145,25 @@ module.exports = function (env) {
     router.get('/spielmodus', function (req, res) {
         logger.verbose('Spielmodus %s', env.SPIEL_MODE);
         return res.json(env.SPIEL_MODE);
+    });
+
+    /**
+     * @api {get} /config/mannschaftslisten Mannschaftslisten
+     * @apiName GetConfig
+     * @apiDescription Gibt an ob Mannschaftslisten aktiviert sind
+     * @apiGroup Config
+     *
+     * @apiSuccess {String} body Mannschaftslisten
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       complex
+     *     }
+     **/
+    router.get('/mannschaftslisten', function (req, res) {
+        logger.verbose('Mannschaftslisten %s', env.MANNSCHAFTSLISTEN_PRINT);
+        return res.json(env.MANNSCHAFTSLISTEN_PRINT);
     });
 
     return router;
