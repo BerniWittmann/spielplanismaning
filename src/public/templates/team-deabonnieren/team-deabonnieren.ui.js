@@ -56,6 +56,7 @@
 
         vm.abbestellen = function (form) {
             if (form.$valid) {
+                form.$setUntouched();
                 if (email.checkSubscription(vm.sub)) {
                     email.removeSubscription(vm.sub).then(function () {
                         success();

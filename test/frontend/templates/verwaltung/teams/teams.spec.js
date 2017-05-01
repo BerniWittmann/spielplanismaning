@@ -11,7 +11,7 @@
         var mockErrorHandler = {
             handleResponseError: function () {}
         };
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
 
         beforeEach(function () {
             module(function ($provide) {

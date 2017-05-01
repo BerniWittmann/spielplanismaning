@@ -78,7 +78,7 @@
             controller.abonnent.email = 'neueEmail@test.de';
             var spy = chai.spy.on(mockEmail, 'addSubscriber');
 
-            controller.addAbonnent({$valid: true});
+            controller.addAbonnent({$valid: true, $setUntouched: function () {}});
 
             expect(spy).to.have.been.called.with({email: 'neueEmail@test.de', team: '1'});
         });

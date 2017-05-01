@@ -41,6 +41,7 @@
             abonnements: (subscribers || []),
             send: function (form) {
                 if (form.$valid) {
+                    form.$setUntouched();
                     if (!_.isEqual(vm.email, emailBlank)) {
                         return BestaetigenDialog.open('Email wirklich an alle Abonnenten senden?', send);
                     }

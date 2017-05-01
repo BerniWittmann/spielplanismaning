@@ -43,6 +43,7 @@
             },
             changeUserDetails: function (form) {
                 if(form.$valid) {
+                    form.$setUntouched();
                     auth.setUserDetails(vm.user).then(function (response) {
                         auth.saveToken(response.token);
                         toastr.success('Wir haben deine Daten gespeichert', 'Gespeichert');

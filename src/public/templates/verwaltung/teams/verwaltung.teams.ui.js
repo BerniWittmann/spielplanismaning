@@ -40,7 +40,9 @@
             teams: teams,
             addJugend: function (form) {
                 if (form.$valid) {
+                    form.$setUntouched();
                     jugend.create(vm.jugend).then(function (res) {
+                        form.$setUntouched();
                         spielplan.createSpielplan();
                         vm.jugend = {};
                         vm.jugenden.push(res);

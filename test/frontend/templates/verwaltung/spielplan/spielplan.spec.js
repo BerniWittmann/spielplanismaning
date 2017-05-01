@@ -43,7 +43,7 @@
             warning: function() {},
             success: function() {}
         };
-        var form = {$valid: true};
+        var form = {$valid: true, $setUntouched: function () {}};
         var injector;
 
         function resolve(value) {
