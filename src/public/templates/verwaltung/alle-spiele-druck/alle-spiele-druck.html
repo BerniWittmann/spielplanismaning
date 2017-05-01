@@ -14,21 +14,21 @@
 </div>
 <spi-loader loading="vm.loading"></spi-loader>
 <div data-ng-if="!vm.loading">
-    <div class="spiel-print" data-ng-repeat="spiel in vm.spiele track by $index">
+    <div class="spiel-print" data-ng-repeat="spiel in vm.spiele track by spiel._id">
         <div class="row">
             <div class="col-xs-12">
                 <div class="row text-center">
                     <div class="col-xs-12">
-                        <h2>{{spiel.uhrzeit}} Uhr</h2>
-                        <h3>{{spiel.datum}}</h3>
-                        <h4>Platz {{spiel.platz}}</h4>
+                        <h3 class="spiel-time">{{spiel.uhrzeit}} Uhr</h3>
+                        <h6>{{spiel.datum}}</h6>
+                        <h5>Platz {{spiel.platz}}</h5>
                     </div>
                 </div>
                 <div class="row text-center">
                     <div class="col-xs-12">
-                        <h3>
+                        <h4>
                             <spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
-                        </h3>
+                        </h4>
                         <h6 class="spiel-gruppe" data-ng-click="vm.gotoGruppe(spiel.gruppe)">{{vm.displayGruppe(spiel)}}</h6>
                     </div>
                 </div>
@@ -37,11 +37,11 @@
                     <div class="col-xs-12">
                         <div class="row">
                             <div class="col-xs-5">
-                                <h4>Heim</h4>
+                                <h5>Heim</h5>
                             </div>
 
                             <div class="col-xs-5 col-xs-offset-2">
-                                <h4>Gast</h4>
+                                <h5>Gast</h5>
                             </div>
                         </div>
                         <div class="row">
@@ -72,10 +72,34 @@
             </div>
         </div>
 
+        <div class="row visible-print-block" data-ng-if="vm.mannschaftslistenEnabled">
+            <div class="col-xs-6" data-ng-repeat="letter in ['A', 'B'] track by spiel._id+letter">
+                <table data-ng-init="team = spiel['team' + letter]" class="spieler-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Geburtsdatum</th>
+                        <th class="number-element text-center"> # </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="spieler in vm.getSpielerArray(team) track by spiel._id+letter+$index">
+                        <td class="text-center">{{$index + 1}}</td>
+                        <td><span data-ng-if="spieler">{{spieler.vorname}}</span></td>
+                        <td><span data-ng-if="spieler">{{spieler.nachname}}</span></td>
+                        <td><span data-ng-if="spieler">{{spieler.geburtsdatum}}</span></td>
+                        <td class="text-center"><span data-ng-if="spieler">{{spieler.trikotnummer}}</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="row visible-print-block">
             <br>
             <p class="lead text-center">Ergebnis: </p>
-            <br>
         </div>
 
         <div class="row visible-print-block" data-ng-if="!vm.isComplexMode">
@@ -97,11 +121,13 @@
                     <br>
                     <br>
                     <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+                    <div data-ng-if="!vm.mannschaftslistenEnabled">
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
                 </div>
                 <hr class="alle-spiele-divider">
                 <div class="row">

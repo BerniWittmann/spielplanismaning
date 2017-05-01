@@ -10,13 +10,14 @@ describe('Route: Config', function () {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
-            expect(response.body).to.have.keys(['version', 'env', 'lockdown', 'plaetze', 'spielmodus']);
+            expect(response.body).to.have.keys(['version', 'env', 'lockdown', 'plaetze', 'spielmodus', 'mannschaftslisten']);
             expect(response.body).to.deep.equal({
                 version: version,
                 env: 'testing',
                 lockdown: true,
                 plaetze: '3',
-                spielmodus: 'normal'
+                spielmodus: 'normal',
+                mannschaftslisten: 'false'
             });
             return done();
         });

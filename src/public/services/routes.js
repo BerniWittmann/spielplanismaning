@@ -60,6 +60,9 @@
                     },
                     spielmodus: function () {
                         return ENDPOINT_BASE + '/config/spielmodus';
+                    },
+                    mannschaftslisten: function () {
+                        return ENDPOINT_BASE + '/config/mannschaftslisten';
                     }
                 },
                 email: {
