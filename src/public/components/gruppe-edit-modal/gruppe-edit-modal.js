@@ -92,7 +92,7 @@
                     gruppe: vm.gruppe._id,
                     jugend: vm.gruppe.jugend
                 });
-                form.$setPristine();
+                form.$setUntouched();
                 return team.create(vm.team).then(function (res) {
                     spielplan.createSpielplan();
                     vm.teams.push(res);

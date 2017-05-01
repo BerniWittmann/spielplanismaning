@@ -87,6 +87,7 @@
             if (!vm.loading && form.$valid) {
                 vm.loading = true;
                 vm.error = undefined;
+                form.$setUntouched();
                 gruppe.create(vm.jugend._id, vm.gruppe).catch(function (error) {
                     vm.error = error;
                     vm.loading = false;

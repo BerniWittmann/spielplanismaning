@@ -93,6 +93,7 @@
 
         function saveSpielzeit(form) {
             if (form.$valid) {
+                form.$setUntouched();
                 vm.loading = true;
                 spielplan.saveZeiten({
                     startzeit: moment(vm.startzeit.toISOString()).format('HH:mm'),

@@ -43,6 +43,7 @@
         }
         vm.login = function (form) {
             if (form.$valid) {
+                form.$setUntouched();
                 vm.user.username = vm.user.username.toLowerCase();
                 auth.logIn(vm.user).then(function () {
                     if ($stateParams.next) {

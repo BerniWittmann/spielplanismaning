@@ -28,6 +28,7 @@
 
         vm.forgotPassword = function (form) {
             if(form.$valid && vm.email) {
+                form.$setUntouched();
                 auth.forgotPassword(vm.email).then(function () {
                     toastr.success('Wir haben eine Email mit weiteren Infos an ' + vm.email + ' versendet.', 'Email versendet');
                 }, function (error) {

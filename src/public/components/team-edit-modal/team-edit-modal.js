@@ -45,6 +45,7 @@
         function save(form) {
             if (form.$valid) {
                 vm.loading = true;
+                form.$setUntouched();
                 const data = {
                     name: vm.name,
                     anmeldungsId: vm.anmeldungsId
