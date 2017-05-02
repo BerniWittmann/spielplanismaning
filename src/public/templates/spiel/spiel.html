@@ -6,7 +6,7 @@
         </h3>
         <div class="pull-right" data-ng-if="vm.canEdit">
             <button class="btn btn-primary" data-ng-click="vm.edit()"
-                    data-ng-if="vm.isComplexMode && !vm.isEditing"><i class="fa fa-pencil"></i> Bearbeiten
+                    data-ng-if="!vm.isEditing"><i class="fa fa-pencil"></i> Bearbeiten
             </button>
             <button class="btn btn-danger" data-ng-click="vm.abort()" data-ng-if="vm.isEditing"><i
                     class="fa fa-times"></i> Abbrechen
@@ -128,12 +128,26 @@
                     </div>
                 </div>
                 <div data-ng-if="!vm.isComplexMode">
-                    <div data-ng-if="vm.spiel.beendet" id="spiel-stand">
+                    <div data-ng-if="!vm.isEditing && vm.spiel.beendet" id="spiel-stand">
                         <div class="score hidden-xs" data-scorea="{{vm.spiel.toreA}}" data-scoreb="{{vm.spiel.toreB}}"
                              flipcounter="{}">{{vm.spiel.toreA}} : {{vm.spiel.toreB}}
                         </div>
                         <div class="score-normal visible-xs-block">
                             {{vm.spiel.toreA}} : {{vm.spiel.toreB}}
+                        </div>
+                    </div>
+                    <div data-ng-if="vm.isEditing">
+                        <div class="spielHZInput">
+                            <input type="number" min="0" data-ng-model="vm.spiel.toreA"
+                                   class="spielnumberinput"
+                                   data-ng-click="$event.stopPropagation();" data-focus-on="focusTextInput"
+                                   data-ng-enter="vm.save()"
+                                   title="toreA">
+                            <span> : </span>
+                            <input type="number" min="0" data-ng-model="vm.spiel.toreB"
+                                   class="spielnumberinput"
+                                   data-ng-click="$event.stopPropagation();" data-ng-enter="vm.save()"
+                                   title="toreB">
                         </div>
                     </div>
                 </div>

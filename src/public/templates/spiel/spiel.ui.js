@@ -105,7 +105,7 @@
             isComplexMode: spielModus === 'complex',
             canEdit: auth.isAdmin() || auth.isBearbeiter(),
             edit: function ()  {
-                if (vm.canEdit && vm.isComplexMode) {
+                if (vm.canEdit) {
                     vm.isEditing = true;
                 }
             },
@@ -132,7 +132,7 @@
         }
 
         function save() {
-            if (!checkComplexData(vm.spiel.complex)) {
+            if (vm.isComplexMode && !checkComplexData(vm.spiel.complex)) {
                 return;
             }
             return spiel.updateTore(vm.spiel).then(function (res) {
