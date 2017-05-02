@@ -43,6 +43,20 @@
             teamA: 't3',
             teamB: 't1'
         }];
+        var gruppe = {
+            name: 'Gruppe 1',
+            _id: 'grp1',
+            teamTabelle: [{
+                name: 'Team 1',
+                _id: 't1'
+            }, {
+                name: 'Team 2',
+                _id: 't2'
+            }, {
+                name: 'Team 3',
+                _id: 't3'
+            }]
+        };
         var injector;
         var mockSpiel;
         var mockTeamAbonnierenDialog;
@@ -52,6 +66,8 @@
                 return mockEmail.isSubscribed;
             }
         };
+
+        var mockGruppe = {};
 
         function resolve(value) {
             return {forStateAndView: function (state, view) {
@@ -70,6 +86,7 @@
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiel);
             $provide.value('team', mockTeam);
+            $provide.value('gruppe', mockGruppe);
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -100,6 +117,11 @@
                     return $q.when(spiele);
                 }
             };
+            mockGruppe = {
+                get: function () {
+                    return $q.when(gruppe);
+                }
+            };
             mockTeamAbonnierenDialog = {
                 open: function () {
                     var deferred = $q.defer();
@@ -116,7 +138,8 @@
                 spiele: spiele,
                 aktivesTeam: team,
                 TeamAbonnierenDialog: mockTeamAbonnierenDialog,
-                email: mockEmail
+                email: mockEmail,
+                gruppe: mockGruppe
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

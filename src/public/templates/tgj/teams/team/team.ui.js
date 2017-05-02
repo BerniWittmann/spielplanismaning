@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.team.ui', [
-            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui'
+            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe'
         ])
         .config(states)
         .controller('TeamController', TeamController);
@@ -27,13 +27,14 @@
 
     }
 
-    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, team, $state, toastr) {
+    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe) {
         const vm = this;
         vm.loading = true;
 
         if (!aktivesTeam.name) {
             toastr.error('Team nicht gefunden');
             $state.go('spi.home');
+            return;
         }
 
         _.extend(vm, {
@@ -44,17 +45,16 @@
             spiele: _.sortBy(spiele, ['nummer']),
             abonnieren: abonnieren
         });
-        team.getByGruppe(vm.team.gruppe._id, vm.team.jugend._id).then(function (res) {
-            vm.teams = res;
-            if (vm.team.zwischengruppe) {
-                return team.getByGruppe(vm.team.zwischengruppe._id, vm.team.jugend._id).then(function (res) {
-                    vm.zwischengruppenTeams = res.filter(function (single) {
+        gruppe.get(aktivesTeam.gruppe._id).then(function (res) {
+            vm.teams = res.teamTabelle;
+            if (aktivesTeam.zwischengruppe && aktivesTeam.zwischengruppe._id) {
+                return gruppe.get(aktivesTeam.zwischengruppe._id).then(function (res) {
+                    vm.zwischengruppenTeams = res.teamTabelle.filter(function (single) {
                         return !single.isPlaceholder;
                     });
                     vm.loading = false;
                 });
             }
-
             vm.loading = false;
         });
 

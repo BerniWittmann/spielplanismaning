@@ -13,10 +13,16 @@
             gruppen: [{
                 name: 'Gruppe 1',
                 _id: 'grp1',
+                jugend: {
+                    _id: '1'
+                },
                 teams: [{}, {}, {}]
             }, {
                 name: 'Gruppe 2',
                 _id: 'grp2',
+                jugend: {
+                    _id: '1'
+                },
                 teams: [{}, {}, {}]
             }]
         }, {
@@ -25,14 +31,23 @@
             gruppen: [{
                 name: 'Gruppe 3',
                 _id: 'grp3',
+                jugend: {
+                    _id: '2'
+                },
                 teams: [{}, {}, {}]
             }, {
                 name: 'Gruppe 4',
                 _id: 'grp4',
+                jugend: {
+                    _id: '2'
+                },
                 teams: [{}, {}, {}]
             }, {
                 name: 'Gruppe 5',
                 _id: 'grp5',
+                jugend: {
+                    _id: '2'
+                },
                 teams: [{}, {}, {}]
             }]
         }, {
@@ -40,6 +55,44 @@
             name: 'Jugend 3',
             gruppen: []
         }];
+        var gruppen = [
+            {
+                name: 'Gruppe 1',
+                _id: 'grp1',
+                jugend: {
+                    _id: '1'
+                },
+                teams: [{}, {}, {}]
+            }, {
+                name: 'Gruppe 2',
+                _id: 'grp2',
+                jugend: {
+                    _id: '1'
+                },
+                teams: [{}, {}, {}]
+            }, {
+                name: 'Gruppe 3',
+                _id: 'grp3',
+                jugend: {
+                    _id: '2'
+                },
+                teams: [{}, {}, {}]
+            }, {
+                name: 'Gruppe 4',
+                _id: 'grp4',
+                jugend: {
+                    _id: '2'
+                },
+                teams: [{}, {}, {}]
+            }, {
+                name: 'Gruppe 5',
+                _id: 'grp5',
+                jugend: {
+                    _id: '2'
+                },
+                teams: [{}, {}, {}]
+            }
+        ]
         var mockJugend;
         var injector;
 
@@ -89,7 +142,8 @@
             var ctrl = scope.vm = $controller('TabellenController', {
                 jugend: mockJugend,
                 jugenden: jugenden,
-                jugendTore: 18
+                jugendTore: 18,
+                gruppen: gruppen
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

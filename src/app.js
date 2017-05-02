@@ -44,9 +44,9 @@ const sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.
 const secret = process.env.SECRET;
 const app = express();
 
+require('./models/Spiele');
 require('./models/Gruppen');
 require('./models/Jugenden');
-require('./models/Spiele');
 require('./models/Spielplan');
 require('./models/Teams');
 require('./models/Subscriber');

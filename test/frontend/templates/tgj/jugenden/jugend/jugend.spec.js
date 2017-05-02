@@ -43,9 +43,19 @@
             teamA: 't3',
             teamB: 't1'
         }];
+        var gruppen = [{
+            name: 'Gruppe 1',
+            _id: 'g1',
+            teamTabelle: jugend.teams
+        }, {
+            name: 'Gruppe 2',
+            _id: 'g2',
+            teamTabelle: jugend.teams
+        }];
         var injector;
         var mockJugend;
         var mockSpiele;
+        var mockGruppe;
 
         function resolve(value) {
             return {forStateAndView: function (state, view) {
@@ -92,9 +102,16 @@
                 }
             };
 
+            mockGruppe = {
+                getByJugend: function () {
+                    return $q.when(gruppen);
+                }
+            };
+
             var ctrl = scope.vm = $controller('JugendController', {
                 aktiveJugend: jugend,
-                spiele: spiele
+                spiele: spiele,
+                gruppen: gruppen
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

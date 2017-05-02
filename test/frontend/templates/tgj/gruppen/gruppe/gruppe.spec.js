@@ -22,6 +22,16 @@
             }, {
                 name: 'Team 3',
                 _id: 't3'
+            }],
+            teamTabelle: [{
+                name: 'Team 1',
+                _id: 't1'
+            }, {
+                name: 'Team 2',
+                _id: 't2'
+            }, {
+                name: 'Team 3',
+                _id: 't3'
             }]
         };
         var spiele = [{

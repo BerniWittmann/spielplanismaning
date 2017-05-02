@@ -68,8 +68,8 @@
             var result = element.find('tbody').find('tr');
 
             expect(angular.element(angular.element(result[0]).find('td')[1]).text()).to.contain('Test Team 1');
-            expect(angular.element(angular.element(result[1]).find('td')[1]).text()).to.contain('Test Team 3');
-            expect(angular.element(angular.element(result[2]).find('td')[1]).text()).to.contain('Test Team 2');
+            expect(angular.element(angular.element(result[1]).find('td')[1]).text()).to.contain('Test Team 2');
+            expect(angular.element(angular.element(result[2]).find('td')[1]).text()).to.contain('Test Team 3');
         });
 
         it('das ausgewählt Team wird gehighlited', function () {

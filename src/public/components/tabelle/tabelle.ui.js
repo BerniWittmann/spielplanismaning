@@ -40,19 +40,8 @@
                     single.gtore = results.gtore;
                     single.spiele = results.spiele;
                     return single;
-                }).sort(compare);
+                });
             }
         };
-
-        function compare(a, b) {
-            let result = a.punkte - b.punkte;
-            if (result === 0) {
-                result = (a.tore - a.gtore) - (b.tore - b.gtore);
-                if (result === 0) {
-                    result = a.tore - b.tore;
-                }
-            }
-            return result * -1;
-        }
     }
 })();

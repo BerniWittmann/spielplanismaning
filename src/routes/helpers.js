@@ -12,6 +12,7 @@ const Gruppe = mongoose.model('Gruppe');
 const Jugend = mongoose.model('Jugend');
 const Spiel = mongoose.model('Spiel');
 const request = require('request');
+const helper = require('../models/helper.js');
 
 function getEntityQuery(model, req) {
     logger.silly('Getting Entity Query');
@@ -267,37 +268,22 @@ function getSpielErgebnisse(cb) {
     });
 }
 
-function sortTeams(teams, key) {
-    if (!key) {
-        key = 'all';
-    }
-    return teams.sort(function (a, b) {
-        const ergebnisseA = a.ergebnisse && a.ergebnisse[key] ? a.ergebnisse[key] : {};
-        const ergebnisseB = b.ergebnisse && b.ergebnisse[key] ? b.ergebnisse[key] : {};
-        let result = ergebnisseA.punkte - ergebnisseB.punkte;
-        if (result === 0) {
-            result = (ergebnisseA.tore - ergebnisseA.gtore) - (ergebnisseB.tore - ergebnisseB.gtore);
-            if (result === 0) {
-                result = ergebnisseA.tore - ergebnisseB.tore;
-            }
-        }
-        return result * -1;
-    });
-}
-
-function gruppeFindPlace(teams, spieleDerGruppe, platz, gruppenType) {
+function gruppeFindPlace(teams, spieleDerGruppe, platz, gruppe, callback) {
     logger.silly('Calculating Platz of Gruppe');
     const nichtbeendete = spieleDerGruppe.filter(function (single) {
         return !single.beendet;
     });
-    const key = gruppenType === 'normal' ? 'gruppe' : 'zwischenGruppe';
+    const key = gruppe.type === 'normal' ? 'gruppe' : 'zwischenGruppe';
     if (nichtbeendete.length === 0) {
         logger.silly('All Games Played');
-        const sorted = sortTeams(teams, key);
-        return sorted[platz - 1];
+        return helper.sortTeams(teams, key, Spiel, gruppe, function (err, sorted) {
+            if (err) return callback(err);
+
+            return callback(null, sorted[platz - 1]);
+        });
     }
 
-    return undefined;
+    return callback(null, undefined);
 }
 
 function fillSpielFromSpiel(spiel, cb) {
@@ -365,8 +351,12 @@ function fillSpielFromGruppe(spiel, cb) {
                 return Spiel.find({gruppe: spiel['from' + letter]._id}).exec(function (err, spiele) {
                     if (err) return next(err);
 
-                    calculatedTeams[letter] = gruppeFindPlace(teams, spiele, spiel['rank' + letter], spiel['from' + letter].type);
-                    return next();
+                    return gruppeFindPlace(teams, spiele, spiel['rank' + letter], spiel['from' + letter], function (err, team) {
+                        if (err) return next(err);
+
+                        calculatedTeams[letter] = team;
+                        return next();
+                    });
                 });
             });
         });
@@ -394,24 +384,24 @@ function fillTeamFromGruppe(team, cb) {
         return Spiel.find({gruppe: team.from._id}).exec(function (err, spiele) {
             if (err) return cb(err);
 
-            const originalTeam = gruppeFindPlace(teams, spiele, team.rank, team.from.type);
-
-            if (!originalTeam) {
-                return cb();
-            }
-            return Team.update({'_id': originalTeam}, {'zwischengruppe': team.gruppe._id}, function (err) {
+            return gruppeFindPlace(teams, spiele, team.rank, team.from, function (err, originalTeam) {
                 if (err) return cb(err);
+                if (!originalTeam) return cb();
 
-                return Gruppe.updateTeamInGruppe(team.gruppe._id, team._id, originalTeam._id, function (err) {
+                return Team.update({'_id': originalTeam}, {'zwischengruppe': team.gruppe._id}, function (err) {
                     if (err) return cb(err);
 
-                    return Spiel.updateTeamInSpiele(team._id, originalTeam._id, function (err) {
+                    return Gruppe.updateTeamInGruppe(team.gruppe._id, team._id, originalTeam._id, function (err) {
                         if (err) return cb(err);
 
-                        return Jugend.removeTeam(originalTeam.jugend._id, team._id, function (err) {
+                        return Spiel.updateTeamInSpiele(team._id, originalTeam._id, function (err) {
                             if (err) return cb(err);
 
-                            return removeEntityBy(Team, '_id', team._id, {}, cb);
+                            return Jugend.removeTeam(originalTeam.jugend._id, team._id, function (err) {
+                                if (err) return cb(err);
+
+                                return removeEntityBy(Team, '_id', team._id, {}, cb);
+                            });
                         });
                     });
                 });
@@ -638,7 +628,7 @@ module.exports = {
     checkSpielOrderChangeAllowed: checkSpielOrderChangeAllowed,
     calcSpielDateTime: calcSpielDateTime,
     getSpielErgebnisse: getSpielErgebnisse,
-    sortTeams: sortTeams,
+    sortTeams: helper.sortTeams,
     fillSpiele: fillSpiele,
     gruppeFindPlace: gruppeFindPlace,
     teamCalcErgebnisse: teamCalcErgebnisse,

@@ -15,14 +15,14 @@ module.exports = function () {
         return cb();
     };
 
+    if (!mongoose.models.Spiel) {
+        require('./../../src/models/Spiele');
+    }
     if (!mongoose.models.Gruppe) {
         require('./../../src/models/Gruppen');
     }
     if (!mongoose.models.Jugend) {
         require('./../../src/models/Jugenden');
-    }
-    if (!mongoose.models.Spiel) {
-        require('./../../src/models/Spiele');
     }
     if (!mongoose.models.Spielplan) {
         require('./../../src/models/Spielplan');

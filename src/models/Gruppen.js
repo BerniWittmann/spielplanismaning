@@ -10,7 +10,8 @@ const GruppenSchema = new mongoose.Schema({
     type: {
         type: String,
         default: 'normal'
-    }
+    },
+    teamTabelle: [{type: Schema.ObjectId, ref: 'Team'}]
 }, {
     toObject: {
         virtuals: true
@@ -47,7 +48,11 @@ GruppenSchema.statics.updateTeamInGruppe = function (gruppenid, oldTeam, newTeam
 
 GruppenSchema.methods.fill = function (cb) {
     const self = this;
-    return helper.fillOfEntity(self, 'teams', cb);
+    return helper.fillOfEntity(self, 'teams', function (err, gruppe) {
+        if (err) return cb(err);
+
+        return helper.fillTabelle(gruppe, Spiel, cb);
+    });
 };
 
 const deepPopulate = require('mongoose-deep-populate')(mongoose);
@@ -55,3 +60,4 @@ GruppenSchema.plugin(deepPopulate, {});
 
 mongoose.model('Gruppe', GruppenSchema);
 const helper = require('./helper.js');
+const Spiel = mongoose.model('Spiel');

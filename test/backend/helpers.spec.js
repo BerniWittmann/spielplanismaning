@@ -832,10 +832,12 @@ describe('Helpers', function () {
 
         function checkPlaetze() {
             for (let i = 1; i <= maxTeams; i++) {
-                it('Es soll Platz ' + i + ' korrekt geladen werden', function () {
-                    const result = gruppeFindPlace(teams, spiele, i, 'all');
-
-                    expect(result._id).to.equal(i.toString());
+                it('Es soll Platz ' + i + ' korrekt geladen werden', function (done) {
+                    gruppeFindPlace(teams, spiele, i, {type: 'all', _id: '1234'}, function (err, result) {
+                        expect(err).to.equal(null);
+                        expect(result._id).to.equal(i.toString());
+                        return done();
+                    });
                 });
             }
         }
@@ -920,10 +922,11 @@ describe('Helpers', function () {
             });
 
             for (let i = 1; i <= maxTeams; i++) {
-                it('Es soll Platz ' + i + ' korrekt geladen werden', function () {
-                    const result = gruppeFindPlace(teams, spiele, i, 'all');
-
-                    expect(result).to.be.undefined;
+                it('Es soll Platz ' + i + ' korrekt geladen werden', function (done) {
+                    gruppeFindPlace(teams, spiele, i, {type: 'all', _id: '1234'}, function (err, result) {
+                        expect(result).to.be.undefined;
+                        return done();
+                    });
                 });
             }
         });

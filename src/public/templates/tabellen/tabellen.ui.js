@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tabellen.ui', [
-            'ui.router', 'spi.components.tabelle.ui', 'spi.jugend'
+            'ui.router', 'spi.components.tabelle.ui', 'spi.jugend', 'spi.gruppe'
         ])
         .config(states)
         .controller('TabellenController', TabellenController);
@@ -21,19 +21,27 @@
                     },
                     jugendTore: function (jugend) {
                         return jugend.getGesamtTore();
+                    },
+                    gruppen: function (gruppe) {
+                        return gruppe.getAll();
                     }
                 }
             });
 
     }
 
-    function TabellenController(jugend, jugenden, jugendTore) {
+    function TabellenController(jugend, jugenden, jugendTore, gruppen) {
         const vm = this;
         vm.loading = true;
 
         _.extend(vm, {
             gesamt: jugendTore,
-            jugenden: jugenden,
+            jugenden: jugenden.map(function (jgd) {
+                jgd.gruppen = gruppen.filter(function(single) {
+                    return single.jugend._id.toString() === jgd._id.toString();
+                });
+                return jgd;
+            }),
             calcTableWidth: function (jugend) {
                 return 6;
             },
