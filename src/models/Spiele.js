@@ -126,7 +126,7 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
     this.set('complex', {
         hz1: data.complex.hz1,
         hz2: data.complex.hz2,
-        hz3: data.complex.hz3
+        hz3: _.isEmpty(data.complex.hz3) ? {toreA: undefined, toreB: undefined} : data.complex.hz3
     });
 
     let punkteA = 0;
@@ -137,7 +137,7 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
     _.forEach(['hz1', 'hz2', 'hz3'], function (hz) {
         const hzData = data.complex[hz];
 
-        if (hzData && hzData.toreA && hzData.toreB && hzData.toreA >= 0 && hzData.toreB >= 0) {
+        if (hzData && hzData.toreA >= 0 && hzData.toreB >= 0) {
             if (hzData.toreA > hzData.toreB) {
                 punkteA++;
             } else if (hzData.toreA < hzData.toreB) {
@@ -158,7 +158,7 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
 
         spiel.set('toreA', toreA);
         spiel.set('toreB', toreB);
-        spiel.save(cb);
+        return spiel.save(cb);
     });
 };
 
