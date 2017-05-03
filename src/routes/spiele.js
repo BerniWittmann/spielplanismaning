@@ -314,7 +314,6 @@ module.exports = function (sendgrid, env, url, disableMails) {
             return messages.ErrorSpielplanUngueltig(res, errorIndex);
         }
 
-
         Spielplan.findOne().exec(function (err, spielplan) {
             if (err) {
                 return messages.Error(res, err);
@@ -324,20 +323,24 @@ module.exports = function (sendgrid, env, url, disableMails) {
             async.eachSeries(spiele, function (singlespiel, asyncdone) {
                 const index = spiele.indexOf(singlespiel);
                 logger.silly('Update Spiel %s', singlespiel._id);
-                Spiel.findById(singlespiel._id).exec(function (err, spiel) {
-                    if (err) {
-                        return asyncdone(err);
-                    }
-                    logger.silly('Calculating New Spiel Date/Time/Place');
-                    const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
 
-                    spiel.datum = dateTimePlace.date;
-                    spiel.uhrzeit = dateTimePlace.time;
-                    spiel.platz = dateTimePlace.platz;
-                    spiel.nummer = index + 1;
-                    logger.silly('Save new Spiel Data');
-                    spiel.save(asyncdone);
-                });
+                if (singlespiel.deleted && singlespiel.isNew) {
+                    return asyncdone();
+                }
+                if (singlespiel.deleted && !singlespiel.isNew && singlespiel._id) {
+                    logger.silly('Delete Spiel %s', singlespiel._id);
+                    return helpers.removeEntityBy(Spiel, '_id', singlespiel._id, {}, asyncdone);
+                }
+                if (singlespiel.isNew && !singlespiel.deleted) {
+                    logger.silly('Create Spiel %s', singlespiel._id);
+                    const spiel = new Spiel();
+                    return spiel.save(function (err, spiel) {
+                       if (err) return asyncdone(err);
+
+                       return updateSpielDateTime(spiel, index, spielplan, asyncdone);
+                    });
+                }
+                return updateSpielDateTime(singlespiel, index, spielplan, asyncdone);
             }, function (err) {
                 if (err) {
                     return messages.Error(res, err);
@@ -354,6 +357,23 @@ module.exports = function (sendgrid, env, url, disableMails) {
             });
         });
     });
+
+    function updateSpielDateTime(singlespiel, index, spielplan, cb) {
+        return Spiel.findById(singlespiel._id).exec(function (err, spiel) {
+            if (err) {
+                return cb(err);
+            }
+            logger.silly('Calculating New Spiel Date/Time/Place');
+            const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
+
+            spiel.datum = dateTimePlace.date;
+            spiel.uhrzeit = dateTimePlace.time;
+            spiel.platz = dateTimePlace.platz;
+            spiel.nummer = index + 1;
+            logger.silly('Save new Spiel Data');
+            spiel.save(cb);
+        });
+    }
 
     return router;
 };

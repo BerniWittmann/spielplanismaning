@@ -39,4 +39,7 @@
 			</span>
         </div>
     </div>
+    <div data-ng-if="vm.spielplanIsEdited && !vm.spiel.jugend">
+        <span class="pull-right color-red" data-ng-click="vm.removeSpiel(); $event.stopPropagation();" data-uib-tooltip="Spiel löschen" data-tooltip-placement="top-right"><i class="fa fa-minus-circle"></i></span>
+    </div>
 </td>

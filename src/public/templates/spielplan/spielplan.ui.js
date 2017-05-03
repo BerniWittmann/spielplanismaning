@@ -64,7 +64,15 @@
             checkRowInvalid: checkRowInvalid,
             abortEdit: abortEdit,
             isLastPlatz: isLastPlatz,
-            isComplexMode: spielModus === 'complex'
+            isComplexMode: spielModus === 'complex',
+            addEmptySpiel: function () {
+                vm.spiele.push({
+                    nummer: vm.spiele.length + 1,
+                    isNew: true,
+                    _id: 'testId' + moment().toISOString()
+                });
+            },
+            deletedSpiele: []
         });
 
         function checkRowInvalid(index) {
@@ -90,10 +98,11 @@
         }
 
         function saveOrder() {
-            return spiel.updateOrder(vm.spiele).then(function (res) {
+            return spiel.updateOrder(vm.spiele.concat(vm.deletedSpiele)).then(function (res) {
                 vm.spiele = _.sortBy(res.GAMES, ['nummer']);
                 vm.isEditing = false;
                 vm.errorIndex = undefined;
+                vm.deletedSpiele = [];
                 toastr.success('Die neue Reihenfolge der Spiele wurde gespeichert.', 'Spielplan gespeichert');
             }, function (err) {
                 if (err.MESSAGEKEY === 'ERROR_SPIELPLAN_UNGUELTIG') {
@@ -136,6 +145,17 @@
            spiel.getAll().then(function (spiele) {
                vm.spiele = _.sortBy(spiele, ['nummer']);
            });
+        });
+
+        $scope.$on('removeSpiel', function (event, spielid) {
+            const currentSpiel = vm.spiele.find(function (single) {
+                return single._id.toString() === spielid;
+            });
+            currentSpiel.deleted = true;
+            vm.deletedSpiele.push(currentSpiel);
+            vm.spiele = vm.spiele.filter(function (single) {
+                return single._id.toString() !== spielid;
+            });
         });
 
         vm.loading = false;

@@ -16,7 +16,8 @@
                     'spiSingleSpiel': '=',
                     'showJugend': '=',
                     'showGruppe': '=',
-                    'isComplexMode': '='
+                    'isComplexMode': '=',
+                    'isEditing': '='
                 }
             };
         })
@@ -44,6 +45,7 @@
             showJugend: $scope.showJugend,
             isComplexMode: $scope.isComplexMode,
             isEditing: false,
+            spielplanIsEdited: $scope.isEditing,
             displayGruppe: function () {
                 return spiel.getGruppeDisplay($scope.spiSingleSpiel);
             },
@@ -120,7 +122,10 @@
                 }, undefined)
             },
             spielIsNotFilled: spielIsNotFilled(),
-            ergebnisDisplay: '   :   '
+            ergebnisDisplay: '   :   ',
+            removeSpiel: function () {
+                $scope.$emit('removeSpiel', vm.spiel._id);
+            }
         });
 
         function calcErgebnisDisplay() {

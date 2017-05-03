@@ -308,3 +308,7 @@ spi-panel-title spi-jugend-label {
     margin: 5px;
     text-align: center;
 }
+
+.color-red {
+    color: red;
+}
