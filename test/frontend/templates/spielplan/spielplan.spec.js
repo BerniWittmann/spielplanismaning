@@ -69,6 +69,14 @@
                 gruppen: [{}]
             }
         }];
+        var zeiten = {
+            startzeit: '10:00',
+            spielzeit: 6,
+            pausenzeit: 4,
+            endzeit: '16:00',
+            startdatum: '01.01.1970',
+            enddatum: '31.01.2000'
+        };
         var mockState = {
             go: function () {
             }
@@ -145,7 +153,8 @@
                 spiel: mockSpiel,
                 auth: mockAuth,
                 anzahlPlaetze: 3,
-                spielModus: 'normal'
+                spielModus: 'normal',
+                zeiten: zeiten
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

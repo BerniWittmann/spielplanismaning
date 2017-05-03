@@ -47,6 +47,7 @@
             isComplexMode: $scope.isComplexMode,
             isEditing: false,
             spielplanIsEdited: $scope.isEditing,
+            delay: 0,
             displayGruppe: function () {
                 return spiel.getGruppeDisplay($scope.spiSingleSpiel);
             },
@@ -185,6 +186,10 @@
 
         $scope.$watch('isLastPlatz', function () {
             vm.isLastPlatz = $scope.isLastPlatz
+        });
+
+        $scope.$watch('vm.delay', function () {
+            $scope.$emit('delayChanged', {delay: vm.delay, spiel: vm.spiel})
         });
     }
 

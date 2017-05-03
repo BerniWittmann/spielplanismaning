@@ -60,6 +60,7 @@
                 },
                 stop: function (e, ui) {
                     recalculateDateTimePlatz();
+                    vm.delays = [];
                 }
             },
             isEditing: false,
@@ -78,7 +79,8 @@
                     _id: 'testId' + moment().toISOString()
                 });
             },
-            deletedSpiele: []
+            deletedSpiele: [],
+            delays: {}
         });
 
         function checkRowInvalid(index) {
@@ -104,8 +106,9 @@
         }
 
         function saveOrder() {
-            return spiel.updateOrder(vm.spiele.concat(vm.deletedSpiele)).then(function (res) {
+            return spiel.updateOrder({spiele: vm.spiele.concat(vm.deletedSpiele), delays: vm.delays}).then(function (res) {
                 vm.spiele = _.sortBy(res.GAMES, ['nummer']);
+                vm.spieleBackup = vm.spiele;
                 vm.isEditing = false;
                 vm.errorIndex = undefined;
                 vm.deletedSpiele = [];
@@ -164,6 +167,16 @@
             });
         });
 
+        $scope.$on('delayChanged', function (event, data) {
+           const index = vm.spiele.findIndex(function (single) {
+               return single._id.toString() === data.spiel._id.toString();
+           });
+           if (index >= 0 && data.delay && !_.isNaN(data.delay)) {
+               vm.delays[index] = data.delay;
+               recalculateDateTimePlatz()
+           }
+        });
+
         function recalculateDateTimePlatz() {
             vm.spiele = vm.spiele.map(function (spiel, index) {
                 const dateTimeObj = calcZeit(index);
@@ -191,8 +204,18 @@
                 return undefined;
             }
 
-            const date = moment(zeiten.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
-            const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (zeiten.spielzeit + zeiten.pausenzeit), 'minutes');
+            let delayBefore = 0;
+
+            _.forIn(vm.delays, function (value, key) {
+                const i = parseInt(key, 10);
+
+                if (i < index) {
+                    delayBefore += value;
+                }
+            });
+
+            const date = moment(zeiten.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days').add(delayBefore, 'minutes');
+            const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (zeiten.spielzeit + zeiten.pausenzeit) + delayBefore, 'minutes');
             const platz = (offsetSpiele % plaetze) + 1;
 
             return {
