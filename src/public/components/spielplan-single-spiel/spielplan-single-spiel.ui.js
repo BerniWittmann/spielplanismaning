@@ -17,7 +17,8 @@
                     'showJugend': '=',
                     'showGruppe': '=',
                     'isComplexMode': '=',
-                    'isEditing': '='
+                    'isEditing': '=',
+                    'isLastPlatz': '='
                 }
             };
         })
@@ -125,7 +126,9 @@
             ergebnisDisplay: '   :   ',
             removeSpiel: function () {
                 $scope.$emit('removeSpiel', vm.spiel._id);
-            }
+            },
+            isLastPlatz: $scope.isLastPlatz,
+            delaySpiel: delaySpiel
         });
 
         function calcErgebnisDisplay() {
@@ -174,6 +177,10 @@
         function spielIsNotFilled() {
             const spiel = $scope.spiSingleSpiel;
             return !spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name;
+        }
+
+        function delaySpiel() {
+
         }
     }
 
