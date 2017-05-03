@@ -32,14 +32,23 @@
         </div>
         <div data-ng-if="!vm.isEditing">
             <span>{{vm.ergebnisDisplay}}</span>
-			<span class="pull-right" style="padding-left:33px;" data-ng-if="vm.canEdit" data-ng-hide="vm.spielIsNotFilled">
+			<span class="pull-right" style="padding-left:33px;" data-ng-if="vm.canEdit && !vm.spielplanIsEdited" data-ng-hide="vm.spielIsNotFilled">
 			<span class="hidden-print" data-ng-click="vm.edit(); $event.stopPropagation();"
                   data-uib-tooltip="Ergebnis bearbeiten" data-tooltip-placement="top-right"><i
                     class="icon-hover fa fa-pencil"></i></span>
 			</span>
+            <span class="pull-right spiel-click-icon spiel-click-icon-single" data-ng-if="vm.spielplanIsEdited && vm.isLastPlatz" data-uib-popover-template="'spielDelayPopoverTemplate.html'" data-popover-title="Verzögerung" data-popover-placement="top-right" data-popover-trigger="outsideClick" data-uib-tooltip="Verzögerung nach dem Spiel einfügen" data-tooltip-placement="top-right"><i class="fa fa-clock-o"></i></span>
         </div>
     </div>
     <div data-ng-if="vm.spielplanIsEdited && !vm.spiel.jugend">
-        <span class="pull-right color-red" data-ng-click="vm.removeSpiel(); $event.stopPropagation();" data-uib-tooltip="Spiel löschen" data-tooltip-placement="top-right"><i class="fa fa-minus-circle"></i></span>
+        <span class="pull-right color-red spiel-click-icon" data-ng-click="vm.removeSpiel(); $event.stopPropagation();" data-uib-tooltip="Spiel löschen" data-tooltip-placement="top-right"><i class="fa fa-minus-circle"></i></span>
+        <span class="pull-right spiel-click-icon" data-ng-if="vm.isLastPlatz" data-uib-popover-template="'spielDelayPopoverTemplate.html'" data-popover-title="Verzögerung" data-popover-placement="top-right" data-popover-trigger="outsideClick" data-uib-tooltip="Verzögerung nach dem Spiel einfügen" data-tooltip-placement="top-right"><i class="fa fa-clock-o"></i></span>
     </div>
 </td>
+
+<script type="text/ng-template" id="spielDelayPopoverTemplate.html">
+    <div>Verzögerung in Minuten</div>
+    <div class="form-group">
+        <input type="number" ng-model="vm.delay" ng-model-options="{debounce: 300}" class="form-control">
+    </div>
+</script>

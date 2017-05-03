@@ -305,7 +305,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorSpielplanUngueltig
      **/
     router.put('/order', function (req, res) {
-        const spiele = req.body;
+        const spiele = req.body.spiele;
+        const delays = req.body.delays || {};
 
         logger.verbose('Checking if new order is valid');
         const errorIndex = helpers.checkSpielOrderChangeAllowed(spiele);
@@ -337,10 +338,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     return spiel.save(function (err, spiel) {
                        if (err) return asyncdone(err);
 
-                       return updateSpielDateTime(spiel, index, spielplan, asyncdone);
+                       return updateSpielDateTime(spiel, index, spielplan, delays, asyncdone);
                     });
                 }
-                return updateSpielDateTime(singlespiel, index, spielplan, asyncdone);
+                return updateSpielDateTime(singlespiel, index, spielplan, delays, asyncdone);
             }, function (err) {
                 if (err) {
                     return messages.Error(res, err);
@@ -358,13 +359,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
         });
     });
 
-    function updateSpielDateTime(singlespiel, index, spielplan, cb) {
+    function updateSpielDateTime(singlespiel, index, spielplan, delays, cb) {
         return Spiel.findById(singlespiel._id).exec(function (err, spiel) {
             if (err) {
                 return cb(err);
             }
             logger.silly('Calculating New Spiel Date/Time/Place');
-            const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan);
+            const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan, delays);
 
             spiel.datum = dateTimePlace.date;
             spiel.uhrzeit = dateTimePlace.time;

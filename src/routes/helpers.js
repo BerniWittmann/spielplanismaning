@@ -210,7 +210,8 @@ function checkSpielOrderChangeAllowed(spiele) {
     return -1;
 }
 
-function calcSpielDateTime(nr, spielplan) {
+function calcSpielDateTime(nr, spielplan, delays) {
+    delays = delays || {};
     logger.silly('Calculate Date and Time for a Spiel');
     const plaetze = parseInt(process.env.PLAETZE, 10);
     logger.silly('Calculated %d Plätze', plaetze);
@@ -235,8 +236,18 @@ function calcSpielDateTime(nr, spielplan) {
         return undefined;
     }
 
-    const date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
-    const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit), 'minutes');
+    let delayBefore = 0;
+
+    _.forIn(delays, function (value, key) {
+        const i = parseInt(key, 10);
+
+        if (i < (nr - 1)) {
+            delayBefore += value;
+        }
+    });
+
+    const date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days').add(delayBefore, 'minutes');
+    const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit) + delayBefore, 'minutes');
     const platz = (offsetSpiele % plaetze) + 1;
     logger.silly('Calculated Date: %s', date.format('DD.MM.YYYY'));
     logger.silly('Calculated Time: %s', time.format('HH:mm'));

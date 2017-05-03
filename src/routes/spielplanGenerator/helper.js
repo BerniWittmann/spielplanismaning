@@ -214,7 +214,7 @@ function leeresSpiel(spieleGesamt, leereSpieleStreak, i) {
 }
 
 function calcSpielDateTime(i, zeiten) {
-    const dateTimeObj = helpers.calcSpielDateTime(i, zeiten);
+    const dateTimeObj = helpers.calcSpielDateTime(i, zeiten, {});
     if (!dateTimeObj) {
         return logger.error('Couldn\'t calculate spiel data');
     }
@@ -314,7 +314,7 @@ function filterCompleteSpiele(spiele) {
 function recalculateDateTimePlatzForSpiele(spiele, zeiten) {
     if (spiele && zeiten) {
         return spiele.map(function (spiel) {
-            const dateTimeObject = helpers.calcSpielDateTime(spiel.nummer, zeiten);
+            const dateTimeObject = helpers.calcSpielDateTime(spiel.nummer, zeiten, {});
             spiel.uhrzeit = dateTimeObject.time;
             spiel.datum = dateTimeObject.date;
             spiel.platz = dateTimeObject.platz;

@@ -24,13 +24,16 @@
                     },
                     spielModus: function (config) {
                         return config.getSpielmodus();
+                    },
+                    zeiten: function (spielplan) {
+                        return spielplan.getZeiten();
                     }
                 }
             });
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus) {
+    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus, zeiten) {
         const vm = this;
         vm.loading = true;
 
@@ -54,6 +57,10 @@
                         ui.item.sortable.cancel();
                         toastr.warning('Spiele die bereits beendet sind können nicht mehr verschoben werden.', 'Spiel nicht verschiebbar');
                     }
+                },
+                stop: function (e, ui) {
+                    recalculateDateTimePlatz();
+                    vm.delays = [];
                 }
             },
             isEditing: false,
@@ -72,7 +79,8 @@
                     _id: 'testId' + moment().toISOString()
                 });
             },
-            deletedSpiele: []
+            deletedSpiele: [],
+            delays: {}
         });
 
         function checkRowInvalid(index) {
@@ -98,8 +106,9 @@
         }
 
         function saveOrder() {
-            return spiel.updateOrder(vm.spiele.concat(vm.deletedSpiele)).then(function (res) {
+            return spiel.updateOrder({spiele: vm.spiele.concat(vm.deletedSpiele), delays: vm.delays}).then(function (res) {
                 vm.spiele = _.sortBy(res.GAMES, ['nummer']);
+                vm.spieleBackup = vm.spiele;
                 vm.isEditing = false;
                 vm.errorIndex = undefined;
                 vm.deletedSpiele = [];
@@ -157,6 +166,64 @@
                 return single._id.toString() !== spielid;
             });
         });
+
+        $scope.$on('delayChanged', function (event, data) {
+           const index = vm.spiele.findIndex(function (single) {
+               return single._id.toString() === data.spiel._id.toString();
+           });
+           if (index >= 0 && data.delay && !_.isNaN(data.delay)) {
+               vm.delays[index] = data.delay;
+               recalculateDateTimePlatz()
+           }
+        });
+
+        function recalculateDateTimePlatz() {
+            vm.spiele = vm.spiele.map(function (spiel, index) {
+                const dateTimeObj = calcZeit(index);
+                spiel.datum = dateTimeObj.date;
+                spiel.uhrzeit = dateTimeObj.time;
+                spiel.platz = dateTimeObj.platz;
+                return spiel;
+            });
+        }
+
+        function calcZeit(index) {
+            const plaetze = anzahlPlaetze;
+            const dailyStartTime = moment(zeiten.startzeit, 'HH:mm');
+            const dailyEndTime = moment(zeiten.endzeit, 'HH:mm');
+            const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (zeiten.spielzeit + zeiten.pausenzeit)) * plaetze;
+            if (spielePerDay < 0) {
+                return undefined;
+            }
+            const offsetDays = Math.floor((index) / spielePerDay);
+            if (offsetDays < 0) {
+                return undefined;
+            }
+            const offsetSpiele = (index) % spielePerDay;
+            if (offsetSpiele < 0) {
+                return undefined;
+            }
+
+            let delayBefore = 0;
+
+            _.forIn(vm.delays, function (value, key) {
+                const i = parseInt(key, 10);
+
+                if (i < index) {
+                    delayBefore += value;
+                }
+            });
+
+            const date = moment(zeiten.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days').add(delayBefore, 'minutes');
+            const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (zeiten.spielzeit + zeiten.pausenzeit) + delayBefore, 'minutes');
+            const platz = (offsetSpiele % plaetze) + 1;
+
+            return {
+                date: date.format('DD.MM.YYYY'),
+                time: time.format('HH:mm'),
+                platz: platz
+            }
+        }
 
         vm.loading = false;
     }

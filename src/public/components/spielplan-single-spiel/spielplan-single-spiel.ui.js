@@ -17,7 +17,8 @@
                     'showJugend': '=',
                     'showGruppe': '=',
                     'isComplexMode': '=',
-                    'isEditing': '='
+                    'isEditing': '=',
+                    'isLastPlatz': '='
                 }
             };
         })
@@ -46,6 +47,7 @@
             isComplexMode: $scope.isComplexMode,
             isEditing: false,
             spielplanIsEdited: $scope.isEditing,
+            delay: 0,
             displayGruppe: function () {
                 return spiel.getGruppeDisplay($scope.spiSingleSpiel);
             },
@@ -125,7 +127,9 @@
             ergebnisDisplay: '   :   ',
             removeSpiel: function () {
                 $scope.$emit('removeSpiel', vm.spiel._id);
-            }
+            },
+            isLastPlatz: $scope.isLastPlatz,
+            delaySpiel: delaySpiel
         });
 
         function calcErgebnisDisplay() {
@@ -175,6 +179,18 @@
             const spiel = $scope.spiSingleSpiel;
             return !spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name;
         }
+
+        function delaySpiel() {
+
+        }
+
+        $scope.$watch('isLastPlatz', function () {
+            vm.isLastPlatz = $scope.isLastPlatz
+        });
+
+        $scope.$watch('vm.delay', function () {
+            $scope.$emit('delayChanged', {delay: vm.delay, spiel: vm.spiel})
+        });
     }
 
 })();

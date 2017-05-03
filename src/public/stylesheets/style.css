@@ -312,3 +312,12 @@ spi-panel-title spi-jugend-label {
 .color-red {
     color: red;
 }
+
+.spiel-click-icon {
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+.spiel-click-icon-single {
+    margin-right: 22px;
+}

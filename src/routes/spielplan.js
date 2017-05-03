@@ -123,7 +123,7 @@ module.exports = function () {
                 async.eachSeries(spiele, function (singlespiel, asyncdone) {
                     if (singlespiel) {
                         logger.silly('Updating Spiel #%d', singlespiel.nummer);
-                        const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body);
+                        const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body, {});
                         singlespiel.uhrzeit = dateTimeObject.time;
                         singlespiel.datum = dateTimeObject.date;
                         singlespiel.platz = dateTimeObject.platz;

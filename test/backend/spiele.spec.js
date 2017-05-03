@@ -322,7 +322,7 @@ describe('Route: Spiele', function () {
         request(server)
             .put('/api/spiele/order')
             .set('Authorization', server.adminToken)
-            .send(alleSpiele)
+            .send({spiele: alleSpiele})
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
