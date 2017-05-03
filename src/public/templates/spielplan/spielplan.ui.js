@@ -24,13 +24,16 @@
                     },
                     spielModus: function (config) {
                         return config.getSpielmodus();
+                    },
+                    zeiten: function (spielplan) {
+                        return spielplan.getZeiten();
                     }
                 }
             });
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus) {
+    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus, zeiten) {
         const vm = this;
         vm.loading = true;
 
@@ -54,6 +57,9 @@
                         ui.item.sortable.cancel();
                         toastr.warning('Spiele die bereits beendet sind können nicht mehr verschoben werden.', 'Spiel nicht verschiebbar');
                     }
+                },
+                stop: function (e, ui) {
+                    recalculateDateTimePlatz();
                 }
             },
             isEditing: false,
@@ -157,6 +163,44 @@
                 return single._id.toString() !== spielid;
             });
         });
+
+        function recalculateDateTimePlatz() {
+            vm.spiele = vm.spiele.map(function (spiel, index) {
+                const dateTimeObj = calcZeit(index);
+                spiel.datum = dateTimeObj.date;
+                spiel.uhrzeit = dateTimeObj.time;
+                spiel.platz = dateTimeObj.platz;
+                return spiel;
+            });
+        }
+
+        function calcZeit(index) {
+            const plaetze = anzahlPlaetze;
+            const dailyStartTime = moment(zeiten.startzeit, 'HH:mm');
+            const dailyEndTime = moment(zeiten.endzeit, 'HH:mm');
+            const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (zeiten.spielzeit + zeiten.pausenzeit)) * plaetze;
+            if (spielePerDay < 0) {
+                return undefined;
+            }
+            const offsetDays = Math.floor((index) / spielePerDay);
+            if (offsetDays < 0) {
+                return undefined;
+            }
+            const offsetSpiele = (index) % spielePerDay;
+            if (offsetSpiele < 0) {
+                return undefined;
+            }
+
+            const date = moment(zeiten.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days');
+            const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (zeiten.spielzeit + zeiten.pausenzeit), 'minutes');
+            const platz = (offsetSpiele % plaetze) + 1;
+
+            return {
+                date: date.format('DD.MM.YYYY'),
+                time: time.format('HH:mm'),
+                platz: platz
+            }
+        }
 
         vm.loading = false;
     }

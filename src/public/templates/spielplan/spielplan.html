@@ -28,11 +28,11 @@
             </tr>
             </thead>
             <tbody ui-sortable="vm.sortableOptions" ng-model="vm.spiele" data-ng-if="vm.isEditing">
-                <tr data-ng-repeat="spiel in vm.spiele" class="spielplan-single-spiel" data-ng-class="{'invalid-spielplan-row': vm.checkRowInvalid($index)}"
+                <tr data-ng-repeat="spiel in vm.spiele track by spiel._id" class="spielplan-single-spiel" data-ng-class="{'invalid-spielplan-row': vm.checkRowInvalid($index), 'last-platz-spiel': vm.isLastPlatz(spiel)}"
                     data-spi-single-spiel="spiel" data-index="{{ $index }}" data-show-jugend="vm.showJugend" data-show-gruppe="vm.showGruppe" data-is-complex-mode="vm.isComplexMode" data-is-editing="vm.isEditing" data-is-last-platz="vm.isLastPlatz(spiel)"></tr>
             </tbody>
             <tbody data-ng-if="!vm.isEditing" class="table-body-spiele-by-date" data-ng-repeat="spieleByDate in vm.spieleByDate">
-                <tr data-ng-repeat="spiel in spieleByDate" class="spielplan-single-spiel" data-ng-class="{'last-platz-spiel': vm.isLastPlatz(spiel)}" data-is-complex-mode="vm.isComplexMode" data-show-jugend="vm.showJugend" data-show-gruppe="vm.showGruppe" data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
+                <tr data-ng-repeat="spiel in spieleByDate track by spiel._id" class="spielplan-single-spiel" data-ng-class="{'last-platz-spiel': vm.isLastPlatz(spiel)}" data-is-complex-mode="vm.isComplexMode" data-show-jugend="vm.showJugend" data-show-gruppe="vm.showGruppe" data-spi-single-spiel="spiel" data-ng-click="vm.gotoSpiel(spiel)"></tr>
             </tbody>
         </table>
         <button data-ng-if="vm.isEditing" data-ng-click="vm.addEmptySpiel()" class="btn btn-primary text-center"><i class="fa fa-plus"></i> Leeres Spiel einfügen</button>

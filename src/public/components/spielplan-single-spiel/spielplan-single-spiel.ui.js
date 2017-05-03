@@ -182,6 +182,10 @@
         function delaySpiel() {
 
         }
+
+        $scope.$watch('isLastPlatz', function () {
+            vm.isLastPlatz = $scope.isLastPlatz
+        });
     }
 
 })();
