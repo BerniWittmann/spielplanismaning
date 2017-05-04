@@ -49,6 +49,6 @@
 <script type="text/ng-template" id="spielDelayPopoverTemplate.html">
     <div>Verzögerung in Minuten</div>
     <div class="form-group">
-        <input type="number" ng-model="vm.delay" ng-model-options="{debounce: 300}" class="form-control">
+        <input type="number" ng-model="vm.delay" data-ng-change="vm.delayChangeHandle()" ng-model-options="{debounce: 300}" class="form-control">
     </div>
 </script>

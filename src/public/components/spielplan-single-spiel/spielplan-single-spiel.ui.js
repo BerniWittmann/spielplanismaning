@@ -129,7 +129,8 @@
                 $scope.$emit('removeSpiel', vm.spiel._id);
             },
             isLastPlatz: $scope.isLastPlatz,
-            delaySpiel: delaySpiel
+            delaySpiel: delaySpiel,
+            delayChangeHandle: delayChangeHandle
         });
 
         function calcErgebnisDisplay() {
@@ -188,9 +189,9 @@
             vm.isLastPlatz = $scope.isLastPlatz
         });
 
-        $scope.$watch('vm.delay', function () {
+        function delayChangeHandle() {
             $scope.$emit('delayChanged', {delay: vm.delay, spiel: vm.spiel})
-        });
+        }
     }
 
 })();

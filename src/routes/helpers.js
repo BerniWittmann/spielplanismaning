@@ -246,7 +246,7 @@ function calcSpielDateTime(nr, spielplan, delays) {
         }
     });
 
-    const date = moment(spielplan.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days').add(delayBefore, 'minutes');
+    const date = moment(spielplan.startdatum, 'DD.MM.YYYY').set({'hour': dailyStartTime.get('hour'), 'minute': dailyStartTime.get('minute')}).add(offsetDays, 'days').add(delayBefore, 'minutes');
     const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit) + delayBefore, 'minutes');
     const platz = (offsetSpiele % plaetze) + 1;
     logger.silly('Calculated Date: %s', date.format('DD.MM.YYYY'));
