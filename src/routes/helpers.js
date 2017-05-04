@@ -82,12 +82,12 @@ function findEntityAndPushTeam(model, id, team, res, callback) {
     });
 }
 
-function removeEntityBy(model, by, value, res, cb) {
+function removeEntityBy(model, by, value, cb) {
     const query = {};
     query[by] = value;
     return model.remove(query, function (err) {
         if (err) {
-            return messages.Error(res, err);
+            return cb(err);
         }
 
         return cb(null);
@@ -411,7 +411,7 @@ function fillTeamFromGruppe(team, cb) {
                             return Jugend.removeTeam(originalTeam.jugend._id, team._id, function (err) {
                                 if (err) return cb(err);
 
-                                return removeEntityBy(Team, '_id', team._id, {}, cb);
+                                return removeEntityBy(Team, '_id', team._id, cb);
                             });
                         });
                     });

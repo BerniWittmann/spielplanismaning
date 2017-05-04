@@ -163,9 +163,11 @@ module.exports = function () {
                     }
                     logger.verbose('Removed Gruppe from Jugend');
 
-                    return helpers.removeEntityBy(Team, 'gruppe', gruppe, res, function () {
+                    return helpers.removeEntityBy(Team, 'gruppe', gruppe, function (err) {
+                        if (err) return messages.Error(res, err);
                         logger.verbose('Removed All Teams from this Gruppe');
-                        return helpers.removeEntityBy(Gruppe, '_id', gruppe, res, function (err) {
+                        return helpers.removeEntityBy(Gruppe, '_id', gruppe, function (err) {
+                            if (err) return messages.Error(res, err);
                             logger.verbose('Removed Gruppe');
                             return handler.handleErrorAndDeleted(err, res);
                         })

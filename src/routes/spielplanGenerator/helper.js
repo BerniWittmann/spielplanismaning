@@ -543,10 +543,10 @@ function removeZwischenRundenGruppe(callback) {
                         return cb(err);
                     }
 
-                    return helpers.removeEntityBy(Spiel, 'gruppe', gruppe._id.toString(), {}, function (err) {
+                    return helpers.removeEntityBy(Spiel, 'gruppe', gruppe._id.toString(), function (err) {
                         if (err) return cb(err);
 
-                        return helpers.removeEntityBy(Gruppen, '_id', gruppe._id.toString(), {}, function (err) {
+                        return helpers.removeEntityBy(Gruppen, '_id', gruppe._id.toString(), function (err) {
                             if (err) {
                                 return cb(err);
                             }
@@ -559,7 +559,7 @@ function removeZwischenRundenGruppe(callback) {
         }, function (err) {
             if (err) return callback(err);
 
-            return helpers.removeEntityBy(Team, 'isPlaceholder', true, {}, function (err) {
+            return helpers.removeEntityBy(Team, 'isPlaceholder', true, function (err) {
                 if (err) return callback(err);
 
                 return callback();

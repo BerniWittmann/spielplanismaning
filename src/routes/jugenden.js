@@ -136,11 +136,13 @@ module.exports = function () {
                 return messages.Error(res, err);
             }
 
-            return helpers.removeEntityBy(Team, 'jugend', req.query.id, res, function () {
+            return helpers.removeEntityBy(Team, 'jugend', req.query.id, function (err) {
+                if (err) return messages.Error(res, err);
                 logger.verbose('Removed All Teams from this Jugend');
-                return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, res, function () {
+                return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, function (err) {
+                    if (err) return messages.Error(res, err);
                     logger.verbose('Removed All Gruppen from this Jugend');
-                    return helpers.removeEntityBy(Jugend, '_id', req.query.id, res, function (err) {
+                    return helpers.removeEntityBy(Jugend, '_id', req.query.id, function (err) {
                         return handler.handleErrorAndDeleted(err, res);
                     });
                 });

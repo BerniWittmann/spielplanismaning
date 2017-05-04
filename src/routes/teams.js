@@ -86,7 +86,7 @@ module.exports = function () {
                     }
 
                     logger.verbose('Delete Team');
-                    return helpers.removeEntityBy(Team, '_id', team, res, function (err) {
+                    return helpers.removeEntityBy(Team, '_id', team, function (err) {
                         return handler.handleErrorAndDeleted(err, res);
                     });
                 });

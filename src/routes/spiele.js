@@ -108,7 +108,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.delete('/', function (req, res) {
         logger.warn('This method is deprecated');
         logger.verbose('Delete Spiel %s', req.query.id);
-        return helpers.removeEntityBy(Spiel, '_id', req.query.id, res, function (err) {
+        return helpers.removeEntityBy(Spiel, '_id', req.query.id, function (err) {
             return handler.handleErrorAndDeleted(err, res);
         });
     });
@@ -330,7 +330,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 }
                 if (singlespiel.deleted && !singlespiel.isNew && singlespiel._id) {
                     logger.silly('Delete Spiel %s', singlespiel._id);
-                    return helpers.removeEntityBy(Spiel, '_id', singlespiel._id, {}, asyncdone);
+                    return helpers.removeEntityBy(Spiel, '_id', singlespiel._id, asyncdone);
                 }
                 if (singlespiel.isNew && !singlespiel.deleted) {
                     logger.silly('Create Spiel %s', singlespiel._id);

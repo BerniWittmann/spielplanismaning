@@ -91,7 +91,7 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        return helpers.removeEntityBy(Ansprechpartner, '_id', req.query.id, res, function (err) {
+        return helpers.removeEntityBy(Ansprechpartner, '_id', req.query.id, function (err) {
             return handler.handleErrorAndDeleted(err, res);
         });
     });
