@@ -59,6 +59,8 @@
             $watch: function () {
             },
             $apply: function () {
+            },
+            $on: function () {
             }
         };
         var mockAuth;

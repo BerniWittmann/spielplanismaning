@@ -15,7 +15,7 @@
             controllerAs: 'vm'
         });
 
-    function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, BestaetigenDialog) {
+    function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, $scope, BestaetigenDialog) {
         const vm = this;
         vm.loading = true;
 
@@ -61,6 +61,7 @@
                 jugend.delete(id).then(function () {
                     vm.jugend = {};
                     vm.loading = false;
+                    $scope.$emit('jugendDeleted');
                     spielplan.createSpielplan();
                 });
             }

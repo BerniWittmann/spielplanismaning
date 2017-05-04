@@ -57,6 +57,12 @@
             refreshAnmeldeObjects: team.reloadAnmeldeObjekte
         });
 
+        $scope.$on('jugendDeleted', function () {
+           jugend.getAll().then(function (res) {
+               vm.jugenden = res;
+           });
+        });
+
         vm.loading = false;
     }
 })();
