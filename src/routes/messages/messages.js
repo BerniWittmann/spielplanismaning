@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 module.exports = function () {
     const logger = require('winston').loggers.get('api');
     function send(obj, res) {
@@ -10,6 +12,10 @@ module.exports = function () {
             level = 'error';
         }
         logger.log(level, 'Message: %d %s \n', obj.STATUSCODE, obj.MESSAGE, obj);
+        if (!res || _.isEmpty(res)) {
+            logger.error('Undefined Response, while sending Message.');
+            return;
+        }
         return res.status(obj.STATUSCODE).json(obj);
     }
 
