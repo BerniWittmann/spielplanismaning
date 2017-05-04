@@ -83,9 +83,6 @@
             delays: {}
         });
 
-        console.log(vm.spieleBackup);
-        console.log(vm.spiele);
-
         function checkRowInvalid(index) {
             return vm.errorIndex >= 0 && index >= vm.errorIndex && index < (vm.errorIndex + 3);
         }
@@ -103,10 +100,13 @@
         }
 
         function abortEdit() {
-            vm.spiele = _.sortBy(vm.spieleBackup, ['nummer']);
             vm.delays = {};
             vm.isEditing = false;
             vm.errorIndex = undefined;
+            vm.spiele = _.sortBy(vm.spieleBackup, ['nummer']);
+            return spiel.getAll().then(function (res) {
+                vm.spiele = _.sortBy(res, ['nummer']);
+            });
         }
 
         function saveOrder() {
@@ -175,7 +175,8 @@
            const index = vm.spiele.findIndex(function (single) {
                return single._id.toString() === data.spiel._id.toString();
            });
-           if (index >= 0 && data.delay && !_.isNaN(data.delay)) {
+           const valBefore = vm.delays[index];
+           if (index >= 0 && (data.delay || (data.delay === 0 && valBefore && valBefore !== 0)) && !_.isNaN(data.delay)) {
                vm.delays[index] = data.delay;
                recalculateDateTimePlatz()
            }
