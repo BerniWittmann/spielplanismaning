@@ -83,6 +83,9 @@
             delays: {}
         });
 
+        console.log(vm.spieleBackup);
+        console.log(vm.spiele);
+
         function checkRowInvalid(index) {
             return vm.errorIndex >= 0 && index >= vm.errorIndex && index < (vm.errorIndex + 3);
         }
@@ -101,6 +104,7 @@
 
         function abortEdit() {
             vm.spiele = _.sortBy(vm.spieleBackup, ['nummer']);
+            vm.delays = {};
             vm.isEditing = false;
             vm.errorIndex = undefined;
         }
@@ -214,7 +218,7 @@
                 }
             });
 
-            const date = moment(zeiten.startdatum, 'DD.MM.YYYY').add(offsetDays, 'days').add(delayBefore, 'minutes');
+            const date = moment(zeiten.startdatum, 'DD.MM.YYYY').set({'hour': dailyStartTime.get('hour'), 'minute': dailyStartTime.get('minute')}).add(offsetDays, 'days').add(delayBefore, 'minutes');
             const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (zeiten.spielzeit + zeiten.pausenzeit) + delayBefore, 'minutes');
             const platz = (offsetSpiele % plaetze) + 1;
 
