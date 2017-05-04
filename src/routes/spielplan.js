@@ -70,7 +70,7 @@ module.exports = function () {
             logger.verbose('Generator finished');
             if (err) {
                 if (err.message !== 'SpieleGesamt calulation returned invalid value') {
-                    return messages.Error(err);
+                    return messages.Error(res, err);
                 }
                 err = null;
             }
