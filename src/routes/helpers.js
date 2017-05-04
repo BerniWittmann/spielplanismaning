@@ -210,32 +210,78 @@ function checkSpielOrderChangeAllowed(spiele) {
     return -1;
 }
 
-function calcSpielDateTime(nr, spielplan, delays) {
-    delays = delays || {};
-    logger.silly('Calculate Date and Time for a Spiel');
-    const plaetze = parseInt(process.env.PLAETZE, 10);
-    logger.silly('Calculated %d Plätze', plaetze);
+function checkSpielplanZeitValid(val, format) {
+    if (!val) {
+        logger.error('%s is not given', val);
+        return false
+    }
+
+    if (!moment(val, format).isValid()) {
+        logger.error('%s is not valid', val);
+        return false;
+    }
+
+    return true;
+}
+
+function checkSpielplanZeitenValid(spielplan) {
+    const requiredKeys = [{
+        val: spielplan.startzeit,
+        format: 'HH:mm'
+    }, {
+        val: spielplan.endzeit,
+        format: 'HH:mm'
+    }, {
+        val: spielplan.spielzeit,
+        format: 'numer'
+    }, {
+        val: spielplan.pausenzeit,
+        format: 'HH:mm'
+    }, {
+        val: spielplan.startdatum,
+        format: 'DD.MM.YYYY'
+    }];
+    let valid = true;
+    _.forEach(requiredKeys, function (current) {
+        if (!checkSpielplanZeitValid(current.val, current.format)) {
+            valid = false;
+        }
+    });
+    return valid;
+}
+
+function getPlaetze() {
+    let plaetze;
+    try {
+        plaetze = parseInt(process.env.PLAETZE, 10);
+    }catch (err) {
+        logger.error(err);
+    }
+    if (!plaetze || _.isNaN(plaetze)) {
+        return logger.error('Anzahl Plätze is not given');
+    }
+    return plaetze;
+}
+
+function calcSpielDateTimePresets(spielplan, plaetze, nr, delays) {
+    const startDatum = moment(spielplan.startdatum, 'DD.MM.YYYY');
     const dailyStartTime = moment(spielplan.startzeit, 'HH:mm');
     const dailyEndTime = moment(spielplan.endzeit, 'HH:mm');
     const spielePerDay = Math.floor(dailyEndTime.diff(dailyStartTime, 'minutes') / (spielplan.spielzeit + spielplan.pausenzeit)) * plaetze;
-    logger.silly('Calculated %d Spiele per Day', spielePerDay);
     if (spielePerDay < 0) {
         logger.warn('Less than 0 Spiele per Day were calculated');
         return undefined;
     }
     const offsetDays = Math.floor((nr - 1) / spielePerDay);
-    logger.silly('Calculated offset of %d days for the Spiel', offsetDays);
     if (offsetDays < 0) {
         logger.warn('Negative Offset of Days!');
         return undefined;
     }
     const offsetSpiele = (nr - 1) % spielePerDay;
-    logger.silly('Calculated offset of %d Spiele within the day', offsetSpiele);
     if (offsetSpiele < 0) {
         logger.warn('Negative Offset of Spiele!');
         return undefined;
     }
-
     let delayBefore = 0;
 
     _.forIn(delays, function (value, key) {
@@ -245,10 +291,39 @@ function calcSpielDateTime(nr, spielplan, delays) {
             delayBefore += value;
         }
     });
+    return {
+        dailyStartTime: dailyStartTime,
+        dailyEndTime: dailyEndTime,
+        spielePerDay: spielePerDay,
+        offsetDays: offsetDays,
+        offsetSpiele: offsetSpiele,
+        delayBefore: delayBefore,
+        startDatum: startDatum
+    }
+}
 
-    const date = moment(spielplan.startdatum, 'DD.MM.YYYY').set({'hour': dailyStartTime.get('hour'), 'minute': dailyStartTime.get('minute')}).add(offsetDays, 'days').add(delayBefore, 'minutes');
-    const time = dailyStartTime.add(Math.floor(offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit) + delayBefore, 'minutes');
-    const platz = (offsetSpiele % plaetze) + 1;
+function calcSpielDateTime(nr, spielplan, delays) {
+    delays = delays || {};
+    logger.silly('Calculate Date and Time for a Spiel');
+    if (!checkSpielplanZeitenValid(spielplan)) {
+        return undefined;
+    }
+
+    const plaetze = getPlaetze();
+    const presets = calcSpielDateTimePresets(spielplan, nr, plaetze, delays);
+    logger.silly('Calculated Presets', presets);
+
+    if (!presets) {
+        return;
+    }
+
+    const date = presets.startDatum
+        .set({'hour': presets.dailyStartTime.get('hour'), 'minute': presets.dailyStartTime.get('minute')})
+        .add(presets.offsetDays, 'days')
+        .add(presets.delayBefore, 'minutes');
+    const time = presets.dailyStartTime
+        .add(Math.floor(presets.offsetSpiele / plaetze) * (spielplan.spielzeit + spielplan.pausenzeit) + presets.delayBefore, 'minutes');
+    const platz = (presets.offsetSpiele % plaetze) + 1;
     logger.silly('Calculated Date: %s', date.format('DD.MM.YYYY'));
     logger.silly('Calculated Time: %s', time.format('HH:mm'));
     logger.silly('Calculated Platz: %d', platz);
