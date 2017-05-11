@@ -9,10 +9,14 @@
                     const externalRequestRegex = /(http|https)/;
                     if (config.url && externalRequestRegex.test(config.url)) {
                         config.headers.Authorization = undefined;
-                        return config;
+                    } else {
+                        config.headers.Authorization = authToken.getToken();
                     }
 
-                    config.headers.Authorization = authToken.getToken();
+                    const currentEvent = $injector.get('veranstaltungen').getCurrentEvent();
+                    if (currentEvent && currentEvent._id) {
+                        config.headers['Beach-Event-ID'] = currentEvent._id.toString();
+                    }
 
                     return config;
                 },

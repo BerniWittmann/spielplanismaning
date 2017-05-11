@@ -52,6 +52,7 @@ require('./models/Teams');
 require('./models/Subscriber');
 require('./models/Users')(secret);
 require('./models/Ansprechpartner');
+require('./models/Veranstaltungen');
 require('./config/passport');
 
 app.set('ENVIRONMENT', process.env.NODE_ENV);
@@ -114,6 +115,8 @@ require('./routes/middleware/authorization.js')(app, secret);
 
 //Setup BadRequest Handler
 require('./routes/middleware/badRequestHandler.js')(app);
+
+require('./routes/middleware/beachEvent.js')(app);
 
 //Setup Routes
 require('./routes/routes.js')(app, sendgrid, secret);

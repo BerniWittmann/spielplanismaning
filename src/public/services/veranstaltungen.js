@@ -1,0 +1,75 @@
+(function () {
+    'use strict';
+
+    angular
+        .module('spi.veranstaltungen', ['spi.routes'])
+        .factory('veranstaltungen', ['routes', 'storage', 'CURRENT_EVENT_TOKEN_NAME', function (routes, storage, CURRENT_EVENT_TOKEN_NAME) {
+            const veranstaltungen = {};
+
+            veranstaltungen.getAll = function () {
+                return routes.requestGETBase('veranstaltungen');
+            };
+
+            function cacheAlleEvents() {
+                veranstaltungen.getAll().then(function (res) {
+                    veranstaltungen.alleVeranstaltungen = res;
+                });
+            }
+
+            veranstaltungen.get = function (id) {
+                return routes.requestGETID(routes.urls.veranstaltungen.base(), id);
+            };
+
+            veranstaltungen.create = function (data) {
+                return routes.requestPOST(routes.urls.veranstaltungen.base(), data).then(function (res) {
+                    cacheAlleEvents();
+                    return res;
+                });
+            };
+
+            veranstaltungen.update = function (id, data) {
+                return routes.requestPUTID(routes.urls.veranstaltungen.base(), id, data);
+            };
+
+            veranstaltungen.delete = function (id) {
+                return routes.requestDELETE(routes.urls.veranstaltungen.base(), id).then(function (res) {
+                    cacheAlleEvents();
+                    return res;
+                });
+            };
+
+            veranstaltungen.setCurrentEvent = function (event) {
+                storage.set(CURRENT_EVENT_TOKEN_NAME, JSON.stringify(event));
+            };
+
+            veranstaltungen.getCurrentEvent = function () {
+                const eventStr = storage.get(CURRENT_EVENT_TOKEN_NAME);
+                if (!eventStr) return undefined;
+
+                let event;
+                try {
+                    event = JSON.parse(eventStr);
+                } catch(e) {
+                    return undefined;
+                }
+
+                if (!event || !event._id) return undefined;
+
+                if (!veranstaltungen.alleVeranstaltungen) return event;
+
+                const veranstaltung = veranstaltungen.alleVeranstaltungen.find(function (single) {
+                    return single._id === event._id;
+                });
+
+                if (!veranstaltung || veranstaltung._id !== event._id) {
+                    storage.remove(CURRENT_EVENT_TOKEN_NAME);
+                    return undefined;
+                }
+
+                return event;
+            };
+
+            return veranstaltungen;
+        }]);
+
+})();
