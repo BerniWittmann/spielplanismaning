@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const async = require('async');
 const _ = require('lodash');
+const cls = require('../config/cls.js');
+const helper = require('./helper.js');
 
-const SpielSchema = new mongoose.Schema({
+let SpielSchema = new mongoose.Schema({
     nummer: Number,
     platz: Number,
     datum: String, //01.01.1970
@@ -77,49 +79,80 @@ const SpielSchema = new mongoose.Schema({
     fromType: String,
     rankA: Number,
     rankB: Number,
-    label: String
+    label: String,
+    veranstaltung: {type: Schema.ObjectId, ref: 'Veranstaltung', required: true}
 });
 
 SpielSchema.methods.setToreNormal = function (toreA, toreB, cb) {
-    this.setToreA(toreA, function (err, spiel) {
-        if (err) {
-            return cb(err);
-        }
-
-        spiel.setToreB(toreB, function (err, spiel) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        self.setToreA(toreA, function (err, spiel) {
             if (err) {
                 return cb(err);
             }
 
-            if (spiel.toreA > spiel.toreB) {
-                spiel.setPunkte(2, 0, function (err, spiel) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                spiel.setToreB(toreB, function (err, spiel) {
                     if (err) {
                         return cb(err);
                     }
 
-                    spiel.save(cb);
-                });
-            } else if (spiel.toreA < spiel.toreB) {
-                spiel.setPunkte(0, 2, function (err, spiel) {
-                    if (err) {
-                        return cb(err);
+                    if (spiel.toreA > spiel.toreB) {
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+
+                            spiel.setPunkte(2, 0, function (err, spiel) {
+                                if (err) {
+                                    return cb(err);
+                                }
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    spiel.save(cb);
+                                });
+                            });
+                        });
+                    } else if (spiel.toreA < spiel.toreB) {
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+
+                            spiel.setPunkte(0, 2, function (err, spiel) {
+                                if (err) {
+                                    return cb(err);
+                                }
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    spiel.save(cb);
+                                });
+                            });
+                        });
+                    } else {
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+
+                            spiel.setPunkte(1, 1, function (err, spiel) {
+                                if (err) {
+                                    return cb(err);
+                                }
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    spiel.save(cb);
+                                });
+                            });
+                        });
                     }
-                    spiel.save(cb);
                 });
-            } else {
-                spiel.setPunkte(1, 1, function (err, spiel) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    spiel.save(cb);
-                });
-            }
+            });
         });
     });
 };
 
-SpielSchema.methods.setToreComplex = function(data, cb) {
-    if (!data.complex || !data.complex.hz1 || !data.complex.hz2 ) {
+SpielSchema.methods.setToreComplex = function (data, cb) {
+    if (!data.complex || !data.complex.hz1 || !data.complex.hz2) {
         return cb(new Error('Keine Halbzeit Daten gefunden'));
     }
 
@@ -151,44 +184,71 @@ SpielSchema.methods.setToreComplex = function(data, cb) {
         }
     });
 
-    return this.setPunkte(punkteA, punkteB, function (err, spiel) {
-        if (err) {
-            return cb(err);
-        }
+    const self = this;
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return self.setPunkte(punkteA, punkteB, function (err, spiel) {
+            if (err) {
+                return cb(err);
+            }
 
-        spiel.set('toreA', toreA);
-        spiel.set('toreB', toreB);
-        return spiel.save(cb);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                spiel.set('toreA', toreA);
+                spiel.set('toreB', toreB);
+                return spiel.save(cb);
+            });
+        });
     });
 };
 
 SpielSchema.methods.setTore = function (data, cb) {
-    if (process.env.SPIEL_MODE === 'complex') {
+    if (this.veranstaltung && this.veranstaltung.spielModus === 'complex') {
         return this.setToreComplex(data, cb);
     }
     return this.setToreNormal(data.toreA, data.toreB, cb);
 };
 
 SpielSchema.methods.reset = function (cb) {
-    this.setToreA(0, function (err, spiel) {
-        if (err) {
-            return cb(err);
-        }
-
-        spiel.setToreB(0, function (err, spiel) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        self.setToreA(0, function (err, spiel) {
             if (err) {
                 return cb(err);
             }
 
-            spiel.resetHalbzeiten(function (err, spiel) {
-                if (err) return cb(err);
-
-                spiel.resetPunkte(function (err, spiel) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                spiel.setToreB(0, function (err, spiel) {
                     if (err) {
                         return cb(err);
                     }
 
-                    spiel.save(cb);
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        spiel.resetHalbzeiten(function (err, spiel) {
+                            if (err) return cb(err);
+
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+                                spiel.resetPunkte(function (err, spiel) {
+                                    if (err) {
+                                        return cb(err);
+                                    }
+
+                                    return clsSession.run(function () {
+                                        clsSession.set('beachEventID', beachEventID);
+                                        spiel.save(cb);
+                                    });
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });
@@ -196,129 +256,201 @@ SpielSchema.methods.reset = function (cb) {
 };
 
 SpielSchema.methods.resetHalbzeiten = function (cb) {
-    this.set('complex', {
-        hz1: {
-            toreA: 0,
-            toreB: 0
-        },
-        hz2: {
-            toreA: 0,
-            toreB: 0
-        },
-        hz3: {
-            toreA: 0,
-            toreB: 0
-        }
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        self.set('complex', {
+            hz1: {
+                toreA: 0,
+                toreB: 0
+            },
+            hz2: {
+                toreA: 0,
+                toreB: 0
+            },
+            hz3: {
+                toreA: 0,
+                toreB: 0
+            }
+        });
+        self.save(cb);
     });
-    this.save(cb);
 };
 
 SpielSchema.methods.setToreA = function (toreA, cb) {
-    //noinspection JSUnresolvedFunction
-    this.set('toreA', toreA);
-    //noinspection JSUnresolvedFunction
-    this.save(cb);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        //noinspection JSUnresolvedFunction
+        self.set('toreA', toreA);
+        //noinspection JSUnresolvedFunction
+        self.save(cb);
+    });
 };
 
 SpielSchema.methods.setToreB = function (toreB, cb) {
-    //noinspection JSUnresolvedFunction
-    this.set('toreB', toreB);
-    //noinspection JSUnresolvedFunction
-    this.save(cb);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        //noinspection JSUnresolvedFunction
+        self.set('toreB', toreB);
+        //noinspection JSUnresolvedFunction
+        self.save(cb);
+    });
 };
 
 SpielSchema.methods.setPunkte = function (punkteA, punkteB, cb) {
-    this.setPunkteA(punkteA, function (err, spiel) {
-        if (err) {
-            throw err;
-        }
-
-        spiel.setPunkteB(punkteB, function (err, spiel) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        self.setPunkteA(punkteA, function (err, spiel) {
             if (err) {
                 throw err;
             }
 
-            if (spiel.punkteA > spiel.punkteB) {
-                spiel.unentschieden = false;
-                spiel.gewinner = spiel.teamA;
-            } else if (spiel.punkteA < spiel.punkteB ) {
-                spiel.unentschieden = false;
-                spiel.gewinner = spiel.teamB;
-            } else if (spiel.punkteA === spiel.punkteB) {
-                spiel.unentschieden = true;
-            }
-            spiel.beendet = true;
-            spiel.save(cb);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                spiel.setPunkteB(punkteB, function (err, spiel) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        if (spiel.punkteA > spiel.punkteB) {
+                            spiel.unentschieden = false;
+                            spiel.gewinner = spiel.teamA;
+                        } else if (spiel.punkteA < spiel.punkteB) {
+                            spiel.unentschieden = false;
+                            spiel.gewinner = spiel.teamB;
+                        } else if (spiel.punkteA === spiel.punkteB) {
+                            spiel.unentschieden = true;
+                        }
+                        spiel.beendet = true;
+                        spiel.save(cb);
+                    });
+                });
+            });
         });
     });
 };
 
 SpielSchema.methods.resetPunkte = function (cb) {
-    this.setPunkteA(0, function (err, spiel) {
-        if (err) {
-            throw err;
-        }
-
-        spiel.setPunkteB(0, function (err, spiel) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        self.setPunkteA(0, function (err, spiel) {
             if (err) {
                 throw err;
             }
 
-            spiel.unentschieden = false;
-            spiel.gewinner = undefined;
-            spiel.beendet = false;
-            spiel.save(cb);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                spiel.setPunkteB(0, function (err, spiel) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        spiel.unentschieden = false;
+                        spiel.gewinner = undefined;
+                        spiel.beendet = false;
+                        spiel.save(cb);
+                    });
+                });
+            });
         });
     });
 };
 
 SpielSchema.methods.setPunkteA = function (punkteA, cb) {
-    //noinspection JSUnresolvedFunction
-    this.set('punkteA', punkteA);
-    //noinspection JSUnresolvedFunction
-    this.save(cb);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        //noinspection JSUnresolvedFunction
+        self.set('punkteA', punkteA);
+        //noinspection JSUnresolvedFunction
+        self.save(cb);
+    });
 };
 
 SpielSchema.methods.setPunkteB = function (punkteB, cb) {
-    //noinspection JSUnresolvedFunction
-    this.set('punkteB', punkteB);
-    //noinspection JSUnresolvedFunction
-    this.save(cb);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    const self = this;
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        //noinspection JSUnresolvedFunction
+        self.set('punkteB', punkteB);
+        //noinspection JSUnresolvedFunction
+        self.save(cb);
+    });
 };
 
 SpielSchema.statics.updateTeamInSpiele = function (oldTeam, newTeam, cb) {
     const self = this;
-    return async.each(['teamA', 'teamB'], function (t, next) {
-        const query = {
-            beendet: false
-        };
-        const update = {};
-        query[t] = oldTeam;
-        update[t] = newTeam;
-        self.update(query, update, {multi: true}, next);
-    }, cb);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return async.each(['teamA', 'teamB'], function (t, next) {
+            const query = {
+                beendet: false
+            };
+            const update = {};
+            query[t] = oldTeam;
+            update[t] = newTeam;
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                self.update(query, update, {multi: true}, next);
+            });
+        }, cb);
+    });
 };
 
 SpielSchema.methods.fill = function (cb) {
     const self = this;
-    return async.each(['teamA', 'teamB', 'gewinner'], function (t, next) {
-        if (self[t] && self[t]._id) {
-            return self[t].fill(function (err, team) {
-                if (err) return cb(err);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return async.each(['teamA', 'teamB', 'gewinner'], function (t, next) {
+            if (self[t] && self[t]._id) {
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return self[t].fill(function (err, team) {
+                        if (err) return cb(err);
 
-                self.set(t, team);
-                return next();
-            });
-        }
-        return next();
-    }, function (err) {
-        if (err) return cb(err);
+                        self.set(t, team);
+                        return next();
+                    });
+                });
+            }
+            return next();
+        }, function (err) {
+            if (err) return cb(err);
 
-        return cb(null, self);
+            return cb(null, self);
+        });
     });
 };
 
-const deepPopulate = require('mongoose-deep-populate')(mongoose);
+SpielSchema = helper.applyBeachEventMiddleware(SpielSchema);
+
+const deepPopulate = require('../config/mongoose-deep-populate')(mongoose);
 SpielSchema.plugin(deepPopulate, {});
 
 mongoose.model('Spiel', SpielSchema);

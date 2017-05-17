@@ -11,7 +11,11 @@ const VeranstaltungenSchema = new Schema({
     printMannschaftslisten: Boolean
 });
 
-const deepPopulate = require('mongoose-deep-populate')(mongoose);
+VeranstaltungenSchema.methods.fill = function (cb) {
+    return cb(null, this);
+};
+
+const deepPopulate = require('../config/mongoose-deep-populate')(mongoose);
 VeranstaltungenSchema.plugin(deepPopulate, {});
 
 mongoose.model('Veranstaltung', VeranstaltungenSchema);

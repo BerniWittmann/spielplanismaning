@@ -10,6 +10,7 @@ const Gruppe = mongoose.model('Gruppe');
 const Jugend = mongoose.model('Jugend');
 const Team = mongoose.model('Team');
 const maxTeamsAdvance = 2;
+const cls = require('../../config/cls.js');
 
 module.exports = function (payload, cb) {
     logger.verbose('Generate End-Runde');
@@ -19,40 +20,47 @@ module.exports = function (payload, cb) {
 
     let groups = [];
 
-    return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
-        const gruppenLength = gruppen.length;
-        if (gruppenLength < 2 || gruppenLength > 8) {
-            logger.error('Gruppenanzahl stimmt nicht');
-            return callback('Gruppenanzahl stimmt nicht');
-        }
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
+            const gruppenLength = gruppen.length;
+            if (gruppenLength < 2 || gruppenLength > 8) {
+                logger.error('Gruppenanzahl stimmt nicht');
+                return callback('Gruppenanzahl stimmt nicht');
+            }
 
-        groups = groups.concat(gruppen);
+            groups = groups.concat(gruppen);
 
-        return callback();
-    }, function (err) {
-        if (err) return cb(err);
-
-        return helper.generateZwischenGruppenHelper(groups, maxTeamsAdvance, payload.zeiten, function (err, groups, spiele) {
+            return callback();
+        }, function (err) {
             if (err) return cb(err);
-            newSpiele = newSpiele.concat(spiele);
 
-            const gruppenByJugend = helper.getGruppenWithSameJugend(groups);
-            return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return helper.generateZwischenGruppenHelper(groups, maxTeamsAdvance, payload.zeiten, function (err, groups, spiele) {
+                    if (err) return cb(err);
+                    newSpiele = newSpiele.concat(spiele);
 
-                newSpiele = newSpiele.concat(helper.calculateFinalspiele(gruppen, jugendid));
-                newSpiele = newSpiele.concat(helper.calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance));
+                    const gruppenByJugend = helper.getGruppenWithSameJugend(groups);
+                    return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
 
-                return callback();
-            }, function (err) {
-                if (err) return cb(err);
+                        newSpiele = newSpiele.concat(helper.calculateFinalspiele(gruppen, jugendid));
+                        newSpiele = newSpiele.concat(helper.calculatePlatzierungsspiele(gruppen, jugendid, maxTeamsAdvance));
+                        return callback();
+                    }, function (err) {
+                        if (err) return cb(err);
 
-                newSpiele = newSpiele.sort(helper.sortEndrundeSpiele);
+                        newSpiele = newSpiele.sort(helper.sortEndrundeSpiele);
 
-                newSpiele = helper.fillEndrundeSpieleWithEmpty(newSpiele);
+                        newSpiele = helper.fillEndrundeSpieleWithEmpty(newSpiele);
 
-                newSpiele = helper.calcDateTimeForEndrundeSpiele(newSpiele, gruppenSpiele.length + 1, payload.zeiten);
+                        newSpiele = helper.calcDateTimeForEndrundeSpiele(newSpiele, gruppenSpiele.length + 1, payload.zeiten);
 
-                return cb(null, gruppenSpiele.concat(newSpiele));
+                        return cb(null, gruppenSpiele.concat(newSpiele));
+                    });
+                });
             });
         });
     });

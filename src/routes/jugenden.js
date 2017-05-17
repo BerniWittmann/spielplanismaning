@@ -2,6 +2,7 @@ module.exports = function () {
     const logger = require('winston').loggers.get('apiJugenden');
     const express = require('express');
     const router = express.Router();
+    const cls = require('../config/cls.js');
 
     const mongoose = require('mongoose');
     const Gruppe = mongoose.model('Gruppe');
@@ -78,34 +79,48 @@ module.exports = function () {
      **/
     router.post('/', function (req, res) {
         logger.verbose('Creating Jugend %s', req.body.name);
-        const jugend = new Jugend(req.body);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            const jugend = new Jugend(req.body);
 
-        jugend.save(function (err, jugend) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-            logger.verbose('Jugend created');
-            const gruppe = new Gruppe({
-                name: "Gruppe A"
-                , jugend: jugend._id
-            });
-
-            gruppe.save(function (err, gruppe) {
+            jugend.save(function (err, jugend) {
                 if (err) {
                     return messages.Error(res, err);
                 }
+                logger.verbose('Jugend created');
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    const gruppe = new Gruppe({
+                        name: "Gruppe A",
+                        jugend: jugend._id
+                    });
 
-                jugend.gruppen.push(gruppe._id);
+                    gruppe.save(function (err, gruppe) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
 
-                jugend.save(function (err, jugend) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            jugend.gruppen.push(gruppe._id);
 
-                    logger.verbose('Added default Gruppe');
+                            jugend.save(function (err, jugend) {
+                                if (err) {
+                                    return messages.Error(res, err);
+                                }
 
-                    jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
-                        return handler.handleErrorAndResponse(err, res, jgd);
+                                logger.verbose('Added default Gruppe');
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    jugend.deepPopulate('gruppen teams gruppen.teams', function (err, jgd) {
+                                        return handler.handleErrorAndResponse(err, res, jgd);
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -127,23 +142,37 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        Jugend.findById(req.query.id, function (err, jgd) {
-            if (!jgd) {
-                logger.warn('Jugend %s not found', req.query.id);
-                return messages.ErrorBadRequest(res, ['Jugend not found']);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Jugend.findOne({_id: mongoose.Types.ObjectId(req.query.id)}, function (err, jgd) {
+                if (!jgd) {
+                    logger.warn('Jugend %s not found', req.query.id);
+                    return messages.ErrorBadRequest(res, ['Jugend not found']);
+                }
+                if (err) {
+                    return messages.Error(res, err);
+                }
 
-            return helpers.removeEntityBy(Team, 'jugend', req.query.id, function (err) {
-                if (err) return messages.Error(res, err);
-                logger.verbose('Removed All Teams from this Jugend');
-                return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, function (err) {
-                    if (err) return messages.Error(res, err);
-                    logger.verbose('Removed All Gruppen from this Jugend');
-                    return helpers.removeEntityBy(Jugend, '_id', req.query.id, function (err) {
-                        return handler.handleErrorAndDeleted(err, res);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return helpers.removeEntityBy(Team, 'jugend', req.query.id, function (err) {
+                        if (err) return messages.Error(res, err);
+                        logger.verbose('Removed All Teams from this Jugend');
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.removeEntityBy(Gruppe, 'jugend', req.query.id, function (err) {
+                                if (err) return messages.Error(res, err);
+                                logger.verbose('Removed All Gruppen from this Jugend');
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return helpers.removeEntityBy(Jugend, '_id', req.query.id, function (err) {
+                                        return handler.handleErrorAndDeleted(err, res);
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -167,23 +196,28 @@ module.exports = function () {
      *     }
      **/
     router.get('/tore', function (req, res) {
-        let query = Spiel.find();
-        if (req.query.id) {
-            query = Spiel.find({'jugend': req.query.id});
-        }
-        let tore = 0;
-        query.exec(function (err, spiele) {
-            if (err) {
-                return messages.Error(res, err);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            let query = Spiel.find({});
+            if (req.query.id) {
+                query = Spiel.find({'jugend': req.query.id});
             }
-            spiele.forEach(function (spiel) {
-                if (spiel.beendet) {
-                    tore += spiel.toreA;
-                    tore += spiel.toreB;
+            let tore = 0;
+            query.exec(function (err, spiele) {
+                if (err) {
+                    return messages.Error(res, err);
                 }
+                spiele.forEach(function (spiel) {
+                    if (spiel.beendet) {
+                        tore += spiel.toreA;
+                        tore += spiel.toreB;
+                    }
+                });
+                logger.verbose('%d Tore counted', tore);
+                return res.json(tore);
             });
-            logger.verbose('%d Tore counted', tore);
-            return res.json(tore);
         });
     });
 

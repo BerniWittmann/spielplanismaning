@@ -29,6 +29,8 @@ module.exports = function(loglevel) {
     createCategory('middlewareBadRequest', 'Spielplan Ismaning: Middleware - Request');
     createCategory('middlewareEvent', 'Spielplan Ismaning: Middleware - EventCheck');
 
+    createCategory('dbSetup', 'Spielplan Ismaning: Database Setup');
+
     createCategory('mailGenerator', 'Spielplan Ismaning: Mail-Generator');
     createCategory('spielplanGenerator', 'Spielplan Ismaning: Spielplan-Generator');
 

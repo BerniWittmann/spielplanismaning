@@ -44,6 +44,7 @@ const sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.
 const secret = process.env.SECRET;
 const app = express();
 
+require('./models/Veranstaltungen');
 require('./models/Spiele');
 require('./models/Gruppen');
 require('./models/Jugenden');
@@ -52,7 +53,6 @@ require('./models/Teams');
 require('./models/Subscriber');
 require('./models/Users')(secret);
 require('./models/Ansprechpartner');
-require('./models/Veranstaltungen');
 require('./config/passport');
 
 app.set('ENVIRONMENT', process.env.NODE_ENV);
@@ -107,6 +107,8 @@ app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 app.listen(app.get('port'), function () {
     appLogger.info('Server is listening on port %d', app.get('port'));
 });
+
+require('./config/setup-db.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
 
 app.use(require('./routes/middleware/allowCrossDomain.js'));
 

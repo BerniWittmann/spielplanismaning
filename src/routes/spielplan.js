@@ -2,6 +2,7 @@ module.exports = function () {
     const logger = require('winston').loggers.get('apiSpiele');
     const express = require('express');
     const router = express.Router();
+    const cls = require('../config/cls.js');
 
     const mongoose = require('mongoose');
     const moment = require('moment');
@@ -40,9 +41,20 @@ module.exports = function () {
      *     }]
      **/
     router.get('/', function (req, res) {
-        const query = Spielplan.findOne({});
-        query.deepPopulate('ausnahmen ausnahmen.team1 ausnahmen.team2').exec(function (err, spielplan) {
-            return handler.handleErrorAndResponse(err, res, spielplan);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Spielplan.findOne({}, function (err, spielplan) {
+                if (err) return messages.Error(res, err);
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    Spielplan.deepPopulate(spielplan, 'ausnahmen ausnahmen.team1 ausnahmen.team2', function (err, spielplan) {
+                        return handler.handleErrorAndResponse(err, res, spielplan);
+                    });
+                });
+            });
         });
     });
 
@@ -65,16 +77,23 @@ module.exports = function () {
             generator = spielplanGenerator.regenerate;
         }
 
+        const beachEventID = cls.getBeachEventID();
         logger.verbose('Start Generator');
-        generator(function (err) {
-            logger.verbose('Generator finished');
-            if (err) {
-                if (err.message !== 'SpieleGesamt calulation returned invalid value') {
-                    return messages.Error(res, err);
+        const clsSession = cls.getNamespace();
+
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+
+            return generator(function (err) {
+                logger.verbose('Generator finished');
+                if (err) {
+                    if (err.message !== 'SpieleGesamt calulation returned invalid value') {
+                        return messages.Error(res, err);
+                    }
+                    err = null;
                 }
-                err = null;
-            }
-            return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
+                return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
+            });
         });
     });
 
@@ -108,38 +127,49 @@ module.exports = function () {
         }
 
         logger.verbose('Update Times');
-        Spielplan.findOneAndUpdate({}, req.body, {
-            upsert: true
-        }, function (err) {
-            if (err) return messages.Error(res, err);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Spielplan.findOneAndUpdate({}, req.body, {
+                upsert: true
+            }, function (err) {
+                if (err) return messages.Error(res, err);
 
-            Spiel.find().exec(function (err, spiele) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    Spiel.find().exec(function (err, spiele) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
 
-                logger.verbose('Update Spiele according to new Times');
-                spiele = spiele.sort(compareNumbers);
-                async.eachSeries(spiele, function (singlespiel, asyncdone) {
-                    if (singlespiel) {
-                        logger.silly('Updating Spiel #%d', singlespiel.nummer);
-                        const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body, {});
-                        singlespiel.uhrzeit = dateTimeObject.time;
-                        singlespiel.datum = dateTimeObject.date;
-                        singlespiel.platz = dateTimeObject.platz;
-                        singlespiel.save(asyncdone);
-                    } else {
-                        logger.warn('Spiel is undefined');
-                        return asyncdone();
-                    }
-                }, function (err) {
-                    logger.verbose('Updated all Spiele');
-                    return handler.handleErrorAndSuccess(err, res);
+                        logger.verbose('Update Spiele according to new Times');
+                        spiele = spiele.sort(compareNumbers);
+                        async.eachSeries(spiele, function (singlespiel, asyncdone) {
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+                                if (singlespiel) {
+                                    logger.silly('Updating Spiel #%d', singlespiel.nummer);
+                                    const dateTimeObject = helpers.calcSpielDateTime(singlespiel.nummer, req.body, {});
+                                    singlespiel.uhrzeit = dateTimeObject.time;
+                                    singlespiel.datum = dateTimeObject.date;
+                                    singlespiel.platz = dateTimeObject.platz;
+                                    singlespiel.save(asyncdone);
+                                } else {
+                                    logger.warn('Spiel is undefined');
+                                    return asyncdone();
+                                }
+                            });
+                        }, function (err) {
+                            logger.verbose('Updated all Spiele');
+                            return handler.handleErrorAndSuccess(err, res);
+                        });
+
+                        function compareNumbers(a, b) {
+                            return a.nummer - b.nummer;
+                        }
+                    });
                 });
-
-                function compareNumbers(a, b) {
-                    return a.nummer - b.nummer;
-                }
             });
         });
     });

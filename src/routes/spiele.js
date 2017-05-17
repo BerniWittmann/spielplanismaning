@@ -2,6 +2,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const logger = require('winston').loggers.get('apiSpiele');
     const express = require('express');
     const router = express.Router();
+    const cls = require('../config/cls.js');
 
     const mongoose = require('mongoose');
     const async = require('async');
@@ -17,26 +18,34 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const handler = require('./handler.js');
 
     function notifySubscribers(spiel, fn, callback) {
-        return async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
-            if (team && team._id) {
-                Subscriber.getByTeam(team._id).then(function (mails) {
-                    const emails = [];
-                    mails.forEach(function (mail) {
-                        emails.push(mail.email);
-                    });
-                    if (emails.length > 0) {
-                        fn(team, spiel, emails, asyncdone);
-                    } else {
-                        return asyncdone(null, {});
-                    }
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return async.eachSeries([spiel.teamA, spiel.teamB], function (team, asyncdone) {
+                if (team && team._id) {
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        Subscriber.getByTeam(team._id).then(function (mails) {
+                            const emails = [];
+                            mails.forEach(function (mail) {
+                                emails.push(mail.email);
+                            });
+                            if (emails.length > 0) {
+                                fn(team, spiel, emails, asyncdone);
+                            } else {
+                                return asyncdone(null, {});
+                            }
 
-                });
-            } else {
+                        });
+                    });
+                } else {
+                    return callback(null, {});
+                }
+            }, function (err) {
+                if (err) return messages.Error(res, err);
                 return callback(null, {});
-            }
-        }, function (err) {
-            if (err) return messages.Error(res, err);
-            return callback(null, {});
+            });
         });
     }
 
@@ -80,13 +89,18 @@ module.exports = function (sendgrid, env, url, disableMails) {
         logger.warn('This method is deprecated');
         logger.verbose('Create new Spiel', req.body);
 
-        const spiel = new Spiel(req.body);
-        spiel.jugend = req.body.jugend;
-        spiel.gruppe = req.body.gruppe;
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            const spiel = new Spiel(req.body);
+            spiel.jugend = req.body.jugend;
+            spiel.gruppe = req.body.gruppe;
 
-        spiel.save(function (err, spiel) {
-            logger.verbose('Saved Spiel');
-            return handler.handleErrorAndResponse(err, res, spiel);
+            spiel.save(function (err, spiel) {
+                logger.verbose('Saved Spiel');
+                return handler.handleErrorAndResponse(err, res, spiel);
+            });
         });
     });
 
@@ -108,8 +122,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.delete('/', function (req, res) {
         logger.warn('This method is deprecated');
         logger.verbose('Delete Spiel %s', req.query.id);
-        return helpers.removeEntityBy(Spiel, '_id', req.query.id, function (err) {
-            return handler.handleErrorAndDeleted(err, res);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return helpers.removeEntityBy(Spiel, '_id', req.query.id, function (err) {
+                return handler.handleErrorAndDeleted(err, res);
+            });
         });
     });
 
@@ -130,15 +149,23 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
         const spiele = req.body;
         logger.verbose('%d Spiele should be updated', spiele.length);
-        async.eachSeries(spiele, function (singlespiel, asyncdone) {
-            logger.silly('Updating Spiel %s', singlespiel._id);
-            const spiel = new Spiel(singlespiel);
-            spiel.jugend = singlespiel.jugend;
-            spiel.gruppe = singlespiel.gruppe;
-            spiel.save(asyncdone);
-        }, function (err) {
-            logger.verbose('Updated all Spiele');
-            return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            async.eachSeries(spiele, function (singlespiel, asyncdone) {
+                logger.silly('Updating Spiel %s', singlespiel._id);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    const spiel = new Spiel(singlespiel);
+                    spiel.jugend = singlespiel.jugend;
+                    spiel.gruppe = singlespiel.gruppe;
+                    spiel.save(asyncdone);
+                });
+            }, function (err) {
+                logger.verbose('Updated all Spiele');
+                return handler.handleErrorAndMessage(err, res, messages.SpielplanErstellt);
+            });
         });
     });
 
@@ -155,8 +182,13 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.delete('/alle', function (req, res) {
         logger.verbose('Removing all Spiele');
-        Spiel.remove({}, function (err) {
-            return handler.handleErrorAndDeleted(err, res);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Spiel.remove({veranstaltung: beachEventID}, function (err) {
+                return handler.handleErrorAndDeleted(err, res);
+            });
         });
     });
 
@@ -178,23 +210,41 @@ module.exports = function (sendgrid, env, url, disableMails) {
     router.delete('/tore', function (req, res) {
         logger.verbose('Reset Spiel %s', req.query.id);
 
-        return helpers.checkSpielChangeable(req.query.id, function (err, result) {
-            if (err) return messages.Error(res, err);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return helpers.checkSpielChangeable(req.query.id, function (err, result) {
+                if (err) return messages.Error(res, err);
 
-            if (!result) return messages.ErrorSpielNotChangeable(res);
+                if (!result) return messages.ErrorSpielNotChangeable(res);
 
-            return Spiel.findById(req.query.id).deepPopulate('gruppe jugend teamA teamB').populate('fromA fromB').exec(function (err, spiel) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return Spiel.findById(req.query.id).exec(function (err, spiel) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
 
-                if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
-                    return messages.ErrorSpielNotFilled(res);
-                }
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
 
-                return spiel.reset(function (err, spiel) {
-                    logger.verbose('Reseted Spiel');
-                    handler.handleErrorAndResponse(err, res, spiel);
+                            return helpers.clsdeepPopulate(Spiel, spiel, 'gruppe jugend teamA teamB fromA fromB', function (err, spiel) {
+                                if (err) return messages.Error(res, err);
+                                if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
+                                    return messages.ErrorSpielNotFilled(res);
+                                }
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return spiel.reset(function (err, spiel) {
+                                        logger.verbose('Reseted Spiel');
+                                        handler.handleErrorAndResponse(err, res, spiel);
+                                    });
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });
@@ -220,72 +270,113 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.put('/tore', function (req, res) {
         logger.verbose('Set Result for Spiel %s', req.query.id);
-        return helpers.checkSpielChangeable(req.query.id, function (err, result) {
-            if (err) return messages.Error(res, err);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return helpers.checkSpielChangeable(req.query.id, function (err, result) {
+                if (err) return messages.Error(res, err);
 
-            if (!result) return messages.ErrorSpielNotChangeable(res);
-            const query = Spiel.findById(req.query.id);
-            query.deepPopulate('gruppe jugend teamA teamB').populate('fromA fromB').exec(function (err, spiel) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
-                if (!spiel) {
-                    logger.error('Spiel %s not found', req.query.id);
-                    return messages.Error(res, err);
-                }
-                if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
-                    return messages.ErrorSpielNotFilled(res);
-                }
+                if (!result) return messages.ErrorSpielNotChangeable(res);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
 
-                spiel.setTore(req.body, function (err, spiel) {
-                    if (err) {
-                        if (err.message === 'Keine Halbzeit Daten gefunden') {
-                            return messages.ErrorBadRequest(res, err.message);
-                        }
-                        return messages.Error(res, err);
-                    }
+                    return Spiel.findById(req.query.id, function (err, spiel) {
+                        if (err) return messages.Error(res, err);
 
-                    function sendNextSpielUpdates(cb) {
-                        logger.verbose('Check if Spiel-Reminder for next Games should be sent');
-                        return Spiel.findOne({
-                            nummer: spiel.nummer + 6
-                        }).deepPopulate('teamA teamB').exec(function (err, nextspiel) {
-                            if (err) {
-                                return messages.Error(res, err);
-                            }
-                            if (nextspiel) {
-                                if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
-                                    logger.verbose('Send Spiel-Reminder for next Games');
-                                    notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
-                                } else {
-                                    return cb(null, {});
-                                }
-                            } else {
-                                return cb(null, {});
-                            }
-
-                        });
-                    }
-
-                    return helpers.fillSpiele(function (err) {
-                        if (err) logger.warn(err);
-
-                        logger.verbose('Filled Spiele');
-
-                        if (disableMails !== 'true') {
-                            return sendNextSpielUpdates(function (err) {
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.clsdeepPopulate(Spiel, spiel, 'gruppe jugend teamA teamB fromA fromB veranstaltung', function (err, spiel) {
                                 if (err) {
                                     return messages.Error(res, err);
                                 }
+                                if (!spiel) {
+                                    logger.error('Spiel %s not found', req.query.id);
+                                    return messages.Error(res, err);
+                                }
+                                if (!spiel.teamA || !spiel.teamA.name || !spiel.teamB || !spiel.teamB.name) {
+                                    return messages.ErrorSpielNotFilled(res);
+                                }
 
-                                logger.verbose('Send Spiel-Result Update to Subscribers');
-                                return notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
-                                    return handler.handleErrorAndResponse(err, res, spiel);
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    spiel.setTore(req.body, function (err, spiel) {
+                                        if (err) {
+                                            if (err.message === 'Keine Halbzeit Daten gefunden') {
+                                                return messages.ErrorBadRequest(res, err.message);
+                                            }
+                                            return messages.Error(res, err);
+                                        }
+
+                                        function sendNextSpielUpdates(cb) {
+                                            logger.verbose('Check if Spiel-Reminder for next Games should be sent');
+                                            return clsSession.run(function () {
+                                                clsSession.set('beachEventID', beachEventID);
+                                                return Spiel.findOne({
+                                                    nummer: spiel.nummer + 6
+                                                }).exec(function (err, nextspiel) {
+                                                    if (err) {
+                                                        return messages.Error(res, err);
+                                                    }
+
+                                                    if (nextspiel) {
+                                                        if (!nextspiel.beendet && spiel.datum === nextspiel.datum) {
+                                                            logger.verbose('Send Spiel-Reminder for next Games');
+                                                            return clsSession.run(function () {
+                                                                clsSession.set('beachEventID', beachEventID);
+                                                                nextspiel.deepPopulate('teamA teamB', function (err, nextspiel) {
+                                                                    if (err) return cb(err);
+
+                                                                    return clsSession.run(function () {
+                                                                        clsSession.set('beachEventID', beachEventID);
+                                                                        notifySubscribers(nextspiel, MailGenerator.sendSpielReminder, cb);
+                                                                    });
+                                                                });
+                                                            });
+                                                        } else {
+                                                            return cb(null, {});
+                                                        }
+                                                    } else {
+                                                        return cb(null, {});
+                                                    }
+                                                });
+                                            });
+                                        }
+
+                                        return clsSession.run(function () {
+                                            clsSession.set('beachEventID', beachEventID);
+                                            return helpers.fillSpiele(function (err) {
+                                                if (err) logger.warn(err);
+
+                                                logger.verbose('Filled Spiele');
+
+                                                if (disableMails !== 'true') {
+                                                    return clsSession.run(function () {
+                                                        clsSession.set('beachEventID', beachEventID);
+
+                                                        return sendNextSpielUpdates(function (err) {
+                                                            if (err) {
+                                                                return messages.Error(res, err);
+                                                            }
+
+                                                            logger.verbose('Send Spiel-Result Update to Subscribers');
+                                                            return clsSession.run(function () {
+                                                                clsSession.set('beachEventID', beachEventID);
+                                                                return notifySubscribers(spiel, MailGenerator.sendErgebnisUpdate, function (err) {
+                                                                    return handler.handleErrorAndResponse(err, res, spiel);
+                                                                });
+                                                            });
+                                                        });
+                                                    });
+                                                } else {
+                                                    return res.json(spiel);
+                                                }
+                                            });
+                                        });
+                                    });
                                 });
                             });
-                        } else {
-                            return res.json(spiel);
-                        }
+                        });
                     });
                 });
             });
@@ -315,66 +406,102 @@ module.exports = function (sendgrid, env, url, disableMails) {
             return messages.ErrorSpielplanUngueltig(res, errorIndex);
         }
 
-        Spielplan.findOne().exec(function (err, spielplan) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            logger.verbose('Update Spiele with new Order');
-            async.eachSeries(spiele, function (singlespiel, asyncdone) {
-                const index = spiele.indexOf(singlespiel);
-                logger.silly('Update Spiel %s', singlespiel._id);
-
-                if (singlespiel.deleted && singlespiel.isNew) {
-                    return asyncdone();
-                }
-                if (singlespiel.deleted && !singlespiel.isNew && singlespiel._id) {
-                    logger.silly('Delete Spiel %s', singlespiel._id);
-                    return helpers.removeEntityBy(Spiel, '_id', singlespiel._id, asyncdone);
-                }
-                if (singlespiel.isNew && !singlespiel.deleted) {
-                    logger.silly('Create Spiel %s', singlespiel._id);
-                    const spiel = new Spiel();
-                    return spiel.save(function (err, spiel) {
-                       if (err) return asyncdone(err);
-
-                       return updateSpielDateTime(spiel, index, spielplan, delays, asyncdone);
-                    });
-                }
-                return updateSpielDateTime(singlespiel, index, spielplan, delays, asyncdone);
-            }, function (err) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Spielplan.findOne().exec(function (err, spielplan) {
                 if (err) {
                     return messages.Error(res, err);
                 }
-                logger.verbose('All Spiele updated');
 
-                Spiel.find().deepPopulate('gruppe jugend teamA teamB gewinner').populate('fromA fromB').exec(function (err, neueSpiele) {
+                logger.verbose('Update Spiele with new Order');
+                async.eachSeries(spiele, function (singlespiel, asyncdone) {
+                    const index = spiele.indexOf(singlespiel);
+                    logger.silly('Update Spiel %s', singlespiel._id);
+
+                    if (singlespiel.deleted && singlespiel.isNew) {
+                        return asyncdone();
+                    }
+                    if (singlespiel.deleted && !singlespiel.isNew && singlespiel._id) {
+                        logger.silly('Delete Spiel %s', singlespiel._id);
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.removeEntityBy(Spiel, '_id', singlespiel._id, asyncdone);
+                        });
+                    }
+                    if (singlespiel.isNew && !singlespiel.deleted) {
+                        logger.silly('Create Spiel %s', singlespiel._id);
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            const spiel = new Spiel();
+                            return spiel.save(function (err, spiel) {
+                                if (err) return asyncdone(err);
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return updateSpielDateTime(spiel, index, spielplan, delays, asyncdone);
+                                });
+                            });
+                        });
+                    }
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        return updateSpielDateTime(singlespiel, index, spielplan, delays, asyncdone);
+                    });
+                }, function (err) {
                     if (err) {
                         return messages.Error(res, err);
                     }
+                    logger.verbose('All Spiele updated');
 
-                    return messages.SpielplanAktualisert(res, neueSpiele);
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        Spiel.find().exec(function (err, neueSpiele) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+
+                                return helpers.clsdeepPopulate(Spiel, neueSpiele, 'gruppe jugend teamA teamB gewinner fromA fromB', function (err, neueSpiele) {
+                                    if (err) return messages.Error(res, err);
+                                    return messages.SpielplanAktualisert(res, neueSpiele);
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });
     });
 
     function updateSpielDateTime(singlespiel, index, spielplan, delays, cb) {
-        return Spiel.findById(singlespiel._id).exec(function (err, spiel) {
-            if (err) {
-                return cb(err);
-            }
-            logger.silly('Calculating New Spiel Date/Time/Place');
-            const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan, delays);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return Spiel.findById(singlespiel._id).exec(function (err, spiel) {
+                if (err) {
+                    return cb(err);
+                }
+                logger.silly('Calculating New Spiel Date/Time/Place');
+                const dateTimePlace = helpers.calcSpielDateTime(index + 1, spielplan, delays);
 
-            spiel.datum = dateTimePlace.date;
-            spiel.uhrzeit = dateTimePlace.time;
-            spiel.platz = dateTimePlace.platz;
-            spiel.nummer = index + 1;
-            logger.silly('Save new Spiel Data');
-            spiel.save(cb);
+                spiel.datum = dateTimePlace.date;
+                spiel.uhrzeit = dateTimePlace.time;
+                spiel.platz = dateTimePlace.platz;
+                spiel.nummer = index + 1;
+                logger.silly('Save new Spiel Data');
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    spiel.save(cb);
+                });
+            });
         });
     }
 
     return router;
-};
+}
+;

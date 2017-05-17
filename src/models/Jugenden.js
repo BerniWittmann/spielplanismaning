@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const async = require('async');
+const cls = require('../config/cls.js');
 
-const JugendSchema = new mongoose.Schema({
+let JugendSchema = new mongoose.Schema({
     name: String,
     gruppen: [{
         type: Schema.ObjectId,
@@ -12,7 +13,8 @@ const JugendSchema = new mongoose.Schema({
         type: Schema.ObjectId,
         ref: 'Team'
     }],
-    color: String
+    color: String,
+    veranstaltung: {type: Schema.ObjectId, ref: 'Veranstaltung', required: true}
 }, {
     toObject: {
         virtuals: true
@@ -45,30 +47,47 @@ JugendSchema.methods.pushTeams = function (team, cb) {
 
 JugendSchema.statics.removeTeam = function (jugendid, teamid, cb) {
     const self = this;
-    return self.findById(jugendid, function (err, jugend) {
-        if (err) return cb(err);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return self.findById(jugendid, function (err, jugend) {
+            if (err) return cb(err);
 
-        const teams = jugend.teams;
-        if (!teams) {
-            return cb();
-        }
-        teams.splice(teams.indexOf(teamid), 1);
+            const teams = jugend.teams;
+            if (!teams) {
+                return cb();
+            }
+            teams.splice(teams.indexOf(teamid), 1);
 
-        return self.update({'_id': jugendid}, {'teams': teams}, cb);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return self.update({'_id': jugendid}, {'teams': teams}, cb);
+            });
+        });
     });
 };
 
 JugendSchema.methods.fill = function (cb) {
     const self = this;
-    return helper.fillOfEntity(self, 'teams', function (err, self) {
-        if (err) return cb(err);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return helper.fillOfEntity(self, 'teams', function (err, self) {
+            if (err) return cb(err);
 
-        return helper.fillOfEntity(self, 'gruppen', cb);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return helper.fillOfEntity(self, 'gruppen', cb);
+            });
+        });
     });
 };
 
-const deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('../config/mongoose-deep-populate')(mongoose);
 JugendSchema.plugin(deepPopulate, {});
 
-mongoose.model('Jugend', JugendSchema);
 const helper = require('./helper.js');
+JugendSchema = helper.applyBeachEventMiddleware(JugendSchema);
+mongoose.model('Jugend', JugendSchema);

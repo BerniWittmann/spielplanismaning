@@ -7,6 +7,7 @@ module.exports = function () {
     const Jugend = mongoose.model('Jugend');
     const Team = mongoose.model('Team');
     const async = require('async');
+    const cls = require('../config/cls.js');
 
     const messages = require('./messages/messages.js')();
     const helpers = require('./helpers.js');
@@ -65,29 +66,49 @@ module.exports = function () {
      * @apiUse SuccessDeleteMessage
      **/
     router.delete('/', function (req, res) {
-        const query = Team.findById(req.query.id);
-        logger.verbose('Delete Team %s', req.query.id);
-        query.deepPopulate('gruppe, jugend').exec(function (err, team) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-            logger.verbose('Remove Team from Jugend');
-            team.jugend.teams.splice(team.jugend.teams.indexOf(team), 1);
-            team.jugend.save(function (err) {
-                if (err) {
-                    return messages.Error(res, err);
-                }
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            logger.verbose('Delete Team %s', req.query.id);
+            Team.findById(req.query.id, function (err, team) {
+                if (err) return messages.Error(res, err);
 
-                logger.verbose('Remove Team from Gruppe');
-                team.gruppe.teams.splice(team.gruppe.teams.indexOf(team), 1);
-                team.gruppe.save(function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    Team.deepPopulate(team, 'gruppe, jugend', function (err, team) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
+                        logger.verbose('Remove Team from Jugend');
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            team.jugend.teams.splice(team.jugend.teams.indexOf(team), 1);
+                            team.jugend.save(function (err) {
+                                if (err) {
+                                    return messages.Error(res, err);
+                                }
 
-                    logger.verbose('Delete Team');
-                    return helpers.removeEntityBy(Team, '_id', team, function (err) {
-                        return handler.handleErrorAndDeleted(err, res);
+                                logger.verbose('Remove Team from Gruppe');
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    team.gruppe.teams.splice(team.gruppe.teams.indexOf(team), 1);
+                                    team.gruppe.save(function (err) {
+                                        if (err) {
+                                            return messages.Error(res, err);
+                                        }
+
+                                        logger.verbose('Delete Team');
+                                        return clsSession.run(function () {
+                                            clsSession.set('beachEventID', beachEventID);
+                                            return helpers.removeEntityBy(Team, '_id', team, function (err) {
+                                                return handler.handleErrorAndDeleted(err, res);
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -132,26 +153,37 @@ module.exports = function () {
      **/
     router.post('/', function (req, res) {
         logger.verbose('Create new Team', req.body);
-        const team = new Team(req.body);
-        team.jugend = req.query.jugend;
-        team.gruppe = req.query.gruppe;
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            const team = new Team(req.body);
+            team.jugend = req.query.jugend;
+            team.gruppe = req.query.gruppe;
 
-        team.save(function (err, team) {
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            async.parallel([
-                function (cb) {
-                    logger.verbose('Add Team to Gruppe');
-                    return helpers.findEntityAndPushTeam(Gruppe, team.gruppe, team, res, cb);
-                },
-                function (cb) {
-                    logger.verbose('Add Team to Jugend');
-                    return helpers.findEntityAndPushTeam(Jugend, team.jugend, team, res, cb);
+            team.save(function (err, team) {
+                if (err) {
+                    return messages.Error(res, err);
                 }
-            ], function (err) {
-                return handler.handleErrorAndResponse(err, res, team);
+
+                async.parallel([
+                    function (cb) {
+                        logger.verbose('Add Team to Gruppe');
+                        clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.findEntityAndPushTeam(Gruppe, team.gruppe, team, res, cb);
+                        });
+                    },
+                    function (cb) {
+                        logger.verbose('Add Team to Jugend');
+                        clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.findEntityAndPushTeam(Jugend, team.jugend, team, res, cb);
+                        });
+                    }
+                ], function (err) {
+                    return handler.handleErrorAndResponse(err, res, team);
+                });
             });
         });
     });
@@ -192,15 +224,23 @@ module.exports = function () {
      *     }]
      **/
     router.put('/', function (req, res) {
-        Team.findById(req.query.id, function (err, team) {
-            if (err) {
-                return messages.Error(res, err);
-            }
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Team.findById(req.query.id, function (err, team) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
 
-            team = helpers.updateDocByKeys(team, ['name', 'anmeldungsId'], req.body);
+                team = helpers.updateDocByKeys(team, ['name', 'anmeldungsId'], req.body);
 
-            team.save(function (err, team) {
-                return handler.handleErrorAndResponse(err, res, team);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    team.save(function (err, team) {
+                        return handler.handleErrorAndResponse(err, res, team);
+                    });
+                });
             });
         });
     });
@@ -233,8 +273,13 @@ module.exports = function () {
      * @apiUse SuccessMessage
      **/
     router.put('/reloadAnmeldeObjekte', function (req, res) {
-        return helpers.reloadAnmeldeObjects(function (err) {
-            return handler.handleErrorAndSuccess(err,res);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return helpers.reloadAnmeldeObjects(function (err) {
+                return handler.handleErrorAndSuccess(err, res);
+            });
         });
     });
 

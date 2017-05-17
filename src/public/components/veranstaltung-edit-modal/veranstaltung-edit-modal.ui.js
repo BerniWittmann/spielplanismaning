@@ -32,7 +32,7 @@
     function VeranstaltungEditierenController($uibModalInstance, veranstaltungen, event) {
         const vm = this;
 
-        event.printMannschaftslisten = event.printMannschaftslisten.toString();
+        event.printMannschaftslisten = event.printMannschaftslisten ? event.printMannschaftslisten.toString() : 'false';
         _.extend(vm, {
             veranstaltung: event,
             name: event.name,

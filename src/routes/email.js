@@ -9,6 +9,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
     const messages = require('./messages/messages.js')();
     const helpers = require('./helpers.js');
     const handler = require('./handler.js');
+    const cls = require('../config/cls.js');
 
     /**
      * @api {post} /email Send Email
@@ -97,8 +98,13 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      **/
     router.delete('/subscriber', function (req, res) {
         logger.verbose('Deleting Subscriber with email %s', req.query.email, {team: req.query.team});
-        Subscriber.find({email: req.query.email, team: req.query.team}).remove().exec(function (err) {
-            return handler.handleErrorAndDeleted(err, res)
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Subscriber.remove({email: req.query.email, team: req.query.team, veranstaltung: beachEventID}, function (err) {
+                return handler.handleErrorAndDeleted(err, res)
+            });
         });
     });
 
@@ -142,9 +148,20 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      *     }]
      **/
     router.get('/subscriber', function (req, res) {
-        const query = Subscriber.find();
-        query.deepPopulate('team team.jugend').exec(function (err, subs) {
-            return handler.handleErrorAndResponse(err, res, subs);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Subscriber.find({}, function (err, subs) {
+                if (err) return messages.Error(res, err);
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    Subscriber.deepPopulate(subs, 'team team.jugend', function (err, subs) {
+                        return handler.handleErrorAndResponse(err, res, subs);
+                    });
+                });
+            });
         });
     });
 
