@@ -51,11 +51,7 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
-    return runSequence('testDB:wipeAndRestore', 'test:backend:withOutWipe', done);
-});
-
-gulp.task('test:backend:withOutWipe', function (done) {
-    gulp.src('././test/backend/**/*.spec.js', {read: false})
+    gulp.src('././test/backend/**/ansprechpartner.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
             reporterOptions: {
@@ -64,7 +60,7 @@ gulp.task('test:backend:withOutWipe', function (done) {
                 reportTitle: 'Test-Ergebnisse (Backend)',
                 reportPageTitle: 'Test-Ergebnisse (Backend)'
             },
-            timeout: 5000
+            timeout: 120000
         }))
         .on('error', function (error) {
             throw error;

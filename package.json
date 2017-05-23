@@ -99,6 +99,7 @@
     "karma-safari-launcher": "^1.0.0",
     "mocha": "^3.2.0",
     "mochawesome": "^2.0.0",
+    "mockgoose": "^7.3.1",
     "protractor": "^4.0.4",
     "sinon": "^1.17.5",
     "supertest": "^2.0.0"
