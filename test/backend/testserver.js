@@ -65,6 +65,7 @@ module.exports = function () {
 
     require('../../src/routes/middleware/authorization.js')(app, process.env.SECRET);
     require('../../src/routes/middleware/badRequestHandler.js')(app);
+    require('../../src/routes/middleware/beachEvent.js')(app);
 
     app.use('/api/users', users);
     app.use('/api/email', email);
@@ -89,6 +90,7 @@ module.exports = function () {
     app.bearbeiterToken = function () {
         return databaseSetup.getTokens().Bearbeiter;
     };
+    app.eventID = databaseSetup.getEventID().toString();
 
     return app;
 };

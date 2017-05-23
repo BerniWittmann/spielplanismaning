@@ -25,7 +25,8 @@ module.exports = function (MONGO_DB_URI) {
     function fillDefaultData(cb) {
         return async.parallel([
             defaultData.insertAnsprechpartner,
-            defaultData.insertUser
+            defaultData.insertUser,
+            defaultData.insertVeranstaltungen
         ], cb);
     }
 
@@ -33,6 +34,7 @@ module.exports = function (MONGO_DB_URI) {
         disconnect: disconnect,
         connect: connect,
         fillDefaultData: fillDefaultData,
-        getTokens: defaultData.getTokens
+        getTokens: defaultData.getTokens,
+        getEventID: defaultData.getEventID
     };
 };

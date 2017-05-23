@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const tokens = {};
+const beachEventID = mongoose.Types.ObjectId();
 
 const admin = {
     _id: mongoose.Types.ObjectId(),
@@ -75,7 +76,14 @@ const data = {
         email: 'test@byom.com',
         turnier: 'Mein anderes Turnier'
     }],
-    user: [generateUser(admin), generateUser(bearbeiter)]
+    user: [generateUser(admin), generateUser(bearbeiter)],
+    veranstaltung: [{
+        _id: beachEventID,
+        name: 'Event',
+        bildUrl: '',
+        spielModus: 'complex',
+        printMannschaftslisten: true
+    }]
 };
 
 function insert(name, cb) {
@@ -90,13 +98,23 @@ function insertUser(cb) {
     return insert('User', cb);
 }
 
+function insertVeranstaltungen(cb) {
+    return insert('Veranstaltung', cb);
+}
+
 function getTokens() {
     return tokens;
 }
 
+function getEventID() {
+    return beachEventID;
+}
+
 module.exports = {
     getTokens: getTokens,
+    getEventID: getEventID,
     insert: insert,
     insertAnsprechpartner: insertAnsprechpartner,
-    insertUser: insertUser
+    insertUser: insertUser,
+    insertVeranstaltungen: insertVeranstaltungen
 };
