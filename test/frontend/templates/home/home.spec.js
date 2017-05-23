@@ -39,6 +39,11 @@
             jugend: 'jgd2'
         }];
 
+        var mockVeranstaltungen = {
+            getCurrentEvent: function () {
+                return {name: 'EventName'};
+            }
+        };
         var mockSpiele;
         var injector;
 
@@ -58,6 +63,7 @@
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
             $provide.value('Logger', {});
+            $provide.value('veranstaltung', mockVeranstaltungen);
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -83,7 +89,8 @@
             };
 
             var ctrl = scope.vm = $controller('HomeController', {
-                spiele: spiele
+                spiele: spiele,
+                veranstaltungen: mockVeranstaltungen
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

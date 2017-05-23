@@ -22,6 +22,11 @@
             },
             href: function () {}
         };
+        var mockVeranstaltungen = {
+            getCurrentEvent: function () {
+                return {name: 'Event'};
+            }
+        };
         var mockAuth = {
             userLoggedIn: true,
             userAccessLevel: 999,
@@ -58,6 +63,7 @@
             $provide.value('$state', mockState);
             $provide.value('auth', mockAuth);
             $provide.value('spielplan', mockSpielplan);
+            $provide.value('veranstaltungen', mockVeranstaltungen);
 
             element = $compile('<spi-navigation></spi-navigation>')(scope);
             scope.$digest();
@@ -152,13 +158,6 @@
             });
 
             describe('Dropdown Verwaltung', function () {
-                it('soll den Link Allgemein anzeigen', function () {
-                    var result = element.find('#nav-button-verwaltung-allgemein');
-                    expect(result).to.exist;
-                    expect(result.text()).to.include('Allgemein');
-                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.verwaltung.allgemein');
-                });
-
                 it('soll den Link Gruppen anzeigen', function () {
                     var result = element.find('#nav-button-verwaltung-teams');
                     expect(result).to.exist;
