@@ -1,89 +1,17 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const tokens = {};
-const beachEventID = mongoose.Types.ObjectId();
 
-const admin = {
-    _id: mongoose.Types.ObjectId(),
-    username: 'admin',
-    email: 'admin@byom.de',
-    role: {
-        name: 'Admin',
-        rank: 1
-    },
-    resetToken: null,
-    resetTokenExp: null,
-    password: 'admin123'
-};
+const ids = require('./data/ids');
+const user = require('./data/users');
+const veranstaltung = require('./data/veranstaltung');
+const ansprechpartner = require('./data/ansprechpartner');
+const jugend = require('./data/jugenden');
 
-const bearbeiter = {
-    _id: mongoose.Types.ObjectId(),
-    username: 'bearbeiter',
-    email: 'bearbeiter@byom.de',
-    role: {
-        name: 'Bearbeiter',
-        rank: 0
-    },
-    resetToken: null,
-    resetTokenExp: null,
-    password: 'bearbeiter123'
-};
-
-function generateJWT(user) {
-    // set expiration to 60 days
-    const today = new Date();
-    const exp = new Date(today);
-    exp.setDate(today.getDate() + 60);
-    const obj = {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        exp: parseInt(exp.getTime() / 1000, 10),
-        iat: parseInt(today.getTime() / 1000, 10)
-    };
-    return jwt.sign(obj, process.env.SECRET);
-}
-
-function setPassword(password) {
-    const salt = crypto.randomBytes(32).toString('hex');
-    const hash = crypto.pbkdf2Sync(password, salt, 10000, 512, 'sha512').toString('hex');
-
-    return {
-        salt: salt,
-        hash: hash
-    }
-}
-
-function generateUser(user) {
-    const passwordData = setPassword(user.password);
-    user.salt = passwordData.salt;
-    user.hash = passwordData.hash;
-    delete user.password;
-
-    tokens[user.role.name] = generateJWT(user);
-    return user;
-}
-
+console.log(ids);
 const data = {
-    ansprechpartner: [{
-        name: 'Test Name',
-        email: 'my@mail.com',
-        turnier: 'Mein Turnier'
-    }, {
-        name: 'Ansprechpartner Name',
-        email: 'test@byom.com',
-        turnier: 'Mein anderes Turnier'
-    }],
-    user: [generateUser(admin), generateUser(bearbeiter)],
-    veranstaltung: [{
-        _id: beachEventID,
-        name: 'Event',
-        bildUrl: '',
-        spielModus: 'complex',
-        printMannschaftslisten: true
-    }]
+    ansprechpartner: ansprechpartner.data,
+    user: user.data,
+    veranstaltung: veranstaltung.data,
+    jugend: jugend.data
 };
 
 function insert(name, cb) {
@@ -102,12 +30,20 @@ function insertVeranstaltungen(cb) {
     return insert('Veranstaltung', cb);
 }
 
+function insertJugenden(cb) {
+    return insert('Jugend', cb);
+}
+
 function getTokens() {
-    return tokens;
+    return user.getTokens();
 }
 
 function getEventID() {
-    return beachEventID;
+    return getIDs().veranstaltung;
+}
+
+function getIDs() {
+    return ids;
 }
 
 module.exports = {
@@ -116,5 +52,7 @@ module.exports = {
     insert: insert,
     insertAnsprechpartner: insertAnsprechpartner,
     insertUser: insertUser,
-    insertVeranstaltungen: insertVeranstaltungen
+    insertVeranstaltungen: insertVeranstaltungen,
+    insertJugenden: insertJugenden,
+    getIDs: getIDs
 };
