@@ -4,7 +4,7 @@
   "authors": [
     "BerniWittmann <wittmann_b@web.de>"
   ],
-  "version": "2.7.1",
+  "version": "2.8.0",
   "homepage": "http://handballismaning.de",
   "private": true,
   "dependencies": {
