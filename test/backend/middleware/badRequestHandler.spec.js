@@ -9,6 +9,7 @@ var path = require('path');
 var _ = require('lodash');
 var helpers = require('../../../src/routes/helpers.js');
 var routes = require('../../../src/routes/middleware/routeConfig.js');
+const constants = require('../../../src/config/constants');
 
 describe('Bad Request Handler', function () {
     var token;
@@ -42,6 +43,7 @@ describe('Bad Request Handler', function () {
         it('Der Request soll korrekt ausgeführt werden', function (done) {
             request(server)
                 .post('/api/email/')
+                .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
                 .set('Authorization', token)
                 .send({subject: 'Test', text: 'test'})
                 .end(function (err, response) {
@@ -55,6 +57,7 @@ describe('Bad Request Handler', function () {
         it('Fehlen alle Parameter soll ein Fehler geworfen werden', function (done) {
             request(server)
                 .post('/api/email/')
+                .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
                 .set('Authorization', token)
                 .send({})
                 .end(function (err, response) {
@@ -69,6 +72,7 @@ describe('Bad Request Handler', function () {
         it('Fehlt ein Parameter soll ein Fehler geworfen werden', function (done) {
             request(server)
                 .post('/api/email/')
+                .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
                 .set('Authorization', token)
                 .send({subject: 'Test'})
                 .end(function (err, response) {
