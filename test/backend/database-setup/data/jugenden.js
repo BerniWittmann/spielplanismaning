@@ -5,6 +5,7 @@ const data = [{
     gruppen: ids.gruppen,
     teams: ids.teams,
     color: 'blau',
+    name: 'Jugend',
     veranstaltung: ids.veranstaltung
 }];
 
