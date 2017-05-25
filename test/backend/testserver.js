@@ -91,6 +91,7 @@ module.exports = function () {
         return databaseSetup.getTokens().Bearbeiter;
     };
     app.eventID = databaseSetup.getEventID().toString();
+    app.IDs = databaseSetup.getIDs();
 
     return app;
 };

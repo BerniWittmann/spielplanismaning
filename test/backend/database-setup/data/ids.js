@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 function createID() {
-    return mongoose.Types.ObjectId()
+    return mongoose.Types.ObjectId().toString();
 }
 
 function createIDArr(length) {

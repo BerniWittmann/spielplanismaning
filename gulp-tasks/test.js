@@ -51,7 +51,7 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
-    gulp.src('././test/backend/**/config.spec.js', {read: false})
+    gulp.src('././test/backend/**/email.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
             reporterOptions: {
