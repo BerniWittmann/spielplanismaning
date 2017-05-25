@@ -12,6 +12,8 @@
             function loadTeams() {
                 team.getAll().then(function (res) {
                     teams = res;
+                }).catch(function (err) {
+                    console.warn(err);
                 });
             }
             loadTeams();

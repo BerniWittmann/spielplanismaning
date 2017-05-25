@@ -1,0 +1,20 @@
+<div class="row veranstaltungen">
+    <div data-ng-repeat="veranstaltung in vm.veranstaltungen" class="veranstaltung" data-ng-click="vm.gotoVeranstaltung(veranstaltung)">
+        <img class="veranstaltung-image" data-ng-if="veranstaltung.bildUrl" src="{{veranstaltung.bildUrl}}">
+        <div class="veranstaltung-image-overlay-wrap">
+            <div class="veranstaltung-image-overlay"><p class="veranstaltung-image-overlay-text">Zum Spielplan</p></div>
+        </div>
+        <h3 class="veranstaltung-text">{{veranstaltung.name}}</h3>
+    </div>
+    <div class="veranstaltung" data-ng-if="vm.isAdmin">
+        <img class="veranstaltung-image" src="/assets/img/settings.png">
+        <div class="veranstaltung-image-overlay-wrap">
+            <div class="veranstaltung-image-overlay">
+                <p class="veranstaltung-image-overlay-text" data-ui-sref="spi.shared.verwaltung.allgemein">Allgemein</p>
+                <p class="veranstaltung-image-overlay-text" data-ui-sref="spi.shared.verwaltung.ansprechpartner">Ansprechpartner</p>
+                <p class="veranstaltung-image-overlay-text" data-ui-sref="spi.shared.verwaltung.veranstaltungen">Events</p>
+            </div>
+        </div>
+        <h3 class="veranstaltung-text">Einstellungen</h3>
+    </div>
+</div>

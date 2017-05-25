@@ -24,8 +24,8 @@
                 responseError: function (response) {
                     if (response.status === 401 || response.status === 403) {
                         const state = $injector.get('$state');
-                        if (!_.isEqual(state.current.name, 'spi.login')) {
-                            state.go('spi.login', {
+                        if (!_.isEqual(state.current.name, 'spi.shared.login')) {
+                            state.go('spi.shared.login', {
                                 reasonKey: 'AUTH_ERROR',
                                 reason: 'Sie haben versucht auf eine Ressource zuzugreifen, für die Sie nicht genügend Rechte haben. Bitte melden Sie sich mit einem passenden Account an.'
                             });

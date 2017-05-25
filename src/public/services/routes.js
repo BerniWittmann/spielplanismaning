@@ -3,7 +3,7 @@
 
     angular
         .module('spi.routes', ['spi.errorHandler', 'spi.constants'])
-        .factory('routes', ['$http', 'errorHandler', 'ENDPOINT_BASE', function ($http, errorHandler, ENDPOINT_BASE) {
+        .factory('routes', ['$http', 'errorHandler', 'ENDPOINT_BASE', '$q', function ($http, errorHandler, ENDPOINT_BASE, $q) {
             const methods = {
                 GET: 'GET',
                 POST: 'POST',

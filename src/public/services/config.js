@@ -3,7 +3,7 @@
 
     angular
         .module('spi.config', ['spi.routes'])
-        .factory('config', ['routes', '$q', function (routes, $q) {
+        .factory('config', ['routes', '$q', '$rootScope', function (routes, $q, $rootScope) {
 
             const config = {
                 env: undefined,
@@ -29,6 +29,9 @@
 
                 return routes.requestGET(routes.urls.config[name]()).then(function (data) {
                     config[name] = parseToInt(data);
+                    if (name === 'spielmodus') {
+                        $rootScope.isComplexMode = config.spielmodus === 'complex';
+                    }
                     return config[name];
                 });
             }
@@ -41,6 +44,7 @@
                     config.plaetze = parseInt(data.plaetze, 10) || config.plaetze;
                     config.spielmodus = data.spielmodus || config.spielmodus;
                     config.mannschaftslisten = data.mannschaftslisten || config.mannschaftslisten;
+                    $rootScope.isComplexMode = config.spielmodus === 'complex';
                     return config;
                 });
             }

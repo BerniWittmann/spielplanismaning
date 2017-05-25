@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.veranstaltungen', ['spi.routes'])
-        .factory('veranstaltungen', ['routes', 'storage', 'CURRENT_EVENT_TOKEN_NAME', '$rootScope', function (routes, storage, $rootScope, CURRENT_EVENT_TOKEN_NAME) {
+        .module('spi.veranstaltungen', ['spi.routes', 'spi.config', 'spi.templates.verwaltung.veranstaltungen.ui'])
+        .factory('veranstaltungen', ['routes', 'storage', 'CURRENT_EVENT_TOKEN_NAME', '$rootScope', 'config', '$state', function (routes, storage, CURRENT_EVENT_TOKEN_NAME, $rootScope, config, $state) {
             const veranstaltungen = {};
 
             veranstaltungen.getAll = function () {
@@ -18,6 +18,10 @@
 
             veranstaltungen.get = function (id) {
                 return routes.requestGETID(routes.urls.veranstaltungen.base(), id);
+            };
+
+            veranstaltungen.getBySlugOrID = function (identifier) {
+                return routes.requestGETSlugOrID(routes.urls.veranstaltungen.base(), identifier);
             };
 
             veranstaltungen.create = function (data) {
@@ -43,6 +47,7 @@
                     Raven.setExtraContext({currentEvent: event});
                 }
                 storage.set(CURRENT_EVENT_TOKEN_NAME, JSON.stringify(event));
+                config.getConfig();
             };
 
             veranstaltungen.getCurrentEvent = function () {

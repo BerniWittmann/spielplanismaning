@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const constants = require('../config/constants.js');
 const async = require('async');
-
+const URLSlugs = require('mongoose-url-slugs');
 
 const VeranstaltungenSchema = new Schema({
     name: String,
@@ -10,6 +10,8 @@ const VeranstaltungenSchema = new Schema({
     spielModus: String,
     printMannschaftslisten: Boolean
 });
+
+VeranstaltungenSchema.plugin(URLSlugs('name'), {update: true});
 
 VeranstaltungenSchema.methods.fill = function (cb) {
     return cb(null, this);

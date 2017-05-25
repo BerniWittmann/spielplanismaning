@@ -208,20 +208,27 @@ function verifyToken(req, secret) {
 }
 
 function saveUserAndSendMail(user, res, mail) {
-    return user.save(function (err) {
-        if (err) {
-            if (err.code === 11000) {
-                logger.warn('User %s already exists', user.username);
-                return messages.ErrorUserExistiertBereits(res, user.username);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return user.save(function (err) {
+            if (err) {
+                if (err.code === 11000) {
+                    logger.warn('User %s already exists', user.username);
+                    return messages.ErrorUserExistiertBereits(res, user.username);
+                }
+                return messages.Error(res, err);
             }
-            return messages.Error(res, err);
-        }
 
-        logger.verbose('Sending Mail');
-        return mail(user, function (err) {
-            return handler.handleErrorAndSuccess(err, res);
+            logger.verbose('Sending Mail');
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return mail(user, function (err) {
+                    return handler.handleErrorAndSuccess(err, res);
+                });
+            });
         });
-
     });
 }
 

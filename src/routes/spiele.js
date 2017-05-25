@@ -32,7 +32,10 @@ module.exports = function (sendgrid, env, url, disableMails) {
                                 emails.push(mail.email);
                             });
                             if (emails.length > 0) {
-                                fn(team, spiel, emails, asyncdone);
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    fn(team, spiel, emails, asyncdone);
+                                });
                             } else {
                                 return asyncdone(null, {});
                             }

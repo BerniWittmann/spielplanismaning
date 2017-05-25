@@ -20,39 +20,39 @@
         _.extend(vm, {
             gotoTeam: function (team, $event) {
                 if (team && team.name) {
-                    gotoState('spi.tgj.team', {
+                    gotoState('spi.event.tgj.team', {
                         teamid: team.slug || team._id
                     }, $event);
                 }
             },
             gotoGruppe: function (gruppe, $event) {
                 if (gruppe) {
-                    gotoState('spi.tgj.gruppe', {
+                    gotoState('spi.event.tgj.gruppe', {
                         gruppeid: gruppe.slug || gruppe._id
                     }, $event);
                 }
             },
             gotoJugend: function (jugend, $event) {
                 if (jugend) {
-                    gotoState('spi.tgj.jugend', {
+                    gotoState('spi.event.tgj.jugend', {
                         jugendid: jugend.slug || jugend._id
                     }, $event);
                 }
             },
             gotoSpiel: function (game) {
                 if (game.jugend) {
-                    gotoState('spi.spiel', {
+                    gotoState('spi.event.spiel', {
                         spielid: game.slug || game._id
                     }, undefined);
                 }
             },
             gotoPlatz: function (platznummer) {
-                gotoState('spi.platz', {
+                gotoState('spi.event.platz', {
                     platznummer: platznummer + ''
                 }, undefined);
             },
             gotoDate: function (date) {
-                gotoState('spi.datum', {
+                gotoState('spi.event.datum', {
                     datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
                 }, undefined);
             },

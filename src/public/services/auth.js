@@ -87,7 +87,7 @@
                 if ($rootScope.ravenEnabled) {
                     Raven.setUserContext();
                 }
-                $state.go('spi.home');
+                $state.go('spi.shared.veranstaltungen');
             };
 
             auth.getRole = function () {
@@ -131,9 +131,9 @@
                     if (_.includes(toState.data.requiredRoles, auth.getRole().name)) {
                         return $q.when();
                     } else {
-                        if (!_.isEqual(toState.name, 'spi.login')) {
+                        if (!_.isEqual(toState.name, 'spi.event.login')) {
                             $timeout(function () {
-                                $state.go('spi.login', {
+                                $state.go('spi.event.login', {
                                     next: toState.name,
                                     reasonKey: 'AUTH_ERROR',
                                     reason: 'Sie verfügen nicht über genügend Rechte. Bitte melden Sie sich mit einem passenden Account an.'

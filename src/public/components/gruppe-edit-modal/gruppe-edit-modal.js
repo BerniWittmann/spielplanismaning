@@ -79,7 +79,7 @@
         }
 
         function gotoTeam(team) {
-            $state.go('spi.tgj.team', {
+            $state.go('spi.event.tgj.team', {
                 teamid: team.slug || team.id
             });
             $uibModalInstance.dismiss('cancel');

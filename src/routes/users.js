@@ -13,6 +13,7 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
     const mailGenerator = require('./mailGenerator/mailGenerator.js')(sendgrid, env, url, disableEmails);
     const helpers = require('./helpers.js');
     const handler = require('./handler.js');
+    const cls = require('../config/cls.js');
 
     /**
      * @api {post} /users/register Register User
@@ -45,21 +46,30 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
             return messages.ErrorUnbekannteRolle(res);
         }
 
-        return User.find({$or: [{username: user.username}, {email: user.email}]}, function (err, users) {
-            if (err) return messages.Error(res, err);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return User.find({$or: [{username: user.username}, {email: user.email}]}, function (err, users) {
+                if (err) return messages.Error(res, err);
 
-            if (users && users.length > 0) {
-                return messages.ErrorUserExistiertBereits(res, user.username);
-            }
+                if (users && users.length > 0) {
+                    return messages.ErrorUserExistiertBereits(res, user.username);
+                }
 
-            logger.verbose('Setting Random Password');
-            user.setRandomPassword();
-            logger.verbose('Generating Reset Token');
-            user.generateResetToken();
+                logger.verbose('Setting Random Password');
+                user.setRandomPassword();
+                logger.verbose('Generating Reset Token');
+                user.generateResetToken();
 
-            logger.verbose('Saving User');
-            logger.verbose('Send Registration E-Mail');
-            return helpers.saveUserAndSendMail(user, res, mailGenerator.registerMail);
+                logger.verbose('Saving User');
+                logger.verbose('Send Registration E-Mail');
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return helpers.saveUserAndSendMail(user, res, mailGenerator.registerMail);
+                });
+            });
         });
     });
 
@@ -160,27 +170,44 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
         const email = req.body.email;
 
         logger.verbose('Requesting new Password for User with E-Mail %s', email);
-        User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
-            if (!user) {
-                logger.warn('User not found');
-                //Still sending success to prevent brute-forcing for a correct username
-                return messages.Success(res);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            logger.verbose('Generate Reset Token');
-            user.generateResetToken();
-
-            logger.verbose('Saving User');
-            return User.findOneAndUpdate({$or: [{'username': email}, {'email': email}]}, { $set: { resetTokenExp: user.resetTokenExp, resetToken: user.resetToken }}, {new: true}, function (err, userNew) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            User.findOne({$or: [{'username': email}, {'email': email}]}).exec(function (err, user) {
+                if (!user) {
+                    logger.warn('User not found');
+                    //Still sending success to prevent brute-forcing for a correct username
+                    return messages.Success(res);
+                }
                 if (err) {
                     return messages.Error(res, err);
                 }
 
-                logger.verbose('Sending Password-Forgot E-Mail');
-                return helpers.saveUserAndSendMail(userNew, res, mailGenerator.passwordForgotMail);
+                logger.verbose('Generate Reset Token');
+                user.generateResetToken();
+
+                logger.verbose('Saving User');
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return User.findOneAndUpdate({$or: [{'username': email}, {'email': email}]}, {
+                        $set: {
+                            resetTokenExp: user.resetTokenExp,
+                            resetToken: user.resetToken
+                        }
+                    }, {new: true}, function (err, userNew) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
+
+                        logger.verbose('Sending Password-Forgot E-Mail');
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.saveUserAndSendMail(userNew, res, mailGenerator.passwordForgotMail);
+                        });
+                    });
+                });
             });
         });
     });

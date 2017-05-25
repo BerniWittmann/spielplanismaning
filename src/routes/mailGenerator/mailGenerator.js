@@ -7,9 +7,11 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const fs = require('fs');
     const emailTemplatesFolderName = 'emailTemplates';
     const mailGenerator = {};
+    const cls = require('../../config/cls.js');
 
     mailGenerator.sendErgebnisUpdate = function (team, spiel, emails, cb) {
         logger.verbose('Sending Ergebnis-Update to %d Subscribers', emails.length);
+        const beachEventID = cls.getBeachEventID();
         if (emails.length > 0) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'ergebnisUpdate.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -47,8 +49,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     toreB: tore.toreB,
                     teambname: spiel.teamB.name,
                     spielausgang: spielausgang,
-                    spielUrl: url + 'spiel/' + spiel._id,
-                    unsubscribelink: url + 'teams/' + team._id + '/deabonnieren',
+                    spielUrl: url + beachEventID + '/spiel/' + spiel._id,
+                    unsubscribelink: url +  beachEventID + '/teams/' + team._id + '/deabonnieren',
                     kontaktUrl: url + 'kontakt',
                     imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
@@ -67,6 +69,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     mailGenerator.sendSpielReminder = function (team, spiel, emails, cb) {
         logger.verbose('Sending Spiel-Reminder to %d Subscribers', emails.length);
+        const beachEventID = cls.getBeachEventID();
         if (emails.length > 0) {
             const templatePath = path.join(__dirname, emailTemplatesFolderName, 'spielReminder.ejs');
             return fs.readFile(templatePath, 'utf-8', function (err, template) {
@@ -95,8 +98,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                     platz: spiel.platz,
                     uhrzeit: spiel.uhrzeit,
                     teambname: teambname,
-                    spielUrl: url + 'spiel/' + spiel._id,
-                    unsubscribelink: url + 'teams/' + team._id + '/deabonnieren',
+                    spielUrl: url + beachEventID + '/spiel/' + spiel._id,
+                    unsubscribelink: url + beachEventID + '/teams/' + team._id + '/deabonnieren',
                     kontaktUrl: url + 'kontakt',
                     imageUrl: url + 'assets/img/hoelle_sued_beach_logo_email.png'
                 };
@@ -237,6 +240,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
 
     mailGenerator.bugReportMail = function (data, cb) {
         logger.verbose('Sending Bug-Report');
+        const beachEventID = cls.getBeachEventID();
         const templatePath = path.join(__dirname, emailTemplatesFolderName, 'bugReport.ejs');
         return fs.readFile(templatePath, 'utf-8', function (err, template) {
             if (err) {
@@ -254,6 +258,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             if (!data.username) {
                 data.username = 'Nicht eingeloggt';
             }
+            data.eventID = beachEventID || 'kein Event gewählt';
             const mail = new sendgrid.Email();
             mail.setTos(constants.BUG_REPORT_EMAIL_TO);
             mail.setSmtpapiTos(constants.BUG_REPORT_EMAIL_TO);

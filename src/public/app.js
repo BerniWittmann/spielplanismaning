@@ -97,14 +97,23 @@
         const vm = this;
         vm.runBefore = false;
 
-        $rootScope.$on('$stateChangeStart', function (event, toState) {
-            if (!_.isEqual(toState.name, 'spi.login')) {
+        $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
+            if (!_.isEqual(toState.name, 'spi.shared.login')) {
                 checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope);
                 auth.checkRoute($q, toState);
             }
 
-            if (!_.isEqual(toState.name, 'spi.veranstaltungen')) {
+            if (!_.isEqual(toState.name, 'spi.shared.veranstaltungen')) {
                 checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toState.name);
+            }
+
+            if (_.includes(toState.name, 'spi.event')) {
+                //Intercept route transition to add eventID to stateParams
+                if (!toStateParams.eventid || toStateParams.eventid.length === 0) {
+                    event.preventDefault();
+                    toStateParams.eventid = veranstaltungen.getCurrentEvent().slug;
+                    $state.transitionTo(toState.name, toStateParams);
+                }
             }
 
             $rootScope.loading = true;
@@ -118,7 +127,7 @@
             if (!vm.runBefore) {
                 vm.runBefore = true;
 
-                if (!_.isEqual($state.current.name, 'spi.login')) {
+                if (!_.isEqual($state.current.name, 'spi.shared.login')) {
                     auth.checkRoute($q, $state.current);
                 }
 
@@ -134,7 +143,7 @@
     function checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toStateName) {
         const currentEvent = veranstaltungen.getCurrentEvent();
         if (!currentEvent && !_.includes(AVAILABLE_STATES_WITHOUT_EVENT, toStateName)) {
-            $state.go('spi.veranstaltungen');
+            $state.go('spi.shared.veranstaltungen');
         }
     }
 
@@ -146,11 +155,11 @@
                         name: 'InitialState'
                     };
                 }
-                if (_.isEqual(toState.name, 'spi.login') || _.isEqual(toState.name, 'spi.team-deabonnieren') || auth.isLoggedIn()) {
+                if (_.isEqual(toState.name, 'spi.shared.login') || _.isEqual(toState.name, 'spi.event.team-deabonnieren') || auth.isLoggedIn()) {
                     return $q.when();
                 } else {
                     $timeout(function () {
-                        $state.go('spi.login');
+                        $state.go('spi.shared.login');
                     });
                     $rootScope.loading = false;
 

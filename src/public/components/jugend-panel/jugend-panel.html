@@ -1,6 +1,6 @@
 <spi-panel data-ng-if="vm.jugend._id">
     <spi-panel-titel>
-        <a data-ui-sref="spi.tgj.jugend({jugendid: vm.jugend.slug || vm.jugend._id})">
+        <a data-ui-sref="spi.event.tgj.jugend({jugendid: vm.jugend.slug || vm.jugend._id})">
             <spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
         </a><span data-ng-if="vm.canEdit" class="pull-right" data-ng-click="vm.askDeleteJugend(vm.jugend)"
                   data-uib-tooltip="Jugend löschen" data-tooltip-append-to-body="true" analytics-on="click" analytics-event="Delete Jugend"><i
@@ -18,7 +18,7 @@
         <div class="col-md-12">
             <table>
                 <tr data-ng-repeat="gruppe in vm.gruppen">
-                    <td><a data-ui-sref="spi.tgj.gruppe({gruppeid: gruppe.slug || gruppe._id})">{{gruppe.name}}</a></td>
+                    <td><a data-ui-sref="spi.event.tgj.gruppe({gruppeid: gruppe.slug || gruppe._id})">{{gruppe.name}}</a></td>
                     <td data-ng-if="vm.gruppeIsEditable(gruppe)" class="padding-left-15" data-ng-click="vm.askDeleteGruppe(gruppe)"
                         data-uib-tooltip="Gruppe löschen" analytics-on="click" analytics-event="Delete Gruppe"><i class="icon-hover fa fa-remove"></i></td>
                     <td data-ng-if="vm.gruppeIsEditable(gruppe)" class="padding-left-5" data-ng-click="vm.editGruppe(gruppe)"

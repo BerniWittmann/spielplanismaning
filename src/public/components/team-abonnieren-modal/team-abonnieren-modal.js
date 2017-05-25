@@ -83,7 +83,7 @@
             },
             gotoAbmelden: function () {
                 $uibModalInstance.close();
-                $state.go('spi.team-deabonnieren', {teamid: vm.team.slug || vm.team._id});
+                $state.go('spi.event.team-deabonnieren', {teamid: vm.team.slug || vm.team._id});
             },
             bereitsabonniert: false
         });
