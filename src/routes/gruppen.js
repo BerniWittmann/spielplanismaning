@@ -91,6 +91,7 @@ module.exports = function () {
             const gruppe = new Gruppe(req.body);
             logger.verbose('Setting Jugend %s', req.query.jugend);
             gruppe.jugend = req.query.jugend;
+            gruppe.veranstaltung = beachEventID;
             const query = Jugend.findOne({_id: mongoose.Types.ObjectId(gruppe.jugend)});
 
             query.exec(function (err, jugend) {

@@ -160,11 +160,12 @@ function beachEventQueryMiddleware() {
 
 function beachEventDocumentMiddleware(next) {
     const beachEventID = cls.getBeachEventID();
-    if (!beachEventID) {
+    if (!beachEventID && !this.veranstaltung) {
         logger.error('No beachEventID given in Schema in document hook: %s', JSON.stringify(this));
         return next();
     }
-    this.set({veranstaltung: mongoose.Types.ObjectId(beachEventID)});
+    const ID = beachEventID || this.veranstaltung;
+    this.set({veranstaltung: mongoose.Types.ObjectId(ID)});
     return next();
 }
 

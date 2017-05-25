@@ -97,7 +97,7 @@
             };
 
             spiel.getGruppeDisplay = function (game) {
-                if (game.label && game.label !== 'Zwischenrunde' && game.label !== 'normal') {
+                if (game.label && game.label !== 'Zwischenrunde' && game.label !== 'Spiel') {
                     return game.label;
                 } else if (game.gruppe) {
                     return game.gruppe.name

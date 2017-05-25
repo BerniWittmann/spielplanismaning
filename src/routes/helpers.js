@@ -45,6 +45,10 @@ function getEntityQuery(model, req) {
         logger.silly('Query by Date');
         const day = moment(req.query.date, 'YYYY-MM-DD');
         query = model.find({datum: day.format('DD.MM.YYYY')});
+    } else if (req.query.slug) {
+        logger.silly('Query by Slug');
+        searchById = true;
+        query = model.findOne({slug: req.query.slug});
     }
     return {
         query: query,

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const async = require('async');
 const cls = require('../config/cls.js');
+const URLSlugs = require('mongoose-url-slugs');
 
 let JugendSchema = new mongoose.Schema({
     name: String,
@@ -23,6 +24,8 @@ let JugendSchema = new mongoose.Schema({
         virtuals: true
     }
 });
+
+JugendSchema.plugin(URLSlugs('name'), {update: true});
 
 JugendSchema.methods.pushGruppe = function (Gruppe, cb) {
     this.gruppen.push(Gruppe);

@@ -216,12 +216,18 @@ function saveSpiele(spiele, cb) {
         return async.each(spiele, function (spiel, callback) {
             return clsSession.run(function () {
                 clsSession.set('beachEventID', beachEventID);
-                Spiel.create(spiel, function (err) {
-                    if (err) return callback(err);
+                spiel.veranstaltung = beachEventID;
+                const game = new Spiel(spiel);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return game.save(function (err) {
+                        logger.info('AfterUpdate')
+                        if (err) return callback(err);
 
-                    return clsSession.run(function () {
-                        clsSession.set('beachEventID', beachEventID);
-                        return callback();
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return callback();
+                        });
                     });
                 });
             });

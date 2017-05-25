@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const constants = require('../config/constants.js');
 const async = require('async');
 const cls = require('../config/cls.js');
+const URLSlugs = require('mongoose-url-slugs');
 
 let GruppenSchema = new mongoose.Schema({
     name: String,
@@ -22,6 +23,8 @@ let GruppenSchema = new mongoose.Schema({
         virtuals: true
     }
 });
+
+GruppenSchema.plugin(URLSlugs('name'), {update: true});
 
 GruppenSchema.methods.pushTeams = function (team, cb) {
     this.teams.push(team);

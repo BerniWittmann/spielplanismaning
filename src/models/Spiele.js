@@ -4,6 +4,7 @@ const async = require('async');
 const _ = require('lodash');
 const cls = require('../config/cls.js');
 const helper = require('./helper.js');
+const URLSlugs = require('mongoose-url-slugs');
 
 let SpielSchema = new mongoose.Schema({
     nummer: Number,
@@ -82,6 +83,8 @@ let SpielSchema = new mongoose.Schema({
     label: String,
     veranstaltung: {type: Schema.ObjectId, ref: 'Veranstaltung', required: true}
 });
+
+SpielSchema.plugin(URLSlugs('label nummer'), {update: true});
 
 SpielSchema.methods.setToreNormal = function (toreA, toreB, cb) {
     const beachEventID = cls.getBeachEventID();

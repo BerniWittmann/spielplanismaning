@@ -160,7 +160,7 @@ module.exports = function () {
             const team = new Team(req.body);
             team.jugend = req.query.jugend;
             team.gruppe = req.query.gruppe;
-
+            team.veranstaltung = beachEventID;
             team.save(function (err, team) {
                 if (err) {
                     return messages.Error(res, err);

@@ -7,6 +7,7 @@ const request = require('request');
 const moment = require('moment');
 const helper = require('./helper.js');
 const cls = require('../config/cls.js');
+const URLSlugs = require('mongoose-url-slugs');
 
 let TeamSchema = new mongoose.Schema({
     name: String,
@@ -46,6 +47,8 @@ let TeamSchema = new mongoose.Schema({
         virtuals: true
     }
 });
+
+TeamSchema.plugin(URLSlugs('name'), {update: true});
 
 TeamSchema.virtual('anmeldungsObject').get(function () {
     if (!this.anmeldungsObjectString || this.anmeldungsObjectString.length === 0) {
