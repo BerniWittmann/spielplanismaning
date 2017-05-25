@@ -11,6 +11,8 @@ module.exports = function (app, sendgrid, secret) {
     const ansprechpartner = require('./ansprechpartner.js')();
     const veranstaltungen = require('./veranstaltungen.js')();
     const notFound = require('./notfound.js')();
+    const {healthRoute} = require('express-healthchecker');
+    const healtChecks = require('./middleware/healthChecks.js');
 
     const API_PREFIX = '/api';
     app.use(API_PREFIX + '/users', users);
@@ -24,5 +26,10 @@ module.exports = function (app, sendgrid, secret) {
     app.use(API_PREFIX + '/ansprechpartner', ansprechpartner);
     app.use(API_PREFIX + '/veranstaltungen', veranstaltungen);
     app.use(/\/api\/.*/, notFound);
+
+    app.get('/health', healthRoute({
+        healthChecks: healtChecks(app),
+        accessToken: process.env.HEALTH_ROUTE_ACCESS_TOKEN
+    }));
     app.use(/\/.*/, routes);
 };
