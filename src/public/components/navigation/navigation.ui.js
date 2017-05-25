@@ -3,7 +3,7 @@
 
     angular
         .module('spi.components.navigation.ui', [
-            'spi.auth', 'ngSanitize'
+            'spi.auth', 'ngSanitize', 'spi.veranstaltungen'
         ])
         .directive('spiNavigation', spiNavigation)
         .controller('NavigationController', NavigationController);
@@ -18,7 +18,7 @@
         };
     }
 
-    function NavigationController($state, $scope, auth) {
+    function NavigationController($state, $scope, auth, veranstaltungen) {
         const vm = this;
 
         _.extend(vm, {
@@ -32,7 +32,19 @@
             logOut: auth.logOut,
             isAktiv: function (name) {
                 return $state.includes(name);
-            }
+            },
+            eventName: getEventName
         });
+
+        function getEventName() {
+            const event = veranstaltungen.getCurrentEvent();
+            if (!event) {
+                vm.eventChosen = false;
+                return 'Spielplan'
+            } else {
+                vm.eventChosen = true;
+                return event.name;
+            }
+        }
     }
 })();

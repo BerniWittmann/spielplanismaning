@@ -106,6 +106,9 @@ module.exports = function () {
         },
         ErrorSpielNotChangeable: function (res) {
             send(require('./ErrorSpielNotChangeable.js'), res);
+        },
+        ErrorVeranstaltungNotFound: function (res, err) {
+            send(require('./ErrorVeranstaltungNotFound.js')(err), res);
         }
     };
 };

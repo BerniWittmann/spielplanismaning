@@ -2,6 +2,8 @@ var expect = require('chai').expect;
 var request = require("supertest");
 var server = require('./testserver.js')();
 var mongoose = require('mongoose');
+const constants = require('../../src/config/constants');
+const cls = require('../../src/config/cls');
 
 describe('Route: Jugenden', function () {
     var jugendid;
@@ -9,6 +11,8 @@ describe('Route: Jugenden', function () {
     before(function (done) {
         server.connectDB(function (err) {
             if (err) throw err;
+
+            jugendid = server.IDs.jugend;
             done();
         });
     });
@@ -17,12 +21,14 @@ describe('Route: Jugenden', function () {
         request(server)
             .get('/api/turniere/')
             .set('Accept', 'application/json')
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.have.lengthOf(2);
-                jugendid = response.body[1]._id;
+                expect(response.body).to.have.lengthOf(1);
+                expect(response.body[0]._id.toString()).to.equal(jugendid);
+                expect(response.body[0].name).to.equal('Jugend');
                 return done();
             });
     });
@@ -31,6 +37,7 @@ describe('Route: Jugenden', function () {
         request(server)
             .get('/api/turniere?id=' + jugendid.toString())
             .set('Accept', 'application/json')
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
@@ -46,7 +53,8 @@ describe('Route: Jugenden', function () {
         request(server)
             .post('/api/turniere')
             .send(jugend)
-            .set('Authorization', server.adminToken)
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
+            .set('Authorization', server.adminToken())
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -64,7 +72,8 @@ describe('Route: Jugenden', function () {
         request(server)
             .post('/api/turniere')
             .send(jugend)
-            .set('Authorization', server.adminToken)
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
+            .set('Authorization', server.adminToken())
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -74,11 +83,15 @@ describe('Route: Jugenden', function () {
                 expect(response.body.name).to.be.equal(jugend.name);
                 neueJugendid = response.body._id;
                 expect(response.body.gruppen).to.have.lengthOf(1);
-                mongoose.model('Jugend').find().exec(function (err, res) {
-                    if (err) return done(err);
-                    expect(res).to.have.lengthOf(3);
-                    return done();
+                const clsSession = cls.getNamespace();
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', server.eventID);
+                    mongoose.model('Jugend').find().exec(function (err, res) {
+                        if (err) return done(err);
+                        expect(res).to.have.lengthOf(2);
+                        return done();
 
+                    });
                 });
             });
     });
@@ -86,11 +99,12 @@ describe('Route: Jugenden', function () {
     it('soll die Gesamtzahl der Tore laden', function (done) {
         request(server)
             .get('/api/turniere/tore')
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.equal(14);
+                expect(response.body).to.equal(6);
                 done();
             });
     });
@@ -98,11 +112,12 @@ describe('Route: Jugenden', function () {
     it('soll die Tore für eine einzelne Jugend laden', function (done) {
         request(server)
             .get('/api/turniere/tore?id=' + jugendid.toString())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .end(function (err, response) {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.equal(9);
+                expect(response.body).to.equal(6);
                 done();
             });
     });
@@ -110,7 +125,8 @@ describe('Route: Jugenden', function () {
     it('wenn keine JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .del('/api/turniere?id=')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .end(function (err, response) {
                 if (err) throw err;
                 expect(response).not.to.be.undefined;
@@ -123,7 +139,8 @@ describe('Route: Jugenden', function () {
     it('wenn eine falsche JugendId zum löschen angegeben wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .del('/api/turniere?id=DASgibtsN1cht')
-            .set('Authorization', server.adminToken)
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
+            .set('Authorization', server.adminToken())
             .end(function (err, response) {
                 if (err) throw err;
 
@@ -136,26 +153,39 @@ describe('Route: Jugenden', function () {
 
     it('soll eine Jugend löschen können und die Teams & Gruppen mitlöschen', function (done) {
         var anzahlGruppenVorher;
-        mongoose.model('Gruppe').find().exec(function (err, res) {
-            if (err) throw err;
-            anzahlGruppenVorher = res.length;
-            request(server)
-                .del('/api/turniere?id=' + neueJugendid)
-                .set('Authorization', server.adminToken)
-                .end(function (err, res) {
-                    if (err) throw err;
-                    expect(res.statusCode).to.equal(200);
-                    expect(res.body.MESSAGEKEY).to.equal('SUCCESS_DELETE_MESSAGE');
-                    mongoose.model('Jugend').findById(neueJugendid).exec(function (err, res) {
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', server.eventID);
+            mongoose.model('Gruppe').find().exec(function (err, res) {
+                if (err) throw err;
+                anzahlGruppenVorher = res.length;
+                request(server)
+                    .del('/api/turniere?id=' + neueJugendid)
+                    .set('Authorization', server.adminToken())
+                    .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
+                    .end(function (err, res) {
                         if (err) throw err;
-                        expect(res).not.to.exist;
-                        mongoose.model('Gruppe').find().exec(function (err, res) {
-                            if (err) throw err;
-                            expect(res.length).to.be.below(anzahlGruppenVorher);
-                            done();
+                        expect(res.statusCode).to.equal(200);
+                        expect(res.body.MESSAGEKEY).to.equal('SUCCESS_DELETE_MESSAGE');
+                        const clsSession = cls.getNamespace();
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', server.eventID);
+                            mongoose.model('Jugend').findById(neueJugendid).exec(function (err, res) {
+                                if (err) throw err;
+                                expect(res).not.to.exist;
+                                const clsSession = cls.getNamespace();
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', server.eventID);
+                                    mongoose.model('Gruppe').find().exec(function (err, res) {
+                                        if (err) throw err;
+                                        expect(res.length).to.be.below(anzahlGruppenVorher);
+                                        done();
+                                    });
+                                });
+                            });
                         });
                     });
-                });
+            });
         });
     });
 

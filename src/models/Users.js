@@ -110,7 +110,7 @@ module.exports = function (secret) {
         return cb(null, this);
     };
 
-    const deepPopulate = require('mongoose-deep-populate')(mongoose);
+    const deepPopulate = require('../config/mongoose-deep-populate')(mongoose);
     UserSchema.plugin(deepPopulate, {});
 
     mongoose.model('User', UserSchema);

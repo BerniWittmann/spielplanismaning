@@ -45,14 +45,22 @@ module.exports = function (sendgrid, env, url, disableEmails, secret) {
             return messages.ErrorUnbekannteRolle(res);
         }
 
-        logger.verbose('Setting Random Password');
-        user.setRandomPassword();
-        logger.verbose('Generating Reset Token');
-        user.generateResetToken();
+        return User.find({$or: [{username: user.username}, {email: user.email}]}, function (err, users) {
+            if (err) return messages.Error(res, err);
 
-        logger.verbose('Saving User');
-        logger.verbose('Send Registration E-Mail');
-        return helpers.saveUserAndSendMail(user, res, mailGenerator.registerMail);
+            if (users && users.length > 0) {
+                return messages.ErrorUserExistiertBereits(res, user.username);
+            }
+
+            logger.verbose('Setting Random Password');
+            user.setRandomPassword();
+            logger.verbose('Generating Reset Token');
+            user.generateResetToken();
+
+            logger.verbose('Saving User');
+            logger.verbose('Send Registration E-Mail');
+            return helpers.saveUserAndSendMail(user, res, mailGenerator.registerMail);
+        });
     });
 
     /**

@@ -9,18 +9,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" data-ui-sref="spi.home">
+            <a class="navbar-brand" data-ui-sref="spi.veranstaltungen">
 				<span class="pull-left brand-image">
 				<!--suppress HtmlUnknownTarget -->
                     <img class="brand-image-normal" alt="" src="/assets/img/hoelle_sued_beach_logo_klein.png" width="32px"
                          height="32px">
 				</span>
-                <span> Spielplan</span>
+                <span> {{vm.eventName()}}</span>
             </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="spi-navbar">
+        <div class="collapse navbar-collapse" id="spi-navbar" data-ng-if="vm.eventChosen">
             <ul class="nav navbar-nav">
                 <li data-ng-class="{active: vm.isAktiv('spi.home')}" id="nav-button-home"><a data-ui-sref="spi.home"
                                                                                              data-toggle="collapse"
@@ -58,10 +58,6 @@
                        aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
-                        <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-allgemein"><a
-                                data-ui-sref="spi.verwaltung.allgemein"
-                                data-toggle="collapse" data-target=".navbar-collapse.in">Allgemein</a>
-                        </li>
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-teams"><a
                                 data-ui-sref="spi.verwaltung.teams" data-toggle="collapse"
                                 data-target=".navbar-collapse.in">Teams, Gruppen & Turniere</a></li>
@@ -74,9 +70,6 @@
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-emails"><a
                                 data-ui-sref="spi.verwaltung.email-abonnements"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Email Abonnements</a></li>
-                        <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-ansprechpartner"><a
-                                data-ui-sref="spi.verwaltung.ansprechpartner"
-                                data-toggle="collapse" data-target=".navbar-collapse.in">Ansprechpartner</a></li>
                     </ul>
                 </li>
             </ul>

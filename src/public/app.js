@@ -23,7 +23,8 @@
             'ngMessages',
             'LocalStorageModule',
             'angular-loading-bar',
-            'ui.sortable'
+            'ui.sortable',
+            'spi.veranstaltungen'
         ])
         .config(states)
         .config(toastr)
@@ -34,7 +35,7 @@
         .run(run);
 
     function states($urlRouterProvider, $stateProvider, $locationProvider) {
-        $urlRouterProvider.otherwise('/home');
+        $urlRouterProvider.otherwise('/beachevents');
 
         $stateProvider
             .state('spi', {
@@ -92,7 +93,7 @@
         };
     }
 
-    function AppController($q, auth, $state, $timeout, config, $rootScope) {
+    function AppController($q, auth, $state, $timeout, config, $rootScope, veranstaltungen, AVAILABLE_STATES_WITHOUT_EVENT) {
         const vm = this;
         vm.runBefore = false;
 
@@ -101,6 +102,11 @@
                 checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope);
                 auth.checkRoute($q, toState);
             }
+
+            if (!_.isEqual(toState.name, 'spi.veranstaltungen')) {
+                checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toState.name);
+            }
+
             $rootScope.loading = true;
         });
 
@@ -110,12 +116,26 @@
 
         $rootScope.$on('$viewContentLoading', function () {
             if (!vm.runBefore) {
+                vm.runBefore = true;
+
                 if (!_.isEqual($state.current.name, 'spi.login')) {
                     auth.checkRoute($q, $state.current);
                 }
-                vm.runBefore = true;
+
+                checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, $state.current.name);
             }
         });
+
+        $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
+            console.error(error);
+        });
+    }
+
+    function checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toStateName) {
+        const currentEvent = veranstaltungen.getCurrentEvent();
+        if (!currentEvent && !_.includes(AVAILABLE_STATES_WITHOUT_EVENT, toStateName)) {
+            $state.go('spi.veranstaltungen');
+        }
     }
 
     function checkLockdown($q, auth, $state, $timeout, config, toState, $rootScope) {

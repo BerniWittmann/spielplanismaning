@@ -11,6 +11,7 @@ const Gruppen = mongoose.model('Gruppe');
 const Team = mongoose.model('Team');
 const Jugend = mongoose.model('Jugend');
 const spielLabels = require('./spielLabels.js');
+const cls = require('../../config/cls.js');
 
 function calcSpieleGesamt(gruppen) {
     let sum = 0;
@@ -120,38 +121,65 @@ function checkSpieleFuerGruppeUebrig(gruppe, spiele) {
 }
 
 function getZeiten(cb) {
-    Spielplan.findOne({}).exec(function (err, data) {
-        if (err) {
-            return cb(err);
-        }
-        return cb(undefined, data);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Spielplan.findOne({}, function (err, data) {
+            if (err) {
+                return cb(err);
+            }
+            return cb(undefined, data);
+        });
     });
 }
 
 function getGruppen(cb) {
-    Gruppen.find({}).deepPopulate('jugend teams').exec(function (err, data) {
-        if (err) {
-            return cb(err);
-        }
-        return cb(undefined, data);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        return Gruppen.find({}).exec(function (err, data) {
+            if (err) {
+                return cb(err);
+            }
+
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                Gruppen.deepPopulate(data, 'jugend teams', function (err, data) {
+                    if (err) return cb(err);
+                    return cb(undefined, data);
+                });
+            });
+
+        });
     });
 }
 
 function getAllSpiele(cb) {
-    return Spiel.find({}).exec(function (err, data) {
-        if (err) {
-            return cb(err);
-        }
-        return cb(undefined, data);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Spiel.find({}).exec(function (err, data) {
+            if (err) {
+                return cb(err);
+            }
+            return cb(undefined, data);
+        });
     });
 }
 
 function deleteSpiele(cb) {
-    Spiel.remove({}).exec(function (err) {
-        if (err) {
-            return cb(err);
-        }
-        return cb();
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        Spiel.remove({veranstaltung: beachEventID}).exec(function (err) {
+            if (err) {
+                return cb(err);
+            }
+            return cb();
+        });
     });
 }
 
@@ -160,34 +188,59 @@ function updateAllSpiele(spiele, keep, cb) {
     if (keep) {
         query = deleteNotCompletedSpiele;
     }
-    return query(function (err) {
-        if (err) {
-            return cb(err);
-        }
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return query(function (err) {
+            if (err) {
+                return cb(err);
+            }
 
-        return saveSpiele(spiele, function (err) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return saveSpiele(spiele, function (err) {
+                    if (err) return cb(err);
+                    return cb();
+                });
+            });
+        });
+    });
+}
+
+function saveSpiele(spiele, cb) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return async.each(spiele, function (spiel, callback) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                Spiel.create(spiel, function (err) {
+                    if (err) return callback(err);
+
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        return callback();
+                    });
+                });
+            });
+        }, function (err) {
             if (err) return cb(err);
             return cb();
         });
     });
 }
 
-function saveSpiele(spiele, cb) {
-    return async.each(spiele, function (spiel, callback) {
-        Spiel.create(spiel, function (err) {
-            if (err) return callback(err);
-            return callback();
-        });
-    }, function (err) {
-        if (err) return cb(err);
-        return cb();
-    });
-}
-
 function deleteNotCompletedSpiele(cb) {
-    return Spiel.remove({beendet: false}, function (err) {
-        if (err) return cb(err);
-        return cb();
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Spiel.remove({beendet: false, veranstaltung: beachEventID}, function (err) {
+            if (err) return cb(err);
+            return cb();
+        });
     });
 }
 
@@ -492,7 +545,7 @@ function fillWithEmptyEndrundeByFunction(spiele, fn) {
     const index = fn(spiele);
     const plaetze = getPlaetze();
     const diff = (index + 1) % plaetze;
-    if(index > 0 && diff !== 0) {
+    if (index > 0 && diff !== 0) {
         for (let i = 1; i <= (3 - diff); i++) {
             spiele.splice((index + i), 0, {label: spielLabels.ZWISCHENRUNDENSPIEL});
         }
@@ -507,65 +560,101 @@ function fillEndrundeSpieleWithEmpty(spiele) {
 }
 
 function removeZwischenRundenGruppenUndSpiele(callback) {
-    return removeZwischenRundenGruppe(function (err) {
-        if (err) return callback(err);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return removeZwischenRundenGruppe(function (err) {
+            if (err) return callback(err);
 
-        return removeEndSpiele(callback);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return removeEndSpiele(callback);
+            });
+        });
     });
 }
 
 function removeEndSpiele(callback) {
-    return Spiel.remove({label: {$ne: 'normal'}}, callback);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Spiel.remove({label: {$ne: 'normal'}, veranstaltung: beachEventID}, callback);
+    });
 }
 
 function removeZwischenRundenGruppe(callback) {
-    return Gruppen.find({type: 'zwischenrunde'}, function (err, gruppen) {
-        if (err) {
-            return callback(err);
-        }
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Gruppen.find({type: 'zwischenrunde'}, function (err, gruppen) {
+            if (err) {
+                return callback(err);
+            }
 
-        if (!gruppen || gruppen.length === 0) {
-            return callback();
-        }
+            if (!gruppen || gruppen.length === 0) {
+                return callback();
+            }
 
-        return async.eachSeries(gruppen, function (gruppe, cb) {
-            return Jugend.findById(gruppe.jugend, function (err, jugend) {
-                if (err) {
-                    return cb(err);
-                }
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return async.eachSeries(gruppen, function (gruppe, cb) {
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
 
-                if (!jugend) {
-                    return cb();
-                }
-
-                return jugend.removeGruppe(gruppe._id.toString(), function (err) {
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    return helpers.removeEntityBy(Spiel, 'gruppe', gruppe._id.toString(), function (err) {
-                        if (err) return cb(err);
-
-                        return helpers.removeEntityBy(Gruppen, '_id', gruppe._id.toString(), function (err) {
+                        return Jugend.findById(gruppe.jugend, function (err, jugend) {
                             if (err) {
                                 return cb(err);
                             }
 
-                            return cb();
+                            if (!jugend) {
+                                return cb();
+                            }
+
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+                                return jugend.removeGruppe(gruppe._id.toString(), function (err) {
+                                    if (err) {
+                                        return cb(err);
+                                    }
+
+                                    return clsSession.run(function () {
+                                        clsSession.set('beachEventID', beachEventID);
+                                        return helpers.removeEntityBy(Spiel, 'gruppe', gruppe._id.toString(), function (err) {
+                                            if (err) return cb(err);
+
+                                            return clsSession.run(function () {
+                                                clsSession.set('beachEventID', beachEventID);
+                                                return helpers.removeEntityBy(Gruppen, '_id', gruppe._id.toString(), function (err) {
+                                                    if (err) {
+                                                        return cb(err);
+                                                    }
+
+                                                    return cb();
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
                         });
                     });
                 });
-            });
-        }, function (err) {
-            if (err) return callback(err);
-
-            return helpers.removeEntityBy(Team, 'isPlaceholder', true, function (err) {
+            }, function (err) {
                 if (err) return callback(err);
 
-                return callback();
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return helpers.removeEntityBy(Team, 'isPlaceholder', true, function (err) {
+                        if (err) return callback(err);
+
+                        return callback();
+                    });
+                });
             });
         });
-
     });
 }
 
@@ -580,76 +669,99 @@ function generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, callback) {
         return callback(null, []);
     }
 
-    const groups = [];
-    return async.times(maxTeamsAdvance, function (i, next) {
-        const nummer = i + 1;
-        logger.verbose('Generating Zwischengruppe ' + nummer);
-        const teams = [];
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        const groups = [];
+        return async.times(maxTeamsAdvance, function (i, next) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                const nummer = i + 1;
+                logger.verbose('Generating Zwischengruppe ' + nummer);
+                const teams = [];
 
-        const gruppenID = mongoose.Types.ObjectId();
+                const gruppenID = mongoose.Types.ObjectId();
 
-        for (let seq = 0; seq < gruppenLength; seq++) {
-            teams.push({
-                _id: mongoose.Types.ObjectId(),
-                rank: ((nummer + seq) % 2 + 1),
-                fromType: 'Gruppe',
-                from: gruppen[seq],
-                isPlaceholder: true,
-                gruppe: gruppenID,
-                jugend: jugendid
-            });
-        }
-
-        const gruppe = new Gruppen({
-            _id: gruppenID,
-            name: 'Zwischenrunde Gruppe ' + nummer,
-            type: 'zwischenrunde',
-            jugend: jugendid,
-            teams: teams
-        });
-        logger.silly('Setting Jugend %s', jugendid);
-        gruppe.jugend = jugendid;
-        const query = Jugend.findById(gruppe.jugend);
-
-        return query.exec(function (err, jugend) {
-            if (err) {
-                return next(err);
-            }
-            return gruppe.save(function (err, gruppe) {
-                if (err) {
-                    return next(err);
+                for (let seq = 0; seq < gruppenLength; seq++) {
+                    teams.push({
+                        _id: mongoose.Types.ObjectId(),
+                        rank: ((nummer + seq) % 2 + 1),
+                        fromType: 'Gruppe',
+                        from: gruppen[seq],
+                        isPlaceholder: true,
+                        gruppe: gruppenID,
+                        jugend: jugendid
+                    });
                 }
-                logger.silly('Gruppe saved');
 
-                return jugend.pushGruppe(gruppe, function (err) {
-                    if (err) return next(err);
+                const gruppe = new Gruppen({
+                    _id: gruppenID,
+                    name: 'Zwischenrunde Gruppe ' + nummer,
+                    type: 'zwischenrunde',
+                    jugend: jugendid,
+                    teams: teams
+                });
+                logger.silly('Setting Jugend %s', jugendid);
+                gruppe.jugend = jugendid;
+                const query = Jugend.findById(gruppe.jugend);
 
-                    groups.push(gruppe);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return query.exec(function (err, jugend) {
+                        if (err) {
+                            return next(err);
+                        }
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return gruppe.save(function (err, gruppe) {
+                                if (err) {
+                                    return next(err);
+                                }
+                                logger.silly('Gruppe saved');
 
-                    return async.eachSeries(teams, function (team, callback) {
-                        const t = new Team(team);
-                        t.save(function (err) {
-                            if (err) return callback(err);
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return jugend.pushGruppe(gruppe, function (err) {
+                                        if (err) return next(err);
 
-                            return callback();
-                        });
-                    }, function (err) {
-                        if (err) return next(err);
+                                        groups.push(gruppe);
 
-                        return gruppe.deepPopulate('teams jugend', function (err, gruppe) {
-                            if (err) return next(err);
+                                        return async.eachSeries(teams, function (team, callback) {
+                                            const t = new Team(team);
+                                            return clsSession.run(function () {
+                                                clsSession.set('beachEventID', beachEventID);
+                                                t.save(function (err) {
+                                                    if (err) return callback(err);
 
-                            relevantGruppen.push(gruppe);
-                            return next();
+                                                    return callback();
+                                                });
+                                            }, function (err) {
+                                                if (err) return next(err);
+
+                                                return clsSession.run(function () {
+                                                    clsSession.set('beachEventID', beachEventID);
+                                                    return gruppe.deepPopulate('teams jugend', function (err, gruppe) {
+                                                        if (err) return next(err);
+
+                                                        relevantGruppen.push(gruppe);
+                                                        return next();
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
                         });
                     });
                 });
             });
-        });
-    }, function (err) {
-        if (err) return callback(err);
+        }, function (err) {
+            if (err) return callback(err);
 
-        return callback(null, relevantGruppen);
+            return callback(null, relevantGruppen);
+        });
     });
 }
 
@@ -694,34 +806,49 @@ function createSpielFromSpiel(spielA, spielB, rankA, rankB, jugendid, label) {
 
 function generateZwischenGruppenHelper(gruppen, maxTeamsAdvance, zeiten, cb) {
     let relevantGruppen = [];
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
 
     const gruppenByJugend = getGruppenWithSameJugend(gruppen);
     return async.forEachOf(gruppenByJugend, function (gruppen, jugendid, callback) {
-        return generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, function (err, groups) {
-            if (err) return callback(err);
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return generateZwischenGruppen(gruppen, jugendid, maxTeamsAdvance, function (err, groups) {
+                if (err) return callback(err);
 
-            relevantGruppen = relevantGruppen.concat(groups);
-            return callback();
+                relevantGruppen = relevantGruppen.concat(groups);
+                return callback();
+            });
         });
     }, function (err) {
         if (err) return cb(err);
 
         if (!relevantGruppen || relevantGruppen.length === 0) {
-            return cb(null, gruppen, []);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return cb(null, gruppen, []);
+            });
         }
 
-        return require('./generateGruppenPhase.js')({
-            zeiten: zeiten,
-            gruppen: relevantGruppen,
-            spiele: [],
-            lastPlayingTeams: [],
-            geradeSpielendeTeams: [],
-            i: 1
-        }, function (err, spiele) {
-            if (err) return cb(err);
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            return require('./generateGruppenPhase.js')({
+                zeiten: zeiten,
+                gruppen: relevantGruppen,
+                spiele: [],
+                lastPlayingTeams: [],
+                geradeSpielendeTeams: [],
+                i: 1
+            }, function (err, spiele) {
+                if (err) return cb(err);
 
-            spiele = fillLastEmptySpiele(spiele, zeiten, spielLabels.ZWISCHENRUNDENSPIEL);
-            return cb(null, relevantGruppen, spiele);
+                spiele = fillLastEmptySpiele(spiele, zeiten, spielLabels.ZWISCHENRUNDENSPIEL);
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return cb(null, relevantGruppen, spiele);
+                });
+            });
         });
     });
 }

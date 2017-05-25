@@ -2,10 +2,10 @@ var expect = require('chai').expect;
 var request = require("supertest");
 var server = require('./testserver.js')();
 var mongoose = require('mongoose');
+const constants = require('../../src/config/constants');
+const cls = require('../../src/config/cls');
 
 describe('Route: Spielplan', function () {
-    var ausnahme;
-    var ausnahmenVorher;
     before(function (done) {
         server.connectDB(function (err) {
             if (err) throw err;
@@ -16,6 +16,7 @@ describe('Route: Spielplan', function () {
     it('soll den Spielplan laden können', function (done) {
         request(server)
             .get('/api/spielplan/')
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -24,10 +25,6 @@ describe('Route: Spielplan', function () {
                 expect(response.body.startzeit).to.be.equal('09:00');
                 expect(response.body.spielzeit).to.be.a('Number');
                 expect(response.body.pausenzeit).to.be.a('Number');
-                expect(response.body.ausnahmen).to.be.a('Array');
-                expect(response.body.ausnahmen).not.to.be.empty;
-                ausnahme = response.body.ausnahmen[0];
-                ausnahmenVorher = response.body.ausnahmen.length;
                 return done();
             });
     });
@@ -39,7 +36,8 @@ describe('Route: Spielplan', function () {
         };
         request(server)
             .put('/api/spielplan/zeiten')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .send(spielplan)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -58,7 +56,8 @@ describe('Route: Spielplan', function () {
         };
         request(server)
             .put('/api/spielplan/zeiten')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .send(spielplan)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -77,7 +76,8 @@ describe('Route: Spielplan', function () {
         };
         request(server)
             .put('/api/spielplan/zeiten')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .send(spielplan)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -100,7 +100,8 @@ describe('Route: Spielplan', function () {
         };
         request(server)
             .put('/api/spielplan/zeiten')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .send(spielplan)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -123,7 +124,8 @@ describe('Route: Spielplan', function () {
         };
         request(server)
             .put('/api/spielplan/zeiten')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .send(spielplan)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -146,7 +148,8 @@ describe('Route: Spielplan', function () {
         };
         request(server)
             .put('/api/spielplan/zeiten')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .send(spielplan)
             .set('Accept', 'application/json')
             .end(function (err, response) {
@@ -154,12 +157,16 @@ describe('Route: Spielplan', function () {
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
                 expect(response.body.MESSAGEKEY).to.equal('SUCCESS_MESSAGE');
-                mongoose.model('Spielplan').findOne().exec(function (err, res) {
-                    if (err) throw err;
-                    expect(res.startzeit).to.be.equal(spielplan.startzeit);
-                    expect(res.spielzeit).to.be.equal(spielplan.spielzeit);
-                    expect(res.pausenzeit).to.be.equal(spielplan.pausenzeit);
-                    return done();
+                const clsSession = cls.getNamespace();
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', server.eventID);
+                    mongoose.model('Spielplan').findOne().exec(function (err, res) {
+                        if (err) throw err;
+                        expect(res.startzeit).to.be.equal(spielplan.startzeit);
+                        expect(res.spielzeit).to.be.equal(spielplan.spielzeit);
+                        expect(res.pausenzeit).to.be.equal(spielplan.pausenzeit);
+                        return done();
+                    });
                 });
             });
     });
@@ -167,7 +174,8 @@ describe('Route: Spielplan', function () {
     it('soll den Spielplan generieren', function (done) {
         request(server)
             .put('/api/spielplan')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -175,10 +183,14 @@ describe('Route: Spielplan', function () {
                 expect(response.statusCode).to.equal(200);
                 expect(response.body.MESSAGEKEY).to.equal('SPIELPLAN_CREATED_MESSAGE');
                 expect(response.body.STATUSCODE).to.equal(200);
-                mongoose.model('Spiel').find().exec(function (err, res) {
-                    if (err) throw err;
-                    expect(res).to.have.lengthOf(15);
-                    return done();
+                const clsSession = cls.getNamespace();
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', server.eventID);
+                    mongoose.model('Spiel').find().exec(function (err, res) {
+                        if (err) throw err;
+                        expect(res).to.have.lengthOf(15);
+                        return done();
+                    });
                 });
             });
     });
@@ -187,7 +199,8 @@ describe('Route: Spielplan', function () {
         request(server)
             .put('/api/spielplan')
             .send({keep: true})
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
+            .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -195,10 +208,14 @@ describe('Route: Spielplan', function () {
                 expect(response.statusCode).to.equal(200);
                 expect(response.body.MESSAGEKEY).to.equal('SPIELPLAN_CREATED_MESSAGE');
                 expect(response.body.STATUSCODE).to.equal(200);
-                mongoose.model('Spiel').find().exec(function (err, res) {
-                    if (err) throw err;
-                    expect(res).to.have.lengthOf(15);
-                    return done();
+                const clsSession = cls.getNamespace();
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', server.eventID);
+                    mongoose.model('Spiel').find().exec(function (err, res) {
+                        if (err) throw err;
+                        expect(res).to.have.lengthOf(15);
+                        return done();
+                    });
                 });
             });
     });

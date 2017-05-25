@@ -18,7 +18,7 @@ gulp.task('test:precommit', function (done) {
 });
 
 gulp.task('test:travis', function () {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'lint', function (err) {
+    return runSequence('test:frontend', 'test:backend', 'lint', function (err) {
         let exitCode = 0;
         if (err) {
             exitCode = 2;
@@ -51,10 +51,6 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
-    return runSequence('testDB:wipeAndRestore', 'test:backend:withOutWipe', done);
-});
-
-gulp.task('test:backend:withOutWipe', function (done) {
     gulp.src('././test/backend/**/*.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
@@ -64,7 +60,7 @@ gulp.task('test:backend:withOutWipe', function (done) {
                 reportTitle: 'Test-Ergebnisse (Backend)',
                 reportPageTitle: 'Test-Ergebnisse (Backend)'
             },
-            timeout: 5000
+            timeout: 120000
         }))
         .on('error', function (error) {
             throw error;

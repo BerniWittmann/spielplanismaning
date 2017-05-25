@@ -2,6 +2,7 @@ module.exports = function () {
     const logger = require('winston').loggers.get('apiGruppen');
     const express = require('express');
     const router = express.Router();
+    const cls = require('../config/cls.js');
 
     const mongoose = require('mongoose');
     const Gruppe = mongoose.model('Gruppe');
@@ -82,42 +83,52 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        logger.verbose('Creating Gruppe %s', req.body.name);
-        const gruppe = new Gruppe(req.body);
-        logger.verbose('Setting Jugend %s', req.query.jugend);
-        gruppe.jugend = req.query.jugend;
-        const query = Jugend.findById(gruppe.jugend);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            logger.verbose('Creating Gruppe %s', req.body.name);
+            const gruppe = new Gruppe(req.body);
+            logger.verbose('Setting Jugend %s', req.query.jugend);
+            gruppe.jugend = req.query.jugend;
+            const query = Jugend.findOne({_id: mongoose.Types.ObjectId(gruppe.jugend)});
 
-        query.exec(function (err, jugend) {
-            if(!jugend) {
-                logger.warn('Jugend %s not found', req.query.jugend);
-                return messages.ErrorBadRequest(res, ['Jugend not found']);
-            }
-            if (err) {
-                return messages.Error(res, err);
-            }
+            query.exec(function (err, jugend) {
+                if (!jugend) {
+                    logger.warn('Jugend %s not found', req.query.jugend);
+                    return messages.ErrorBadRequest(res, ['Jugend not found']);
+                }
+                if (err) {
+                    return messages.Error(res, err);
+                }
 
-            const normalGroups = jugend.gruppen.filter(function(single) {
-                return single.type === 'normal';
-            });
-            if (normalGroups.length >= 4) {
-                logger.warn('Maximum amount of Gruppen in Jugend reached');
-                return messages.ErrorMaxZahlGruppe(res);
-            } else {
-                logger.verbose('Saving Gruppe %s', req.body.name);
-                gruppe.save(function (err, gruppe) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-                    logger.verbose('Gruppe saved');
-
-                    jugend.pushGruppe(gruppe, function (err) {
-                        logger.verbose('Add Gruppe to Jugend');
-                        return handler.handleErrorAndResponse(err, res, gruppe);
-                    });
+                const normalGroups = jugend.gruppen.filter(function (single) {
+                    return single.type === 'normal';
                 });
-            }
+                if (normalGroups.length >= 4) {
+                    logger.warn('Maximum amount of Gruppen in Jugend reached');
+                    return messages.ErrorMaxZahlGruppe(res);
+                } else {
+                    logger.verbose('Saving Gruppe %s', req.body.name);
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        gruppe.save(function (err, gruppe) {
+                            if (err) {
+                                return messages.Error(res, err);
+                            }
+                            logger.verbose('Gruppe saved');
 
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+                                jugend.pushGruppe(gruppe, function (err) {
+                                    logger.verbose('Add Gruppe to Jugend');
+                                    return handler.handleErrorAndResponse(err, res, gruppe);
+                                });
+                            });
+                        });
+                    });
+                }
+            });
         });
     });
 
@@ -137,40 +148,57 @@ module.exports = function () {
      * @apiUse ErrorGruppeNotFoundMessage
      **/
     router.delete('/', function (req, res) {
-        Gruppe.findById(req.query.id, function (err, gruppe) {
-            if(!gruppe) {
-                logger.warn('Gruppe %s not found', req.query.id);
-                return messages.ErrorGruppeNotFound(res, err);
-            }
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Gruppe.findOne({_id: mongoose.Types.ObjectId(req.query.id)}, function (err, gruppe) {
+                if (!gruppe) {
+                    logger.warn('Gruppe %s not found', req.query.id);
+                    return messages.ErrorGruppeNotFound(res, err);
+                }
 
-            if (err) {
-                return messages.Error(res, err);
-            }
-
-            if (gruppe.type !== 'normal') {
-                logger.warn('Gruppe %s kann nicht gelöscht werden', gruppe.name);
-                return messages.ErrorBadRequest(res);
-            }
-
-            Jugend.findById(gruppe.jugend, function (err, jugend) {
                 if (err) {
                     return messages.Error(res, err);
                 }
 
-                jugend.removeGruppe(gruppe, function (err) {
-                    if (err) {
-                        return messages.Error(res, err);
-                    }
-                    logger.verbose('Removed Gruppe from Jugend');
+                if (gruppe.type !== 'normal') {
+                    logger.warn('Gruppe %s kann nicht gelöscht werden', gruppe.name);
+                    return messages.ErrorBadRequest(res);
+                }
 
-                    return helpers.removeEntityBy(Team, 'gruppe', gruppe, function (err) {
-                        if (err) return messages.Error(res, err);
-                        logger.verbose('Removed All Teams from this Gruppe');
-                        return helpers.removeEntityBy(Gruppe, '_id', gruppe, function (err) {
-                            if (err) return messages.Error(res, err);
-                            logger.verbose('Removed Gruppe');
-                            return handler.handleErrorAndDeleted(err, res);
-                        })
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    Jugend.findById(gruppe.jugend, function (err, jugend) {
+                        if (err) {
+                            return messages.Error(res, err);
+                        }
+
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            jugend.removeGruppe(gruppe, function (err) {
+                                if (err) {
+                                    return messages.Error(res, err);
+                                }
+                                logger.verbose('Removed Gruppe from Jugend');
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return helpers.removeEntityBy(Team, 'gruppe', gruppe, function (err) {
+                                        if (err) return messages.Error(res, err);
+                                        logger.verbose('Removed All Teams from this Gruppe');
+                                        return clsSession.run(function () {
+                                            clsSession.set('beachEventID', beachEventID);
+                                            return helpers.removeEntityBy(Gruppe, '_id', gruppe, function (err) {
+                                                if (err) return messages.Error(res, err);
+                                                logger.verbose('Removed Gruppe');
+                                                return handler.handleErrorAndDeleted(err, res);
+                                            })
+                                        });
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
             });

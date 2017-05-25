@@ -4,6 +4,7 @@ const async = require('async');
 const _ = require('lodash');
 const helper = require('./helper.js');
 const helpers = require('../helpers.js');
+const cls = require('../../config/cls.js');
 
 module.exports = function (payload, cb) {
     const properties = helper.configureProperties(payload);

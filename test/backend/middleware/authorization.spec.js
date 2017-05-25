@@ -11,6 +11,7 @@ var path = require('path');
 var helpers = require('../../../src/routes/helpers.js');
 var fs = require('fs');
 var routes = require('../../../src/routes/middleware/routeConfig.js');
+const constants = require('../../../src/config/constants');
 
 describe('API Authorization', function () {
     var token;
@@ -28,8 +29,8 @@ describe('API Authorization', function () {
     var userNameToBeDeleted = 'test';
 
     var roleTokens = {
-        admin: server.adminToken,
-        bearbeiter: server.bearbeiterToken
+        admin: server.adminToken(),
+        bearbeiter: server.bearbeiterToken()
     };
 
     var exampleTokenPayload = {
@@ -93,6 +94,7 @@ describe('API Authorization', function () {
         it('Der Request soll ausgeführt werden', function (done) {
             request(server)
                 .get('/api/teams/')
+                .set(constants.BEACH_EVENT_HEADER_NAME, server.eventID)
                 .set('Authorization', token)
                 .expect(200)
                 .end(function (err, response) {
@@ -169,7 +171,7 @@ describe('API Authorization', function () {
             request(server)
                 .put('/api/users/delete')
                 .send({username: userNameToBeDeleted})
-                .set('Authorization', server.bearbeiterToken)
+                .set('Authorization', server.bearbeiterToken())
                 .expect(403)
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -201,18 +203,22 @@ describe('API Authorization', function () {
         });
 
         it('wenn der Nutzer eine passende Rolle hat, soll der Request ausgeführt werden', function (done) {
-            request(server)
-                .put('/api/users/delete')
-                .send({username: userNameToBeDeleted})
-                .set('Authorization', server.adminToken)
-                .expect(200)
-                .end(function (err, response) {
-                    if (err) return done(err);
-                    expect(response).not.to.be.undefined;
-                    expect(response.statusCode).to.equal(200);
-                    expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
-                    return done();
-                });
+            return mongoose.model('User').insertMany([{username: userNameToBeDeleted}], function (err) {
+                if (err) return done(err);
+
+                request(server)
+                    .put('/api/users/delete')
+                    .send({username: userNameToBeDeleted})
+                    .set('Authorization', server.adminToken())
+                    .expect(200)
+                    .end(function (err, response) {
+                        if (err) return done(err);
+                        expect(response).not.to.be.undefined;
+                        expect(response.statusCode).to.equal(200);
+                        expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
+                        return done();
+                    });
+            });
         });
     });
 

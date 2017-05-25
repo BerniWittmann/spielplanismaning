@@ -10,7 +10,7 @@ AnsprechpartnerSchema.methods.fill = function (cb) {
     return cb(null, this);
 };
 
-const deepPopulate = require('mongoose-deep-populate')(mongoose);
+const deepPopulate = require('../config/mongoose-deep-populate')(mongoose);
 AnsprechpartnerSchema.plugin(deepPopulate, {});
 
 mongoose.model('Ansprechpartner', AnsprechpartnerSchema);

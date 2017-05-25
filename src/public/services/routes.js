@@ -16,6 +16,11 @@
                         return ENDPOINT_BASE + '/ansprechpartner';
                     }
                 },
+                veranstaltungen: {
+                    base: function () {
+                        return ENDPOINT_BASE + '/veranstaltungen';
+                    }
+                },
                 users: {
                     register: function () {
                         return ENDPOINT_BASE + '/users/register';

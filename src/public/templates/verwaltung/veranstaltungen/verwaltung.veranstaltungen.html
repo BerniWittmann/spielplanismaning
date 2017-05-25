@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-md-12 page-header">
+        <h3>Verwaltung Events</h3>
+    </div>
+</div>
+
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table table-condensed table-striped table-hover text-center" data-ng-if="vm.veranstaltungen.length > 0">
+            <thead>
+            <tr>
+                <th class="text-center">Bild</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Spiel-Modus</th>
+                <th class="text-center">Mannschaftsliste Druck</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="veranstaltung in vm.veranstaltungen">
+                <td class="valign"><img data-ng-if="veranstaltung.bildUrl" src="{{veranstaltung.bildUrl}}" class="veranstaltung-image-table "></td>
+                <td class="valign">{{veranstaltung.name}}</td>
+                <td class="valign">{{veranstaltung.spielModus === 'complex' ? '2 Halbzeiten + Penalty': '1 Halbzeit'}}</td>
+                <td class="valign"><i class="fa fa-lg {{veranstaltung.printMannschaftslisten ? 'fa-check': 'fa-times'}}"></i></td>
+                <td class="valign">
+                    <span class="spiel-click-icon pull-right" data-uib-tooltip="Löschen" data-tooltip-placement="top-right" data-ng-click="vm.askDeleteEvent(veranstaltung)"><i class="fa fa-trash-o"></i></span>
+                    <span class="spiel-click-icon pull-right" data-uib-tooltip="Bearbeiten" data-tooltip-placement="top-right" data-ng-click="vm.edit(veranstaltung)"><i class="fa fa-pencil"></i></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-info" data-ng-if="vm.veranstaltungen.length === 0">Keine Veranstaltungen gefunden</div>
+    </div>
+</div>
+
+<div data-ng-if="!vm.loading" class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <form data-ng-submit="vm.add(form)" style="margin-top:30px;" name="form" novalidate>
+            <h4 class="width-100 text-center">Event hinzufügen</h4>
+
+            <div class="form-group" data-ng-class="{ 'has-error': form.name.$touched && form.name.$invalid }">
+                <input type="text" class="form-control" placeholder="Name" data-ng-model="vm.veranstaltung.name" name="name" required data-ng-minlength="2">
+                <span class="help-block" data-ng-messages="form.name.$error" data-ng-if="form.name.$touched">
+                    <p data-ng-message="required">Name ist ein Pflichtfeld</p>
+                    <p data-ng-message="minlength">Name ist zu kurz</p>
+                </span>
+            </div>
+            <div class="form-group" data-ng-class="{ 'has-error': form.bildUrl.$touched && form.bildUrl.$invalid }">
+                <input type="url" class="form-control" placeholder="Bild - URL" data-ng-model="vm.veranstaltung.bildUrl" name="bildUrl" required>
+                <span class="help-block" data-ng-messages="form.bildUrl.$error" data-ng-if="form.bildUrl.$touched">
+                    <p data-ng-message="required">Bild - URL ist ein Pflichtfeld</p>
+                    <p data-ng-message="url">URL ist ungültig</p>
+                </span>
+            </div>
+            <div class="form-group" data-ng-class="{ 'has-error': form.name.$touched && form.name.$invalid }">
+                <select class="form-control" data-ng-model="vm.veranstaltung.spielModus" name="spielModus" required>
+                    <option value="" selected disabled>Bitte wählen</option>
+                    <option value="complex">2 Halbzeiten + Penalty</option>
+                    <option value="normal">1 Halbzeit</option>
+                </select>
+                <span class="help-block" data-ng-messages="form.spielModus.$error" data-ng-if="form.spielModus.$touched">
+                    <p data-ng-message="required">Spiel-Modus ist ein Pflichtfeld</p>
+                </span>
+            </div>
+            <div class="form-group" data-ng-class="{ 'has-error': form.printMannschaftslisten.$touched && form.printMannschaftslisten.$invalid }">
+                <select class="form-control" data-ng-model="vm.veranstaltung.printMannschaftslisten" name="printMannschaftslisten" required>
+                    <option value="" selected disabled>Bitte wählen</option>
+                    <option value="true">Mannschaftslisten drucken</option>
+                    <option value="false">Mannschaftslisten nicht drucken</option>
+                </select>
+                <span class="help-block" data-ng-messages="form.printMannschaftslisten.$error" data-ng-if="form.printMannschaftslisten.$touched">
+                    <p data-ng-message="required">Mannschaftslisten - Druck ist ein Pflichtfeld</p>
+                </span>
+            </div>
+
+            <button type="submit" class="btn btn-primary center-block margin-top-25" data-ng-disabled="form.$invalid" analytics-on="click" analytics-event="Add Event">anlegen</button>
+
+        </form>
+    </div>
+</div>
+<br>

@@ -1,20 +1,23 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 var server = require('./testserver.js')();
+const mongoose = require('mongoose');
 var helpers = require('../../src/routes/helpers.js');
 
 describe('Helpers', function () {
     describe('soll die Datenbank query basierend auf Parametern laden', function () {
+        const orQueryObj = {
+            or: function () {
+                return 'team';
+            }
+        };
+
         var model = {
             find: function (object) {
                 if (_.isUndefined(object)) {
                     return 'all';
                 } else if (_.isEmpty(object)) {
-                    return {
-                        or: function () {
-                            return 'team';
-                        }
-                    };
+                    return orQueryObj;
                 } else if (_.isEqual(_.keys(object)[0], 'gruppe')) {
                     return 'gruppe';
                 } else if (_.isEqual(_.keys(object)[0], 'jugend')) {
@@ -25,6 +28,9 @@ describe('Helpers', function () {
             },
             findById: function () {
                 return 'id';
+            },
+            findOne: function (query) {
+                return Object.keys(query);
             }
         };
 
@@ -32,14 +38,14 @@ describe('Helpers', function () {
             var req = {query: {}, body: {}};
             var data = helpers.getEntityQuery(model, req);
             expect(data.searchById).to.be.false;
-            expect(data.query).to.equal('all');
+            expect(data.query).to.equal(orQueryObj);
         });
 
         it('soll das Query für ein einzelnes Entity zurückgegeben', function () {
-            var req = {query: {id: '1234'}, body: {}};
+            var req = {query: {id: '12345678901234567890abcd'}, body: {}};
             var data = helpers.getEntityQuery(model, req);
             expect(data.searchById).to.be.true;
-            expect(data.query).to.equal('id');
+            expect(data.query).to.deep.equal(['_id']);
         });
 
         it('soll das Query für ein Entity gefiltert nach Team zurückgegeben', function () {
@@ -77,7 +83,7 @@ describe('Helpers', function () {
             callbacked: false
         };
         var model = {
-            findById: function () {
+            findOne: function () {
                 return {
                     exec: function (cb) {
                         return cb(null, data)
@@ -85,8 +91,8 @@ describe('Helpers', function () {
                 }
             }
         }
-        var team = {id: '123', name: 'test'};
-        helpers.findEntityAndPushTeam(model, '123', team, {}, data.callback);
+        var team = {id: '12345678901234567890abcd', name: 'test'};
+        helpers.findEntityAndPushTeam(model, '12345678901234567890abcd', team, {}, data.callback);
         expect(data.pushed).to.deep.equal(team);
         expect(data.callbacked).to.be.true;
     });
@@ -100,10 +106,11 @@ describe('Helpers', function () {
             query: undefined
         };
         var query = {
-            id: '1234'
+            id: '1234',
+            veranstaltung: undefined
         };
 
-        helpers.removeEntityBy(model, 'id', '1234', {}, function () {
+        helpers.removeEntityBy(model, 'id', '1234', function () {
         });
         expect(model.query).to.deep.equal(query);
     });
@@ -123,7 +130,7 @@ describe('Helpers', function () {
     });
 
     it('soll einen Token validieren', function () {
-        var token = server.adminToken;
+        var token = server.adminToken();
         var req = {
             get: function (text) {
                 if (text === 'Authorization') {
@@ -134,7 +141,7 @@ describe('Helpers', function () {
         };
         var result = helpers.verifyToken(req, 'TEST-SECRET');
         expect(result).not.to.be.undefined;
-        expect(result.username).to.equal('berni');
+        expect(result.username).to.equal('admin');
     });
 
     it('soll einen User speichern und eine Email schicken', function () {

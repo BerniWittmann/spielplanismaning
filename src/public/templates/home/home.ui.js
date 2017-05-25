@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.home.ui', [
-            'ui.router', 'spi.spiel'
+            'ui.router', 'spi.spiel', 'spi.veranstaltungen'
         ])
         .config(states)
         .controller('HomeController', HomeController);
@@ -27,7 +27,7 @@
 
     }
 
-    function HomeController(spiele) {
+    function HomeController(spiele, veranstaltungen) {
         const vm = this;
 
         vm.loading = true;
@@ -58,6 +58,8 @@
             vm.aktuelleSpiele = [];
             vm.naechsteSpiele = [];
         }
+
+        vm.eventName = veranstaltungen.getCurrentEvent() ? veranstaltungen.getCurrentEvent().name : 'Überblick';
         vm.loading = false;
     }
 })();

@@ -44,6 +44,7 @@ const sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.
 const secret = process.env.SECRET;
 const app = express();
 
+require('./models/Veranstaltungen');
 require('./models/Spiele');
 require('./models/Gruppen');
 require('./models/Jugenden');
@@ -107,6 +108,8 @@ app.listen(app.get('port'), function () {
     appLogger.info('Server is listening on port %d', app.get('port'));
 });
 
+require('./config/setup-db.js')(sendgrid, process.env.NODE_ENV, process.env.URL, process.env.DISABLEEMAIL);
+
 app.use(require('./routes/middleware/allowCrossDomain.js'));
 
 //Setup API Authorization
@@ -114,6 +117,8 @@ require('./routes/middleware/authorization.js')(app, secret);
 
 //Setup BadRequest Handler
 require('./routes/middleware/badRequestHandler.js')(app);
+
+require('./routes/middleware/beachEvent.js')(app);
 
 //Setup Routes
 require('./routes/routes.js')(app, sendgrid, secret);

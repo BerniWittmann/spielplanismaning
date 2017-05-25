@@ -23,9 +23,13 @@ module.exports = function(loglevel) {
     createCategory('apiSpielplan', 'Spielplan Ismaning: API - Spielplan');
     createCategory('apiUsers', 'Spielplan Ismaning: API - Users');
     createCategory('apiHelper', 'Spielplan Ismaning: API - Helper');
+    createCategory('apiVeranstaltungen', 'Spielplan Ismaning: API - Veranstaltungen');
 
     createCategory('middlewareAuthorization', 'Spielplan Ismaning: Middleware - Authorization');
     createCategory('middlewareBadRequest', 'Spielplan Ismaning: Middleware - Request');
+    createCategory('middlewareEvent', 'Spielplan Ismaning: Middleware - EventCheck');
+
+    createCategory('dbSetup', 'Spielplan Ismaning: Database Setup');
 
     createCategory('mailGenerator', 'Spielplan Ismaning: Mail-Generator');
     createCategory('spielplanGenerator', 'Spielplan Ismaning: Spielplan-Generator');

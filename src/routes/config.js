@@ -3,6 +3,9 @@ module.exports = function (env) {
     const express = require('express');
     const version = require('../../package.json').version;
     const router = express.Router();
+    const messages = require('./messages/messages.js')();
+    const helpers = require('./helpers.js');
+    const cls = require('../config/cls.js');
 
     /**
      * @api {get} /config/ Config
@@ -21,16 +24,20 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/', function (req, res) {
-        const config = {
-            version: version,
-            env: env.NODE_ENV,
-            lockdown: env.LOCKDOWNMODE === 'true',
-            plaetze: env.PLAETZE,
-            spielmodus: env.SPIEL_MODE,
-            mannschaftslisten: env.MANNSCHAFTSLISTEN_PRINT
-        };
-        logger.verbose('Summary', {config: config});
-        return res.json(config);
+        return helpers.getVeranstaltungData(function (err, data) {
+            if (err) return messages.Error(res, err);
+
+            const config = {
+                version: version,
+                env: env.NODE_ENV,
+                lockdown: env.LOCKDOWNMODE === 'true',
+                plaetze: env.PLAETZE,
+                spielmodus: data.SPIEL_MODE || undefined,
+                mannschaftslisten: data.MANNSCHAFTSLISTEN_PRINT || undefined
+            };
+            logger.verbose('Summary', {config: config});
+            return res.json(config);
+        });
     });
 
     /**
@@ -143,8 +150,11 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/spielmodus', function (req, res) {
-        logger.verbose('Spielmodus %s', env.SPIEL_MODE);
-        return res.json(env.SPIEL_MODE);
+        return helpers.getVeranstaltungData(function (err, data) {
+            if (err) return messages.Error(res, err);
+            logger.verbose('Spielmodus %s', data.SPIEL_MODE);
+            return res.json(data.SPIEL_MODE);
+        });
     });
 
     /**
@@ -162,8 +172,11 @@ module.exports = function (env) {
      *     }
      **/
     router.get('/mannschaftslisten', function (req, res) {
-        logger.verbose('Mannschaftslisten %s', env.MANNSCHAFTSLISTEN_PRINT);
-        return res.json(env.MANNSCHAFTSLISTEN_PRINT);
+        return helpers.getVeranstaltungData(function (err, data) {
+            if (err) return messages.Error(res, err);
+            logger.verbose('Mannschaftslisten %s', data.MANNSCHAFTSLISTEN_PRINT);
+            return res.json(data.MANNSCHAFTSLISTEN_PRINT);
+        });
     });
 
     return router;

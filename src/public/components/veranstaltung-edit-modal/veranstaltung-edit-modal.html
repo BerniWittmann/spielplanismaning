@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{vm.name}} bearbeiten</h3>
+</div>
+<div class="modal-body">
+    <spi-loader loading="vm.loading"></spi-loader>
+    <div class="row">
+        <div class="col-md-12">
+            <form data-ng-submit="vm.save(form)" style="margin-top:30px;" name="form" novalidate>
+                <div class="form-group" data-ng-class="{ 'has-error': form.name.$touched && form.name.$invalid }">
+                    <input type="text" class="form-control" placeholder="Name" data-ng-model="vm.veranstaltung.name" name="name" required data-ng-minlength="2">
+                    <span class="help-block" data-ng-messages="form.name.$error" data-ng-if="form.name.$touched">
+                    <p data-ng-message="required">Name ist ein Pflichtfeld</p>
+                    <p data-ng-message="minlength">Name ist zu kurz</p>
+                </span>
+                </div>
+                <div class="form-group" data-ng-class="{ 'has-error': form.bildUrl.$touched && form.bildUrl.$invalid }">
+                    <input type="url" class="form-control" placeholder="Bild - URL" data-ng-model="vm.veranstaltung.bildUrl" name="bildUrl" required>
+                    <span class="help-block" data-ng-messages="form.bildUrl.$error" data-ng-if="form.bildUrl.$touched">
+                    <p data-ng-message="required">Bild - URL ist ein Pflichtfeld</p>
+                    <p data-ng-message="url">URL ist ungültig</p>
+                </span>
+                </div>
+                <div class="form-group" data-ng-class="{ 'has-error': form.name.$touched && form.name.$invalid }">
+                    <select class="form-control" data-ng-model="vm.veranstaltung.spielModus" name="spielModus" required>
+                        <option value="" selected disabled>Bitte wählen</option>
+                        <option value="complex">2 Halbzeiten + Penalty</option>
+                        <option value="normal">1 Halbzeit</option>
+                    </select>
+                    <span class="help-block" data-ng-messages="form.spielModus.$error" data-ng-if="form.spielModus.$touched">
+                    <p data-ng-message="required">Spiel-Modus ist ein Pflichtfeld</p>
+                </span>
+                </div>
+                <div class="form-group" data-ng-class="{ 'has-error': form.printMannschaftslisten.$touched && form.printMannschaftslisten.$invalid }">
+                    <select class="form-control" data-ng-model="vm.veranstaltung.printMannschaftslisten" name="printMannschaftslisten" required>
+                        <option value="" selected disabled>Bitte wählen</option>
+                        <option value="true">Mannschaftslisten drucken</option>
+                        <option value="false">Mannschaftslisten nicht drucken</option>
+                    </select>
+                    <span class="help-block" data-ng-messages="form.printMannschaftslisten.$error" data-ng-if="form.printMannschaftslisten.$touched">
+                    <p data-ng-message="required">Mannschaftslisten - Druck ist ein Pflichtfeld</p>
+                </span>
+                </div>
+
+                <button type="submit" class="btn btn-primary margin-top-25" data-ng-disabled="form.$invalid" analytics-on="click" analytics-event="Edit Event">Speichern</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" data-ng-click="vm.abbrechen()">Schließen</button>
+</div>

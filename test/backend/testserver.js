@@ -15,6 +15,9 @@ module.exports = function () {
         return cb();
     };
 
+    if (!mongoose.models.Veranstaltung) {
+        require('./../../src/models/Veranstaltungen');
+    }
     if (!mongoose.models.Spiel) {
         require('./../../src/models/Spiele');
     }
@@ -62,6 +65,7 @@ module.exports = function () {
 
     require('../../src/routes/middleware/authorization.js')(app, process.env.SECRET);
     require('../../src/routes/middleware/badRequestHandler.js')(app);
+    require('../../src/routes/middleware/beachEvent.js')(app);
 
     app.use('/api/users', users);
     app.use('/api/email', email);
@@ -80,8 +84,14 @@ module.exports = function () {
     app.connectDB = databaseSetup.connect;
     app.disconnectDB = databaseSetup.disconnect;
 
-    app.adminToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NzcyZjZlNTYyMTVmNmIwM2NhYmY3ZTIiLCJ1c2VybmFtZSI6ImJlcm5pIiwicm9sZSI6eyJyYW5rIjoxLCJuYW1lIjoiQWRtaW4ifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0ODMzNDg3NjksImNoZWNrc3VtIjoiZjA5M2JlN2E1NzVhNWJmODFmZTZmZGQ0MzkwOTNjZWEifQ.g-yUU9Rf5l3Rn3pF1qAtqiA4fd2kqSjSZ-6hqmylA2A';
-    app.bearbeiterToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODZhMWIzZjU0YzI2MGJlOTE4ZTliYTgiLCJ1c2VybmFtZSI6InRlc3QtdXNlciIsInJvbGUiOnsicmFuayI6MCwibmFtZSI6IkJlYXJiZWl0ZXIifSwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjE0ODMzNDg3OTksImNoZWNrc3VtIjoiY2I3MWRmYTNiNzNjZmM2YTk3ODg1MWJjNTVlMDc0NDYifQ.pb3PDznqivdX1BlBQSuWNMDAoHSMlGUbKnp5IOkNMH4';
+    app.adminToken = function () {
+        return databaseSetup.getTokens().Admin;
+    };
+    app.bearbeiterToken = function () {
+        return databaseSetup.getTokens().Bearbeiter;
+    };
+    app.eventID = databaseSetup.getEventID().toString();
+    app.IDs = databaseSetup.getIDs();
 
     return app;
 };

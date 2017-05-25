@@ -6,25 +6,48 @@ var Ansprechpartner = mongoose.model('Ansprechpartner');
 
 describe('Route: Ansprechpartner', function () {
     var neuerAnsprechpartnerId;
-    var initialerAnsprechpartner = {
-        name: 'Test Name',
-        turnier: 'Test Turnier',
-        email: 'email@byom.de'
-    };
+    var initialerAnsprechpartner;
     before(function (done) {
         server.connectDB(function (err) {
             if (err) throw err;
-            var ansprechpartner = new Ansprechpartner(initialerAnsprechpartner);
 
-            ansprechpartner.save(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                expect(res._id).not.to.be.undefined;
-                initialerAnsprechpartner._id = res._id.toString();
+            Ansprechpartner.find({}, function (err, ansprechpartner) {
+                if (err) throw err;
+
+                initialerAnsprechpartner = ansprechpartner[0];
                 return done();
             });
         });
+    });
+
+    it('soll alle Ansprechpartner laden', function (done) {
+        request(server)
+            .get('/api/ansprechpartner')
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                expect(response.body).to.have.lengthOf(2);
+                return done();
+            });
+    });
+
+    it('soll einen einzelnen Ansprechpartner laden', function (done) {
+        request(server)
+            .get('/api/ansprechpartner')
+            .query({id: initialerAnsprechpartner._id.toString()})
+            .set('Accept', 'application/json')
+            .end(function (err, response) {
+                if (err) return done(err);
+                expect(response).not.to.be.undefined;
+                expect(response.statusCode).to.equal(200);
+                expect(response.body._id.toString()).to.equal(initialerAnsprechpartner._id.toString());
+                expect(response.body.name).to.equal(initialerAnsprechpartner.name);
+                expect(response.body.email).to.equal(initialerAnsprechpartner.email);
+                expect(response.body.turnier).to.equal(initialerAnsprechpartner.turnier);
+                return done();
+            });
     });
 
     it('soll einen Ansprechpartner hinzufügen können', function (done) {
@@ -36,7 +59,7 @@ describe('Route: Ansprechpartner', function () {
         request(server)
             .post('/api/ansprechpartner')
             .send(ansprechpartner)
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -56,34 +79,6 @@ describe('Route: Ansprechpartner', function () {
             });
     });
 
-    it('soll alle Ansprechpartner laden', function (done) {
-        request(server)
-            .get('/api/ansprechpartner')
-            .set('Accept', 'application/json')
-            .end(function (err, response) {
-                if (err) return done(err);
-                expect(response).not.to.be.undefined;
-                expect(response.statusCode).to.equal(200);
-                expect(response.body).to.have.lengthOf(2);
-                return done();
-            });
-    });
-
-    it('soll einen einzelnen Ansprechpartner laden', function (done) {
-        request(server)
-            .get('/api/ansprechpartner')
-            .query({id: initialerAnsprechpartner._id})
-            .set('Accept', 'application/json')
-            .end(function (err, response) {
-                if (err) return done(err);
-                expect(response).not.to.be.undefined;
-                expect(response.statusCode).to.equal(200);
-                expect(response.body._id.toString()).to.equal(initialerAnsprechpartner._id);
-                expect(response.body).to.contain.keys(initialerAnsprechpartner);
-                return done();
-            });
-    });
-
     describe('soll einen Ansprechpartner ändern können', function () {
         it('der Name soll geändert werden können', function (done) {
             var data = {
@@ -91,9 +86,9 @@ describe('Route: Ansprechpartner', function () {
             };
             request(server)
                 .put('/api/ansprechpartner')
-                .query({id: initialerAnsprechpartner._id})
+                .query({id: initialerAnsprechpartner._id.toString()})
                 .send(data)
-                .set('Authorization', server.adminToken)
+                .set('Authorization', server.adminToken())
                 .set('Accept', 'application/json')
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -118,9 +113,9 @@ describe('Route: Ansprechpartner', function () {
             };
             request(server)
                 .put('/api/ansprechpartner')
-                .query({id: initialerAnsprechpartner._id})
+                .query({id: initialerAnsprechpartner._id.toString()})
                 .send(data)
-                .set('Authorization', server.adminToken)
+                .set('Authorization', server.adminToken())
                 .set('Accept', 'application/json')
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -145,9 +140,9 @@ describe('Route: Ansprechpartner', function () {
             };
             request(server)
                 .put('/api/ansprechpartner')
-                .query({id: initialerAnsprechpartner._id})
+                .query({id: initialerAnsprechpartner._id.toString()})
                 .send(data)
-                .set('Authorization', server.adminToken)
+                .set('Authorization', server.adminToken())
                 .set('Accept', 'application/json')
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -174,9 +169,9 @@ describe('Route: Ansprechpartner', function () {
             };
             request(server)
                 .put('/api/ansprechpartner')
-                .query({id: initialerAnsprechpartner._id})
+                .query({id: initialerAnsprechpartner._id.toString()})
                 .send(data)
-                .set('Authorization', server.adminToken)
+                .set('Authorization', server.adminToken())
                 .set('Accept', 'application/json')
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -207,7 +202,7 @@ describe('Route: Ansprechpartner', function () {
                 .put('/api/ansprechpartner')
                 .query({id: 'completelyWrongID'})
                 .send(data)
-                .set('Authorization', server.adminToken)
+                .set('Authorization', server.adminToken())
                 .set('Accept', 'application/json')
                 .end(function (err, response) {
                     if (err) return done(err);
@@ -222,8 +217,8 @@ describe('Route: Ansprechpartner', function () {
     it('soll einen Ansprechpartner löschen können', function (done) {
         request(server)
             .delete('/api/ansprechpartner')
-            .query({id: neuerAnsprechpartnerId})
-            .set('Authorization', server.adminToken)
+            .query({id: neuerAnsprechpartnerId.toString()})
+            .set('Authorization', server.adminToken())
             .set('Accept', 'application/json')
             .end(function (err, response) {
                 if (err) return done(err);
@@ -240,7 +235,8 @@ describe('Route: Ansprechpartner', function () {
     after(function (done) {
         server.disconnectDB(done);
     });
-});
+})
+;
 
 
 
