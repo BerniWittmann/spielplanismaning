@@ -226,10 +226,16 @@ function saveUserAndSendMail(user, res, mail) {
 }
 
 function addEntity(model, req, res) {
-    const entity = new model(req.body);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        const entity = new model(req.body);
 
-    entity.save(function (err, entity) {
-        return handler.handleErrorAndResponse(err, res, entity);
+        entity.veranstaltung = beachEventID;
+        entity.save(function (err, entity) {
+            return handler.handleErrorAndResponse(err, res, entity);
+        });
     });
 }
 

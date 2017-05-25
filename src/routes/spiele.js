@@ -96,7 +96,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
             const spiel = new Spiel(req.body);
             spiel.jugend = req.body.jugend;
             spiel.gruppe = req.body.gruppe;
-
+            spiel.veranstaltung = beachEventID;
             spiel.save(function (err, spiel) {
                 logger.verbose('Saved Spiel');
                 return handler.handleErrorAndResponse(err, res, spiel);

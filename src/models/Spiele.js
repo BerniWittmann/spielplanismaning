@@ -80,7 +80,10 @@ let SpielSchema = new mongoose.Schema({
     fromType: String,
     rankA: Number,
     rankB: Number,
-    label: String,
+    label: {
+        type: String,
+        default: 'Spiel'
+    },
     veranstaltung: {type: Schema.ObjectId, ref: 'Veranstaltung', required: true}
 });
 
