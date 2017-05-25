@@ -32,7 +32,7 @@ describe('Route: Spiele', function () {
                 if (err) return done(err);
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
-                expect(response.body).to.have.lengthOf(9);
+                expect(response.body).to.have.lengthOf(15);
                 return done();
             });
     });
@@ -64,7 +64,7 @@ describe('Route: Spiele', function () {
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
                 expect(response.body).to.be.a('Array');
-                expect(response.body).to.have.lengthOf(1);
+                expect(response.body).to.have.lengthOf(3);
                 expect(response.body[0].gruppe._id.toString()).to.be.equal(gruppenid.toString());
                 return done();
             });
@@ -80,7 +80,7 @@ describe('Route: Spiele', function () {
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
                 expect(response.body).to.be.a('Array');
-                expect(response.body).to.have.lengthOf(4);
+                expect(response.body).to.have.lengthOf(14);
                 expect(response.body[0].jugend._id.toString()).to.be.equal(jugendid.toString());
                 return done();
             });
@@ -96,7 +96,7 @@ describe('Route: Spiele', function () {
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
                 expect(response.body).to.be.a('Array');
-                expect(response.body).to.have.lengthOf(1);
+                expect(response.body).to.have.lengthOf(2);
                 //das geladene Team soll entweder Team A oder Team B sein
                 expect([response.body[0].teamA._id.toString(), response.body[0].teamB._id.toString()]).to.contain(teamid.toString());
                 return done();
@@ -113,7 +113,7 @@ describe('Route: Spiele', function () {
                 expect(response).not.to.be.undefined;
                 expect(response.statusCode).to.equal(200);
                 expect(response.body).to.be.a('Array');
-                expect(response.body).to.have.lengthOf(9);
+                expect(response.body).to.have.lengthOf(15);
                 return done();
             });
     });

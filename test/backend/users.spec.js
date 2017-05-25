@@ -70,10 +70,9 @@ describe('Route: Users', function () {
         request(server)
             .post('/api/users/register')
             .set('Authorization', server.adminToken())
-            .send({username: 'test-user', email: 'test2@byom.de', role: 'Bearbeiter'})
+            .send({username: 'test-user', email: 'test@byom.de', role: 'Bearbeiter'})
             .end(function (err, res) {
                 if (err) return done(err);
-                expect(res).not.to.be.undefined;
                 expect(res.statusCode).to.equal(409);
                 expect(res.body.MESSAGEKEY).to.equal('ERROR_USER_ALREADY_EXISTS');
                 expect(res.body.MESSAGE).to.equal('Benutzer test-user existiert bereits');
@@ -138,7 +137,7 @@ describe('Route: Users', function () {
     it('soll einen Fehler liefern, bei falschem Nutzernamen', function (done) {
         request(server)
             .post('/api/users/login')
-            .send({username: 'test-user2', password: 'bruteforce'})
+            .send({username: 'test-usergsödvjrn', password: 'bruteforce'})
             .end(function (err, res) {
                 if (err) return done(err);
                 expect(res).not.to.be.undefined;

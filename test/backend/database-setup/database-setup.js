@@ -24,23 +24,25 @@ module.exports = function (MONGO_DB_URI) {
     }
 
     function fillDefaultData(cb) {
-        return defaultData.insertVeranstaltungen(function (err, veranstaltung) {
-            if (err || !veranstaltung || veranstaltung.length === 0) return cb(err);
+        mockgoose.helper.reset().then(() => {
+            return defaultData.insertVeranstaltungen(function (err, veranstaltung) {
+                if (err || !veranstaltung || veranstaltung.length === 0) return cb(err);
 
-            const beachEventID = veranstaltung[0]._id.toString();
-            const clsSession = cls.getNamespace();
-            return clsSession.run(function () {
-                clsSession.set('beachEventID', beachEventID);
-                return async.parallel([
-                    defaultData.insertAnsprechpartner,
-                    defaultData.insertUser,
-                    defaultData.insertJugenden,
-                    defaultData.insertGruppe,
-                    defaultData.insertSpielplan,
-                    defaultData.insertSpiel,
-                    defaultData.insertTeam,
-                    defaultData.insertSubscriber
-                ], cb);
+                const beachEventID = veranstaltung[0]._id.toString();
+                const clsSession = cls.getNamespace();
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    return async.parallel([
+                        defaultData.insertAnsprechpartner,
+                        defaultData.insertUser,
+                        defaultData.insertJugenden,
+                        defaultData.insertGruppe,
+                        defaultData.insertSpielplan,
+                        defaultData.insertSpiel,
+                        defaultData.insertTeam,
+                        defaultData.insertSubscriber
+                    ], cb);
+                });
             });
         });
     }

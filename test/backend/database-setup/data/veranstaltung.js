@@ -4,7 +4,7 @@ const data = [{
     _id: ids.veranstaltung,
     name: 'Event',
     bildUrl: '',
-    spielModus: 'complex',
+    spielModus: 'normal',
     printMannschaftslisten: true
 }];
 

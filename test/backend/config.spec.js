@@ -26,7 +26,7 @@ describe('Route: Config', function () {
                     env: 'testing',
                     lockdown: true,
                     plaetze: '3',
-                    spielmodus: 'complex',
+                    spielmodus: 'normal',
                     mannschaftslisten: true
                 });
                 return done();
@@ -81,7 +81,7 @@ describe('Route: Config', function () {
             if (err) return done(err);
             expect(response).not.to.be.undefined;
             expect(response.statusCode).to.equal(200);
-            expect(response.body).to.equal('complex');
+            expect(response.body).to.equal('normal');
             return done();
         });
     });
