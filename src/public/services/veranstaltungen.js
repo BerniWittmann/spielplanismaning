@@ -3,7 +3,7 @@
 
     angular
         .module('spi.veranstaltungen', ['spi.routes'])
-        .factory('veranstaltungen', ['routes', 'storage', 'CURRENT_EVENT_TOKEN_NAME', function (routes, storage, CURRENT_EVENT_TOKEN_NAME) {
+        .factory('veranstaltungen', ['routes', 'storage', 'CURRENT_EVENT_TOKEN_NAME', '$rootScope', function (routes, storage, $rootScope, CURRENT_EVENT_TOKEN_NAME) {
             const veranstaltungen = {};
 
             veranstaltungen.getAll = function () {
@@ -39,6 +39,9 @@
             };
 
             veranstaltungen.setCurrentEvent = function (event) {
+                if ($rootScope.ravenEnabled) {
+                    Raven.setExtraContext({currentEvent: event});
+                }
                 storage.set(CURRENT_EVENT_TOKEN_NAME, JSON.stringify(event));
             };
 
@@ -63,7 +66,13 @@
 
                 if (!veranstaltung || veranstaltung._id !== event._id) {
                     storage.remove(CURRENT_EVENT_TOKEN_NAME);
+                    if ($rootScope.ravenEnabled) {
+                        Raven.setExtraContext({currentEvent: undefined});
+                    }
                     return undefined;
+                }
+                if ($rootScope.ravenEnabled) {
+                    Raven.setExtraContext({currentEvent: event});
                 }
 
                 return event;
