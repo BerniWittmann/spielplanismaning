@@ -18,7 +18,7 @@ gulp.task('test:precommit', function (done) {
 });
 
 gulp.task('test:travis', function () {
-    return runSequence('test:frontend', 'test:backend:withOutWipe', 'lint', function (err) {
+    return runSequence('test:frontend', 'test:backend', 'lint', function (err) {
         let exitCode = 0;
         if (err) {
             exitCode = 2;
@@ -51,7 +51,7 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
-    gulp.src('././test/backend/**/gruppen.spec.js', {read: false})
+    return gulp.src('././test/backend/**/jugenden.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
             reporterOptions: {
