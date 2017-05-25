@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet')
 
 const Raven = require('raven');
 const version = require('../package.json').version;
@@ -43,6 +44,8 @@ const sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.
 
 const secret = process.env.SECRET;
 const app = express();
+
+app.use(helmet());
 
 require('./models/Veranstaltungen');
 require('./models/Spiele');

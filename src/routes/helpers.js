@@ -184,7 +184,7 @@ function verifyToken(req, secret) {
     logger.silly('Verifying Token');
     let obj;
     try {
-        obj = jsonwebtoken.verify(req.get('Authorization'), secret);
+        obj = jsonwebtoken.verify(req.get('Authorization'), secret, {algorithms: ["HS256"]});
     } catch (err) {
         logger.warn('Token not valid!');
         return undefined;
