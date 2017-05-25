@@ -43,7 +43,7 @@
             gotoSpiel: function (gewaehltesspiel) {
                 if (gewaehltesspiel.jugend) {
                     $state.go('spi.spiel', {
-                        spielid: gewaehltesspiel._id
+                        spielid: gewaehltesspiel.slug || gewaehltesspiel._id
                     });
                 }
             },

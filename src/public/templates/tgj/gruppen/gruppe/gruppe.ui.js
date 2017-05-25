@@ -17,7 +17,7 @@
                 controllerAs: 'vm',
                 resolve: {
                     aktiveGruppe: function (gruppe, $stateParams) {
-                        return gruppe.get($stateParams.gruppeid);
+                        return gruppe.getBySlugOrID($stateParams.gruppeid);
                     },
                     spiele: function (spiel, aktiveGruppe) {
                         return spiel.getByGruppe(aktiveGruppe._id, aktiveGruppe.jugend._id);

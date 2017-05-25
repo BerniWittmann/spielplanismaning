@@ -194,6 +194,10 @@
                 return requestMethodParams('GET', urls[base].base(), param);
             }
 
+            function requestGETSlugOrID(url, identifier) {
+                return requestMethodParams('GET', url, {identifier: identifier});
+            }
+
             return {
                 methods: methods,
                 requestMethod: requestMethod,
@@ -208,6 +212,7 @@
                 requestPOST: requestPOST,
                 requestGETBaseParam: requestGETBaseParam,
                 requestGETBase: requestGETBase,
+                requestGETSlugOrID: requestGETSlugOrID,
                 urls: urls
             };
         }]);

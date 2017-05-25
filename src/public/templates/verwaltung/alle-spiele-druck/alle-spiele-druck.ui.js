@@ -40,14 +40,14 @@
             gotoTeam: function (gewaehltesteam) {
                 if (gewaehltesteam && gewaehltesteam.name) {
                     $state.go('spi.tgj.team', {
-                        teamid: gewaehltesteam._id
+                        teamid: gewaehltesteam.slug || gewaehltesteam._id
                     });
                 }
             },
             gotoGruppe: function (gewaehltegruppe) {
                 if (gewaehltegruppe) {
                     $state.go('spi.tgj.gruppe', {
-                        gruppeid: gewaehltegruppe._id
+                        gruppeid: gewaehltegruppe.slug || gewaehltegruppe._id
                     });
                 }
             },

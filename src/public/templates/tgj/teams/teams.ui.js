@@ -31,17 +31,17 @@
             teams: teams,
             gotoTeam: function (team) {
                 $state.go('spi.tgj.team', {
-                    teamid: team._id
+                    teamid: team.slug || team._id
                 });
             },
             gotoGruppe: function (gruppe) {
                 $state.go('spi.tgj.gruppe', {
-                    gruppeid: gruppe._id
+                    gruppeid: gruppe.slug || gruppe._id
                 });
             },
             gotoJugend: function (jugend) {
                 $state.go('spi.tgj.jugend', {
-                    jugendid: jugend._id
+                    jugendid: jugend.slug || jugend._id
                 });
             }
         });

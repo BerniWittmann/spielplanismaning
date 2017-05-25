@@ -111,6 +111,9 @@
             mockGruppe = {
                 get: function () {
                     return $q.when(gruppe);
+                },
+                getBySlugOrID: function () {
+                    return $q.when(gruppe);
                 }
             };
 

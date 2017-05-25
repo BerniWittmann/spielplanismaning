@@ -1,4 +1,4 @@
 <span class="label label-default jugend-label jugend-label-{{vm.jugend.color}}"
       data-ng-if="vm.jugend && vm.jugend.name">
-	<a data-ui-sref="spi.tgj.jugend({jugendid: vm.jugend._id})">{{vm.jugend.name}}</a>
+	<a data-ui-sref="spi.tgj.jugend({jugendid: vm.jugend.slug || vm.jugend._id})">{{vm.jugend.name}}</a>
 </span>

@@ -18,7 +18,7 @@
                 controllerAs: 'vm',
                 resolve: {
                     aktivesSpiel: function (spiel, $stateParams) {
-                        return spiel.get($stateParams.spielid);
+                        return spiel.getBySlugOrID($stateParams.spielid);
                     },
                     spielModus: function (config) {
                         return config.getSpielmodus();
@@ -89,7 +89,7 @@
             gotoTeam: function (team) {
                 if (team) {
                     $state.go('spi.tgj.team', {
-                        teamid: team._id
+                        teamid: team.slug || team._id
                     });
                 }
             },

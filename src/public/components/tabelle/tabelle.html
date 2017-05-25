@@ -13,7 +13,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="team in vm.teams" data-ui-sref="spi.tgj.team({teamid: team._id})" class="text-center"
+        <tr ng-repeat="team in vm.teams" data-ui-sref="spi.tgj.team({teamid: team.slug || team._id})" class="text-center"
             data-ng-class="{'highlightTeam': vm.checkIsHighlighted(team)}">
             <td>{{$index + 1}}</td>
             <td data-ng-click="vm.gotoTeam(team)">{{team.name}}</td>

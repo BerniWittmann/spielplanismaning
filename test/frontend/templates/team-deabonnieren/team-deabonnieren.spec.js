@@ -86,6 +86,9 @@
             mockTeam = {
                 get: function () {
                     return $q.when(team);
+                },
+                getBySlugOrID: function () {
+                    return $q.when(team);
                 }
             };
 

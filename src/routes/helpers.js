@@ -49,6 +49,16 @@ function getEntityQuery(model, req) {
         logger.silly('Query by Slug');
         searchById = true;
         query = model.findOne({slug: req.query.slug});
+    } else if (req.query.identifier) {
+        logger.silly('Query by Slug Or ID');
+        searchById = true;
+        let id;
+        try {
+            id = mongoose.Types.ObjectId(req.query.identifier);
+        } catch(err) {
+            id = mongoose.Types.ObjectId();
+        }
+        query = model.findOne({$or: [{slug: req.query.identifier}, {_id: id}]});
     }
     return {
         query: query,

@@ -21,28 +21,28 @@
             gotoTeam: function (team, $event) {
                 if (team && team.name) {
                     gotoState('spi.tgj.team', {
-                        teamid: team._id
+                        teamid: team.slug || team._id
                     }, $event);
                 }
             },
             gotoGruppe: function (gruppe, $event) {
                 if (gruppe) {
                     gotoState('spi.tgj.gruppe', {
-                        gruppeid: gruppe._id
+                        gruppeid: gruppe.slug || gruppe._id
                     }, $event);
                 }
             },
             gotoJugend: function (jugend, $event) {
                 if (jugend) {
                     gotoState('spi.tgj.jugend', {
-                        jugendid: jugend._id
+                        jugendid: jugend.slug || jugend._id
                     }, $event);
                 }
             },
             gotoSpiel: function (game) {
                 if (game.jugend) {
                     gotoState('spi.spiel', {
-                        spielid: game._id
+                        spielid: game.slug || game._id
                     }, undefined);
                 }
             },

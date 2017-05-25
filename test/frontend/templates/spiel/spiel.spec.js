@@ -99,6 +99,11 @@
                 },
                 getTeamDisplay: function (spiel, letter) {
                     return spiel['team' + letter].name;
+                },
+                getBySlugOrID: function () {
+                    var deferred = $q.defer();
+                    deferred.resolve(spiel);
+                    return deferred.promise;
                 }
             };
 

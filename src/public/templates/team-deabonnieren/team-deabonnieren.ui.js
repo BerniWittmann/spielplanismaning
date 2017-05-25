@@ -17,7 +17,7 @@
                 controllerAs: 'vm',
                 resolve: {
                     aktivesTeam: function (team, $stateParams) {
-                        return team.get($stateParams.teamid);
+                        return team.getBySlugOrID($stateParams.teamid);
                     }
                 }
             });
@@ -75,7 +75,7 @@
         function redirect() {
             $timeout(function () {
                 $state.go('spi.tgj.team', {
-                    teamid: vm.team._id
+                    teamid: vm.team.slug || vm.team._id
                 });
             }, 3000);
         }

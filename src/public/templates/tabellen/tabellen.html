@@ -43,7 +43,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="jugend in vm.jugenden" data-ui-sref="spi.tgj.jugend({jugendid: jugend._id})"
+                <tr ng-repeat="jugend in vm.jugenden" data-ui-sref="spi.tgj.jugend({jugendid: jugend.slug || jugend._id})"
                     class="text-center">
                     <td class="valign">
                         <spi-jugend-label jugend="jugend"></spi-jugend-label>

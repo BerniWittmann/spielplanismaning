@@ -36,6 +36,10 @@
                 return getByParam('id', id);
             };
 
+            spiel.getBySlugOrID = function (identifier) {
+                return getByParam('identifier', identifier);
+            };
+
             spiel.getByGruppe = function (gruppenid) {
                 return getByParam('gruppe', gruppenid);
             };

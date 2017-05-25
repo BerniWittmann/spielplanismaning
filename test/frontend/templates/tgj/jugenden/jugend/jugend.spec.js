@@ -74,6 +74,7 @@
         beforeEach(module(function ($provide) {
             $provide.value('jugend', mockJugend);
             $provide.value('spiel', mockSpiele);
+            $provide.value('aktiveJugend', jugend);
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -92,6 +93,9 @@
 
             mockJugend = {
                 get: function () {
+                    return $q.when(jugend);
+                },
+                getBySlugOrID: function () {
                     return $q.when(jugend);
                 }
             };

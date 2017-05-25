@@ -17,10 +17,10 @@
                 controllerAs: 'vm',
                 resolve: {
                     aktivesTeam: function (team, $stateParams) {
-                        return team.get($stateParams.teamid);
+                        return team.getBySlugOrID($stateParams.teamid);
                     },
-                    spiele: function (spiel, $stateParams) {
-                        return spiel.getByTeam($stateParams.teamid);
+                    spiele: function (spiel, aktivesTeam) {
+                        return spiel.getByTeam(aktivesTeam._id);
                     }
                 }
             });

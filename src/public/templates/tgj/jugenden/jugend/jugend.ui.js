@@ -17,13 +17,13 @@
                 controllerAs: 'vm',
                 resolve: {
                     aktiveJugend: function (jugend, $stateParams) {
-                        return jugend.get($stateParams.jugendid);
+                        return jugend.getBySlugOrID($stateParams.jugendid);
                     },
-                    spiele: function (spiel, $stateParams) {
-                        return spiel.getByJugend($stateParams.jugendid);
+                    spiele: function (spiel, aktiveJugend) {
+                        return spiel.getByJugend(aktiveJugend._id);
                     },
-                    gruppen: function (gruppe, $stateParams) {
-                        return gruppe.getByJugend($stateParams.jugendid);
+                    gruppen: function (gruppe, aktiveJugend) {
+                        return gruppe.getByJugend(aktiveJugend._id);
                     }
                 }
             });

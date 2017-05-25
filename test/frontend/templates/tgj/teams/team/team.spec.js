@@ -87,6 +87,7 @@
             $provide.value('spiel', mockSpiel);
             $provide.value('team', mockTeam);
             $provide.value('gruppe', mockGruppe);
+            $provide.value('aktivesTeam', team);
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -109,6 +110,9 @@
                     return deferred.promise;
                 },
                 get: function () {
+                    return $q.when(team);
+                },
+                getBySlugOrID: function () {
                     return $q.when(team);
                 }
             };

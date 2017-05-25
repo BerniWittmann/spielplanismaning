@@ -15,6 +15,10 @@
                 return routes.requestGETID(routes.urls.jugenden.base(), id);
             };
 
+            jugend.getBySlugOrID = function (identifier) {
+                return routes.requestGETSlugOrID(routes.urls.jugenden.base(), identifier);
+            };
+
             jugend.create = function (newjugend) {
                 return routes.requestPOST(routes.urls.jugenden.base(), newjugend);
             };

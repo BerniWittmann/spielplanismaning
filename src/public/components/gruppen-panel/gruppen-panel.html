@@ -1,5 +1,5 @@
 <spi-panel data-ng-if="vm.gruppe._id">
-    <spi-panel-titel><a data-ui-sref="spi.tgj.gruppe({gruppeid: vm.gruppe._id})">{{vm.gruppe.name}}</a>
+    <spi-panel-titel><a data-ui-sref="spi.tgj.gruppe({gruppeid: vm.gruppe.slug || vm.gruppe._id})">{{vm.gruppe.name}}</a>
         <spi-jugend-label jugend="vm.gruppe.jugend"></spi-jugend-label>
     </spi-panel-titel>
     <spi-loader loading="vm.loading"></spi-loader>
@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <table>
                 <tr data-ng-repeat="team in vm.teams">
-                    <td><a data-ui-sref="spi.tgj.team({teamid: team._id})">{{team.name}}</a></td>
+                    <td><a data-ui-sref="spi.tgj.team({teamid: team.slug || team._id})">{{team.name}}</a></td>
                 </tr>
             </table>
         </div>
