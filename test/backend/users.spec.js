@@ -3,6 +3,7 @@ var request = require("supertest");
 var server = require('./testserver.js')();
 var mongoose = require('mongoose');
 
+
 describe('Route: Users', function () {
     before(function (done) {
         server.connectDB(function (err) {
@@ -26,7 +27,7 @@ describe('Route: Users', function () {
     it('soll einen Nutzer registrieren können', function (done) {
         request(server)
             .post('/api/users/register')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({
                 username: user.username,
                 email: user.email,
@@ -54,7 +55,7 @@ describe('Route: Users', function () {
     it('soll einen Fehler zurückgeben bei fehlenden Feldern', function (done) {
         request(server)
             .post('/api/users/register')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({username: 'test'})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -68,7 +69,7 @@ describe('Route: Users', function () {
     it('soll keine doppelten Nutzernamen geben', function (done) {
         request(server)
             .post('/api/users/register')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({username: 'test-user', email: 'test2@byom.de', role: 'Bearbeiter'})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -150,7 +151,7 @@ describe('Route: Users', function () {
     it('Bei falschem Nutzername soll ein Fehler geliefert werden', function (done) {
         request(server)
             .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({username: 'tippfehler'})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -165,7 +166,7 @@ describe('Route: Users', function () {
     it('Der Nutzername berni soll nicht gelöscht werden können', function (done) {
         request(server)
             .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({username: 'berni'})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -194,7 +195,7 @@ describe('Route: Users', function () {
     it('Ein Nutzer soll ein neues Passwort anfordern können', function (done) {
         request(server)
             .put('/api/users/password-forgot')
-            .set('Authorization', server.bearbeiterToken)
+            .set('Authorization', server.bearbeiterToken())
             .send({email: 'test@byom.de'})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -278,7 +279,7 @@ describe('Route: Users', function () {
     it('wenn zum Löschen kein Nutzername angegeben ist, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -292,7 +293,7 @@ describe('Route: Users', function () {
     it('wenn der Nutzername nicht gefunden Wird, soll ein Fehler geworfen werden', function (done) {
         request(server)
             .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({username: 'wrongname'})
             .end(function (err, res) {
                 if (err) return done(err);
@@ -306,7 +307,7 @@ describe('Route: Users', function () {
     it('soll einen Nutzer löschen können', function (done) {
         request(server)
             .put('/api/users/delete')
-            .set('Authorization', server.adminToken)
+            .set('Authorization', server.adminToken())
             .send({username: 'testuser'})
             .end(function (err, res) {
                 if (err) return done(err);
