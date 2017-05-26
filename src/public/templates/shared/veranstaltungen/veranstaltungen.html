@@ -18,3 +18,8 @@
         <h3 class="veranstaltung-text">Einstellungen</h3>
     </div>
 </div>
+<div class="row" data-ng-if="vm.veranstaltungen.length == 0 && !vm.isAdmin">
+    <div class="col-md-8 col-md-offset-2 alert alert-info">
+        Leider sind noch keine Veranstaltungen verfügbar.
+    </div>
+</div>
