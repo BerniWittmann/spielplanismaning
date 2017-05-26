@@ -20,8 +20,8 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="spi-navbar" data-ng-if="vm.eventChosen">
-            <ul class="nav navbar-nav">
+        <div class="collapse navbar-collapse" id="spi-navbar">
+            <ul class="nav navbar-nav" data-ng-if="vm.eventChosen">
                 <li data-ng-class="{active: vm.isAktiv('spi.event.home')}" id="nav-button-home"><a data-ui-sref="spi.event.home"
                                                                                              data-toggle="collapse"
                                                                                              data-target=".navbar-collapse.in"><i
