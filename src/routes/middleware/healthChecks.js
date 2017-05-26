@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 const request = require('request');
 const fs = require('fs');
 
+
+function checkForAllExist(required, checkFn, successText, failureText) {
+    const missing = [];
+    required.forEach(function (el) {
+        if (!checkFn(el)) missing.push(el);
+    });
+    const isHealthy = missing.length === 0;
+    return Promise.resolve({
+        isHealthy: isHealthy,
+        details: isHealthy ? successText : failureText.replace('%s', missing.join(', '))
+    });
+}
 module.exports = function (app) {
     const mongooseConnection = {
         name: 'Mongoose Connection',
@@ -17,35 +29,26 @@ module.exports = function (app) {
     const mongooseCollections = {
         name: 'Mongoose Collections',
         checkHealth: () => {
-            const requiredCollections = [ 'veranstaltungs', 'spiels', 'gruppes', 'jugends', 'spielplans', 'teams', 'subscribers', 'users', 'ansprechpartners' ];
-            const missingCollections = [];
-            requiredCollections.forEach(function (collectionName) {
-                if (!mongoose.connection.collections[collectionName]) {
-                    missingCollections.push(collectionName);
-                }
-            });
-            return Promise.resolve({
-                isHealthy: missingCollections.length === 0,
-                details: missingCollections.length === 0 ? "All required Collections exist." : (missingCollections.join(', ') + " are missing")
-            });
+            const requiredCollections = ['veranstaltungs', 'spiels', 'gruppes', 'jugends', 'spielplans', 'teams', 'subscribers', 'users', 'ansprechpartners'];
+            const check = function (collectionName) {
+              return mongoose.connection.collections[collectionName];
+            };
+            return checkForAllExist(requiredCollections, check, "All required Collections exist.", "%s are missing.");
         }
     };
 
     const filesDist = {
         name: 'Files exist in Dist',
         checkHealth: () => {
-            const files = ['app.js', 'public/app.js', 'public/templates.js', 'public/stylesheets/style.css', 'views/index.ejs'];
+            const files = ['app.js', 'public/app.js', 'public/stylesheets/style.css', 'views/index.ejs'];
+            if (process.env.NODE_ENV !== 'development') {
+                files.push('public/templates.js');
+            }
             const relativePath = './dist/';
-            const missingFiles = [];
-            files.forEach(function (file) {
-                if (!fs.existsSync(relativePath + file)) {
-                    missingFiles.push(file);
-                }
-            });
-            return Promise.resolve({
-                isHealthy: missingFiles.length === 0,
-                details: missingFiles.length === 0 ? "All required files exist in dist." : (missingFiles.join(', ') + " are missing")
-            });
+            const check = function (file) {
+                return fs.existsSync(relativePath + file);
+            };
+            return checkForAllExist(files, check, "All required files exist in dist.", "%s are missing.");
         }
     };
 
@@ -69,5 +72,17 @@ module.exports = function (app) {
         }
     };
 
-    return [version, environment, mongooseConnection, mongooseCollections, filesDist];
+    const envVars = {
+        name: 'Environment Variables',
+        checkHealth: () => {
+            const requiredEnvVars = ['NODE_ENV', 'SENDGRID_USERNAME', 'SENDGRID_PASSWORD', 'MONGODB_URI', 'SECRET', 'URL', 'DISABLEEMAIL', 'LOCKDOWNMODE', 'PLAETZE', 'SENTRY_URL', 'SENTRY_PUBLIC_URL', 'LOG_LEVEL', 'GOOGLE_ANALYTICS_CODE', 'BEACHENMELDUNG_TEAM_URL', 'ALLOWED_ORIGINS', 'HEALTH_ROUTE_ACCESS_TOKEN'];
+            const check = function (varName) {
+              return process.env[varName];
+            };
+            return checkForAllExist(requiredEnvVars, check, "All required Environment Variables exist", "%s are missing.");
+        }
+    };
+
+
+    return [version, environment, mongooseConnection, mongooseCollections, filesDist, envVars];
 };
