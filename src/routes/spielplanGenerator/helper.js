@@ -221,7 +221,6 @@ function saveSpiele(spiele, cb) {
                 return clsSession.run(function () {
                     clsSession.set('beachEventID', beachEventID);
                     return game.save(function (err) {
-                        logger.info('AfterUpdate')
                         if (err) return callback(err);
 
                         return clsSession.run(function () {

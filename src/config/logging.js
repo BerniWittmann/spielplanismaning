@@ -21,6 +21,7 @@ module.exports = function(loglevel) {
     createCategory('apiJugenden', 'Spielplan Ismaning: API - Jugenden');
     createCategory('apiSpiele', 'Spielplan Ismaning: API - Spiele');
     createCategory('apiSpielplan', 'Spielplan Ismaning: API - Spielplan');
+    createCategory('apiTeams', 'Spielplan Ismaning: API - Teams');
     createCategory('apiUsers', 'Spielplan Ismaning: API - Users');
     createCategory('apiHelper', 'Spielplan Ismaning: API - Helper');
     createCategory('apiVeranstaltungen', 'Spielplan Ismaning: API - Veranstaltungen');
