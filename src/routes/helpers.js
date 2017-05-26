@@ -460,22 +460,27 @@ function calcSpielDateTime(nr, spielplan, delays) {
 }
 
 function getSpielErgebnisse(cb) {
-    return Spiel.find({}).exec(function (err, spiele) {
-        if (err) return cb(err, undefined);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Spiel.find({}).exec(function (err, spiele) {
+            if (err) return cb(err, undefined);
 
-        const ergebnisse = [];
-        spiele.forEach(function (spiel) {
-            if (spiel.beendet) {
-                ergebnisse.push({
-                    teamA: spiel.teamA,
-                    teamB: spiel.teamB,
-                    toreA: spiel.toreA,
-                    toreB: spiel.toreB
-                });
-            }
+            const ergebnisse = [];
+            spiele.forEach(function (spiel) {
+                if (spiel.beendet) {
+                    ergebnisse.push({
+                        teamA: spiel.teamA,
+                        teamB: spiel.teamB,
+                        toreA: spiel.toreA,
+                        toreB: spiel.toreB
+                    });
+                }
+            });
+
+            return cb(undefined, ergebnisse);
         });
-
-        return cb(undefined, ergebnisse);
     });
 }
 
@@ -484,17 +489,25 @@ function gruppeFindPlace(teams, spieleDerGruppe, platz, gruppe, callback) {
     const nichtbeendete = spieleDerGruppe.filter(function (single) {
         return !single.beendet;
     });
-    const key = gruppe.type === 'normal' ? 'gruppe' : 'zwischenGruppe';
-    if (nichtbeendete.length === 0) {
-        logger.silly('All Games Played');
-        return helper.sortTeams(teams, key, Spiel, gruppe, function (err, sorted) {
-            if (err) return callback(err);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        const key = gruppe.type === 'normal' ? 'gruppe' : 'zwischenGruppe';
+        if (nichtbeendete.length === 0) {
+            logger.silly('All Games Played');
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return helper.sortTeams(teams, key, Spiel, gruppe, function (err, sorted) {
+                    if (err) return callback(err);
 
-            return callback(null, sorted[platz - 1]);
-        });
-    }
+                    return callback(null, sorted[platz - 1]);
+                });
+            });
+        }
 
-    return callback(null, undefined);
+        return callback(null, undefined);
+    });
 }
 
 function fillSpielFromSpiel(spiel, cb) {
@@ -503,45 +516,56 @@ function fillSpielFromSpiel(spiel, cb) {
         A: undefined,
         B: undefined
     };
-    return async.each(['A', 'B'], function (letter, next) {
-        const from = spiel['from' + letter];
-        if (!from) {
-            return next();
-        }
-        return Spiel.findOne({_id: mongoose.Types.ObjectId(from._id)}).populate('teamA teamB gewinner').exec(function (err, foundSpiel) {
-            if (err) return next(err);
-
-            if (!foundSpiel || !foundSpiel.beendet) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return async.each(['A', 'B'], function (letter, next) {
+            const from = spiel['from' + letter];
+            if (!from) {
                 return next();
             }
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return Spiel.findOne({_id: mongoose.Types.ObjectId(from._id)}).populate('teamA teamB gewinner').exec(function (err, foundSpiel) {
+                    if (err) return next(err);
 
-            if (spiel['rank' + letter] > 0) {
-                calculatedTeams[letter] = foundSpiel.gewinner;
-            } else {
-                if (foundSpiel.teamA && foundSpiel.teamA._id &&
-                    foundSpiel.teamB && foundSpiel.teamB._id &&
-                    foundSpiel.gewinner && foundSpiel.gewinner._id) {
-                    if (foundSpiel.teamA._id.toString() === foundSpiel.gewinner._id.toString()) {
-                        calculatedTeams[letter] = foundSpiel.teamB;
-                    } else {
-                        calculatedTeams[letter] = foundSpiel.teamA;
+                    if (!foundSpiel || !foundSpiel.beendet) {
+                        return next();
                     }
-                }
-            }
-            return next();
-        });
-    }, function (err) {
-        if (err) return cb(err);
 
-        return Spiel.findOneAndUpdate({'_id': mongoose.Types.ObjectId(spiel._id.toString())}, {
-            $set: {
-                teamA: calculatedTeams.A,
-                teamB: calculatedTeams.B
-            }
-        }, {new: true}, function (err, spiel) {
+                    if (spiel['rank' + letter] > 0) {
+                        calculatedTeams[letter] = foundSpiel.gewinner;
+                    } else {
+                        if (foundSpiel.teamA && foundSpiel.teamA._id &&
+                            foundSpiel.teamB && foundSpiel.teamB._id &&
+                            foundSpiel.gewinner && foundSpiel.gewinner._id) {
+                            if (foundSpiel.teamA._id.toString() === foundSpiel.gewinner._id.toString()) {
+                                calculatedTeams[letter] = foundSpiel.teamB;
+                            } else {
+                                calculatedTeams[letter] = foundSpiel.teamA;
+                            }
+                        }
+                    }
+                    return next();
+                });
+            });
+        }, function (err) {
             if (err) return cb(err);
 
-            return cb();
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return Spiel.findOneAndUpdate({'_id': mongoose.Types.ObjectId(spiel._id.toString())}, {
+                    $set: {
+                        teamA: calculatedTeams.A,
+                        teamB: calculatedTeams.B
+                    }
+                }, {new: true}, function (err, spiel) {
+                    if (err) return cb(err);
+
+                    return cb();
+                });
+            });
         });
     });
 }
@@ -552,66 +576,119 @@ function fillSpielFromGruppe(spiel, cb) {
         A: undefined,
         B: undefined
     };
-    return async.each(['A', 'B'], function (letter, next) {
-        return Team.find({$or: [{gruppe: spiel['from' + letter]._id}, {zwischengruppe: spiel['from' + letter].id}]}).exec(function (err, teams) {
-            if (err) return next(err);
-
-            return fill(teams, function (err, teams) {
-                if (err) return next(err);
-
-                return Spiel.find({gruppe: spiel['from' + letter]._id}).exec(function (err, spiele) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return async.each(['A', 'B'], function (letter, next) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return Team.find({$or: [{gruppe: spiel['from' + letter]._id}, {zwischengruppe: spiel['from' + letter].id}]}).exec(function (err, teams) {
                     if (err) return next(err);
 
-                    return gruppeFindPlace(teams, spiele, spiel['rank' + letter], spiel['from' + letter], function (err, team) {
-                        if (err) return next(err);
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        return fill(teams, function (err, teams) {
+                            if (err) return next(err);
 
-                        calculatedTeams[letter] = team;
-                        return next();
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+                                return Spiel.find({gruppe: spiel['from' + letter]._id}).exec(function (err, spiele) {
+                                    if (err) return next(err);
+
+                                    return clsSession.run(function () {
+                                        clsSession.set('beachEventID', beachEventID);
+                                        return gruppeFindPlace(teams, spiele, spiel['rank' + letter], spiel['from' + letter], function (err, team) {
+                                            if (err) return next(err);
+
+                                            calculatedTeams[letter] = team;
+                                            return next();
+                                        });
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
             });
-        });
-    }, function (err) {
-        if (err) return cb(err);
-
-        return Spiel.findOneAndUpdate({'_id': mongoose.Types.ObjectId(spiel._id.toString())}, {
-            $set: {
-                teamA: calculatedTeams.A,
-                teamB: calculatedTeams.B
-            }
-        }, {new: true}, function (err) {
+        }, function (err) {
             if (err) return cb(err);
 
-            return cb();
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return Spiel.findOneAndUpdate({'_id': mongoose.Types.ObjectId(spiel._id.toString())}, {
+                    $set: {
+                        teamA: calculatedTeams.A,
+                        teamB: calculatedTeams.B
+                    }
+                }, {new: true}, function (err) {
+                    if (err) return cb(err);
+
+                    return cb();
+                });
+            });
         });
     });
 }
 
 function fillTeamFromGruppe(team, cb) {
     logger.verbose('Filling Team %s from Gruppe', team._id);
-    return Team.find({gruppe: team.from._id}).deepPopulate('jugend').exec(function (err, teams) {
-        if (err) return cb(err);
-
-        return Spiel.find({gruppe: team.from._id}).exec(function (err, spiele) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Team.find({gruppe: team.from._id}).exec(function (err, teams) {
             if (err) return cb(err);
 
-            return gruppeFindPlace(teams, spiele, team.rank, team.from, function (err, originalTeam) {
-                if (err) return cb(err);
-                if (!originalTeam) return cb();
-
-                return Team.update({'_id': originalTeam}, {'zwischengruppe': team.gruppe._id}, function (err) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return Team.populate(teams, 'jugend', function (err, teams) {
                     if (err) return cb(err);
 
-                    return Gruppe.updateTeamInGruppe(team.gruppe._id, team._id, originalTeam._id, function (err) {
-                        if (err) return cb(err);
-
-                        return Spiel.updateTeamInSpiele(team._id, originalTeam._id, function (err) {
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        return Spiel.find({gruppe: team.from._id}).exec(function (err, spiele) {
                             if (err) return cb(err);
 
-                            return Jugend.removeTeam(originalTeam.jugend._id, team._id, function (err) {
-                                if (err) return cb(err);
+                            return clsSession.run(function () {
+                                clsSession.set('beachEventID', beachEventID);
+                                return gruppeFindPlace(teams, spiele, team.rank, team.from, function (err, originalTeam) {
+                                    if (err) return cb(err);
+                                    if (!originalTeam) return cb();
 
-                                return removeEntityBy(Team, '_id', team._id, cb);
+                                    return clsSession.run(function () {
+                                        clsSession.set('beachEventID', beachEventID);
+                                        return Team.update({'_id': originalTeam}, {'zwischengruppe': team.gruppe._id}, function (err) {
+                                            if (err) return cb(err);
+
+                                            return clsSession.run(function () {
+                                                clsSession.set('beachEventID', beachEventID);
+                                                return Gruppe.updateTeamInGruppe(team.gruppe._id, team._id, originalTeam._id, function (err) {
+                                                    if (err) return cb(err);
+
+                                                    return clsSession.run(function () {
+                                                        clsSession.set('beachEventID', beachEventID);
+                                                        return Spiel.updateTeamInSpiele(team._id, originalTeam._id, function (err) {
+                                                            if (err) return cb(err);
+
+                                                            return clsSession.run(function () {
+                                                                clsSession.set('beachEventID', beachEventID);
+                                                                return Jugend.removeTeam(originalTeam.jugend._id, team._id, function (err) {
+                                                                    if (err) return cb(err);
+
+                                                                    return clsSession.run(function () {
+                                                                        clsSession.set('beachEventID', beachEventID);
+                                                                        return removeEntityBy(Team, '_id', team._id, cb);
+                                                                    });
+                                                                });
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
                             });
                         });
                     });
@@ -750,32 +827,44 @@ function teamCalcErgebnisse(team, gruppe, cb) {
 }
 
 function fill(entity, cb) {
-    if (_.isArray(entity)) {
-        if (entity.length === 0) return cb(null, entity);
-        const data = [];
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        if (_.isArray(entity)) {
+            if (entity.length === 0) return cb(null, entity);
+            const data = [];
 
-        return async.eachOf(entity, function (e, index, next) {
-            if (typeof e.fill !== "function") {
-                data[index] = e;
-                return next();
-            }
-            return e.fill(function (err, d) {
-                if (err) return next(err);
-                data[index] = d;
-                return next();
-            })
-        }, function (err) {
-            if (err) return cb(err);
+            return async.eachOf(entity, function (e, index, next) {
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    if (typeof e.fill !== "function") {
+                        data[index] = e;
+                        return next();
+                    }
+                    return e.fill(function (err, d) {
+                        if (err) return next(err);
+                        data[index] = d;
+                        return next();
+                    });
+                });
+            }, function (err) {
+                if (err) return cb(err);
 
-            return cb(null, data);
-        });
-    } else if (_.isObject(entity)) {
-        if (typeof entity.fill !== "function" || !entity._id) {
-            return cb(null, entity);
+                return cb(null, data);
+            });
+        } else if (_.isObject(entity)) {
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+
+                if (typeof entity.fill !== "function" || !entity._id) {
+                    return cb(null, entity);
+                }
+                return entity.fill(cb);
+            });
         }
-        return entity.fill(cb);
-    }
-    return cb('Not able to fill');
+        return cb('Not able to fill');
+    });
 }
 
 function checkSpielnextBeendet(spiel, cb) {
@@ -875,35 +964,43 @@ function updateDocByKeys(doc, keys, data) {
 }
 
 function reloadAnmeldeObjects(cb) {
-    return Team.find({anmeldungsId: {$ne: null}}, function (err, teams) {
-        if (err) return cb(err);
-
-        return async.each(teams, function (team, next) {
-            return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId, function (err, status, body) {
-                if (err) {
-                    logger.warn('Error when retrieving Team from Anmeldung', err);
-                    return next();
-                }
-
-                body = JSON.parse(body);
-
-                if (status.statusCode < 400 && body && body._id) {
-                    _.assign(body, {'expires': moment().add(1, 'd').toISOString()});
-                    team.anmeldungsObjectString = JSON.stringify(body);
-                    return team.save(function (err) {
-                        if (err) {
-                            logger.warn(err);
-                        }
-
-                        return next();
-                    });
-                }
-                return next();
-            });
-        }, function (err) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return Team.find({anmeldungsId: {$ne: null}}, function (err, teams) {
             if (err) return cb(err);
 
-            return cb();
+            return async.each(teams, function (team, next) {
+                return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId, function (err, status, body) {
+                    if (err) {
+                        logger.warn('Error when retrieving Team from Anmeldung', err);
+                        return next();
+                    }
+
+                    body = JSON.parse(body);
+
+                    if (status.statusCode < 400 && body && body._id) {
+                        _.assign(body, {'expires': moment().add(1, 'd').toISOString()});
+                        team.anmeldungsObjectString = JSON.stringify(body);
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return team.save(function (err) {
+                                if (err) {
+                                    logger.warn(err);
+                                }
+
+                                return next();
+                            });
+                        });
+                    }
+                    return next();
+                });
+            }, function (err) {
+                if (err) return cb(err);
+
+                return cb();
+            });
         });
     });
 }
