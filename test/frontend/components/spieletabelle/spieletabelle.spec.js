@@ -159,7 +159,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.spiel', {
+            expect(spy).to.have.been.called.with('spi.event.spiel', {
                 spielid: '5795079dfebe4a03004bfe2c'
             });
         });
@@ -170,7 +170,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.tgj.team', {
+            expect(spy).to.have.been.called.with('spi.event.tgj.team', {
                 teamid: '5795054f25126d0300d95525'
             });
         });
@@ -181,7 +181,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.tgj.team', {
+            expect(spy).to.have.been.called.with('spi.event.tgj.team', {
                 teamid: '5795054c25126d0300d95524'
             });
         });
@@ -192,18 +192,18 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.tgj.gruppe', {
+            expect(spy).to.have.been.called.with('spi.event.tgj.gruppe', {
                 gruppeid: '5795053d25126d0300d95521'
             });
         });
 
-        it('Bei Klick auf die Jugend wird man zur Gruppe weitergeleitet', function () {
+        it('Bei Klick auf die Jugend wird man zur Jugend weitergeleitet', function () {
             var result = angular.element(angular.element(element.find('tbody').find('tr')[2]).find('td')[3]);
             var spy = chai.spy.on(stateMock, 'go');
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.tgj.jugend', {
+            expect(spy).to.have.been.called.with('spi.event.tgj.jugend', {
                 jugendid: '5795053d25126d0300d95521'
             });
         });
@@ -214,7 +214,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.platz', {
+            expect(spy).to.have.been.called.with('spi.event.platz', {
                 platznummer: '3'
             });
         });
@@ -225,7 +225,7 @@
 
             result.triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.datum', {
+            expect(spy).to.have.been.called.with('spi.event.datum', {
                 datum: '1970-01-01'
             });
         });

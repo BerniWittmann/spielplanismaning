@@ -6,7 +6,7 @@
     describe('Template: Spielplan', function () {
         beforeEach(module('spi.constants'));
         var URL = '/spielplan';
-        var STATE_NAME = 'spi.spielplan';
+        var STATE_NAME = 'spi.event.spielplan';
 
         var spiele = [{
             _id: '1',
@@ -122,15 +122,18 @@
             module(function ($provide) {
                 $provide.value('errorHandler', mockErrorHandler);
                 $provide.value('Logger', mockLogger);
+                $provide.value('aktivesEvent', {});
             });
         });
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
         }, 'spi.templates.spielplan.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.components.bestaetigen-modal.ui'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -203,7 +206,7 @@
 
         describe('Resolves', function () {
             it('soll Spiele resolven', function () {
-                var promise = resolve('spiele').forStateAndView('spi.spielplan');
+                var promise = resolve('spiele').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiele);
             });
@@ -228,7 +231,7 @@
             render();
             var spy = chai.spy.on(mockState, 'go');
             angular.element(element.find('tbody').find('tr')[0]).triggerHandler('click');
-            expect(spy).to.have.been.called.with('spi.spiel', {spielid: '1'});
+            expect(spy).to.have.been.called.with('spi.event.spiel', {spielid: '1'});
         });
 
         describe('Template: Spielplan', function () {

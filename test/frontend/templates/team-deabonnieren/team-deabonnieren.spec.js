@@ -5,7 +5,7 @@
 
     describe('Template: Team-Deabonnieren', function () {
         var URL = '/teams//deabonnieren';
-        var STATE_NAME = 'spi.team-deabonnieren';
+        var STATE_NAME = 'spi.event.team-deabonnieren';
 
         var team = {
             _id: '1',
@@ -48,10 +48,12 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
         }, 'spi.templates.teamdeabonnieren.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('team', mockTeam);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -135,7 +137,7 @@
 
         describe('Resolves', function () {
             it('soll das Team resolven', function () {
-                var promise = resolve('aktivesTeam').forStateAndView('spi.team-deabonnieren');
+                var promise = resolve('aktivesTeam').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(team);
             });

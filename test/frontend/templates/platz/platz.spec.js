@@ -5,7 +5,7 @@
 
     describe('Template: Platz', function () {
         var URL = '/platz';
-        var STATE_NAME = 'spi.platz';
+        var STATE_NAME = 'spi.event.platz';
 
         var spiele = [{
             _id: '1',
@@ -71,12 +71,14 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
         }, 'spi.templates.platz.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
             $provide.value('config', mockConfig);
             $provide.value('Logger', {});
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -145,12 +147,12 @@
 
         describe('Resolves', function () {
             it('soll Spiele resolven', function () {
-                var promise = resolve('spiele').forStateAndView('spi.platz');
+                var promise = resolve('spiele').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiele);
             });
             it('soll AnzahlPlätze resolven', function () {
-                var promise = resolve('anzahlPlaetze').forStateAndView('spi.platz');
+                var promise = resolve('anzahlPlaetze').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.equal(3);
             });

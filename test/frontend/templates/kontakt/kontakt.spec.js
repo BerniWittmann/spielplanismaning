@@ -6,7 +6,7 @@
     describe('Template: Kontakt', function () {
         beforeEach(module('spi.constants'));
         var URL = '/kontakt';
-        var STATE_NAME = 'spi.kontakt';
+        var STATE_NAME = 'spi.shared.kontakt';
 
         var mockKontakte = [{
             email: 'test@t.de',
@@ -37,6 +37,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
         }, 'spi.templates.kontakt.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
@@ -113,19 +114,19 @@
 
         describe('Resolves', function () {
             it('soll die Kontakte resolven', function () {
-                var promise = resolve('kontakt').forStateAndView('spi.kontakt');
+                var promise = resolve('kontakt').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(mockKontakte);
             });
 
             it('soll die Version resolven', function () {
-                var promise = resolve('version').forStateAndView('spi.kontakt');
+                var promise = resolve('version').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal('0.0.0');
             });
 
             it('soll die Env resolven', function () {
-                var promise = resolve('env').forStateAndView('spi.kontakt');
+                var promise = resolve('env').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal('testing');
             });

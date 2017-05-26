@@ -5,11 +5,12 @@
 
     describe('Template: Verwaltung Allgemein', function () {
         var URL = '/allgemein';
-        var STATE_NAME = 'spi.verwaltung.allgemein';
+        var STATE_NAME = 'spi.shared.verwaltung.allgemein';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.verwaltung', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
+            $stateProvider.state('spi.shared.verwaltung', {abstract: true});
         }, 'spi.templates.verwaltung.allgemein.ui'));
         beforeEach(module('htmlModule'));
 

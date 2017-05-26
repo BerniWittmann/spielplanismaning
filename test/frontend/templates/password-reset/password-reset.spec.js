@@ -5,10 +5,11 @@
 
     describe('Template: Password Reset', function () {
         var URL = '/reset-password';
-        var STATE_NAME = 'spi.password-reset';
+        var STATE_NAME = 'spi.shared.password-reset';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
         }, 'spi.templates.password-reset.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
@@ -106,7 +107,7 @@
 
         describe('Resolves', function () {
             it('soll den Token resolven', function () {
-                var promise = resolve('isValidToken').forStateAndView('spi.password-reset');
+                var promise = resolve('isValidToken').forStateAndView(STATE_NAME);
                 expect(promise).to.be.false;
             });
 

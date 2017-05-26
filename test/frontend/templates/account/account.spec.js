@@ -5,7 +5,7 @@
 
     describe('Template: Account', function () {
         var URL = '/account';
-        var STATE_NAME = 'spi.account';
+        var STATE_NAME = 'spi.shared.account';
 
         var user = {
             _id: '1234',
@@ -31,6 +31,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
         }, 'spi.templates.account.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
@@ -115,7 +116,7 @@
 
         describe('Resolves', function () {
             it('soll die User-Details resolven', function () {
-                var promise = resolve('userDetails').forStateAndView('spi.account');
+                var promise = resolve('userDetails').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(user);
             });

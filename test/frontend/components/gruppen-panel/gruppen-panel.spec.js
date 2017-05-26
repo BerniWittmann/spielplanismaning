@@ -76,9 +76,9 @@
         it('die Teams sollen einen Link auf die entsprechende Team-Seite haben', function () {
             var result = element.find('tbody').children();
 
-            expect(angular.element(result[0]).html()).to.contain('data-ui-sref="spi.tgj.team({teamid: team.slug || team._id})"');
-            expect(angular.element(result[1]).html()).to.contain('data-ui-sref="spi.tgj.team({teamid: team.slug || team._id})"');
-            expect(angular.element(result[2]).html()).to.contain('data-ui-sref="spi.tgj.team({teamid: team.slug || team._id})"');
+            expect(angular.element(result[0]).html()).to.contain('data-ui-sref="spi.event.tgj.team({teamid: team.slug || team._id})"');
+            expect(angular.element(result[1]).html()).to.contain('data-ui-sref="spi.event.tgj.team({teamid: team.slug || team._id})"');
+            expect(angular.element(result[2]).html()).to.contain('data-ui-sref="spi.event.tgj.team({teamid: team.slug || team._id})"');
         });
     });
 }());

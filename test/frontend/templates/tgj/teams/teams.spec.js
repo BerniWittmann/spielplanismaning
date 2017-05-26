@@ -5,7 +5,7 @@
 
     describe('Template: Teams', function () {
         var URL = '/teams';
-        var STATE_NAME = 'spi.tgj.teams';
+        var STATE_NAME = 'spi.event.tgj.teams';
 
         var teams = [{
             _id: '1',
@@ -70,12 +70,14 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.tgj', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.tgj', {abstract: true});
         }, 'spi.templates.tgj.teams.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
         beforeEach(module(function ($provide) {
             $provide.value('team', mockTeam);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -136,7 +138,7 @@
 
         describe('Resolves', function () {
             it('soll die Teams resolven', function () {
-                var promise = resolve('teams').forStateAndView('spi.tgj.teams');
+                var promise = resolve('teams').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(teams);
             });

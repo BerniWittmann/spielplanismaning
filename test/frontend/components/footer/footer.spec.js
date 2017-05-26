@@ -37,14 +37,14 @@
             var link = undefined;
             _.forEach(element.find('a'), function (a) {
                 a = angular.element(a);
-                if (_.isEqual(a.attr('data-ui-sref'), 'spi.kontakt')) {
+                if (_.isEqual(a.attr('data-ui-sref'), 'spi.shared.kontakt')) {
                     link = a;
                 }
             });
 
             expect(link).not.to.be.undefined;
             expect(link).to.exist;
-            expect(link.attr('data-ui-sref')).to.be.equal('spi.kontakt');
+            expect(link.attr('data-ui-sref')).to.be.equal('spi.shared.kontakt');
         });
 
         describe('Auf der Testumgebung', function () {

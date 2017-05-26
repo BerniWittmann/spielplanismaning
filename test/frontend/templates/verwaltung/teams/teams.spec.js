@@ -6,7 +6,7 @@
     describe('Template: Verwaltung Teams', function () {
         beforeEach(module('spi.constants'));
         var URL = '/teams';
-        var STATE_NAME = 'spi.verwaltung.teams';
+        var STATE_NAME = 'spi.event.verwaltung.teams';
 
         var mockErrorHandler = {
             handleResponseError: function () {}
@@ -19,9 +19,17 @@
             });
         });
 
-        beforeEach(module('ui.router', function ($stateProvider) {
+        beforeEach(module('ui.router', function ($stateProvider, $injector) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.verwaltung', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.verwaltung', {
+                abstract: true,
+                resolve: {
+                    aktivesEvent: function () {
+                        return $injector.get('$q').resolve({});
+                    }
+                }
+            });
         }, 'spi.templates.verwaltung.teams.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
@@ -29,6 +37,7 @@
         beforeEach(module(function ($provide) {
             $provide.value('jugend', mockJugend);
             $provide.value('team', mockTeams);
+            $provide.value('aktivesEvent', {});
         }));
 
         var jugenden = [{
@@ -79,7 +88,10 @@
 
         function resolve(value) {
             return {forStateAndView: function (state, view) {
+                console.log(state);
+                console.log(view);
                 var viewDefinition = view ? $state.get(state).views[view] : $state.get(state);
+                console.log(viewDefinition);
                 var res = viewDefinition.resolve[value];
                 $rootScope.$digest();
                 return injector.invoke(res);
@@ -190,13 +202,13 @@
 
         describe('Resolves', function () {
             it('soll die Jugenden resolven', function () {
-                var promise = resolve('jugenden').forStateAndView('spi.verwaltung.teams');
+                var promise = resolve('jugenden').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(jugenden);
             });
 
             it('soll die Teams resolven', function () {
-                var promise = resolve('teams').forStateAndView('spi.verwaltung.teams');
+                var promise = resolve('teams').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(teams);
             });

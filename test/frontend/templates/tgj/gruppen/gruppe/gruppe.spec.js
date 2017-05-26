@@ -5,7 +5,7 @@
 
     describe('Template: Gruppe', function () {
         var URL = '/gruppen/';
-        var STATE_NAME = 'spi.tgj.gruppe';
+        var STATE_NAME = 'spi.event.tgj.gruppe';
 
         var gruppe = {
             _id: '1',
@@ -72,7 +72,8 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.tgj', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.tgj', {abstract: true});
         }, 'spi.templates.tgj.gruppe.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
@@ -80,6 +81,7 @@
             $provide.value('gruppe', mockGruppe);
             $provide.value('aktiveGruppe', gruppe);
             $provide.value('team', mockTeam);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -157,13 +159,13 @@
 
         describe('Resolves', function () {
             it('soll die Gruppe resolven', function () {
-                var promise = resolve('aktiveGruppe').forStateAndView('spi.tgj.gruppe');
+                var promise = resolve('aktiveGruppe').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(gruppe);
             });
 
             it('soll die Spiele der Gruppe resolven', function () {
-                var promise = resolve('spiele').forStateAndView('spi.tgj.gruppe');
+                var promise = resolve('spiele').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiele);
             });

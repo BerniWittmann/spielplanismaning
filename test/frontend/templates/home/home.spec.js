@@ -5,7 +5,7 @@
 
     describe('Template: Home', function () {
         var URL = '/home';
-        var STATE_NAME = 'spi.home';
+        var STATE_NAME = 'spi.event.home';
 
         var spiele = [{
             _id: '1',
@@ -58,12 +58,14 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
         }, 'spi.templates.home.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
             $provide.value('Logger', {});
             $provide.value('veranstaltung', mockVeranstaltungen);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -127,7 +129,7 @@
 
         describe('Resolves', function () {
             it('soll Spiele resolven', function () {
-                var promise = resolve('spiele').forStateAndView('spi.home');
+                var promise = resolve('spiele').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiele);
             });
