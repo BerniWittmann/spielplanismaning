@@ -28,28 +28,36 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse ErrorBadRequest
      **/
     router.post('/', function (req, res) {
-        Subscriber.find().exec(function (err, subs) {
-            if (err) {
-                return messages.Error(res, err);
-            }
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            Subscriber.find().exec(function (err, subs) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
 
-            let emails = [];
-            subs.forEach(function (sub) {
-                emails.push(sub.email);
-            });
+                let emails = [];
+                subs.forEach(function (sub) {
+                    emails.push(sub.email);
+                });
 
-            function onlyUnique(value, index, self) {
-                return self.indexOf(value) === index;
-            }
+                function onlyUnique(value, index, self) {
+                    return self.indexOf(value) === index;
+                }
 
-            emails = emails.filter(onlyUnique);
+                emails = emails.filter(onlyUnique);
 
-            logger.verbose('Found %d E-Mail-Addresses', emails.length);
-            logger.verbose('Sending E-Mail', {subject: req.body.subject, text: req.body.text});
+                logger.verbose('Found %d E-Mail-Addresses', emails.length);
+                logger.verbose('Sending E-Mail', {subject: req.body.subject, text: req.body.text});
 
-            //noinspection JSUnresolvedFunction
-            MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err) {
-                return handler.handleErrorAndSuccess(err, res);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    //noinspection JSUnresolvedFunction
+                    MailGenerator.sendDefaultMail(emails, req.body.subject, req.body.text, function (err) {
+                        return handler.handleErrorAndSuccess(err, res);
+                    });
+                });
             });
         });
     });
@@ -179,8 +187,13 @@ module.exports = function (sendgrid, env, url, disableEmails) {
      * @apiUse ErrorBadRequest
      **/
     router.post('/bug', function (req, res) {
-        MailGenerator.bugReportMail(req.body, function (err) {
-            return handler.handleErrorAndSuccess(err, res);
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            MailGenerator.bugReportMail(req.body, function (err) {
+                return handler.handleErrorAndSuccess(err, res);
+            });
         });
     });
 

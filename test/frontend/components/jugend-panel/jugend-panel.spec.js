@@ -162,8 +162,8 @@
         it('die Gruppen sollen einen Link auf die entsprechende Gruppen-Seite haben', function () {
             var result = element.find('tbody').children();
 
-            expect(angular.element(result[0]).find('a').parent().html()).to.contain('data-ui-sref="spi.tgj.gruppe({gruppeid: gruppe._id})"');
-            expect(angular.element(result[1]).find('a').parent().html()).to.contain('data-ui-sref="spi.tgj.gruppe({gruppeid: gruppe._id})"');
+            expect(angular.element(result[0]).find('a').parent().html()).to.contain('data-ui-sref="spi.event.tgj.gruppe({gruppeid: gruppe.slug || gruppe._id})"');
+            expect(angular.element(result[1]).find('a').parent().html()).to.contain('data-ui-sref="spi.event.tgj.gruppe({gruppeid: gruppe.slug || gruppe._id})"');
             expect(angular.element(result[0]).find('a').parent().scope().gruppe._id).to.be.equal(1234);
             expect(angular.element(result[1]).find('a').parent().scope().gruppe._id).to.be.equal(1235);
         });

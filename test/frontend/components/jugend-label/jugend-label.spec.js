@@ -75,7 +75,7 @@
         it('soll einen Link zur Jugendseite haben', function () {
             var result = element.find('a');
 
-            expect(result.attr('data-ui-sref')).to.contain('spi.tgj.jugend');
+            expect(result.attr('data-ui-sref')).to.contain('spi.event.tgj.jugend');
         });
     });
 }());

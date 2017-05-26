@@ -5,16 +5,18 @@
 
     describe('Template: Verwaltung Spielplan', function () {
         var URL = '/spielplan';
-        var STATE_NAME = 'spi.verwaltung.spielplan';
+        var STATE_NAME = 'spi.event.verwaltung.spielplan';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.verwaltung', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.verwaltung', {abstract: true});
         }, 'spi.templates.verwaltung.spielplan.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spielplan', mockSpielplan);
             $provide.value('spiel', mockSpiel);
+            $provide.value('aktivesEvent', {});
         }));
 
         var mockSpielplan = {
@@ -124,7 +126,7 @@
 
         describe('Resolves', function () {
             it('soll die Zeiten resolven', function () {
-                var promise = resolve('zeiten').forStateAndView('spi.verwaltung.spielplan');
+                var promise = resolve('zeiten').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(mockSpielplan.zeiten);
             });

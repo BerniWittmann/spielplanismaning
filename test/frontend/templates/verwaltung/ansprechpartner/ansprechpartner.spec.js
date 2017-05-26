@@ -5,11 +5,12 @@
 
     describe('Template: Verwaltung Ansprechpartner', function () {
         var URL = '/ansprechpartner';
-        var STATE_NAME = 'spi.verwaltung.ansprechpartner';
+        var STATE_NAME = 'spi.shared.verwaltung.ansprechpartner';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.verwaltung', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
+            $stateProvider.state('spi.shared.verwaltung', {abstract: true});
         }, 'spi.templates.verwaltung.ansprechpartner.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
@@ -98,7 +99,7 @@
 
         describe('Resolves', function () {
             it('soll die Ansprechpartner resolven', function () {
-                var promise = resolve('kontakte').forStateAndView('spi.verwaltung.ansprechpartner');
+                var promise = resolve('kontakte').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(ansprechpartner);
             });

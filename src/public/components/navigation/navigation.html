@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" data-ui-sref="spi.veranstaltungen">
+            <a class="navbar-brand" data-ui-sref="spi.shared.veranstaltungen">
 				<span class="pull-left brand-image">
 				<!--suppress HtmlUnknownTarget -->
                     <img class="brand-image-normal" alt="" src="/assets/img/hoelle_sued_beach_logo_klein.png" width="32px"
@@ -20,66 +20,66 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="spi-navbar" data-ng-if="vm.eventChosen">
-            <ul class="nav navbar-nav">
-                <li data-ng-class="{active: vm.isAktiv('spi.home')}" id="nav-button-home"><a data-ui-sref="spi.home"
+        <div class="collapse navbar-collapse" id="spi-navbar">
+            <ul class="nav navbar-nav" data-ng-if="vm.eventChosen">
+                <li data-ng-class="{active: vm.isAktiv('spi.event.home')}" id="nav-button-home"><a data-ui-sref="spi.event.home"
                                                                                              data-toggle="collapse"
                                                                                              data-target=".navbar-collapse.in"><i
                         class="fa fa-home"></i><span class="hidden-sm"> Home</span></a></li>
-                <li data-ng-class="{active: vm.isAktiv('spi.spielplan')}" id="nav-button-spielplan"><a
-                        data-ui-sref="spi.spielplan"
+                <li data-ng-class="{active: vm.isAktiv('spi.event.spielplan')}" id="nav-button-spielplan"><a
+                        data-ui-sref="spi.event.spielplan"
                         data-toggle="collapse"
                         data-target=".navbar-collapse.in"><i
                         class="fa fa-calendar-o"></i><span class="hidden-sm"> Spielplan</span></a></li>
-                <li data-ng-class="{active: vm.isAktiv('spi.tgj')}" class="dropdown" id="nav-button-tgj">
+                <li data-ng-class="{active: vm.isAktiv('spi.event.tgj')}" class="dropdown" id="nav-button-tgj">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><i class="fa fa-users"></i><span class="hidden-sm"> Teams, Gruppen & Turniere</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
-                        <li id="nav-button-tgj-teams"><a data-ui-sref="spi.tgj.teams" data-toggle="collapse"
+                        <li id="nav-button-tgj-teams"><a data-ui-sref="spi.event.tgj.teams" data-toggle="collapse"
                                                          data-target=".navbar-collapse.in">Teams</a>
                         </li>
-                        <li id="nav-button-tgj-gruppen"><a data-ui-sref="spi.tgj.gruppen" data-toggle="collapse"
+                        <li id="nav-button-tgj-gruppen"><a data-ui-sref="spi.event.tgj.gruppen" data-toggle="collapse"
                                                            data-target=".navbar-collapse.in">Gruppen</a>
                         </li>
-                        <li id="nav-button-tgj-jugenden"><a data-ui-sref="spi.tgj.jugenden" data-toggle="collapse"
+                        <li id="nav-button-tgj-jugenden"><a data-ui-sref="spi.event.tgj.jugenden" data-toggle="collapse"
                                                             data-target=".navbar-collapse.in">Turniere</a>
                         </li>
                     </ul>
                 </li>
-                <li data-ng-class="{active: vm.isAktiv('spi.tabellen')}" id="nav-button-tabellen"><a
-                        data-ui-sref="spi.tabellen"
+                <li data-ng-class="{active: vm.isAktiv('spi.event.tabellen')}" id="nav-button-tabellen"><a
+                        data-ui-sref="spi.event.tabellen"
                         data-toggle="collapse"
                         data-target=".navbar-collapse.in"><i
                         class="fa fa-table"></i><span class="hidden-sm"> Tabellen</span></a></li>
-                <li data-ng-class="{active: vm.isAktiv('spi.verwaltung')}" data-ng-if="vm.isLoggedIn()"
+                <li data-ng-class="{active: vm.isAktiv('spi.event.verwaltung')}" data-ng-if="vm.isLoggedIn()"
                     class="dropdown" id="nav-button-verwaltung">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><i class="fa fa-cogs"></i><span class="hidden-sm"> Verwaltung</span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-spi">
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-teams"><a
-                                data-ui-sref="spi.verwaltung.teams" data-toggle="collapse"
+                                data-ui-sref="spi.event.verwaltung.teams" data-toggle="collapse"
                                 data-target=".navbar-collapse.in">Teams, Gruppen & Turniere</a></li>
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-spielplan"><a
-                                data-ui-sref="spi.verwaltung.spielplan" data-toggle="collapse"
+                                data-ui-sref="spi.event.verwaltung.spielplan" data-toggle="collapse"
                                 data-target=".navbar-collapse.in">Spielplan</a></li>
                         <li data-ng-if="vm.isBearbeiterOrAdmin()" id="nav-button-verwaltung-spieledruck"><a
-                                data-ui-sref="spi.verwaltung.spiele-druck"
+                                data-ui-sref="spi.event.verwaltung.spiele-druck"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Spiele Drucken</a></li>
                         <li data-ng-if="vm.isAdmin()" id="nav-button-verwaltung-emails"><a
-                                data-ui-sref="spi.verwaltung.email-abonnements"
+                                data-ui-sref="spi.event.verwaltung.email-abonnements"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Email Abonnements</a></li>
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li data-ng-if="vm.isLoggedIn()" id="nav-button-user">
-                    <a data-ui-sref="spi.account" class="navbar-text"><span class="hidden-lg hidden-md padding-left-15"></span><i
+                    <a data-ui-sref="spi.shared.account" class="navbar-text"><span class="hidden-lg hidden-md padding-left-15"></span><i
                             class="fa fa-user"></i> <span class="hidden-sm hidden-md"
                                                           data-ng-bind="vm.currentUser()"></span></a>
                 </li>
-                <li data-ng-if="!vm.isLoggedIn()" id="nav-button-login"><a data-ui-sref="spi.login"
+                <li data-ng-if="!vm.isLoggedIn()" id="nav-button-login"><a data-ui-sref="spi.shared.login"
                                                                            data-toggle="collapse"
                                                                            data-target=".navbar-collapse.in">Login</a>
                 </li>

@@ -5,7 +5,7 @@
 
     describe('Template: Tabellen', function () {
         var URL = '/tabellen';
-        var STATE_NAME = 'spi.tabellen';
+        var STATE_NAME = 'spi.event.tabellen';
 
         var jugenden = [{
             _id: '1',
@@ -107,10 +107,12 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
         }, 'spi.templates.tabellen.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('jugend', mockJugend);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -180,13 +182,13 @@
 
         describe('Resolves', function () {
             it('soll die Jugenden resolven', function () {
-                var promise = resolve('jugenden').forStateAndView('spi.tabellen');
+                var promise = resolve('jugenden').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(jugenden);
             });
 
             it('soll die Tore der Jugenden resolven', function () {
-                var promise = resolve('jugendTore').forStateAndView('spi.tabellen');
+                var promise = resolve('jugendTore').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(18);
             });

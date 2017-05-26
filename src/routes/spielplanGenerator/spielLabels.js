@@ -3,5 +3,5 @@ module.exports = {
     FINALE: 'Finale',
     HALBFINALE: 'Halbfinale',
     ZWISCHENRUNDENSPIEL: 'Zwischenrunde',
-    NORMAL: 'normal'
+    NORMAL: 'Spiel'
 };

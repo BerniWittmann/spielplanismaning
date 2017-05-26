@@ -12,6 +12,8 @@
             function loadTeams() {
                 team.getAll().then(function (res) {
                     teams = res;
+                }).catch(function (err) {
+                    console.warn(err);
                 });
             }
             loadTeams();
@@ -34,6 +36,10 @@
 
             spiel.get = function (id) {
                 return getByParam('id', id);
+            };
+
+            spiel.getBySlugOrID = function (identifier) {
+                return getByParam('identifier', identifier);
             };
 
             spiel.getByGruppe = function (gruppenid) {
@@ -97,7 +103,7 @@
             };
 
             spiel.getGruppeDisplay = function (game) {
-                if (game.label && game.label !== 'Zwischenrunde' && game.label !== 'normal') {
+                if (game.label && game.label !== 'Zwischenrunde' && game.label !== 'Spiel') {
                     return game.label;
                 } else if (game.gruppe) {
                     return game.gruppe.name

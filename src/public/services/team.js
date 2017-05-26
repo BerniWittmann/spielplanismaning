@@ -19,6 +19,10 @@
                 return routes.requestGETID(routes.urls.team.base(), id);
             };
 
+            team.getBySlugOrID = function (identifier) {
+                return routes.requestGETSlugOrID(routes.urls.team.base(), identifier);
+            };
+
             team.getByGruppe = function (gruppenid) {
                 return routes.requestGETBaseParam('team', {gruppe: gruppenid});
             };

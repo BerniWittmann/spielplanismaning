@@ -45,6 +45,20 @@ function getEntityQuery(model, req) {
         logger.silly('Query by Date');
         const day = moment(req.query.date, 'YYYY-MM-DD');
         query = model.find({datum: day.format('DD.MM.YYYY')});
+    } else if (req.query.slug) {
+        logger.silly('Query by Slug');
+        searchById = true;
+        query = model.findOne({slug: req.query.slug});
+    } else if (req.query.identifier) {
+        logger.silly('Query by Slug Or ID');
+        searchById = true;
+        let id;
+        try {
+            id = mongoose.Types.ObjectId(req.query.identifier);
+        } catch(err) {
+            id = mongoose.Types.ObjectId();
+        }
+        query = model.findOne({$or: [{slug: req.query.identifier}, {_id: id}]});
     }
     return {
         query: query,
@@ -194,28 +208,41 @@ function verifyToken(req, secret) {
 }
 
 function saveUserAndSendMail(user, res, mail) {
-    return user.save(function (err) {
-        if (err) {
-            if (err.code === 11000) {
-                logger.warn('User %s already exists', user.username);
-                return messages.ErrorUserExistiertBereits(res, user.username);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        return user.save(function (err) {
+            if (err) {
+                if (err.code === 11000) {
+                    logger.warn('User %s already exists', user.username);
+                    return messages.ErrorUserExistiertBereits(res, user.username);
+                }
+                return messages.Error(res, err);
             }
-            return messages.Error(res, err);
-        }
 
-        logger.verbose('Sending Mail');
-        return mail(user, function (err) {
-            return handler.handleErrorAndSuccess(err, res);
+            logger.verbose('Sending Mail');
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return mail(user, function (err) {
+                    return handler.handleErrorAndSuccess(err, res);
+                });
+            });
         });
-
     });
 }
 
 function addEntity(model, req, res) {
-    const entity = new model(req.body);
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+        const entity = new model(req.body);
 
-    entity.save(function (err, entity) {
-        return handler.handleErrorAndResponse(err, res, entity);
+        entity.veranstaltung = beachEventID;
+        entity.save(function (err, entity) {
+            return handler.handleErrorAndResponse(err, res, entity);
+        });
     });
 }
 

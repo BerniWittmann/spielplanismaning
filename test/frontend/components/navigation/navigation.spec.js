@@ -81,14 +81,14 @@
             var result = element.find('#nav-button-home');
             expect(result).to.exist;
             expect(result.text()).to.include('Home');
-            expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.home');
+            expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.home');
         });
 
         it('soll den Menüpunkt Spielplan anzeigen', function () {
             var result = element.find('#nav-button-spielplan');
             expect(result).to.exist;
             expect(result.text()).to.include('Spielplan');
-            expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.spielplan');
+            expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.spielplan');
         });
 
         it('soll den Menüpunkt Teams, Gruppen, Jugenden anzeigen', function () {
@@ -102,21 +102,21 @@
                 var result = element.find('#nav-button-tgj-teams');
                 expect(result).to.exist;
                 expect(result.text()).to.include('Teams');
-                expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.tgj.teams');
+                expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.tgj.teams');
             });
 
             it('soll den Link Gruppen anzeigen', function () {
                 var result = element.find('#nav-button-tgj-gruppen');
                 expect(result).to.exist;
                 expect(result.text()).to.include('Gruppen');
-                expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.tgj.gruppen');
+                expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.tgj.gruppen');
             });
 
             it('soll den Link Jugenden anzeigen', function () {
                 var result = element.find('#nav-button-tgj-jugenden');
                 expect(result).to.exist;
                 expect(result.text()).to.include('Turniere');
-                expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.tgj.jugenden');
+                expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.tgj.jugenden');
             });
         });
 
@@ -124,7 +124,7 @@
             var result = element.find('#nav-button-tabellen');
             expect(result).to.exist;
             expect(result.text()).to.include('Tabelle');
-            expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.tabellen');
+            expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.tabellen');
         });
 
         describe('Der Nutzer ist nicht eingeloggt', function () {
@@ -162,21 +162,21 @@
                     var result = element.find('#nav-button-verwaltung-teams');
                     expect(result).to.exist;
                     expect(result.text()).to.include('Teams, Gruppen & Turniere');
-                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.verwaltung.teams');
+                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.verwaltung.teams');
                 });
 
                 it('soll den Link Spiele-Druck anzeigen', function () {
                     var result = element.find('#nav-button-verwaltung-spieledruck');
                     expect(result).to.exist;
                     expect(result.text()).to.include('Spiele Drucken');
-                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.verwaltung.spiele-druck');
+                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.verwaltung.spiele-druck');
                 });
 
                 it('soll den Link Email-Abonnements anzeigen', function () {
                     var result = element.find('#nav-button-verwaltung-emails');
                     expect(result).to.exist;
                     expect(result.text()).to.include('Email Abonnements');
-                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.verwaltung.email-abonnements');
+                    expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.verwaltung.email-abonnements');
                 });
             });
 

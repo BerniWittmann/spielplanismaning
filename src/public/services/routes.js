@@ -3,7 +3,7 @@
 
     angular
         .module('spi.routes', ['spi.errorHandler', 'spi.constants'])
-        .factory('routes', ['$http', 'errorHandler', 'ENDPOINT_BASE', function ($http, errorHandler, ENDPOINT_BASE) {
+        .factory('routes', ['$http', 'errorHandler', 'ENDPOINT_BASE', '$q', function ($http, errorHandler, ENDPOINT_BASE, $q) {
             const methods = {
                 GET: 'GET',
                 POST: 'POST',
@@ -194,6 +194,10 @@
                 return requestMethodParams('GET', urls[base].base(), param);
             }
 
+            function requestGETSlugOrID(url, identifier) {
+                return requestMethodParams('GET', url, {identifier: identifier});
+            }
+
             return {
                 methods: methods,
                 requestMethod: requestMethod,
@@ -208,6 +212,7 @@
                 requestPOST: requestPOST,
                 requestGETBaseParam: requestGETBaseParam,
                 requestGETBase: requestGETBase,
+                requestGETSlugOrID: requestGETSlugOrID,
                 urls: urls
             };
         }]);

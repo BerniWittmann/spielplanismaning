@@ -1,0 +1,34 @@
+<div class="row">
+    <div class=" col-md-12 page-header">
+        <h3>
+            <spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
+        </h3>
+    </div>
+</div>
+
+<spi-loader loading="loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-12">
+        <h4>Spiele</h4>
+        <spi-spiele-tabelle data-spiele="vm.spiele"></spi-spiele-tabelle>
+    </div>
+</div>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-12">
+        <h4>Gruppen</h4>
+        <div class="col-md-6" data-ng-repeat="gruppe in vm.gruppen">
+            <spi-panel data-ng-if="gruppe._id">
+                <spi-panel-titel><a data-ui-sref="spi.event.tgj.gruppe({gruppeid: gruppe.slug || gruppe._id})">{{gruppe.name}}</a>
+                    <spi-jugend-label jugend="vm.jugend"></spi-jugend-label>
+                </spi-panel-titel>
+                <div class="row">
+                    <div class="col-md-12">
+                        <spi-tabelle data-teams="gruppe.teamTabelle" data-key="vm.getGruppeKey(gruppe)"></spi-tabelle>
+                    </div>
+                </div>
+            </spi-panel>
+        </div>
+    </div>
+</div>

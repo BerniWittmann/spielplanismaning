@@ -5,7 +5,7 @@
 
     describe('Template: Login', function () {
         var URL = '/login';
-        var STATE_NAME = 'spi.login';
+        var STATE_NAME = 'spi.shared.login';
 
         var mockAuth;
         var mockState = {
@@ -32,6 +32,7 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
         }, 'spi.templates.login.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
@@ -113,7 +114,7 @@
 
         describe('Resolves', function () {
             it('soll den Lockdownmode resolven', function () {
-                var promise = resolve('lockdown').forStateAndView('spi.login');
+                var promise = resolve('lockdown').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.equal(true);
             });

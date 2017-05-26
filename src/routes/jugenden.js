@@ -84,7 +84,7 @@ module.exports = function () {
         return clsSession.run(function () {
             clsSession.set('beachEventID', beachEventID);
             const jugend = new Jugend(req.body);
-
+            jugend.veranstaltung = beachEventID;
             jugend.save(function (err, jugend) {
                 if (err) {
                     return messages.Error(res, err);
@@ -94,7 +94,8 @@ module.exports = function () {
                     clsSession.set('beachEventID', beachEventID);
                     const gruppe = new Gruppe({
                         name: "Gruppe A",
-                        jugend: jugend._id
+                        jugend: jugend._id,
+                        veranstaltung: beachEventID
                     });
 
                     gruppe.save(function (err, gruppe) {

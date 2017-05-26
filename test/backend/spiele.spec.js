@@ -172,7 +172,9 @@ describe('Route: Spiele', function () {
     it('soll ein Spiel speichern können', function (done) {
         var spiel = {
             jugend: jugendid,
-            gruppe: gruppenid
+            gruppe: gruppenid,
+            nummer: 99,
+            label: 'Spiel'
         };
         request(server)
             .post('/api/spiele')

@@ -5,17 +5,19 @@
 
     describe('Template: Verwaltung Email-Abonnements', function () {
         var URL = '/email-abonnements';
-        var STATE_NAME = 'spi.verwaltung.email-abonnements';
+        var STATE_NAME = 'spi.event.verwaltung.email-abonnements';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.verwaltung', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.verwaltung', {abstract: true});
         }, 'spi.templates.verwaltung.email-abonnements.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('ngTable'));
         var form = {$valid: true, $setUntouched: function () {}};
         beforeEach(module(function ($provide) {
             $provide.value('email', mockEmail);
+            $provide.value('aktivesEvent', {});
         }));
 
         var abonnements = [{
@@ -136,7 +138,7 @@
 
         describe('Resolves', function () {
             it('soll die Abonnenten resolven', function () {
-                var promise = resolve('subscribers').forStateAndView('spi.verwaltung.email-abonnements');
+                var promise = resolve('subscribers').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(abonnements);
             });

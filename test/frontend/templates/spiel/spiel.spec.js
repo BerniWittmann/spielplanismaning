@@ -5,7 +5,7 @@
 
     describe('Template: Spiel', function () {
         var URL = '/spiel';
-        var STATE_NAME = 'spi.spiel';
+        var STATE_NAME = 'spi.event.spiel';
 
         var spiel = {
             _id: '1',
@@ -69,11 +69,13 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
         }, 'spi.templates.spiel.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiel);
             $provide.value('Logger', {});
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -99,6 +101,11 @@
                 },
                 getTeamDisplay: function (spiel, letter) {
                     return spiel['team' + letter].name;
+                },
+                getBySlugOrID: function () {
+                    var deferred = $q.defer();
+                    deferred.resolve(spiel);
+                    return deferred.promise;
                 }
             };
 
@@ -146,7 +153,7 @@
 
         describe('Resolves', function () {
             it('soll das Spiel resolven', function () {
-                var promise = resolve('aktivesSpiel').forStateAndView('spi.spiel');
+                var promise = resolve('aktivesSpiel').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiel);
             });
@@ -174,7 +181,7 @@
 
             element.find('#spiel-teamA').triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.tgj.team', {teamid: 't1'});
+            expect(spy).to.have.been.called.with('spi.event.tgj.team', {teamid: 't1'});
         });
 
         it('soll das Team B laden', function () {
@@ -188,7 +195,7 @@
 
             element.find('#spiel-teamB').triggerHandler('click');
 
-            expect(spy).to.have.been.called.with('spi.tgj.team', {teamid: 't2'});
+            expect(spy).to.have.been.called.with('spi.event.tgj.team', {teamid: 't2'});
         });
 
         it('soll den Spielstand anzeigen', function () {

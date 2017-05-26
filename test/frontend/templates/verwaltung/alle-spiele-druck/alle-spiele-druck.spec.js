@@ -5,7 +5,7 @@
 
     describe('Template: Verwaltung Alle Spiele Druck', function () {
         var URL = '/spiele-druck';
-        var STATE_NAME = 'spi.verwaltung.spiele-druck';
+        var STATE_NAME = 'spi.event.verwaltung.spiele-druck';
 
         var spiele = [{
             _id:'s1',
@@ -79,11 +79,13 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.verwaltung', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.verwaltung', {abstract: true});
         }, 'spi.templates.verwaltung.spiele-druck.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module(function ($provide) {
             $provide.value('spiel', mockSpiele);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -152,7 +154,7 @@
 
         describe('Resolves', function () {
             it('soll die Spiele resolven', function () {
-                var promise = resolve('spiele').forStateAndView('spi.verwaltung.spiele-druck');
+                var promise = resolve('spiele').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(spiele);
             });

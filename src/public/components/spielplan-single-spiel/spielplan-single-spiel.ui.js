@@ -60,8 +60,8 @@
             edit: function () {
                 if (vm.canEdit) {
                     if (vm.isComplexMode) {
-                        return $state.go('spi.spiel', {
-                            spielid: $scope.spiSingleSpiel._id,
+                        return $state.go('spi.event.spiel', {
+                            spielid: $scope.spiSingleSpiel.slug || $scope.spiSingleSpiel._id,
                             edit: true
                         });
                     }
@@ -94,32 +94,32 @@
             },
             gotoTeam: function (team, $event) {
                 if (team && team.name) {
-                    gotoState('spi.tgj.team', {
-                        teamid: team._id
+                    gotoState('spi.event.tgj.team', {
+                        teamid: team.slug || team._id
                     }, $event);
                 }
             },
             gotoGruppe: function (gruppe, $event) {
                 if (gruppe) {
-                    gotoState('spi.tgj.gruppe', {
-                        gruppeid: gruppe._id
+                    gotoState('spi.event.tgj.gruppe', {
+                        gruppeid: gruppe.slug || gruppe._id
                     }, $event);
                 }
             },
             gotoJugend: function (jugend, $event) {
                 if (jugend) {
-                    gotoState('spi.tgj.jugend', {
-                        jugendid: jugend._id
+                    gotoState('spi.event.tgj.jugend', {
+                        jugendid: jugend.slug || jugend._id
                     }, $event);
                 }
             },
             gotoPlatz: function (platznummer) {
-                gotoState('spi.platz', {
+                gotoState('spi.event.platz', {
                     platznummer: platznummer
                 }, undefined);
             },
             gotoDate: function (date) {
-                gotoState('spi.datum', {
+                gotoState('spi.event.datum', {
                     datum: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
                 }, undefined)
             },

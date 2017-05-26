@@ -6,7 +6,7 @@
     describe('Template: Jugenden', function () {
         beforeEach(module('spi.constants'));
         var URL = '/turniere';
-        var STATE_NAME = 'spi.tgj.jugenden';
+        var STATE_NAME = 'spi.event.tgj.jugenden';
 
         var jugenden = [{
             _id: '1',
@@ -54,13 +54,15 @@
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
-            $stateProvider.state('spi.tgj', {abstract: true});
+            $stateProvider.state('spi.event', {abstract: true});
+            $stateProvider.state('spi.event.tgj', {abstract: true});
         }, 'spi.templates.tgj.jugenden.ui'));
         beforeEach(module('htmlModule'));
         beforeEach(module('spi.logger'));
         beforeEach(module('spi.components.bestaetigen-modal.ui'));
         beforeEach(module(function ($provide) {
             $provide.value('jugend', mockJugend);
+            $provide.value('aktivesEvent', {});
         }));
 
         function compileRouteTemplateWithController($injector, state) {
@@ -131,7 +133,7 @@
 
         describe('Resolves', function () {
             it('soll die Jugenden resolven', function () {
-                var promise = resolve('jugenden').forStateAndView('spi.tgj.jugenden');
+                var promise = resolve('jugenden').forStateAndView(STATE_NAME);
                 var res = promise.$$state.value;
                 expect(res).to.deep.equal(jugenden);
             });

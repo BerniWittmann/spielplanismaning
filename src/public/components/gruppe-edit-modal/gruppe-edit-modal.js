@@ -78,9 +78,9 @@
             }
         }
 
-        function gotoTeam(teamid) {
-            $state.go('spi.tgj.team', {
-                teamid: teamid
+        function gotoTeam(team) {
+            $state.go('spi.event.tgj.team', {
+                teamid: team.slug || team.id
             });
             $uibModalInstance.dismiss('cancel');
         }

@@ -114,7 +114,7 @@
         it('beim Klick auf das Team, soll man zur Team-Seite weitergeleitet werden', function () {
             var spy_stateGo = chai.spy.on(state, 'go');
 
-            controller.gotoTeam();
+            controller.gotoTeam({slug: 'team-a'});
 
             expect(spy_stateGo).to.have.been.called();
         });

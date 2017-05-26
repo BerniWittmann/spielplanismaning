@@ -5,10 +5,11 @@
 
     describe('Template: Password Forgot', function () {
         var URL = '/forgot-password';
-        var STATE_NAME = 'spi.password-forgot';
+        var STATE_NAME = 'spi.shared.password-forgot';
 
         beforeEach(module('ui.router', function ($stateProvider) {
             $stateProvider.state('spi', {abstract: true});
+            $stateProvider.state('spi.shared', {abstract: true});
         }, 'spi.templates.password-forgot.ui'));
         beforeEach(module('htmlModule'));
 
