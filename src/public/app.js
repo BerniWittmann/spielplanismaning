@@ -35,7 +35,7 @@
         .run(run);
 
     function states($urlRouterProvider, $stateProvider, $locationProvider) {
-        $urlRouterProvider.otherwise('/beachevents');
+        $urlRouterProvider.otherwise('/home');
 
         $stateProvider
             .state('spi', {

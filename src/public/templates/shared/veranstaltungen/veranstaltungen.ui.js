@@ -11,7 +11,7 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.shared.veranstaltungen', {
-                url: '/beachevents',
+                url: '/home',
                 templateUrl: 'templates/shared/veranstaltungen/veranstaltungen.html',
                 controller: VeranstaltungenController,
                 controllerAs: 'vm',
