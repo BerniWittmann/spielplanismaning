@@ -55,7 +55,7 @@ function getEntityQuery(model, req) {
         let id;
         try {
             id = mongoose.Types.ObjectId(req.query.identifier);
-        } catch(err) {
+        } catch (err) {
             id = mongoose.Types.ObjectId();
         }
         query = model.findOne({$or: [{slug: req.query.identifier}, {_id: id}]});
@@ -527,27 +527,34 @@ function fillSpielFromSpiel(spiel, cb) {
             }
             return clsSession.run(function () {
                 clsSession.set('beachEventID', beachEventID);
-                return Spiel.findOne({_id: mongoose.Types.ObjectId(from._id)}).populate('teamA teamB gewinner').exec(function (err, foundSpiel) {
+                return Spiel.findOne({_id: mongoose.Types.ObjectId(from._id)}, function(err, foundSpiel) {
                     if (err) return next(err);
 
-                    if (!foundSpiel || !foundSpiel.beendet) {
-                        return next();
-                    }
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        Spiel.populate(foundSpiel, 'teamA teamB gewinner', function (err, foundSpiel) {
+                            if (err) return next(err);
 
-                    if (spiel['rank' + letter] > 0) {
-                        calculatedTeams[letter] = foundSpiel.gewinner;
-                    } else {
-                        if (foundSpiel.teamA && foundSpiel.teamA._id &&
-                            foundSpiel.teamB && foundSpiel.teamB._id &&
-                            foundSpiel.gewinner && foundSpiel.gewinner._id) {
-                            if (foundSpiel.teamA._id.toString() === foundSpiel.gewinner._id.toString()) {
-                                calculatedTeams[letter] = foundSpiel.teamB;
-                            } else {
-                                calculatedTeams[letter] = foundSpiel.teamA;
+                            if (!foundSpiel || !foundSpiel.beendet) {
+                                return next();
                             }
-                        }
-                    }
-                    return next();
+
+                            if (spiel['rank' + letter] > 0) {
+                                calculatedTeams[letter] = foundSpiel.gewinner;
+                            } else {
+                                if (foundSpiel.teamA && foundSpiel.teamA._id &&
+                                    foundSpiel.teamB && foundSpiel.teamB._id &&
+                                    foundSpiel.gewinner && foundSpiel.gewinner._id) {
+                                    if (foundSpiel.teamA._id.toString() === foundSpiel.gewinner._id.toString()) {
+                                        calculatedTeams[letter] = foundSpiel.teamB;
+                                    } else {
+                                        calculatedTeams[letter] = foundSpiel.teamA;
+                                    }
+                                }
+                            }
+                            return next();
+                        });
+                    });
                 });
             });
         }, function (err) {
@@ -583,7 +590,15 @@ function fillSpielFromGruppe(spiel, cb) {
         return async.each(['A', 'B'], function (letter, next) {
             return clsSession.run(function () {
                 clsSession.set('beachEventID', beachEventID);
-                return Team.find({$or: [{gruppe: spiel['from' + letter]._id}, {zwischengruppe: spiel['from' + letter].id}]}).exec(function (err, teams) {
+                return Team.find({
+                    $or: [{
+                        gruppe: spiel['from' + letter]._id,
+                        veranstaltung: beachEventID
+                    }, {
+                        zwischengruppe: spiel['from' + letter].id,
+                        veranstaltung: beachEventID
+                    }]
+                }, function (err, teams) {
                     if (err) return next(err);
 
                     return clsSession.run(function () {
@@ -729,9 +744,15 @@ function fillSpiele(callback) {
                                         return clsSession.run(function () {
                                             clsSession.set('beachEventID', beachEventID);
                                             if (spiel.fromType === 'Spiel' && !spiel.beendet) {
-                                                return fillSpielFromSpiel(spiel, cb);
+                                                return clsSession.run(function () {
+                                                    clsSession.set('beachEventID', beachEventID);
+                                                    fillSpielFromSpiel(spiel, cb);
+                                                });
                                             } else if (spiel.fromType === 'Gruppe' && !spiel.beendet) {
-                                                return fillSpielFromGruppe(spiel, cb);
+                                                return clsSession.run(function () {
+                                                    clsSession.set('beachEventID', beachEventID);
+                                                    return fillSpielFromGruppe(spiel, cb);
+                                                });
                                             }
                                             return cb('Invalid fromType ' + spiel.fromType);
                                         });
