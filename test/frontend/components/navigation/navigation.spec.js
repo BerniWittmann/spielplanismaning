@@ -80,7 +80,7 @@
         it('soll den Menüpunkt Home anzeigen', function () {
             var result = element.find('#nav-button-home');
             expect(result).to.exist;
-            expect(result.text()).to.include('Home');
+            expect(result.text()).to.include('Aktuell');
             expect(result.find('a')).to.have.attr('data-ui-sref', 'spi.event.home');
         });
 

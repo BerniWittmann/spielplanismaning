@@ -4,7 +4,7 @@
     var expect = chai.expect;
 
     describe('Template: Home', function () {
-        var URL = '/home';
+        var URL = '/aktuell';
         var STATE_NAME = 'spi.event.home';
 
         var spiele = [{
