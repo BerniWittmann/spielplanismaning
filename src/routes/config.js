@@ -32,8 +32,8 @@ module.exports = function (env) {
                 env: env.NODE_ENV,
                 lockdown: env.LOCKDOWNMODE === 'true',
                 plaetze: env.PLAETZE,
-                spielmodus: data.SPIEL_MODE || undefined,
-                mannschaftslisten: data.MANNSCHAFTSLISTEN_PRINT || undefined
+                spielmodus: data.SPIEL_MODE,
+                mannschaftslisten: data.MANNSCHAFTSLISTEN_PRINT
             };
             logger.verbose('Summary', {config: config});
             return res.json(config);

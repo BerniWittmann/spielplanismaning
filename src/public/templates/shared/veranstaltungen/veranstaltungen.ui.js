@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.veranstaltungen.ui', [
-            'ui.router', 'spi.auth', 'spi.veranstaltungen'
+            'ui.router', 'spi.auth', 'spi.veranstaltungen', 'spi.config'
         ])
         .config(states)
         .controller('VeranstaltungenController', VeranstaltungenController);
@@ -23,7 +23,7 @@
             });
     }
 
-    function VeranstaltungenController(alleVeranstaltungen, auth, veranstaltungen, $state) {
+    function VeranstaltungenController(alleVeranstaltungen, auth, veranstaltungen, $state, config) {
         const vm = this;
         vm.loading = true;
 
@@ -36,6 +36,7 @@
 
         function gotoVeranstaltung(event) {
             veranstaltungen.setCurrentEvent(event);
+            config.getConfig();
             $state.go('spi.event.home');
         }
 
