@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const constants = require('../config/constants.js');
 const async = require('async');
 const URLSlugs = require('mongoose-url-slugs');
+const helper = require('./helper.js');
 
 const VeranstaltungenSchema = new Schema({
     name: String,
@@ -11,7 +12,7 @@ const VeranstaltungenSchema = new Schema({
     printMannschaftslisten: Boolean
 });
 
-VeranstaltungenSchema.plugin(URLSlugs('name'), {update: true});
+VeranstaltungenSchema.plugin(URLSlugs('name', {update: true}));
 
 VeranstaltungenSchema.methods.fill = function (cb) {
     return cb(null, this);

@@ -46,6 +46,11 @@
                 if ($rootScope.ravenEnabled) {
                     Raven.setExtraContext({currentEvent: event});
                 }
+                if (!event) {
+                    storage.remove(CURRENT_EVENT_TOKEN_NAME);
+                    config.getConfig();
+                    return;
+                }
                 storage.set(CURRENT_EVENT_TOKEN_NAME, JSON.stringify(event));
                 config.getConfig();
             };

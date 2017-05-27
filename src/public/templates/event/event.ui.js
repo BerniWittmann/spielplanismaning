@@ -37,6 +37,7 @@
         if (aktivesEvent) {
             veranstaltungen.setCurrentEvent(aktivesEvent);
         } else {
+            veranstaltungen.setCurrentEvent(undefined);
             $state.go('spi.shared.veranstaltungen');
         }
     }

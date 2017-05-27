@@ -48,17 +48,17 @@ function getEntityQuery(model, req) {
     } else if (req.query.slug) {
         logger.silly('Query by Slug');
         searchById = true;
-        query = model.findOne({slug: req.query.slug});
+        query = model.findOne({rawSlug: req.query.slug});
     } else if (req.query.identifier) {
         logger.silly('Query by Slug Or ID');
         searchById = true;
         let id;
         try {
             id = mongoose.Types.ObjectId(req.query.identifier);
+            query = model.findOne({_id: id});
         } catch (err) {
-            id = mongoose.Types.ObjectId();
+            query = model.findOne({slug: req.query.identifier});
         }
-        query = model.findOne({$or: [{slug: req.query.identifier}, {_id: id}]});
     }
     return {
         query: query,
@@ -116,6 +116,10 @@ function getEntity(model, population, notFoundMessage, res, req) {
         return query.exec(function (err, data) {
             if (err) {
                 return messages.Error(res, err);
+            }
+
+            if (!data) {
+                return messages.ErrorNotFound(res);
             }
 
             return clsSession.run(function () {

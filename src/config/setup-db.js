@@ -36,7 +36,7 @@ module.exports = function (sendgrid, env, url, disableEmails) {
             user.setRole('Admin');
             user.generateResetToken();
 
-            logger.log('Created default User: Username %s E-Mail: %s', username, email);
+            logger.info('Created default User: Username %s E-Mail: %s', user.username, user.email);
 
             return helpers.saveUserAndSendMail(user, {}, mailGenerator.passwordForgotMail);
         });

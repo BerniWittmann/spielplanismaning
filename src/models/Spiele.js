@@ -87,7 +87,7 @@ let SpielSchema = new mongoose.Schema({
     veranstaltung: {type: Schema.ObjectId, ref: 'Veranstaltung', required: true}
 });
 
-SpielSchema.plugin(URLSlugs('label nummer'), {update: true});
+SpielSchema.plugin(URLSlugs('label nummer', {update: true, indexUnique: false}));
 
 SpielSchema.methods.setToreNormal = function (toreA, toreB, cb) {
     const beachEventID = cls.getBeachEventID();

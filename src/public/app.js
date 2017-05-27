@@ -42,7 +42,12 @@
                 url: '',
                 template: '<ui-view></ui-view>',
                 abstract: true,
-                controller: AppController
+                controller: AppController,
+                resolve: {
+                    events: function (veranstaltungen) {
+                        return veranstaltungen.getAll();
+                    }
+                }
             });
 
         $locationProvider.html5Mode(true);
@@ -93,7 +98,7 @@
         };
     }
 
-    function AppController($q, auth, $state, $timeout, config, $rootScope, veranstaltungen, AVAILABLE_STATES_WITHOUT_EVENT) {
+    function AppController($q, auth, $state, $timeout, config, $rootScope, veranstaltungen, AVAILABLE_STATES_WITHOUT_EVENT, events) {
         const vm = this;
         vm.runBefore = false;
 
@@ -104,14 +109,18 @@
             }
 
             if (!_.isEqual(toState.name, 'spi.shared.veranstaltungen')) {
-                checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toState.name);
+                checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toState.name, events);
             }
 
             if (_.includes(toState.name, 'spi.event')) {
                 //Intercept route transition to add eventID to stateParams
                 if (!toStateParams.eventid || toStateParams.eventid.length === 0) {
                     event.preventDefault();
-                    toStateParams.eventid = veranstaltungen.getCurrentEvent().slug;
+                    const currentEvent = veranstaltungen.getCurrentEvent();
+                    if (!currentEvent) {
+                        return $state.transitionTo('spi.shared.veranstaltungen');
+                    }
+                    toStateParams.eventid = currentEvent.slug || currentEvent._id;
                     $state.transitionTo(toState.name, toStateParams);
                 }
             }
@@ -131,7 +140,7 @@
                     auth.checkRoute($q, $state.current);
                 }
 
-                checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, $state.current.name);
+                checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, $state.current.name, events);
             }
         });
 
@@ -140,10 +149,19 @@
         });
     }
 
-    function checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toStateName) {
-        const currentEvent = veranstaltungen.getCurrentEvent();
-        if (!currentEvent && !_.includes(AVAILABLE_STATES_WITHOUT_EVENT, toStateName)) {
-            $state.go('spi.shared.veranstaltungen');
+    function checkCurrentEvent(veranstaltungen, $state, AVAILABLE_STATES_WITHOUT_EVENT, toStateName, events) {
+        const storedEvent = veranstaltungen.getCurrentEvent();
+        let currentEvent;
+        if (storedEvent && events && events.length > 0) {
+            currentEvent = events.find(function (single) {
+                return single._id.toString() === storedEvent._id.toString();
+            });
+        }
+        if (!currentEvent) {
+            veranstaltungen.setCurrentEvent(undefined);
+            if (!_.includes(toStateName, 'spi.shared')) {
+                $state.go('spi.shared.veranstaltungen');
+            }
         }
     }
 
