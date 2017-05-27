@@ -2,6 +2,7 @@ const async = require('async');
 const logger = require('winston').loggers.get('model');
 const cls = require('../config/cls.js');
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 function fillOfEntity(entity, type, cb) {
     const beachEventID = cls.getBeachEventID();
@@ -152,6 +153,7 @@ function sortTeams(teams, key, spielModel, gruppe, cb) {
 function beachEventQueryMiddleware() {
     const beachEventID = cls.getBeachEventID();
     if (!beachEventID) {
+        if (_.includes(JSON.stringify(this.getQuery()), 'veranstaltung')) return;
         logger.error('No beachEventID given in Schema in ' + this.op + ' hook: ' + this.model.modelName);
         return;
     }

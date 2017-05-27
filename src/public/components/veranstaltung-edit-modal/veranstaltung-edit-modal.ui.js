@@ -3,7 +3,7 @@
 
     angular
         .module('spi.components.veranstaltung-edit-modal.ui', [
-            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.veranstaltungen'
+            'spi.team', 'ui.bootstrap', 'ui.bootstrap.modal', 'spi.veranstaltungen', 'spi.config'
         ])
         .service('VeranstaltungEditierenDialog', VeranstaltungEditierenDialog)
         .controller('VeranstaltungEditierenController', VeranstaltungEditierenController);
@@ -29,7 +29,7 @@
         }
     }
 
-    function VeranstaltungEditierenController($uibModalInstance, veranstaltungen, event) {
+    function VeranstaltungEditierenController($uibModalInstance, veranstaltungen, event, config) {
         const vm = this;
 
         event.printMannschaftslisten = event.printMannschaftslisten ? event.printMannschaftslisten.toString() : 'false';
@@ -48,6 +48,7 @@
                 form.$setUntouched();
                 veranstaltungen.update(vm.veranstaltung._id, vm.veranstaltung).then(function (res) {
                     vm.loading = false;
+                    config.getConfig();
                     $uibModalInstance.close(res);
                 });
             }

@@ -171,6 +171,7 @@
                     altToreB = res.toreB;
                     vm.spiel = res;
                     vm.isEditing = false;
+                    calcErgebnisDisplay();
                     $scope.$emit('updatedTore');
                 });
             }

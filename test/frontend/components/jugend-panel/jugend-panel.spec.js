@@ -69,7 +69,7 @@
             go: function () {
             },
             includes: function (statename) {
-                return statename.indexOf('spi.verwaltung') != -1;
+                return statename.indexOf('spi.event.verwaltung') != -1;
             },
             current: {
                 name: 'state'
@@ -170,7 +170,7 @@
 
         describe('Angenommen der Nutzer ist angemeldet', function () {
             before(function () {
-                accessLevel = 1;
+                accessLevel = 3;
             });
 
             after(function () {
@@ -184,6 +184,7 @@
             });
 
             it('soll ein Button zum Löschen der Jugend angezeigt werden', function () {
+                console.warn(element);
                 var result = element.find('spi-panel-titel').find('span');
 
                 expect(result).not.to.be.undefined;

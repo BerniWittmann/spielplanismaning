@@ -11,7 +11,7 @@
     function states($stateProvider) {
         $stateProvider
             .state('spi.event.home', {
-                url: '/home',
+                url: '/aktuell',
                 templateUrl: 'templates/event/home/home.html',
                 controller: HomeController,
                 controllerAs: 'vm',
