@@ -36,7 +36,7 @@
         vm.loading = false;
 
         function canEdit() {
-            return auth.isAdmin() && $state.includes('spi.verwaltung');
+            return auth.isAdmin() && $state.includes('spi.event.verwaltung');
         }
 
         function gruppeIsEditable(gruppe) {
