@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.team.ui', [
-            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe', 'spi.anmeldung'
+            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe', 'spi.anmeldung', 'spi.auth'
         ])
         .config(states)
         .controller('TeamController', TeamController);
@@ -27,7 +27,7 @@
 
     }
 
-    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe, anmeldung) {
+    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe, anmeldung, auth) {
         const vm = this;
         vm.loading = true;
 
@@ -44,7 +44,8 @@
             }),
             spiele: _.sortBy(spiele, ['nummer']),
             abonnieren: abonnieren,
-            anmeldung: aktivesTeam.anmeldungsObject
+            anmeldung: aktivesTeam.anmeldungsObject,
+            isAdmin: auth.isAdmin()
         });
         gruppe.get(aktivesTeam.gruppe._id).then(function (res) {
             vm.teams = res.teamTabelle;
