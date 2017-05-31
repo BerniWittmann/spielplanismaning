@@ -130,6 +130,9 @@
                 anmeldung: {
                     base: function () {
                         return 'https://beachanmeldung.herokuapp.com/api/teams'
+                    },
+                    url: function () {
+                        return 'https://beachanmeldung.herokuapp.com/verwaltung/team'
                     }
                 }
             };

@@ -10,6 +10,10 @@
                 return routes.requestGETID(routes.urls.anmeldung.base(), id);
             };
 
+            anmeldung.getUrl = function (id) {
+                return routes.urls.anmeldung.url() + '/' + id;
+            };
+
             return anmeldung;
         }]);
 

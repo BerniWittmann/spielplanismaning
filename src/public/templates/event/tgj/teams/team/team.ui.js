@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.team.ui', [
-            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe'
+            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe', 'spi.anmeldung'
         ])
         .config(states)
         .controller('TeamController', TeamController);
@@ -27,7 +27,7 @@
 
     }
 
-    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe) {
+    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe, anmeldung) {
         const vm = this;
         vm.loading = true;
 
@@ -43,7 +43,8 @@
                 team: aktivesTeam._id
             }),
             spiele: _.sortBy(spiele, ['nummer']),
-            abonnieren: abonnieren
+            abonnieren: abonnieren,
+            anmeldung: aktivesTeam.anmeldungsObject
         });
         gruppe.get(aktivesTeam.gruppe._id).then(function (res) {
             vm.teams = res.teamTabelle;
@@ -58,6 +59,16 @@
             vm.loading = false;
         });
 
+        vm.anmeldungsDatum = formatDate('angemeldet');
+        vm.bezahltDatum = formatDate('bezahlt');
+        vm.anmeldungsUrl = vm.anmeldung ? anmeldung.getUrl(vm.anmeldung._id) : undefined;
+
+
+        function formatDate(key) {
+            if (!vm.anmeldung || !vm.anmeldung[key]) return undefined;
+
+            return moment(vm.anmeldung[key], moment.ISO_8601).format('DD.MM.YYYY HH:mm') + ' Uhr';
+        }
         function abonnieren() {
             return TeamAbonnierenDialog.open(vm.team).closed.then(function () {
                 vm.bereitsAbonniert = email.checkSubscription({

@@ -35,3 +35,57 @@
         <spi-tabelle data-teams="vm.zwischengruppenTeams" data-highlighted-team="vm.team" key="'zwischenGruppe'"></spi-tabelle>
     </div>
 </div>
+
+<div class="row" data-ng-if="!vm.loading && vm.anmeldung">
+    <br><br>
+    <div class="col-md-12">
+        <h4 class="text-center">Anmeldungs - Daten</h4>
+    </div>
+    <div class="col-md-6 col-md-offset-3 table-responsive">
+        <table class="table table-condensed table-striped table-hover">
+            <tr>
+                <td>Trainer: </td>
+                <td>{{vm.anmeldung.trainername}}
+                    <span class="pointer" uib-popover="{{vm.anmeldung.traineremail}}" popover-trigger="outsideClick" popover-title="E-Mail" popover-placement="bottom"><i class="fa fa-envelope fa-lg"></i></span>
+                    <span class="pointer" uib-popover="{{vm.anmeldung.trainerhandy}}" popover-trigger="outsideClick" popover-title="Handynummer" popover-placement="bottom"><i class="fa fa-phone fa-lg"></i></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Spieleranzahl: </td>
+                <td>{{vm.anmeldung.spieler.length }}</td>
+            </tr>
+            <tr>
+                <td>Angemeldet am: </td>
+                <td>{{vm.anmeldungsDatum}}</td>
+            </tr>
+            <tr>
+                <td>Bezahlt am: </td>
+                <td>{{vm.bezahltDatum}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6 col-md-offset-3 table-responsive" data-ng-if="vm.anmeldung.spieler.length > 0">
+        <h5 class="text-center">Spieler</h5>
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th class="text-center">Geburtsdatum</th>
+                    <th class="text-center">Trikot - Nr.</th>
+                </tr>
+            </thead>
+            <tr data-ng-repeat="spieler in vm.anmeldung.spieler">
+                <td class="text-center">{{ spieler.nummer }}</td>
+                <td>{{ spieler.vorname }}</td>
+                <td>{{ spieler.nachname }}</td>
+                <td class="text-center">{{ spieler.geburtsdatum }}</td>
+                <td class="text-center">{{ spieler.trikotnummer }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-12 text-center">
+        <a href="{{vm.anmeldungsUrl}}" target="_blank" class="btn btn-primary">Zur Team - Anmeldung</a>
+    </div>
+</div>
