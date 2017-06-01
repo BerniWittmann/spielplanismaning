@@ -403,3 +403,9 @@ spi-panel-title spi-jugend-label {
 .pointer {
     cursor: pointer;
 }
+
+.spiel-nummer-input {
+    width: 30px;
+    text-align: center;
+    margin-right: 5px;
+}
