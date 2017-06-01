@@ -184,7 +184,6 @@
             });
 
             it('soll ein Button zum Löschen der Jugend angezeigt werden', function () {
-                console.warn(element);
                 var result = element.find('spi-panel-titel').find('span');
 
                 expect(result).not.to.be.undefined;

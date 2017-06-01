@@ -63,7 +63,8 @@
         var injector;
         var mockSpiele;
         var mockScope = {
-            $watch: function () {}
+            $watch: function () {},
+            $watchGroup: function () {}
         };
 
         function resolve(value) {
