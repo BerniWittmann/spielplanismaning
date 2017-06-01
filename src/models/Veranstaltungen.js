@@ -9,7 +9,8 @@ const VeranstaltungenSchema = new Schema({
     name: String,
     bildUrl: String,
     spielModus: String,
-    printMannschaftslisten: Boolean
+    printMannschaftslisten: Boolean,
+    spielplanEnabled: Boolean
 });
 
 VeranstaltungenSchema.plugin(URLSlugs('name', {update: true}));

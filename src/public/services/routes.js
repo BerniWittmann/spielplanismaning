@@ -68,6 +68,9 @@
                     },
                     mannschaftslisten: function () {
                         return ENDPOINT_BASE + '/config/mannschaftslisten';
+                    },
+                    spielplanEnabled: function () {
+                        return ENDPOINT_BASE + '/config/spielplanEnabled';
                     }
                 },
                 email: {

@@ -37,6 +37,7 @@ module.exports = function (app) {
             if (err || !event) return sendError(res);
 
             req.eventID = beachEventID;
+            req.spielplanEnabled = !!event.spielplanEnabled;
             const clsSession = cls.getNamespace();
             clsSession.run(function () {
                 clsSession.set('beachEventID', beachEventID);

@@ -15,6 +15,7 @@
                 <th class="text-center">Name</th>
                 <th class="text-center">Spiel-Modus</th>
                 <th class="text-center">Mannschaftsliste Druck</th>
+                <th class="text-center">Spielplan - Verwaltung</th>
                 <th></th>
             </tr>
             </thead>
@@ -24,6 +25,7 @@
                 <td class="valign">{{veranstaltung.name}}</td>
                 <td class="valign">{{veranstaltung.spielModus === 'complex' ? '2 Halbzeiten + Penalty': '1 Halbzeit'}}</td>
                 <td class="valign"><i class="fa fa-lg {{veranstaltung.printMannschaftslisten ? 'fa-check': 'fa-times'}}"></i></td>
+                <td class="valign"><i class="fa fa-lg {{veranstaltung.spielplanEnabled ? 'fa-check': 'fa-times'}}"></i></td>
                 <td class="valign">
                     <span class="spiel-click-icon pull-right" data-uib-tooltip="Löschen" data-tooltip-placement="top-right" data-ng-click="vm.askDeleteEvent(veranstaltung)"><i class="fa fa-trash-o"></i></span>
                     <span class="spiel-click-icon pull-right" data-uib-tooltip="Bearbeiten" data-tooltip-placement="top-right" data-ng-click="vm.edit(veranstaltung)"><i class="fa fa-pencil"></i></span>
@@ -72,6 +74,16 @@
                 </select>
                 <span class="help-block" data-ng-messages="form.printMannschaftslisten.$error" data-ng-if="form.printMannschaftslisten.$touched">
                     <p data-ng-message="required">Mannschaftslisten - Druck ist ein Pflichtfeld</p>
+                </span>
+            </div>
+            <div class="form-group" data-ng-class="{ 'has-error': form.spielplanEnabled.$touched && form.spielplanEnabled.$invalid }">
+                <select class="form-control" data-ng-model="vm.veranstaltung.spielplanEnabled" name="spielplanEnabled" required>
+                    <option value="" selected disabled>Bitte wählen</option>
+                    <option value="true">Spielplan - Verwaltung aktiv</option>
+                    <option value="false">Spielplan - Verwaltung deaktiviert</option>
+                </select>
+                <span class="help-block" data-ng-messages="form.spielplanEnabled.$error" data-ng-if="form.spielplanEnabled.$touched">
+                    <p data-ng-message="required">Spielplan - Verwaltung ist ein Pflichtfeld</p>
                 </span>
             </div>
 

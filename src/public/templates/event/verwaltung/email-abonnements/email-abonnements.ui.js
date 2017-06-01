@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.email-abonnements.ui', [
-            'ui.router', 'ngTable'
+            'ui.router', 'ngTable', 'spi.config'
         ])
         .config(states)
         .controller('EmailAbonnementsContoller', EmailAbonnementsContoller);
@@ -19,6 +19,9 @@
                 resolve: {
                     subscribers: function (aktivesEvent, email) {
                         return email.getSubscribers();
+                    },
+                    spielplanEnabled: function (config) {
+                        return config.getSpielplanEnabled();
                     }
                 },
                 data: {
@@ -28,10 +31,14 @@
 
     }
 
-    function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, subscribers) {
+    function EmailAbonnementsContoller(email, BestaetigenDialog, NgTableParams, $state, subscribers, spielplanEnabled) {
         const vm = this;
         vm.loading = true;
 
+        if (!spielplanEnabled) {
+            $state.go('spi.event.home');
+            return;
+        }
         const emailBlank = {
             subject: '',
             text: ''

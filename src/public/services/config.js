@@ -11,7 +11,8 @@
                 lockdown: undefined,
                 plaetze: undefined,
                 spielmodus: undefined,
-                mannschaftslisten: undefined
+                mannschaftslisten: undefined,
+                spielplanEnabled: undefined
             };
 
             function parseToInt(str) {
@@ -32,6 +33,9 @@
                     if (name === 'spielmodus') {
                         $rootScope.isComplexMode = config.spielmodus === 'complex';
                     }
+                    if (name === 'spielplanEnabled') {
+                        $rootScope.spielplanEnabled = !!config.spielplanEnabled;
+                    }
                     return config[name];
                 });
             }
@@ -45,6 +49,8 @@
                     config.spielmodus = data.spielmodus || config.spielmodus;
                     config.mannschaftslisten = data.mannschaftslisten || config.mannschaftslisten;
                     $rootScope.isComplexMode = config.spielmodus === 'complex';
+                    config.spielplanEnabled = !_.isUndefined(data.spielplanEnabled) ? data.spielplanEnabled : !!config.spielplanEnabled;
+                    $rootScope.spielplanEnabled = config.spielplanEnabled;
                     return config;
                 });
             }
@@ -73,6 +79,9 @@
                 return getConfigParam('mannschaftslisten')
             }
 
+            function getSpielplanEnabled() {
+                return getConfigParam('spielplanEnabled');
+            }
             return {
                 getConfig: getConfig,
                 getEnv: getEnv,
@@ -80,7 +89,8 @@
                 getLockdown: getLockdown,
                 getPlaetze: getPlaetze,
                 getSpielmodus: getSpielmodus,
-                getMannschaftslisten: getMannschaftslisten
+                getMannschaftslisten: getMannschaftslisten,
+                getSpielplanEnabled: getSpielplanEnabled
             };
         }]);
 

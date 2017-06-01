@@ -18,7 +18,7 @@
         };
     }
 
-    function NavigationController($state, $scope, auth, veranstaltungen) {
+    function NavigationController($state, $rootScope, auth, veranstaltungen) {
         const vm = this;
 
         _.extend(vm, {
@@ -33,7 +33,10 @@
             isAktiv: function (name) {
                 return $state.includes(name);
             },
-            eventName: getEventName
+            eventName: getEventName,
+            isSpielplanEnabled: function () {
+                return $rootScope.spielplanEnabled;
+            }
         });
 
         function getEventName() {

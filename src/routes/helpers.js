@@ -1033,7 +1033,8 @@ function reloadAnmeldeObjects(cb) {
 function getVeranstaltungData(cb) {
     const result = {
         SPIEL_MODE: undefined,
-        MANNSCHAFTSLISTEN_PRINT: undefined
+        MANNSCHAFTSLISTEN_PRINT: undefined,
+        SPIELPLAN_ENABLED: undefined
     };
     const beachEventID = cls.getBeachEventID();
     if (!beachEventID) {
@@ -1044,6 +1045,7 @@ function getVeranstaltungData(cb) {
         if (err) return cb(err);
         result.SPIEL_MODE = event.spielModus;
         result.MANNSCHAFTSLISTEN_PRINT = event.printMannschaftslisten;
+        result.SPIELPLAN_ENABLED = event.spielplanEnabled
         return cb(null, result);
     });
 }

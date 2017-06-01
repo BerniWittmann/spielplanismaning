@@ -27,13 +27,16 @@
                     },
                     zeiten: function (aktivesEvent, spielplan) {
                         return spielplan.getZeiten();
+                    },
+                    spielplanEnabled: function (config) {
+                        return config.getSpielplanEnabled();
                     }
                 }
             });
 
     }
 
-    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus, zeiten) {
+    function SpielplanController($state, $scope, spiele, spiel, auth, toastr, anzahlPlaetze, spielModus, zeiten, spielplanEnabled) {
         const vm = this;
         vm.loading = true;
 
@@ -64,7 +67,7 @@
                 }
             },
             isEditing: false,
-            canEdit: auth.isAdmin(),
+            canEdit: auth.isAdmin() && spielplanEnabled,
             toggleEdit: toggleEdit,
             saveOrder: saveOrder,
             errorIndex: undefined,

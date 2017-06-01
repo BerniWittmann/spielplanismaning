@@ -3,7 +3,10 @@
 
     angular
         .module('spi.spielplan', ['spi.routes', 'toastr'])
-        .factory('spielplan', ['routes', 'toastr', function (routes, toastr) {
+        .factory('spielplan', ['routes', 'toastr', '$rootScope', function (routes, toastr, $rootScope) {
+            function isSpielplanEnabled() {
+                return $rootScope.spielplanEnabled;
+            }
 
             const spielplan = {
                 startzeit: undefined,
@@ -16,6 +19,9 @@
             };
 
             spielplan.getZeiten = function () {
+                if (!isSpielplanEnabled()) {
+                    return;
+                }
                 return routes.requestGETBase('spielplan').then(function (data) {
                     _.defaultsDeep(data, {
                         startzeit: '09:00',
@@ -31,10 +37,16 @@
             };
 
             spielplan.saveZeiten = function (zeiten) {
+                if (!isSpielplanEnabled()) {
+                    return;
+                }
                 return routes.requestPUT(routes.urls.spielplan.zeiten(), zeiten);
             };
 
             function generateSpielplan(keep) {
+                if (!isSpielplanEnabled()) {
+                    return;
+                }
                 return routes.requestPUT(routes.urls.spielplan.base(), {keep: keep}).then(function (res) {
                     const title = keep ? 'Spielplan aktualisiert' : 'Spielplan generiert';
                     const message = keep ? 'Spielplan wurde aktualisiert' : 'Spielplan wurde neu generiert';

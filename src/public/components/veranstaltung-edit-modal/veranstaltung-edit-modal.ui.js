@@ -33,6 +33,7 @@
         const vm = this;
 
         event.printMannschaftslisten = event.printMannschaftslisten ? event.printMannschaftslisten.toString() : 'false';
+        event.spielplanEnabled = event.spielplanEnabled ? event.spielplanEnabled.toString() : 'false';
         _.extend(vm, {
             veranstaltung: event,
             name: event.name,
