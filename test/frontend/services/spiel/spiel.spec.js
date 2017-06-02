@@ -70,7 +70,8 @@
             }
         });
 
-        it('soll alle Spiele laden', function () {
+        it('soll alle Spiele laden', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = mockSpiele;
             httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL).respond(201, response);
@@ -79,9 +80,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll ein Spiel erstellen', function () {
+        it('soll ein Spiel erstellen', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = mockSpiele[0];
             httpBackend.expectPOST(ENDPOINT_BASE_URL, mockSpiele[0]).respond(201, response);
 
@@ -89,9 +91,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll ein bestimmtes Spiel laden', function () {
+        it('soll ein bestimmtes Spiel laden', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = mockSpiele[0];
             httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
@@ -100,9 +103,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll alle Spiele nach Jugend laden', function () {
+        it('soll alle Spiele nach Jugend laden',inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = [mockSpiele[0], mockSpiele[1]];
             httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL + '?jugend=123').respond(201, response);
@@ -112,9 +116,10 @@
                 expect(_.isEqual(res, response)).to.be.true;
                 expect(res).to.have.lengthOf(2);
             });
-        });
+        }));
 
-        it('soll alle Spiele nach Gruppe laden', function () {
+        it('soll alle Spiele nach Gruppe laden', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = [mockSpiele[0], mockSpiele[1]];
             httpBackend.expectGET('/api/teams').respond(201, [{_id: '1', name: 'team 1'}, {_id: '2', name: 'team 2'}]);
             httpBackend.expectGET(ENDPOINT_BASE_URL + '?gruppe=1234').respond(201, response);
@@ -124,9 +129,10 @@
                 expect(_.isEqual(res, response)).to.be.true;
                 expect(res).to.have.lengthOf(2);
             });
-        });
+        }));
 
-        it('soll ein Spiel löschen können', function () {
+        it('soll ein Spiel löschen können', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = 'Spiel gelöscht';
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '?id=1').respond(201, response);
 
@@ -134,9 +140,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll alle Spiele löschen können', function () {
+        it('soll alle Spiele löschen können', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = 'Alle Spiele gelöscht';
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '/alle').respond(201, response);
 
@@ -144,9 +151,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll die Tore eines Spiels updaten können', function () {
+        it('soll die Tore eines Spiels updaten können', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = mockSpiele[0];
             response.toreA = 1;
             response.toreB = 4;
@@ -164,9 +172,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll die Tore eines Spiels zurücksetzen', function () {
+        it('soll die Tore eines Spiels zurücksetzen', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = mockSpiele[0];
             response.toreA = 0;
             response.toreB = 0;
@@ -176,15 +185,16 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('soll die Reihenfolge der Spiele speichern', function () {
+        it('soll die Reihenfolge der Spiele speichern', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             httpBackend.expectDELETE(ENDPOINT_BASE_URL + '/order').respond(200, mockSpiele);
 
             spiel.updateOrder(mockSpiele).then(function (res) {
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        })
+        }));
     });
 }());

@@ -3,7 +3,10 @@
 
     angular
         .module('spi.spiel', ['spi.routes', 'spi.team'])
-        .factory('spiel', ['Logger', 'routes', 'team', function (Logger, routes, team) {
+        .factory('spiel', ['Logger', 'routes', 'team', '$rootScope', function (Logger, routes, team, $rootScope) {
+            function isSpielplanEnabled() {
+                return $rootScope.spielplanEnabled;
+            }
 
             const spiel = {};
 
@@ -24,6 +27,7 @@
             };
 
             spiel.create = function (spiel) {
+                if (!isSpielplanEnabled()) return;
                 return routes.requestPOST(routes.urls.spiele.base(), spiel);
             };
 
@@ -55,23 +59,28 @@
             };
 
             spiel.delete = function (spielid) {
+                if (!isSpielplanEnabled()) return;
                 return routes.requestDELETE(routes.urls.spiele.base(), spielid);
             };
 
             spiel.deleteAll = function () {
+                if (!isSpielplanEnabled()) return;
                 return routes.requestMethod('DELETE', routes.urls.spiele.alle());
             };
 
             spiel.updateTore = function (spiel) {
+                if (!isSpielplanEnabled()) return;
                 Logger.log('Tore für Spiel #' + spiel.nummer + ' geändert!');
                 return routes.requestPUTID(routes.urls.spiele.tore(), spiel._id, spiel);
             };
 
             spiel.resetSpiel = function (spiel) {
+                if (!isSpielplanEnabled()) return;
                 return routes.requestDELETE(routes.urls.spiele.tore(), spiel._id);
             };
 
             spiel.updateOrder = function (spiele) {
+                if (!isSpielplanEnabled()) return;
                 return routes.requestPUT(routes.urls.spiele.order(), spiele);
             };
 

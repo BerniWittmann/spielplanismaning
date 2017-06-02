@@ -5,7 +5,8 @@ const data = [{
     name: 'Event',
     bildUrl: '',
     spielModus: 'normal',
-    printMannschaftslisten: true
+    printMannschaftslisten: true,
+    spielplanEnabled: true
 }];
 
 module.exports = {

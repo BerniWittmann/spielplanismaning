@@ -26,6 +26,7 @@
 
         beforeEach(inject(function ($rootScope, $controller, $q) {
             scope = $rootScope.$new();
+            scope.spielplanEnabled = true;
 
             gewaehltesTeam = {
                 _id: '1',
@@ -57,7 +58,8 @@
                 $state: mockState,
                 $uibModalInstance: uibModalInstance,
                 gewTeam: gewaehltesTeam,
-                email: mockEmail
+                email: mockEmail,
+                $rootScope: scope
             });
         }
 
