@@ -116,7 +116,8 @@
                 spielModus: 'normal',
                 auth: mockAuth,
                 toastr: mockToastr,
-                spiel: mockSpiel
+                spiel: mockSpiel,
+                spielplanEnabled: true
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

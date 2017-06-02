@@ -101,7 +101,8 @@
                 email: mockEmail,
                 $state: mockState,
                 BestaetigenDialog: mockBestaetigenDialog,
-                subscribers: abonnements
+                subscribers: abonnements,
+                spielplanEnabled: true
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

@@ -109,6 +109,9 @@ module.exports = function () {
         },
         ErrorVeranstaltungNotFound: function (res, err) {
             send(require('./ErrorVeranstaltungNotFound.js')(err), res);
+        },
+        ErrorSpielplanDisabled: function (res) {
+            send(require('./ErrorSpielplanDisabled.js'), res);
         }
     };
 };

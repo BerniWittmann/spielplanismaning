@@ -22,6 +22,9 @@
                     },
                     spielModus: function (aktivesEvent, config) {
                         return config.getSpielmodus();
+                    },
+                    spielplanEnabled: function (config) {
+                        return config.getSpielplanEnabled();
                     }
                 },
                 params: {
@@ -63,7 +66,7 @@
         }
     }
 
-    function SpielController($state, aktivesSpiel, spiel, spielModus, auth, $stateParams, toastr) {
+    function SpielController($state, aktivesSpiel, spiel, spielModus, auth, $stateParams, toastr, spielplanEnabled) {
         const vm = this;
         vm.loading = true;
 
@@ -103,7 +106,7 @@
                 return spiel.getTeamDisplay(aktivesSpiel, 'B');
             },
             isComplexMode: spielModus === 'complex',
-            canEdit: auth.isAdmin() || auth.isBearbeiter(),
+            canEdit: (auth.isAdmin() || auth.isBearbeiter()) && spielplanEnabled,
             edit: function ()  {
                 if (vm.canEdit) {
                     vm.isEditing = true;

@@ -157,7 +157,8 @@
                 auth: mockAuth,
                 anzahlPlaetze: 3,
                 spielModus: 'normal',
-                zeiten: zeiten
+                zeiten: zeiten,
+                spielplanEnabled: true
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

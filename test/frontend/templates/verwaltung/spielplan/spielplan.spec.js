@@ -31,6 +31,9 @@
             createSpielplan: function () {},
             regenerateSpielplan: function () {}
         };
+        var mockState = {
+            go: function () {}
+        };
         var mockSpiel = {
             spiele: [{
                 label: 'normal', beendet: false
@@ -89,7 +92,9 @@
                 zeiten: mockSpielplan.zeiten,
                 spiele: mockSpiel.spiele,
                 $scope: scope,
-                toastr: mockToastr
+                toastr: mockToastr,
+                $state: mockState,
+                spielplanEnabled: true
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));

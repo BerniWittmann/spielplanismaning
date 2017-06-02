@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.spielplan.ui', [
-            'ui.router', 'spi.spielplan', 'angular-flatpickr', 'toastr', 'spi.spiel'
+            'ui.router', 'spi.spielplan', 'angular-flatpickr', 'toastr', 'spi.spiel', 'spi.config'
         ])
         .config(states)
         .controller('VerwaltungSpielplanController', VerwaltungSpielplanController);
@@ -22,6 +22,9 @@
                     },
                     spiele: function (aktivesEvent, spiel) {
                         return spiel.getAll();
+                    },
+                    spielplanEnabled: function (config) {
+                        return config.getSpielplanEnabled();
                     }
                 },
                 data: {
@@ -30,18 +33,39 @@
             });
     }
 
-    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr, spiele) {
+    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr, spiele, $state, spielplanEnabled) {
         const vm = this;
         vm.loading = true;
-        const d = new Date();
-        d.setHours(9);
-        d.setMinutes(0);
-        const d2 = d;
-        d2.setHours(17);
+        if (!spielplanEnabled) {
+            $state.go('spi.event.home');
+            return;
+        }
+
+        function newDateWithHours(h) {
+            const d = new Date();
+            d.setHours(h);
+            d.setMinutes(0);
+            return d;
+        }
+
+        const d = newDateWithHours(9);
+        const d2 = newDateWithHours(17);
+
+        function prettifyDate(d, format) {
+            let date;
+            if (d && format) {
+                date = moment(d, format);
+            } else if (d && !format) {
+                date = moment(d);
+            } else {
+                date = moment()
+            }
+            return date.format('DD.MM.YYYY');
+        }
 
         if (!zeiten.startdatum || !zeiten.enddatum) {
-            zeiten.startdatum = moment().format('DD.MM.YYYY');
-            zeiten.enddatum = moment().format('DD.MM.YYYY');
+            zeiten.startdatum = prettifyDate();
+            zeiten.enddatum = prettifyDate();
         }
 
         //noinspection JSUnusedGlobalSymbols
@@ -68,7 +92,7 @@
                 locale: 'de',
                 defaultDate: [moment(zeiten.startdatum, 'DD.MM.YYYY').toDate(), moment(zeiten.enddatum, 'DD.MM.YYYY').toDate()]
             },
-            date: moment(d).format('DD.MM.YYYY'),
+            date: prettifyDate(d),
             startdate: undefined,
             enddate: undefined
         });

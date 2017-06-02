@@ -89,6 +89,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.post('/', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.warn('This method is deprecated');
         logger.verbose('Create new Spiel', req.body);
 
@@ -123,6 +124,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.delete('/', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.warn('This method is deprecated');
         logger.verbose('Delete Spiel %s', req.query.id);
         const beachEventID = cls.getBeachEventID();
@@ -149,7 +151,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      **/
     router.put('/alle', function (req, res) {
         logger.warn('This method is deprecated');
-
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         const spiele = req.body;
         logger.verbose('%d Spiele should be updated', spiele.length);
         const beachEventID = cls.getBeachEventID();
@@ -184,6 +186,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse Deprecated
      **/
     router.delete('/alle', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.verbose('Removing all Spiele');
         const beachEventID = cls.getBeachEventID();
         const clsSession = cls.getNamespace();
@@ -211,6 +214,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorBadRequest
      **/
     router.delete('/tore', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.verbose('Reset Spiel %s', req.query.id);
 
         const beachEventID = cls.getBeachEventID();
@@ -272,6 +276,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      *
      **/
     router.put('/tore', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.verbose('Set Result for Spiel %s', req.query.id);
         const beachEventID = cls.getBeachEventID();
         const clsSession = cls.getNamespace();
@@ -399,6 +404,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
      * @apiUse ErrorSpielplanUngueltig
      **/
     router.put('/order', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         const spiele = req.body.spiele;
         const delays = req.body.delays || {};
 

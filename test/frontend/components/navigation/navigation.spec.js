@@ -60,6 +60,8 @@
 
         beforeEach(inject(function ($rootScope, $compile) {
             scope = $rootScope.$new();
+            $rootScope.spielplanEnabled = true;
+            scope.spielplanEnabled = true;
             $provide.value('$state', mockState);
             $provide.value('auth', mockAuth);
             $provide.value('spielplan', mockSpielplan);

@@ -17,7 +17,8 @@
             lockdown: true,
             plaetze: '3',
             spielmodus: 'normal',
-            mannschaftslisten: 'true'
+            mannschaftslisten: 'true',
+            spielplanEnabled: true
         };
         var config;
 

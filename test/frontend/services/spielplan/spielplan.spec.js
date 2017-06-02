@@ -54,7 +54,8 @@
             }
         });
 
-        it('Die Zeiten werden geladen', function () {
+        it('Die Zeiten werden geladen', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = {
                 startzeit: '09:00',
                 spielzeit: 8,
@@ -69,9 +70,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('Die Zeiten werden gespeichert', function () {
+        it('Die Zeiten werden gespeichert', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = {
                 startzeit: '09:00',
                 spielzeit: 8,
@@ -86,9 +88,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('Der Spielplan wird neu generiert', function () {
+        it('Der Spielplan wird neu generiert', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = 'SUCCESS';
             httpBackend.expectPUT(ENDPOINT_BASE_URL, function(postData) {
                 var data = JSON.parse(postData);
@@ -100,9 +103,10 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
 
-        it('Der Spielplan wird neu generiert mit Erhalt von Spielen', function () {
+        it('Der Spielplan wird neu generiert mit Erhalt von Spielen', inject(function ($rootScope) {
+            $rootScope.spielplanEnabled = true;
             response = 'SUCCESS';
             httpBackend.expectPUT(ENDPOINT_BASE_URL, function(postData) {
                 var data = JSON.parse(postData);
@@ -114,6 +118,6 @@
                 responseTest = res;
                 expect(_.isEqual(res, response)).to.be.true;
             });
-        });
+        }));
     });
 }());

@@ -35,11 +35,11 @@
             };
         });
 
-    function SpielplanSingleSpielController($scope, $state, auth, spiel, BestaetigenDialog, $timeout) {
+    function SpielplanSingleSpielController($scope, $state, auth, spiel, BestaetigenDialog, $timeout, $rootScope) {
         const vm = this;
 
         _.extend(vm, {
-            canEdit: auth.isAdmin() || auth.isBearbeiter(),
+            canEdit: (auth.isAdmin() || auth.isBearbeiter()) && isSpielplanEnabled(),
             canDelete: auth.isAdmin(),
             spiel: $scope.spiSingleSpiel,
             showGruppe: $scope.showGruppe,
@@ -143,6 +143,10 @@
             } else {
                 vm.ergebnisDisplay = vm.spiel.toreA + ' : ' + vm.spiel.toreB
             }
+        }
+
+        function isSpielplanEnabled() {
+            return $rootScope.spielplanEnabled;
         }
 
         calcErgebnisDisplay();

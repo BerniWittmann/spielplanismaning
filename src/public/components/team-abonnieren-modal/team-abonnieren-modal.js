@@ -29,13 +29,21 @@
         }
     }
 
-    function TeamAbonnierenController($state, $uibModalInstance, gewTeam, email) {
+    function TeamAbonnierenController($state, $uibModalInstance, gewTeam, email, $rootScope, $timeout) {
         const vm = this;
         vm.loading = true;
         const emptymessage = {
             text: '',
             type: ''
         };
+
+        if(!$rootScope.spielplanEnabled) {
+            $timeout(function () {
+                $uibModalInstance.dismiss('cancel');
+                vm.loading = false;
+            }, 0);
+            return;
+        }
 
         _.extend(vm, {
             team: gewTeam,

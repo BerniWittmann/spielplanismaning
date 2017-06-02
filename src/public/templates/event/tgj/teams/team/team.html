@@ -4,7 +4,7 @@
             <small><span><spi-jugend-label jugend="vm.team.jugend"></spi-jugend-label></span> <span
                     class="padding-left-15">{{vm.team.gruppe.name}}</span></small>
         </h3>
-        <button class="pull-right btn btn-primary btn-sm" data-ng-class="{'disabled': vm.bereitsAbonniert}"
+        <button data-ng-if="vm.showAbonnierenButton" class="pull-right btn btn-primary btn-sm" data-ng-class="{'disabled': vm.bereitsAbonniert}"
                 data-ng-click="vm.abonnieren()" analytics-on="click" analytics-event="Team Abonnieren">
             <i class="fa fa-rss"></i>
             <span class="hidden-xs" data-ng-if="!vm.bereitsAbonniert"> Team abonnieren</span>

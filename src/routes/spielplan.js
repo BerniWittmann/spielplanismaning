@@ -69,6 +69,7 @@ module.exports = function () {
      * @apiUse SpielplanErstelltMessage
      **/
     router.put('/', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.verbose('Create Spielplan');
         let generator = spielplanGenerator.generateNew;
 
@@ -120,6 +121,7 @@ module.exports = function () {
      * @apiUse ErrorBadRequest
      **/
     router.put('/zeiten', function (req, res) {
+        if (!req.spielplanEnabled) return messages.ErrorSpielplanDisabled(res);
         logger.verbose('Check for valid Times');
         if (moment(req.body.startdatum, 'DD.MM.YYYY').isAfter(moment(req.body.enddatum, 'DD.MM.YYYY')) || moment(req.body.startzeit, 'HH:mm').isAfter(moment(req.body.endzeit, 'HH:mm'))) {
             logger.warn('Times are not valid', req.body);

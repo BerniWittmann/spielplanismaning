@@ -72,6 +72,8 @@
 
         beforeEach(inject(function ($rootScope, $compile, $q) {
             scope = $rootScope.$new();
+            $rootScope.spielplanEnabled = true;
+            scope.spielplanEnabled = true;
             scope.spiel = spiel;
             scope.showJugend = showJugend;
             scope.showGruppe = showGruppe;

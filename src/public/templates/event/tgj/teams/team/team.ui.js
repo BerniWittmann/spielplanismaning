@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.tgj.team.ui', [
-            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe', 'spi.anmeldung', 'spi.auth'
+            'spi.email', 'spi.team', 'ui.router', 'spi.spiel', 'spi.components.team-abonnieren-modal.ui', 'spi.gruppe', 'spi.anmeldung', 'spi.auth', 'spi.config'
         ])
         .config(states)
         .controller('TeamController', TeamController);
@@ -21,13 +21,16 @@
                     },
                     spiele: function (aktivesEvent, spiel, aktivesTeam) {
                         return spiel.getByTeam(aktivesTeam._id);
+                    },
+                    spielplanEnabled: function (config) {
+                        return config.getSpielplanEnabled();
                     }
                 }
             });
 
     }
 
-    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe, anmeldung, auth) {
+    function TeamController(aktivesTeam, spiele, TeamAbonnierenDialog, email, $state, toastr, gruppe, anmeldung, auth, spielplanEnabled) {
         const vm = this;
         vm.loading = true;
 
@@ -45,7 +48,8 @@
             spiele: _.sortBy(spiele, ['nummer']),
             abonnieren: abonnieren,
             anmeldung: aktivesTeam.anmeldungsObject,
-            isAdmin: auth.isAdmin()
+            isAdmin: auth.isAdmin(),
+            showAbonnierenButton: !!spielplanEnabled
         });
         gruppe.get(aktivesTeam.gruppe._id).then(function (res) {
             vm.teams = res.teamTabelle;

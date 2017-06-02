@@ -33,7 +33,8 @@ module.exports = function (env) {
                 lockdown: env.LOCKDOWNMODE === 'true',
                 plaetze: env.PLAETZE,
                 spielmodus: data.SPIEL_MODE,
-                mannschaftslisten: data.MANNSCHAFTSLISTEN_PRINT
+                mannschaftslisten: data.MANNSCHAFTSLISTEN_PRINT,
+                spielplanEnabled: data.SPIELPLAN_ENABLED
             };
             logger.verbose('Summary', {config: config});
             return res.json(config);
@@ -176,6 +177,28 @@ module.exports = function (env) {
             if (err) return messages.Error(res, err);
             logger.verbose('Mannschaftslisten %s', data.MANNSCHAFTSLISTEN_PRINT);
             return res.json(data.MANNSCHAFTSLISTEN_PRINT);
+        });
+    });
+
+    /**
+     * @api {get} /config/spielplanEnabled Spielplan Aktiviert
+     * @apiName GetConfig
+     * @apiDescription Gibt an ob Spielplan - Verwaltung aktiviert ist
+     * @apiGroup Config
+     *
+     * @apiSuccess {String} body spielplanEnabeld
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       true
+     *     }
+     **/
+    router.get('/spielplanEnabled', function (req, res) {
+        return helpers.getVeranstaltungData(function (err, data) {
+            if (err) return messages.Error(res, err);
+            logger.verbose('Spielplan Enabled %s', data.SPIELPLAN_ENABLED);
+            return res.json(data.SPIELPLAN_ENABLED);
         });
     });
 
