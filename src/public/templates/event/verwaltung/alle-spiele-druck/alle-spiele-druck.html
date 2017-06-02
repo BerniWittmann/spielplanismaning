@@ -9,7 +9,14 @@
         <select class="hidden-print form-control" data-ng-model="vm.mode">
             <option selected value="all">Alle Spiele</option>
             <option value="nichtBeendete">Noch nicht gespielte Spiele</option>
+            <option value="withoutPlaceholder">Alle Spiele ohne Platzhalter</option>
         </select>
+    </div>
+</div>
+<div class="row hidden-print">
+    <div class="col-md-4 col-md-offset-4">
+        <br>
+        <p class="text-center">Von <input class="spiel-nummer-input" placeholder="#" data-ng-model="vm.minNummer"> bis <input class="spiel-nummer-input" placeholder="#" data-ng-model="vm.maxNummer"></p>
     </div>
 </div>
 <spi-loader loading="vm.loading"></spi-loader>
@@ -22,6 +29,7 @@
                         <h3 class="spiel-time">{{spiel.uhrzeit}} Uhr</h3>
                         <h6>{{spiel.datum}}</h6>
                         <h5>Platz {{spiel.platz}}</h5>
+                        <h6>Spiel Nummer: {{spiel.nummer}}</h6>
                     </div>
                 </div>
                 <div class="row text-center">

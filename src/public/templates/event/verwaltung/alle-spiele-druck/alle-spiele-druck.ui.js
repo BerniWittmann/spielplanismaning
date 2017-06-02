@@ -68,14 +68,27 @@
                 }
 
                 return fillUpSpieler(team.anmeldungsObject.spieler);
-            }
+            },
+            minNummer: undefined,
+            maxNummer: undefined
         });
 
         function getSpiele(games) {
             return _.orderBy(_.filter(games, function (spiel) {
-                if (vm.mode !== 'all' && spiel.beendet) {
+                if (vm.mode === 'nichtBeendete' && spiel.beendet) {
                     return false;
                 }
+                if (vm.mode === 'withoutPlaceholder') {
+                    if (!spiel.teamA || !spiel.teamB) return false;
+                }
+
+                if (vm.minNummer && spiel.nummer < vm.minNummer) {
+                    return false;
+                }
+                if (vm.maxNummer && spiel.nummer > vm.maxNummer) {
+                    return false;
+                }
+
                 return spiel.teamA || spiel.teamB || spiel.fromA || spiel.fromB;
             }), ['platz', 'nummer'], ['asc', 'desc'])
         }
@@ -88,7 +101,7 @@
             return _.sortBy(spieler.concat(new Array(length)), 'nummer');
         }
 
-        $scope.$watch('vm.mode', function () {
+        $scope.$watchGroup(['vm.mode', 'vm.minNummer', 'vm.maxNummer'], function () {
             vm.spiele = getSpiele(spiele);
         });
 
