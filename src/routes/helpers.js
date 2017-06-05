@@ -1050,6 +1050,58 @@ function getVeranstaltungData(cb) {
     });
 }
 
+function createGruppeWithTeams(jugendid, data, cb) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+
+        const gruppe = new Gruppe({
+            name: data.name,
+            jugend: jugendid,
+            veranstaltung: beachEventID
+        });
+
+        return gruppe.save(function (err, gruppe) {
+            if (err) return cb(err);
+
+            if (!data.teams || data.teams.length === 0) {
+                return cb(null, {gruppe: gruppe});
+            }
+
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                const teams = data.teams.map(function (team) {
+                    return {
+                        name: team.name,
+                        gruppe: gruppe._id,
+                        jugend: jugendid,
+                        veranstaltung: beachEventID,
+                        anmeldungsId: team.anmeldungsId
+                    }
+                });
+                return Team.insertMany(teams, function (err, teams) {
+                    if (err) return cb(err);
+
+                    const teamids = teams.map(function(single) {
+                        return single._id
+                    });
+
+                    gruppe.teams = teamids;
+                    return clsSession.run(function () {
+                        clsSession.set('beachEventID', beachEventID);
+                        return gruppe.save(function (err, gruppe) {
+                            if (err) return cb(err);
+
+                            return cb(null, {gruppe: gruppe, teamids: teamids});
+                        });
+                    });
+                });
+            });
+        });
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     getEntity: getEntity,
@@ -1072,5 +1124,6 @@ module.exports = {
     updateDocByKeys: updateDocByKeys,
     reloadAnmeldeObjects: reloadAnmeldeObjects,
     getVeranstaltungData: getVeranstaltungData,
-    clsdeepPopulate: clsdeepPopulate
+    clsdeepPopulate: clsdeepPopulate,
+    createGruppeWithTeams: createGruppeWithTeams
 };

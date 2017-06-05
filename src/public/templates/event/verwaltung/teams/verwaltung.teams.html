@@ -23,6 +23,11 @@
                     <p data-ng-message="minlength">Name ist zu kurz</p>
                 </span>
             </div>
+            <div class="form-group" data-ng-if="vm.turniere && vm.turniere.length > 0">
+                <select class="form-control" data-ng-model="vm.imported" data-ng-change="vm.handleChange()" data-ng-options="turnier as turnier.name for turnier in vm.turniere">
+                    <option selected value="">Von Anmeldung importieren</option>
+                </select>
+            </div>
             <div class="form-group" data-ng-class="{ 'has-error': jugendForm.farbe.$touched && jugendForm.farbe.$invalid }">
                 <select class="form-control" data-ng-model="vm.jugend.color" required title="farbe" name="farbe">
                     <option value="" selected>Farbe wählen...</option>
@@ -41,9 +46,14 @@
     </div>
 </div>
 <br>
+<div class="row" data-ng-if="vm.turniere && vm.turniere.length > 0">
+    <div class="col-md-6 col-md-offset-3">
+
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12 text-center">
-        <button class="btn btn-primary" data-ng-click="vm.refreshAnmeldeObjects()" analytics-on="click" analytics-event="Anmeldung aktualisieren">Daten aus Anmeldung aktualisieren</button>
+        <button class="btn btn-primary" data-ng-click="vm.refreshAnmeldeObjects()" analytics-on="click" analytics-event="Anmeldung aktualisieren">Team - Daten aus Anmeldung aktualisieren</button>
     </div>
 </div>

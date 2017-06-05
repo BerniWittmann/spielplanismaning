@@ -131,11 +131,14 @@
                     }
                 },
                 anmeldung: {
-                    base: function () {
+                    teams: function () {
                         return 'https://beachanmeldung.herokuapp.com/api/teams'
                     },
                     url: function () {
                         return 'https://beachanmeldung.herokuapp.com/verwaltung/team'
+                    },
+                    turniere: function () {
+                        return 'https://beachanmeldung.herokuapp.com/api/turnier'
                     }
                 }
             };

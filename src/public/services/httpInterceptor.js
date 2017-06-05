@@ -14,7 +14,7 @@
                     }
 
                     const currentEvent = $injector.get('veranstaltungen').getCurrentEvent();
-                    if (currentEvent && currentEvent._id) {
+                    if (currentEvent && currentEvent._id && config.url && !externalRequestRegex.test(config.url)) {
                         config.headers['Beach-Event-ID'] = currentEvent._id.toString();
                     }
 
