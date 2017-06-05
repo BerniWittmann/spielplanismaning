@@ -5,6 +5,8 @@ module.exports = function () {
     const cls = require('../config/cls.js');
 
     const mongoose = require('mongoose');
+    const async = require('async');
+    const _ = require('lodash');
     const Gruppe = mongoose.model('Gruppe');
     const Jugend = mongoose.model('Jugend');
     const Team = mongoose.model('Team');
@@ -132,6 +134,107 @@ module.exports = function () {
             });
         });
     });
+
+    router.post('/zwischengruppe', function (req, res) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            helpers.removeZwischenGruppen(function (err) {
+                if (err) return messages.Error(res, err);
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+
+                    return async.each(req.body, function (gruppe, asyncdone) {
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return createZwischenGruppe(gruppe, req.query.jugend, asyncdone);
+                        });
+                    }, function (err) {
+                        if (err) return messages.Error(res, err);
+
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return Jugend.findOne({_id: mongoose.Types.ObjectId(req.query.jugend)}, function (err, jugend) {
+                                if (err) return messages.Error(res, err);
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return jugend.deepPopulate('teams gruppen gruppen.teams', function (err, jugend) {
+                                        return handler.handleErrorAndResponse(err, res, jugend);
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+    function createZwischenGruppe(data, jugendid, cb) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            logger.verbose('Creating Zwischen Gruppe %s', data.name);
+            const gruppe = new Gruppe({
+                name: data.name,
+                type: 'zwischenrunde',
+                jugend: jugendid
+            });
+            gruppe.veranstaltung = beachEventID;
+            const teamids = data.teams.map(function (single) {
+                if (_.isObject(single)) {
+                    return single._id;
+                }
+                return single;
+            });
+            gruppe.teams = teamids;
+            const query = Jugend.findOne({_id: mongoose.Types.ObjectId(gruppe.jugend)});
+
+            query.exec(function (err, jugend) {
+                if (!jugend) {
+                    logger.warn('Jugend %s not found', jugendid);
+                    return cb(new Error('Jugend not found'));
+                }
+                if (err) {
+                    return cb(err);
+                }
+                logger.verbose('Saving Gruppe %s', data.name);
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    gruppe.save(function (err, gruppe) {
+                        if (err) {
+                            return cb(err);
+                        }
+                        logger.verbose('Gruppe saved');
+
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            jugend.pushGruppe(gruppe, function (err) {
+                                logger.verbose('Add Gruppe to Jugend');
+                                if (err) return cb(err);
+
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return async.each(teamids, function (teamid, asyncdone) {
+
+                                        return clsSession.run(function () {
+                                            clsSession.set('beachEventID', beachEventID);
+
+                                            return helpers.TeamAddZwischengruppe(teamid, gruppe._id, asyncdone);
+                                        });
+                                    }, cb);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
 
     /**
      * @api {del} /gruppen Delete Gruppe

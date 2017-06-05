@@ -1102,6 +1102,35 @@ function createGruppeWithTeams(jugendid, data, cb) {
     });
 }
 
+function TeamAddZwischengruppe(teamid, zwischengruppenid, cb) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+
+        return Team.findOne({_id: mongoose.Types.ObjectId(teamid)}, function (err, team) {
+            if (err) return cb(err);
+            if (!team) return cb(new Error('Team not found'));
+
+            team.zwischengruppe = zwischengruppenid;
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                team.save(cb);
+            });
+        });
+    });
+}
+
+function removeZwischenGruppen(cb) {
+    const beachEventID = cls.getBeachEventID();
+    const clsSession = cls.getNamespace();
+    return clsSession.run(function () {
+        clsSession.set('beachEventID', beachEventID);
+
+        return Gruppe.remove({type: 'zwischenrunde'}, cb);
+    });
+}
+
 module.exports = {
     getEntityQuery: getEntityQuery,
     getEntity: getEntity,
@@ -1125,5 +1154,7 @@ module.exports = {
     reloadAnmeldeObjects: reloadAnmeldeObjects,
     getVeranstaltungData: getVeranstaltungData,
     clsdeepPopulate: clsdeepPopulate,
-    createGruppeWithTeams: createGruppeWithTeams
+    createGruppeWithTeams: createGruppeWithTeams,
+    TeamAddZwischengruppe: TeamAddZwischengruppe,
+    removeZwischenGruppen: removeZwischenGruppen
 };

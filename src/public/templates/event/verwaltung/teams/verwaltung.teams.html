@@ -17,10 +17,11 @@
             <h4 class="width-100 text-center">Turnier hinzufügen</h4>
 
             <div class="form-group" data-ng-class="{ 'has-error': jugendForm.name.$touched && jugendForm.name.$invalid }">
-                <input type="text" class="form-control" placeholder="Name" data-ng-model="vm.jugend.name" name="name" required data-ng-minlength="2">
+                <input type="text" class="form-control" placeholder="Name" data-ng-model="vm.jugend.name" name="name" required data-ng-minlength="2" data-ng-maxlength="24">
                 <span class="help-block" data-ng-messages="jugendForm.name.$error" data-ng-if="jugendForm.name.$touched">
                     <p data-ng-message="required">Name ist ein Pflichtfeld</p>
                     <p data-ng-message="minlength">Name ist zu kurz</p>
+                    <p data-ng-message="maxlength">Name ist zu lang</p>
                 </span>
             </div>
             <div class="form-group" data-ng-if="vm.turniere && vm.turniere.length > 0">
