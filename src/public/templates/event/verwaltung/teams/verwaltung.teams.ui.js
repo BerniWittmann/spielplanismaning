@@ -42,6 +42,7 @@
             jugenden: jugenden,
             teams: teams,
             addJugend: function (form) {
+                console.log()
                 if (form.$valid) {
                     form.$setUntouched();
 

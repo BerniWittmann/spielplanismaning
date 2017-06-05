@@ -159,7 +159,7 @@ module.exports = {
         "PARAMS": {
             "POST": {
                 body: {
-                    name: Joi.string().min(3).required()
+                    name: Joi.string().min(2).required()
                 }
             },
             "DELETE": {

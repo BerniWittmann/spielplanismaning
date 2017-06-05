@@ -15,7 +15,7 @@
             controllerAs: 'vm'
         });
 
-    function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, $scope, BestaetigenDialog, AddZwischengruppeDialog) {
+    function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, $scope, BestaetigenDialog, AddZwischengruppeDialog, $rootScope) {
         const vm = this;
         vm.loading = true;
 
@@ -31,7 +31,8 @@
             askDeleteJugend: askDeleteJugend,
             askDeleteGruppe: askDeleteGruppe,
             gruppeIsEditable: gruppeIsEditable,
-            addZwischengruppe: addZwischengruppe
+            addZwischengruppe: addZwischengruppe,
+            editZwischenGruppenVisible: !$rootScope.spielplanEnabled
         });
 
         vm.loading = false;

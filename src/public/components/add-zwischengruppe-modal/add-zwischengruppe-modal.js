@@ -29,8 +29,16 @@
         }
     }
 
-    function AddZwischengruppeController($scope, $uibModalInstance, gewJugend, gruppe) {
+    function AddZwischengruppeController($scope, $uibModalInstance, gewJugend, gruppe, $rootScope, $timeout) {
         const vm = this;
+
+        if($rootScope.spielplanEnabled) {
+            $timeout(function () {
+                $uibModalInstance.dismiss('cancel');
+                vm.loading = false;
+            }, 0);
+            return;
+        }
 
         _.extend(vm, {
             jugend: _.cloneDeep(gewJugend),
