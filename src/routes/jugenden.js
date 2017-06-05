@@ -1,6 +1,7 @@
 module.exports = function () {
     const logger = require('winston').loggers.get('apiJugenden');
     const express = require('express');
+    const async = require('async');
     const router = express.Router();
     const cls = require('../config/cls.js');
 
@@ -79,6 +80,14 @@ module.exports = function () {
      **/
     router.post('/', function (req, res) {
         logger.verbose('Creating Jugend %s', req.body.name);
+
+        if (req.body.gruppen && req.body.gruppen.length > 0) {
+            return createFilledJugend(req, res);
+        }
+        return createBlankJugend(req, res);
+    });
+
+    function createBlankJugend(req, res) {
         const beachEventID = cls.getBeachEventID();
         const clsSession = cls.getNamespace();
         return clsSession.run(function () {
@@ -126,7 +135,64 @@ module.exports = function () {
                 });
             });
         });
-    });
+    }
+
+    function createFilledJugend(req, res) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            const jugend = new Jugend({
+                name: req.body.name,
+                color: req.body.color
+            });
+            jugend.veranstaltung = beachEventID;
+            return jugend.save(function (err, jugend) {
+                if (err) {
+                    return messages.Error(res, err);
+                }
+
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    let teamids = [];
+                    let gruppenids = [];
+                    return async.each(req.body.gruppen, function (gruppe, asyncdone) {
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return helpers.createGruppeWithTeams(jugend._id, gruppe, function (err, returnedData) {
+                                if (err) return asyncdone(err);
+
+                                if (returnedData.teamids) {
+                                    teamids = teamids.concat(returnedData.teamids);
+                                }
+                                if (returnedData.gruppe) {
+                                    gruppenids = gruppenids.concat(returnedData.gruppe._id);
+                                }
+                                return asyncdone();
+                            });
+                        });
+                    }, function (err) {
+                        if (err) return messages.Error(res, err);
+
+                        jugend.teams = teamids;
+                        jugend.gruppen = gruppenids;
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+                            return jugend.save(function (err, jugend) {
+                                if (err) return messages.Error(res, err);
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+                                    return jugend.deepPopulate('teams gruppen gruppen.teams', function (err, jugend) {
+                                        return handler.handleErrorAndResponse(err, res, jugend);
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
 
     /**
      * @api {del} /jugenden Delete Jugend

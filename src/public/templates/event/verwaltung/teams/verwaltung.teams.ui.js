@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.teams.ui', [
-            'spi.auth', 'ui.router', 'spi.team', 'spi.jugend', 'spi.components.jugendpanel.ui', 'spi.spielplan'
+            'spi.auth', 'ui.router', 'spi.team', 'spi.jugend', 'spi.components.jugendpanel.ui', 'spi.spielplan', 'spi.anmeldung', 'spi.components.turnier-import-modal.ui'
         ])
         .config(states)
         .controller('VerwaltungTeamsController', VerwaltungTeamsController);
@@ -21,6 +21,9 @@
                     },
                     teams: function (aktivesEvent, team) {
                         return team.getAll();
+                    },
+                    turniere: function (anmeldung) {
+                        return anmeldung.getSingleTurniere();
                     }
                 },
                 data: {
@@ -30,7 +33,7 @@
 
     }
 
-    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, jugenden, teams, JUGEND_FARBEN, team) {
+    function VerwaltungTeamsController($scope, auth, jugend, spielplan, $timeout, jugenden, teams, JUGEND_FARBEN, team, turniere, TurnierImportDialog) {
         const vm = this;
         vm.loading = true;
 
@@ -41,20 +44,25 @@
             addJugend: function (form) {
                 if (form.$valid) {
                     form.$setUntouched();
-                    jugend.create(vm.jugend).then(function (res) {
-                        form.$setUntouched();
-                        spielplan.createSpielplan();
-                        vm.jugend = {};
+
+                    TurnierImportDialog.open(vm.jugend, vm.imported).result.then(function (res) {
                         vm.jugenden.push(res);
-                        $timeout(function () {
-                            $scope.$apply();
-                        }, 0, false);
                     });
                 }
             },
             isLoggedIn: auth.isAdmin(),
             farben: JUGEND_FARBEN,
-            refreshAnmeldeObjects: team.reloadAnmeldeObjekte
+            refreshAnmeldeObjects: team.reloadAnmeldeObjekte,
+            turniere: turniere,
+            imported: undefined,
+            handleChange: function () {
+                if (vm.imported) {
+                    vm.jugend.name = vm.imported.name;
+                } else {
+                    vm.imported = undefined;
+                    vm.jugend.name = undefined;
+                }
+            }
         });
 
         $scope.$on('jugendDeleted', function () {

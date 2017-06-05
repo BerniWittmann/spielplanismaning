@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{vm.jugend.name}}</h3>
+</div>
+<div class="modal-body">
+    <spi-loader loading="vm.loading"></spi-loader>
+    <div class="row">
+        <div class="col-md-12 gruppe-container-wrap">
+            <spi-panel class="gruppe-container-panel" data-ng-repeat="gruppe in vm.gruppen">
+                <spi-panel-titel>
+                    <input class="gruppe-container-panel-name" data-ng-model="gruppe.name" data-ng-change="vm.hideErr()">
+                    <span class="float-right" data-ng-click="vm.removeGruppe(gruppe.name)"><i class="fa fa-remove"></i></span>
+                </spi-panel-titel>
+                <div class="gruppe-container" data-ui-sortable="vm.sortableOptions" data-ng-model="gruppe.teams">
+                    <div class="turnier-import-team" data-ng-repeat="team in gruppe.teams">{{team.name}}</div>
+                </div>
+            </spi-panel>
+            <div class="gruppe-add" data-ng-click="vm.addGruppe()">
+                <i class="fa fa-plus fa-lg"></i>
+                <p>Gruppe hinzufügen</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 gruppe-container-wrap-special">
+            <p>Noch nicht eingeteilte Teams</p>
+            <div class="gruppe-container" data-ui-sortable="vm.sortableOptions" data-ng-model="vm.unusedTeams">
+                <div class="turnier-import-team" data-ng-repeat="team in vm.unusedTeams">{{team.name}}</div>
+            </div>
+            <div class="alert alert-warning" data-ng-if="vm.saveWarningVisible">
+                Achtung! Es sind noch nicht eingeteilte Teams vorhanden. Diese werden nicht mitgespeichert!
+            </div>
+            <div class="alert alert-danger" data-ng-if="vm.err">
+                {{vm.err}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button uib-popover-template="'addTeamPopover.html'" popover-title="Team hinzufügen" data-popover-is-open="vm.addTeamPopoverOpen" data-popover-trigger="outsideClick" type="button" class="btn btn-primary pull-left"><i class="fa fa-plus"></i> Team Hinzufügen</button>
+    <button class="btn btn-danger" type="button" data-ng-click="vm.abbrechen()">Schließen</button>
+    <button class="btn btn-success" data-ng-click="vm.save()">Speichern</button>
+</div>
+
+<script type="text/ng-template" id="addTeamPopover.html">
+    <div class="form-group">
+        <label>Team Name:</label>
+        <input type="text" ng-model="vm.newTeam.name" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Anmeldungs ID:</label>
+        <input type="text" ng-model="vm.newTeam.anmeldungsId" class="form-control">
+    </div>
+    <button class="btn btn-primary" data-ng-click="vm.addTeam()"><i class="fa fa-plus"></i> Hinzufügen</button>
+</script>

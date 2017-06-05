@@ -13,6 +13,8 @@
         };
         var form = {$valid: true, $setUntouched: function () {}};
 
+        var mockTurnierImportDialog = {};
+
         beforeEach(function () {
             module(function ($provide) {
                 $provide.value('errorHandler', mockErrorHandler);
@@ -38,6 +40,8 @@
             $provide.value('jugend', mockJugend);
             $provide.value('team', mockTeams);
             $provide.value('aktivesEvent', {});
+            $provide.value('turniere', []);
+            $provide.value('TurnierImportDialog', mockTurnierImportDialog);
         }));
 
         var jugenden = [{
@@ -149,6 +153,14 @@
                 }
             };
 
+            mockTurnierImportDialog = {
+                open: function (jugend) {
+                    return {
+                        result: $q.when(jugend)
+                    }
+                }
+            };
+
             var ctrl = scope.vm = $controller('VerwaltungTeamsController', {
                 $scope: mockScope,
                 auth: mockAuth,
@@ -158,7 +170,9 @@
                 $timeout: mockTimeout,
                 $window: mockWindow,
                 jugenden: jugenden,
-                team: mockTeams
+                team: mockTeams,
+                turniere: [],
+                TurnierImportDialog: mockTurnierImportDialog
             });
             $rootScope.$digest();
             var compileFn = $compile(angular.element('<div></div>').html(html));
@@ -228,15 +242,12 @@
                 name: 'Jugend Test',
                 color: 'lila'
             };
-            var spy = chai.spy.on(mockJugend, 'create');
-            var spySpielplan = chai.spy.on(mockSpielplan, 'createSpielplan');
-            $httpBackend.expectGET('/api/gruppen?jugend=j4').respond(201, {});
+            var spy = chai.spy.on(mockTurnierImportDialog, 'open');
 
             ctrl.addJugend(form);
             scope.$digest();
 
             expect(spy).to.have.been.called();
-            expect(spySpielplan).to.have.been.called();
         });
     });
 }());
