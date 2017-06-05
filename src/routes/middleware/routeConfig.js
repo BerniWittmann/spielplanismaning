@@ -82,6 +82,24 @@ module.exports = {
             }
         }
     },
+    "/api/gruppen/zwischengruppe": {
+        "AUTH": {
+            "POST": [
+                "admin"
+            ]
+        },
+        "PARAMS": {
+            "POST": {
+                query: {
+                    jugend: Joi.objectId().required()
+                },
+                body: Joi.array().items({
+                    name: Joi.string().min(3).required(),
+                    teams: Joi.array().required()
+                })
+            }
+        }
+    },
     "/api/teams": {
         "AUTH": {
             "POST": [

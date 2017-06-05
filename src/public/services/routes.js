@@ -87,6 +87,9 @@
                 gruppen: {
                     base: function () {
                         return ENDPOINT_BASE + '/gruppen';
+                    },
+                    zwischengruppe: function () {
+                        return ENDPOINT_BASE + '/gruppen/zwischengruppe';
                     }
                 },
                 jugenden: {

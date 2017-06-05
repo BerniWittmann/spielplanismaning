@@ -15,6 +15,10 @@
                 return routes.requestMethodParamsData('POST', routes.urls.gruppen.base(), newGruppe, {jugend: jugendId});
             };
 
+            gruppe.createZwischengruppe = function (jugendId, gruppen) {
+                return routes.requestMethodParamsData('POST', routes.urls.gruppen.zwischengruppe(), gruppen, {jugend: jugendId});
+            };
+
             gruppe.get = function (id) {
                 return routes.requestGETID(routes.urls.gruppen.base(), id);
             };

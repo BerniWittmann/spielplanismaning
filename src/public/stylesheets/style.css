@@ -96,6 +96,10 @@ input[type=number] {
     color: gray;
 }
 
+.jugend-label a {
+    overflow: hidden;
+}
+
 #spielplan > tbody > .last-platz-spiel > td {
     border-bottom: 2px solid #ddd;
 }
@@ -478,4 +482,12 @@ spi-panel-title spi-jugend-label {
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
+}
+
+.gruppe-container-panel-large {
+    min-width: 240px;
+}
+
+.gruppe-container-panel-large .gruppe-container-panel-name {
+    width: 190px;
 }

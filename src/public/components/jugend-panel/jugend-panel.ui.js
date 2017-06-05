@@ -3,7 +3,7 @@
 
     angular
         .module('spi.components.jugendpanel.ui', [
-            'spi.auth', 'ui.bootstrap', 'spi.jugend', 'spi.gruppe', 'spi.components.panel.ui', 'spi.components.gruppe-edit-modal.ui', 'spi.spielplan', 'spi.components.bestaetigen-modal.ui'
+            'spi.auth', 'ui.bootstrap', 'spi.jugend', 'spi.gruppe', 'spi.components.panel.ui', 'spi.components.gruppe-edit-modal.ui', 'spi.spielplan', 'spi.components.bestaetigen-modal.ui', 'spi.components.add-zwischengruppe-modal.ui'
         ])
         .controller('JugendPanelController', JugendPanelController)
         .component('spiJugendPanel', {
@@ -15,7 +15,7 @@
             controllerAs: 'vm'
         });
 
-    function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, $scope, BestaetigenDialog) {
+    function JugendPanelController(auth, gruppe, jugend, GruppeEditierenDialog, spielplan, $state, $scope, BestaetigenDialog, AddZwischengruppeDialog) {
         const vm = this;
         vm.loading = true;
 
@@ -30,7 +30,8 @@
             editGruppe: editGruppe,
             askDeleteJugend: askDeleteJugend,
             askDeleteGruppe: askDeleteGruppe,
-            gruppeIsEditable: gruppeIsEditable
+            gruppeIsEditable: gruppeIsEditable,
+            addZwischengruppe: addZwischengruppe
         });
 
         vm.loading = false;
@@ -82,6 +83,13 @@
                     vm.showMinZahlGruppen = true;
                 }
             }
+        }
+
+        function addZwischengruppe() {
+            AddZwischengruppeDialog.open(vm.jugend).result.then(function (res) {
+                vm.jugend = res;
+                vm.gruppen = _.sortBy(vm.jugend.gruppen, 'name');
+            });
         }
 
         function addGruppe(form) {
