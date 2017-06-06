@@ -15,7 +15,7 @@
                 <td data-title="'Name'" data-sortable="'name'" class="text-center" data-filter="{name: 'text'}">
                     <spi-jugend-label jugend="jugend"></spi-jugend-label>
                 </td>
-                <td data-title="'Slug'"
+                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenJugenden[$index]" data-tooltip-placement="bottom" class="cursor-copy" data-clipboard data-text="jugend.slug"
                     data-sortable="'slug'" data-filter="{slug: 'text'}">{{jugend.slug}}
                 </td>
             </tr>
@@ -36,7 +36,7 @@
                 <td data-title="'Jugend'" data-sortable="'jugendName'" class="text-center" data-filter="{jugendName: 'text'}">
                     <spi-jugend-label jugend="gruppe.jugend"></spi-jugend-label>
                 </td>
-                <td data-title="'Slug'"
+                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();" class="cursor-copy" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenGruppen[$index]" data-tooltip-placement="bottom" data-clipboard data-text="gruppe.slug"
                     data-sortable="'slug'" data-filter="{slug: 'text'}">{{gruppe.slug}}
                 </td>
             </tr>
@@ -63,8 +63,8 @@
                 <td data-title="'Zwischengruppe'" data-sortable="'zwGruppenName'" class="text-center" data-filter="{zwGruppenName: 'text'}">
                     {{team.zwGruppenName}}
                 </td>
-                <td data-title="'Slug'"
-                    data-sortable="'slug'" data-filter="{slug: 'text'}">{{team.slug}}
+                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();" class="cursor-copy" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenTeams[$index]" data-tooltip-placement="bottom" data-clipboard data-text="team.slug"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}" >{{team.slug}}
                 </td>
             </tr>
         </table>

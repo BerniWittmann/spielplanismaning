@@ -491,3 +491,7 @@ spi-panel-title spi-jugend-label {
 .gruppe-container-panel-large .gruppe-container-panel-name {
     width: 190px;
 }
+
+.cursor-copy {
+    cursor: context-menu;
+}

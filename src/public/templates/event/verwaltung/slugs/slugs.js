@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.slugs.ui', [
-            'ui.router', 'ngTable', 'spi.jugend', 'spi.team', 'spi.gruppe'
+            'ui.router', 'ngTable', 'spi.jugend', 'spi.team', 'spi.gruppe', 'angular-clipboard'
         ])
         .config(states)
         .controller('SlugsContoller', SlugsContoller);
@@ -34,9 +34,10 @@
 
     }
 
-    function SlugsContoller(jugenden, gruppen, teams, NgTableParams, $state) {
+    function SlugsContoller(jugenden, gruppen, teams, NgTableParams, $state, $scope) {
         const vm = this;
         vm.loading = true;
+        const originalTooltipText = 'Klick zum Kopieren';
 
         _.extend(vm, {
             jugenden: jugenden,
@@ -64,13 +65,20 @@
                 $state.go('spi.event.tgj.gruppe', {
                     gruppeid: gruppe.slug || gruppe._id
                 });
+            },
+            tooltipText: originalTooltipText,
+            copied: function () {
+                vm.tooltipText = 'Kopiert';
             }
         });
 
         _.extend(vm, {
             tableParamsJugenden: tableParams(vm.jugenden),
             tableParamsGruppen: tableParams(vm.gruppen),
-            tableParamsTeams: tableParams(vm.teams)
+            tableParamsTeams: tableParams(vm.teams),
+            tooltipOpenJugenden: createTooltipOpenArray(vm.jugenden.length),
+            tooltipOpenGruppen: createTooltipOpenArray(vm.gruppen.length),
+            tooltipOpenTeams: createTooltipOpenArray(vm.teams.length)
         });
 
         function tableParams(data) {
@@ -80,6 +88,26 @@
                 counts: [],
                 data: data
             });
+        }
+
+        function createTooltipOpenArray(length) {
+            return new Array(length).map(function () {
+                return false;
+            });
+        }
+
+        $scope.$watchCollection('vm.tooltipOpenJugenden', handleTooltipChange);
+        $scope.$watchCollection('vm.tooltipOpenGruppen', handleTooltipChange);
+        $scope.$watchCollection('vm.tooltipOpenTeams', handleTooltipChange);
+
+        function handleTooltipChange(arr) {
+            let result = false;
+            arr.forEach(function (single) {
+                if (single) result = true;
+            });
+            if (result) return;
+
+            vm.tooltipText = originalTooltipText;
         }
 
         vm.loading = false;
