@@ -24,7 +24,7 @@ let GruppenSchema = new mongoose.Schema({
     }
 });
 
-GruppenSchema.plugin(URLSlugs('name', {update: true, indexUnique: true}));
+GruppenSchema.plugin(URLSlugs('name', {update: false, indexUnique: true}));
 
 GruppenSchema.methods.pushTeams = function (team, cb) {
     this.teams.push(team);

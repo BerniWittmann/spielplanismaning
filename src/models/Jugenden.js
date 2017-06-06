@@ -25,7 +25,7 @@ let JugendSchema = new mongoose.Schema({
     }
 });
 
-JugendSchema.plugin(URLSlugs('name', {update: true, indexUnique: true}));
+JugendSchema.plugin(URLSlugs('name', {update: false, indexUnique: true}));
 
 JugendSchema.methods.pushGruppe = function (Gruppe, cb) {
     this.gruppen.push(Gruppe);

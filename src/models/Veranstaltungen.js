@@ -13,7 +13,7 @@ const VeranstaltungenSchema = new Schema({
     spielplanEnabled: Boolean
 });
 
-VeranstaltungenSchema.plugin(URLSlugs('name', {update: true}));
+VeranstaltungenSchema.plugin(URLSlugs('name', {update: false}));
 
 VeranstaltungenSchema.methods.fill = function (cb) {
     return cb(null, this);

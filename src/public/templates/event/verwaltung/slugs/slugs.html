@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-md-12 page-header">
+        <h3>URL - Slugs</h3>
+    </div>
+</div>
+
+<spi-loader loading="vm.loading"></spi-loader>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-8 col-md-offset-2">
+        <h4>Jugenden</h4>
+        <table data-ng-table="vm.tableParamsJugenden" class="table table-condensed table-striped table-hover text-center"
+               data-show-filter="true">
+            <tr data-ng-repeat="jugend in $data" class="text-center" data-ng-click="vm.gotoJugend(jugend);">
+                <td data-title="'Name'" data-sortable="'name'" class="text-center" data-filter="{name: 'text'}">
+                    <spi-jugend-label jugend="jugend"></spi-jugend-label>
+                </td>
+                <td data-title="'Slug'"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}">{{jugend.slug}}
+                </td>
+            </tr>
+        </table>
+        <div class="alert alert-info" data-ng-if="vm.tableParamsJugenden.total()===0">Keine Jugenden gefunden</div>
+    </div>
+</div>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-8 col-md-offset-2">
+        <h4>Gruppen</h4>
+        <table data-ng-table="vm.tableParamsGruppen" class="table table-condensed table-striped table-hover text-center"
+               data-show-filter="true">
+            <tr data-ng-repeat="gruppe in $data" class="text-center" data-ng-click="vm.gotoGruppe(gruppe);">
+                <td data-title="'Name'"
+                    data-sortable="'name'" data-filter="{name: 'text'}">{{gruppe.name}}
+                </td>
+                <td data-title="'Jugend'" data-sortable="'jugendName'" class="text-center" data-filter="{jugendName: 'text'}">
+                    <spi-jugend-label jugend="gruppe.jugend"></spi-jugend-label>
+                </td>
+                <td data-title="'Slug'"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}">{{gruppe.slug}}
+                </td>
+            </tr>
+        </table>
+        <div class="alert alert-info" data-ng-if="vm.tableParamsGruppen.total()===0">Keine Gruppen gefunden</div>
+    </div>
+</div>
+
+<div class="row" data-ng-if="!vm.loading">
+    <div class="col-md-8 col-md-offset-2">
+        <h4>Teams</h4>
+        <table data-ng-table="vm.tableParamsTeams" class="table table-condensed table-striped table-hover text-center"
+               data-show-filter="true">
+            <tr data-ng-repeat="team in $data" class="text-center" data-ng-click="vm.gotoTeam(team);">
+                <td data-title="'Name'" data-sortable="'name'" class="text-center" data-filter="{name: 'text'}">
+                    {{team.name}}
+                </td>
+                <td data-title="'Jugend'" data-sortable="'jugendName'" class="text-center" data-filter="{jugendName: 'text'}">
+                    <spi-jugend-label jugend="team.jugend"></spi-jugend-label>
+                </td>
+                <td data-title="'Gruppe'" data-sortable="'gruppenName'" class="text-center" data-filter="{gruppenName: 'text'}">
+                    {{team.gruppenName}}
+                </td>
+                <td data-title="'Zwischengruppe'" data-sortable="'zwGruppenName'" class="text-center" data-filter="{zwGruppenName: 'text'}">
+                    {{team.zwGruppenName}}
+                </td>
+                <td data-title="'Slug'"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}">{{team.slug}}
+                </td>
+            </tr>
+        </table>
+        <div class="alert alert-info" data-ng-if="vm.tableParamsTeams.total()===0">Keine Teams gefunden</div>
+    </div>
+</div>

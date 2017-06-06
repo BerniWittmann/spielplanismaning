@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.event.ui', [
-            'spi.templates.verwaltung.teams.ui', 'spi.templates.verwaltung.spiele-druck.ui', 'spi.templates.verwaltung.email-abonnements.ui', 'spi.templates.verwaltung.spielplan.ui', 'ui.router'
+            'spi.templates.verwaltung.teams.ui', 'spi.templates.verwaltung.spiele-druck.ui', 'spi.templates.verwaltung.email-abonnements.ui', 'spi.templates.verwaltung.spielplan.ui', 'spi.templates.verwaltung.slugs.ui', 'ui.router'
         ])
         .config(states);
 

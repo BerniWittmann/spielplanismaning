@@ -70,6 +70,9 @@
                         <li data-ng-if="vm.isAdmin() && vm.isSpielplanEnabled()" id="nav-button-verwaltung-emails"><a
                                 data-ui-sref="spi.event.verwaltung.email-abonnements"
                                 data-toggle="collapse" data-target=".navbar-collapse.in">Email Abonnements</a></li>
+                        <li data-ng-if="vm.isBearbeiterOrAdmin()" id="nav-button-verwaltung-slugs"><a
+                                data-ui-sref="spi.event.verwaltung.slugs"
+                                data-toggle="collapse" data-target=".navbar-collapse.in">Slugs</a></li>
                     </ul>
                 </li>
             </ul>

@@ -48,7 +48,7 @@ let TeamSchema = new mongoose.Schema({
     }
 });
 
-TeamSchema.plugin(URLSlugs('name', {update: true, indexUnique: true}));
+TeamSchema.plugin(URLSlugs('name', {update: false, indexUnique: true}));
 
 TeamSchema.virtual('anmeldungsObject').get(function () {
     if (!this.anmeldungsObjectString || this.anmeldungsObjectString.length === 0) {
