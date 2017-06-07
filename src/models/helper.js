@@ -166,8 +166,18 @@ function beachEventDocumentMiddleware(next) {
         logger.error('No beachEventID given in Schema in document hook: %s', JSON.stringify(this));
         return next();
     }
-    const ID = beachEventID || this.veranstaltung;
-    this.set({veranstaltung: mongoose.Types.ObjectId(ID)});
+    let ID = beachEventID || this.veranstaltung;
+    try {
+        ID = mongoose.Types.ObjectId(ID);
+    } catch(err) {
+        ID = undefined;
+    }
+    if (!ID) {
+        logger.error('No beachEventID given in Schema in document hook: %s', JSON.stringify(this));
+        return next();
+    }
+
+    this.set({veranstaltung: ID});
     return next();
 }
 

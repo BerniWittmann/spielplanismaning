@@ -92,7 +92,7 @@ app.use(expressWinston.logger({
     level: 'info',
     statusLevels: true
 }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '20mb'}));
 //noinspection JSUnresolvedFunction
 app.use(bodyParser.urlencoded({
     extended: false
