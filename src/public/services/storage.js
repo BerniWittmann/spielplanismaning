@@ -3,11 +3,14 @@
 
     angular
         .module('spi.storage', ['LocalStorageModule'])
-        .factory('storage', ['$window', 'localStorageService', function ($window, localStorageService) {
+        .factory('storage', ['$window', 'localStorageService', '$injector', function ($window, localStorageService, $injector) {
 
             const storage = {};
 
             storage.set = function (key, value) {
+                if (!localStorageService.isSupported) {
+                    $injector.get('toastr').error('Bitte aktivieren Sie Cookies!', 'Achtung!');
+                }
                 localStorageService.set(key, $window.btoa(value));
             };
 
