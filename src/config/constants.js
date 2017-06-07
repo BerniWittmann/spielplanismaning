@@ -12,5 +12,9 @@ module.exports = {
         endzeit: '16:00',
         startdatum: moment().add(7, 'd').format('DD.MM.YYYY'),
         enddatum: moment().add(7, 'd').format('DD.MM.YYYY')
+    },
+    DEFAULT_MAIL_FROM: {
+        EMAIL: 'mail@beach.handballismaning.de',
+        NAME: 'Beachturnier Ismaning'
     }
 };

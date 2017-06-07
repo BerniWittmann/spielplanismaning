@@ -31,8 +31,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const mail = new sendgrid.Email();
                 mail.setTos(emails);
                 mail.setSmtpapiTos(emails);
-                mail.setFrom('mail@spielplanismaning.herokuapp.com');
-                mail.setFromName('Kinderbeachturnier Ismaning');
+                mail.setFrom(constants.DEFAULT_MAIL_FROM.EMAIL);
+                mail.setFromName(constants.DEFAULT_MAIL_FROM.NAME);
                 mail.setSubject('Ergebnis-Update: ' + team.name + ' hat ' + spielausgang);
                 mail.setText('Ergebnis-Update: ' + team.name + ' hat ' + spielausgang);
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
@@ -79,8 +79,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const mail = new sendgrid.Email();
                 mail.setTos(emails);
                 mail.setSmtpapiTos(emails);
-                mail.setFrom('mail@spielplanismaning.herokuapp.com');
-                mail.setFromName('Kinderbeachturnier Ismaning');
+                mail.setFrom(constants.DEFAULT_MAIL_FROM.EMAIL);
+                mail.setFromName(constants.DEFAULT_MAIL_FROM.NAME);
                 mail.setSubject('Spiel-Erinnerung: ' + team.name);
                 mail.setText('Spiel-Erinnerung: ' + team.name);
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
@@ -127,8 +127,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const mail = new sendgrid.Email();
                 mail.setTos(emails);
                 mail.setSmtpapiTos(emails);
-                mail.setFrom('mail@spielplanismaning.herokuapp.com');
-                mail.setFromName('Kinderbeachturnier Ismaning');
+                mail.setFrom(constants.DEFAULT_MAIL_FROM.EMAIL);
+                mail.setFromName(constants.DEFAULT_MAIL_FROM.NAME);
                 mail.setSubject(subject);
                 mail.setText(body);
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
@@ -170,8 +170,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const mail = new sendgrid.Email();
                 mail.setTos(email);
                 mail.setSmtpapiTos(email);
-                mail.setFrom('mail@spielplanismaning.herokuapp.com');
-                mail.setFromName('Beachturnier Ismaning');
+                mail.setFrom(constants.DEFAULT_MAIL_FROM.EMAIL);
+                mail.setFromName(constants.DEFAULT_MAIL_FROM.NAME);
                 mail.setSubject('Account-Freischaltung');
                 mail.setText('Account-Freischaltung');
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
@@ -215,8 +215,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const mail = new sendgrid.Email();
                 mail.setTos(email);
                 mail.setSmtpapiTos(email);
-                mail.setFrom('mail@spielplanismaning.herokuapp.com');
-                mail.setFromName('Beachturnier Ismaning');
+                mail.setFrom(constants.DEFAULT_MAIL_FROM.EMAIL);
+                mail.setFromName(constants.DEFAULT_MAIL_FROM.NAME);
                 mail.setSubject('Passwort zurücksetzen');
                 mail.setText('Passwort zurücksetzen');
                 mail.replyto = 'kinderbeach.ismaning@mail.com';
