@@ -41,6 +41,8 @@
         vm.loading = true;
 
         _.extend(vm, {
+            currentTime: moment().format('HH:mm'),
+            currentUrl: window.location.host,
             spiele: _.sortBy(spiele, ['nummer']),
             spieleByDate: _.groupBy(_.sortBy(spiele, ['nummer']), 'datum'),
             gotoSpiel: function (gewaehltesspiel) {

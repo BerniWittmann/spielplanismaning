@@ -1,10 +1,13 @@
 <div class="row">
     <div class="col-md-12 page-header">
         <h3>Spielplan</h3>
-        <div class="pull-right" data-ng-if="vm.canEdit">
+        <div class="pull-right hidden-print" data-ng-if="vm.canEdit">
             <button data-ng-if="!vm.isEditing" data-ng-click="vm.toggleEdit()" type="button" class="btn btn-primary btn-md"><i class="fa fa-pencil"></i> Spielplan bearbeiten</i></button>
             <button data-ng-if="vm.isEditing" data-ng-click="vm.abortEdit()" type="button" class="btn btn-danger btn-md"><i class="fa fa-times"></i> Abbrechen</i></button>
             <button data-ng-if="vm.isEditing" data-ng-click="vm.saveOrder()" type="button" class="btn btn-success btn-md"><i class="fa fa-check"></i> Spielplan speichern</i></button>
+        </div>
+        <div class="pull-right text-right visible-print">
+            <h4>Stand: {{vm.currentTime}} Uhr <span style="display: inline-block; width: 20px;"></span> Aktueller Spielplan unter {{vm.currentUrl}}</h4>
         </div>
     </div>
 </div>
