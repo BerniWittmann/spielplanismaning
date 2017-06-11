@@ -106,6 +106,18 @@ function prepareSpiel(spiel, index, store, cb) {
 
             spiel.label = spiel.spielLabel;
 
+            if (spiel.punkteA || spiel.punkteB || spiel.toreA || spiel.toreB) {
+                spiel.beendet = true;
+                spiel.unentschieden = false;
+                if (spiel.punkteA > spiel.punkteB) {
+                    spiel.gewinner = spiel.teamA;
+                } else if (spiel.punkteA < spiel.punkteB) {
+                    spiel.gewinner = spiel.teamB;
+                } else {
+                    spiel.unentschieden = true;
+                }
+            }
+
             return cb(null, spiel);
         });
     });
@@ -153,7 +165,6 @@ function addSpiele(spiele, cb) {
                     });
                 }, function (err, spiele) {
                     if (err) return cb(err);
-                    console.log(_.values(spiele));
                     return clsSession.run(function () {
                         clsSession.set('beachEventID', beachEventID);
 

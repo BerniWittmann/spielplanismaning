@@ -69,7 +69,11 @@ describe('Spiel - Import', function () {
                     return Spiel.find({veranstaltung: beachEventID}, function (err, res) {
                         expect(err).not.to.exist;
 
-                        console.warn(res);
+                        expect(res).to.have.lengthOf(1);
+                        expect(res[0]._id).to.exist;
+                        expect(res[0].slug).to.equal('halbfinale-1');
+                        expect(res[0].teamA.toString()).to.have.lengthOf(24);
+                        expect(res[0].teamB.toString()).to.have.lengthOf(24);
 
                         return done();
                     });
