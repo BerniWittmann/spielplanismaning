@@ -21,6 +21,7 @@ const schema = Joi.object().keys({
     teamALabel: Joi.string(),
     teamB: Joi.string(),
     teamBLabel: Joi.string(),
+    veranstaltung: Joi.string().optional(),
     toreA: Joi.number().integer().min(0).required(),
     toreB: Joi.number().integer().min(0).required(),
     punkteA: Joi.number().integer().min(0).required(),
@@ -75,7 +76,7 @@ function checkEntities(spiel, index, cb) {
     return clsSession.run(function () {
         clsSession.set('beachEventID', beachEventID);
 
-        async.each(requiredEntities, function (entityConfig, asyncdone) {
+        return async.each(requiredEntities, function (entityConfig, asyncdone) {
             return clsSession.run(function () {
                 clsSession.set('beachEventID', beachEventID);
                 return checkEntity(entityConfig, spiel, index, asyncdone);
@@ -90,17 +91,17 @@ function validateSpiel(spiel, index, cb) {
     return clsSession.run(function () {
         clsSession.set('beachEventID', beachEventID);
 
+        if (spiel) {
+            spiel.veranstaltung = beachEventID;
+        }
+
         if (!spiel) return cb(validationErrors.spielEmpty(index), false);
         const fieldValidationResult = Joi.validate(spiel, schema);
         if (fieldValidationResult.error) {
             return cb(validationErrors.fieldsInvalid(index, fieldValidationResult.error.details), false);
         }
 
-        return checkEntities(spiel, index, function (err) {
-            if (err) return cb(err, false);
-
-            return cb(null, true)
-        });
+        return checkEntities(spiel, index, cb);
     });
 }
 

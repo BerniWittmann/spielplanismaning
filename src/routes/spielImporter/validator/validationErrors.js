@@ -1,5 +1,5 @@
 function validationError(reason, index) {
-    return '[Spiel ' + index + ': Validation - Error] ' + reason;
+    return '[Spiel ' + (index + 1) + ': Validation - Error] ' + reason;
 }
 
 function spielEmpty(index) {
