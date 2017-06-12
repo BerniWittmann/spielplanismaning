@@ -105,8 +105,13 @@ function prepareSpiel(spiel, index, store, cb) {
             if (err) return cb(err);
 
             spiel.label = spiel.spielLabel;
+            spiel.jugend = spiel.turnier;
 
             if (spiel.punkteA || spiel.punkteB || spiel.toreA || spiel.toreB) {
+                if (!spiel.teamA || !spiel.teamB) {
+                    return cb(validationErrors.teamsNotFilled(index));
+                }
+
                 spiel.beendet = true;
                 spiel.unentschieden = false;
                 if (spiel.punkteA > spiel.punkteB) {
@@ -168,7 +173,6 @@ function addSpiele(spiele, cb) {
                     return clsSession.run(function () {
                         clsSession.set('beachEventID', beachEventID);
 
-                        logger.warn('Before add');
                         return Spiel.insertMany(_.values(spiele), cb);
                     });
                 });

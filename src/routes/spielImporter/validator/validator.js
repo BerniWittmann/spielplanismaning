@@ -15,17 +15,17 @@ const schema = Joi.object().keys({
     uhrzeit: Joi.date().format('HH:mm').required(),
     platz: Joi.number().integer().min(1).max(parseInt(process.env.PLAETZE, 10) || 3).required(),
     turnier: Joi.string().required(),
-    gruppe: Joi.string(),
-    spielLabel: Joi.string(),
-    teamA: Joi.string(),
-    teamALabel: Joi.string(),
-    teamB: Joi.string(),
-    teamBLabel: Joi.string(),
+    gruppe: Joi.string().optional(),
+    spielLabel: Joi.string().optional(),
+    teamA: Joi.string().optional(),
+    teamALabel: Joi.string().optional(),
+    teamB: Joi.string().optional(),
+    teamBLabel: Joi.string().optional(),
     veranstaltung: Joi.string().optional(),
-    toreA: Joi.number().integer().min(0).required(),
-    toreB: Joi.number().integer().min(0).required(),
-    punkteA: Joi.number().integer().min(0).required(),
-    punkteB: Joi.number().integer().min(0).required()
+    toreA: Joi.number().integer().min(0).optional(),
+    toreB: Joi.number().integer().min(0).optional(),
+    punkteA: Joi.number().integer().min(0).optional(),
+    punkteB: Joi.number().integer().min(0).optional()
 }).or('gruppe', 'spielLabel').or('teamA', 'teamALabel').or('teamB', 'teamBLabel');
 
 const requiredEntities = [{
@@ -49,9 +49,9 @@ const requiredEntities = [{
 function checkEntity(config, spiel, index, cb) {
     if (!spiel[config.key]) {
         if (config.required) {
-            return cb(validationErrors.fieldsInvalid(index, [{message: '"' + config.key + '" is required'}]));
+            return cb(validationErrors.fieldsInvalid(index, [{message: '"' + config.key + '" is required'}]), false);
         } else {
-            return cb();
+            return cb(null, true);
         }
     }
 
@@ -61,7 +61,7 @@ function checkEntity(config, spiel, index, cb) {
         clsSession.set('beachEventID', beachEventID);
 
         return config.model.findOne({'slug': spiel[config.key]}, function (err, res) {
-            if (err) return cb(err);
+            if (err) return cb(err, false);
 
             if (!res) return cb(validationErrors.entityNotFound(index, config.key, spiel[config.key]), false);
 
@@ -101,7 +101,11 @@ function validateSpiel(spiel, index, cb) {
             return cb(validationErrors.fieldsInvalid(index, fieldValidationResult.error.details), false);
         }
 
-        return checkEntities(spiel, index, cb);
+        return checkEntities(spiel, index, function (err) {
+            if (err) return cb(err, false);
+
+            return cb(null, true);
+        });
     });
 }
 

@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('spi.spiel', ['spi.routes', 'spi.team'])
-        .factory('spiel', ['Logger', 'routes', 'team', '$rootScope', function (Logger, routes, team, $rootScope) {
+        .module('spi.spiel', ['spi.routes', 'spi.team', 'toastr'])
+        .factory('spiel', ['Logger', 'routes', 'team', '$rootScope', 'toastr', function (Logger, routes, team, $rootScope, toastr) {
             function isSpielplanEnabled() {
                 return $rootScope.spielplanEnabled;
             }
@@ -19,6 +19,7 @@
                     console.warn(err);
                 });
             }
+
             loadTeams();
 
             spiel.getAll = function () {
@@ -106,6 +107,8 @@
                         return winOrLose + ' Spiel ' + game['from' + teamStr].nummer;
                     }
                     return game['rank' + teamStr] + '. ' + game['from' + teamStr].name;
+                } else if (game['team' + teamStr + 'Label']) {
+                    return game['team' + teamStr + 'Label'];
                 } else {
                     return '';
                 }
@@ -119,6 +122,23 @@
                 } else {
                     return '';
                 }
+            };
+
+            spiel.import = function (spiele) {
+                spiele = spiele.map(function (single) {
+                    return _.mapValues(single, function (value) {
+                        if (typeof value === 'string' && value.trim().length === 0) {
+                            value = undefined;
+                        }
+                        return value;
+                    });
+                });
+                return routes.requestPUT(routes.urls.spiele.import(), spiele).then(function (res) {
+                    toastr.success(res.GAMES.length + ' Spiele importiert.', 'Import erfolgreich');
+                    return res;
+                }).catch(function (err) {
+                    toastr.error(err.ERROR, 'Fehler bei SpielImport');
+                });
             };
 
             return spiel;

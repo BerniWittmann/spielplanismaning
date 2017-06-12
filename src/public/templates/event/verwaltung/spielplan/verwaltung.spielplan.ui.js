@@ -33,13 +33,52 @@
             });
     }
 
-    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr, spiele, $state, spielplanEnabled) {
+    function VerwaltungSpielplanController(spielplan, zeiten, $scope, toastr, spiele, spiel, spielplanEnabled) {
         const vm = this;
         vm.loading = true;
-        if (!spielplanEnabled) {
-            $state.go('spi.event.home');
-            return;
+
+        _.extend(vm, {
+            spielplanEnabled: spielplanEnabled,
+            import: _import,
+            importButtonDisabled: true,
+            fileChange: fileChange
+        });
+
+        function _import() {
+            if (!vm.importFile) return;
+
+            Papa.parse(vm.importFile, {
+                header: true,
+                error: function (err) {
+                    console.error(err);
+                    toastr.error('Ein Fehler bei der Umwandlung ist aufgetreten. Bitte überprüfen Sie Ihre Datei', 'Achtung!');
+                },
+                complete: function (res) {
+                    spiel.import(res.data);
+                }
+            });
         }
+
+        function fileChange(event, files) {
+            if (files && files.length > 0) {
+                vm.importFile = files[0];
+                vm.importButtonDisabled = false;
+            } else {
+                vm.importFile = undefined;
+                vm.importButtonDisabled = true;
+            }
+            $scope.$apply();
+        }
+
+        if (spielplanEnabled) {
+            initZeiten.bind(this)(spielplan, zeiten, $scope, toastr, spiele);
+        }
+
+        vm.loading = false;
+    }
+
+    function initZeiten(spielplan, zeiten, $scope, toastr, spiele) {
+        const vm = this;
 
         function newDateWithHours(h) {
             const d = new Date();
@@ -68,7 +107,6 @@
             zeiten.enddatum = prettifyDate();
         }
 
-        //noinspection JSUnusedGlobalSymbols
         _.extend(vm, {
             startzeit: d,
             endzeit: d2,
@@ -98,8 +136,8 @@
         });
 
         vm.endRundeStarted = spiele.filter(function (single) {
-            return single.label !== 'normal' && single.beendet;
-        }).length > 0;
+                return single.label !== 'normal' && single.beendet;
+            }).length > 0;
 
         if (!_.isUndefined(zeiten) && !_.isNull(zeiten)) {
             if (moment(zeiten.startzeit, 'HH:mm').isValid()) {
@@ -170,7 +208,7 @@
             }
         });
 
-        $scope.$watchGroup(['vm.endzeit','vm.startzeit'], function () {
+        $scope.$watchGroup(['vm.endzeit', 'vm.startzeit'], function () {
             if (vm.startzeit && vm.endzeit) {
                 if (moment(vm.startzeit.toISOString()).isAfter(moment(vm.endzeit.toISOString()))) {
                     toastr.warning('Die Startzeit muss vor der Endzeit liegen!', 'Achtung!');
@@ -178,7 +216,5 @@
                 }
             }
         });
-
-        vm.loading = false;
     }
 })();

@@ -51,7 +51,7 @@ gulp.task('test:frontend:watch', function (done) {
 
 // test backend
 gulp.task('test:backend', function (done) {
-    gulp.src('././test/backend/**/validator.spec.js', {read: false})
+    gulp.src('././test/backend/**/*.spec.js', {read: false})
         .pipe(mocha({
             reporter: 'mochawesome',
             reporterOptions: {

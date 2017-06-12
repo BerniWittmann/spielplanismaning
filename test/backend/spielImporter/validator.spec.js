@@ -29,7 +29,10 @@ describe('Spiel - Import', function () {
         };
         var spiel;
         var check = function (cb) {
-            return validate(spiel, index, cb);
+            return clsSession.run(function () {
+                clsSession.set('beachEventID', beachEventID);
+                return validate(spiel, index, cb);
+            });
         };
 
         before(function (done) {
@@ -258,6 +261,28 @@ describe('Spiel - Import', function () {
             });
 
             describe('Gruppe oder Spiellabel müssen required sein', function () {
+                it('wenn nur die Gruppe angegeben ist, soll das in Ordnung sein', function (done) {
+                    delete spiel.spielLabel;
+                    check(function (err, res) {
+                        expect(err).not.to.be.defined;
+                        expect(err).not.to.equal(validationErrorPrefix + 'Fields invalid: "value" must contain at least one of [gruppe, spielLabel]');
+                        expect(res).to.be.true;
+
+                        return done();
+                    });
+                });
+
+                it('wenn nur das SpielLabel angegeben ist, soll das in Ordnung sein', function (done) {
+                    delete spiel.gruppe;
+                    check(function (err, res) {
+                        expect(err).not.to.be.defined;
+                        expect(err).not.to.equal(validationErrorPrefix + 'Fields invalid: "value" must contain at least one of [gruppe, spielLabel]');
+                        expect(res).to.be.true;
+
+                        return done();
+                    });
+                });
+
                 it('mindestens eins von beiden muss gegeben sein', function (done) {
                     delete spiel.gruppe;
                     delete spiel.spielLabel;
@@ -310,22 +335,33 @@ describe('Spiel - Import', function () {
                             return done();
                         });
                     });
-                });
-            });
 
-            _.forEach(['toreA', 'toreB', 'punkteA', 'punkteB'], function (key) {
-                describe(key + ' soll validiert werden', function () {
-                    it(key + ' ist required', function (done) {
-                        delete spiel[key];
+                    it('wenn nur das Team angegeben ist, soll das in Ordnung sein', function (done) {
+                        delete spiel['team' + letter + 'Label'];
                         check(function (err, res) {
-                            expect(err).to.be.defined;
-                            expect(err).to.equal(validationErrorPrefix + 'Fields invalid: "' + key + '" is required');
-                            expect(res).to.be.false;
+                            expect(err).not.to.be.defined;
+                            expect(err).not.to.equal(validationErrorPrefix + 'Fields invalid: "value" must contain at least one of [team' + letter + ', team' + letter + 'Label]');
+                            expect(res).to.be.true;
 
                             return done();
                         });
                     });
 
+                    it('wenn nur das TeamLabel angegeben ist, soll das in Ordnung sein', function (done) {
+                        delete spiel['team' + letter];
+                        check(function (err, res) {
+                            expect(err).not.to.be.defined;
+                            expect(err).not.to.equal(validationErrorPrefix + 'Fields invalid: "value" must contain at least one of [team' + letter + ', team' + letter + 'Label]');
+                            expect(res).to.be.true;
+
+                            return done();
+                        });
+                    });
+                });
+            });
+
+            _.forEach(['toreA', 'toreB', 'punkteA', 'punkteB'], function (key) {
+                describe(key + ' soll validiert werden', function () {
                     it(key + ' muss ein Integer sein', function (done) {
                         spiel[key] = 'foo';
                         check(function (err, res) {

@@ -17,8 +17,13 @@ function entityNotFound(index, name, value) {
     return validationError('Entity ' + name + ' with slug ' + value + ' not found', index);
 }
 
+function teamsNotFilled(index) {
+    return validationError('Spiel kann kein Ergebnis haben, da die Teams nicht befüllt sind', index);
+}
+
 module.exports = {
     spielEmpty: spielEmpty,
     fieldsInvalid: fieldsInvalid,
-    entityNotFound: entityNotFound
+    entityNotFound: entityNotFound,
+    teamsNotFilled: teamsNotFilled
 };
