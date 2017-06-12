@@ -34,6 +34,7 @@ module.exports = function(loglevel) {
 
     createCategory('mailGenerator', 'Spielplan Ismaning: Mail-Generator');
     createCategory('spielplanGenerator', 'Spielplan Ismaning: Spielplan-Generator');
+    createCategory('spielplanImporter', 'Spielplan Ismaning: Spielplan-Importer');
 
     createCategory('model', 'Spielplan Ismaning: Models');
 };

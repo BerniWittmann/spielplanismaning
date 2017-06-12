@@ -16,53 +16,103 @@ const request = require('request');
 const helper = require('../models/helper.js');
 const cls = require('../config/cls.js');
 
-function getEntityQuery(model, req) {
-    logger.silly('Getting Entity Query');
-    let query = model.find({});
-    let searchById = false;
-    if (req.query.id) {
-        logger.silly('Query by ID');
-        searchById = true;
-        query = model.findOne({_id: mongoose.Types.ObjectId(req.query.id)});
-    } else if (req.query.team) {
-        //noinspection JSUnresolvedFunction
-        logger.silly('Query by Team');
-        query = model.find({}).or([{
-            teamA: req.query.team
+function queryId(model, value) {
+    logger.silly('Query By ID');
+    return {
+        searchById: true,
+        query: model.findOne({_id: mongoose.Types.ObjectId(value)})
+    };
+}
+
+function queryTeam(model, value) {
+    logger.silly('Query by Team');
+    return {
+        searchById: false,
+        query: model.find({}).or([{
+            teamA: value
         }, {
-            teamB: req.query.team
-        }]);
-    } else if (req.query.gruppe) {
-        logger.silly('Query by Gruppe');
-        query = model.find({gruppe: req.query.gruppe});
-        if (model.modelName === 'Team') {
-            query = model.find({$or: [{gruppe: req.query.gruppe}, {zwischengruppe: req.query.gruppe}]});
-        }
-    } else if (req.query.jugend) {
-        logger.silly('Query by Jugend');
-        query = model.find({jugend: req.query.jugend});
-    } else if (req.query.date) {
-        logger.silly('Query by Date');
-        const day = moment(req.query.date, 'YYYY-MM-DD');
-        query = model.find({datum: day.format('DD.MM.YYYY')});
-    } else if (req.query.slug) {
-        logger.silly('Query by Slug');
-        searchById = true;
-        query = model.findOne({rawSlug: req.query.slug});
-    } else if (req.query.identifier) {
-        logger.silly('Query by Slug Or ID');
-        searchById = true;
-        let id;
+            teamB: value
+        }])
+    };
+}
+
+function queryGruppe(model, value) {
+    logger.silly('Query by Gruppe');
+    let query = model.find({gruppe: value});
+    if (model.modelName === 'Team') {
+        query = model.find({$or: [{gruppe: value}, {zwischengruppe: value}]});
+    }
+    return {
+        searchById: false,
+        query: query
+    }
+}
+
+function queryJugend(model, value) {
+    logger.silly('Query by Jugend');
+    return {
+        searchById: false,
+        query: model.find({jugend: value})
+    };
+}
+
+function queryDate(model, value) {
+    logger.silly('Query by Date');
+    const day = moment(value, 'YYYY-MM-DD');
+    return {
+        searchById: false,
+        query: model.find({datum: day.format('DD.MM.YYYY')})
+    };
+}
+
+function querySlug(model, value) {
+    logger.silly('Query by Slug');
+    return {
+        searchById: true,
+        query: model.findOne({slug: value})
+    };
+}
+
+function queryIdentifier(model, value) {
+    logger.silly('Query by Slug Or ID');
+    const slugQuery = model.findOne({slug: value})
+    let query;
+    if (!value.match(/([a-f0-9]){24}/)) {
+        query = slugQuery;
+    } else {
         try {
-            id = mongoose.Types.ObjectId(req.query.identifier);
+            const id = mongoose.Types.ObjectId(value);
             query = model.findOne({_id: id});
         } catch (err) {
-            query = model.findOne({slug: req.query.identifier});
+            query = slugQuery;
         }
     }
     return {
-        query: query,
-        searchById: searchById
+        searchById: true,
+        query: query
+    }
+}
+
+function getEntityQuery(model, req) {
+    logger.silly('Getting Entity Query');
+    if (req.query.id) {
+        return queryId(model, req.query.id);
+    } else if (req.query.team) {
+        return queryTeam(model, req.query.team);
+    } else if (req.query.gruppe) {
+        return queryGruppe(model, req.query.gruppe);
+    } else if (req.query.jugend) {
+        return queryJugend(model, req.query.jugend);
+    } else if (req.query.date) {
+        return queryDate(model, req.query.date);
+    } else if (req.query.slug) {
+        return querySlug(model, req.query.slug);
+    } else if (req.query.identifier) {
+        return queryIdentifier(model, req.query.identifier);
+    }
+    return {
+        searchById: false,
+        query: model.find({})
     }
 }
 

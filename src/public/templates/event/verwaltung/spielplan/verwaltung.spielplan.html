@@ -6,7 +6,7 @@
 
 <spi-loader loading="vm.loading"></spi-loader>
 
-<div class="row" data-ng-if="!vm.loading">
+<div class="row" data-ng-if="!vm.loading && vm.spielplanEnabled">
     <div class="col-md-12">
         <form name="spielzeitForm" data-ng-submit="vm.saveSpielzeit(spielzeitForm)" novalidate>
             <div class="row">
@@ -82,9 +82,18 @@
     </div>
 </div>
 
+<div class="row" data-ng-if="!vm.loading && vm.spielplanEnabled">
+    <div class="col-md-4 col-md-offset-4">
+        <button data-ng-click="vm.generateSpielplan()" analytics-on="click" analytics-event="Spielplan generieren" class="btn btn-primary center-block margin-top-25" id="generate-spielplan-btn">Spielplan neu generieren</button>
+        <button data-ng-click="vm.regenerateSpielplan()" analytics-on="click" analytics-event="Spielplan generieren Erhalt" class="btn btn-primary center-block margin-top-25" id="regenerate-spielplan-btn">Spielplan generieren (mit Erhalt beendeter Spiele)</button>
+    </div>
+</div>
+
 <div class="row" data-ng-if="!vm.loading">
     <div class="col-md-4 col-md-offset-4">
-        <button data-ng-click="vm.generateSpielplan()" analytics-on="click" analytics-event="Spielplan generieren"class="btn btn-primary center-block margin-top-25" id="generate-spielplan-btn">Spielplan neu generieren</button>
-        <button data-ng-click="vm.regenerateSpielplan()" analytics-on="click" analytics-event="Spielplan generieren Erhalt" class="btn btn-primary center-block margin-top-25" id="regenerate-spielplan-btn">Spielplan generieren (mit Erhalt beendeter Spiele)</button>
+        <h4>Spiele Importieren</h4>
+        <input type="file" accept="text/csv" onchange="angular.element(this).scope().vm.fileChange(this, files)">
+        <br>
+        <button data-ng-click="vm.import()" class="btn btn-primary" data-ng-disabled="vm.importButtonDisabled"  analytics-on="click" analytics-event="Spiel Import"><i class="fa fa-upload"></i> Importieren</button>
     </div>
 </div>

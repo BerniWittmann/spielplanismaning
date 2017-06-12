@@ -112,6 +112,9 @@
                     },
                     order: function () {
                         return ENDPOINT_BASE + '/spiele/order';
+                    },
+                    import: function () {
+                        return ENDPOINT_BASE + '/spiele/import';
                     }
                 },
                 spielplan: {
@@ -171,7 +174,7 @@
                     console.error('Unkown method: ' + method);
                     return;
                 }
-                return request({method: methods[method], url: url, data:data, params: params});
+                return request({method: methods[method], url: url, data: data, params: params});
             }
 
             function requestGET(url) {

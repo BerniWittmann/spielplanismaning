@@ -55,6 +55,7 @@
     "gulp-watch": "^4.3.9",
     "helmet": "^3.6.1",
     "joi": "^10.4.1",
+    "joi-date-extensions": "^1.0.2",
     "joi-objectid": "^2.0.0",
     "jsonwebtoken": "^5.4.0",
     "karma": "^1.1.1",

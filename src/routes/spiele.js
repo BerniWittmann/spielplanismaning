@@ -8,6 +8,8 @@ module.exports = function (sendgrid, env, url, disableMails) {
     const async = require('async');
     const moment = require('moment');
 
+    const importer = require('./spielImporter/importer.js');
+
     const Spiel = mongoose.model('Spiel');
     const Subscriber = mongoose.model('Subscriber');
     const Spielplan = mongoose.model('Spielplan');
@@ -510,6 +512,20 @@ module.exports = function (sendgrid, env, url, disableMails) {
             });
         });
     }
+
+    router.put('/import', function (req, res) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+
+            return importer.importSpiele(req.body, function (err, spiele) {
+                if (err) return messages.Error(res, err);
+
+                return messages.SpielplanAktualisert(res, spiele)
+            });
+        });
+    });
 
     return router;
 }

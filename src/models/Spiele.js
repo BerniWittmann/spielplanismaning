@@ -27,6 +27,8 @@ let SpielSchema = new mongoose.Schema({
         type: Schema.ObjectId,
         ref: 'Team'
     },
+    teamALabel: String,
+    teamBLabel: String,
     complex: {
         hz1: {
             toreA: Number,
