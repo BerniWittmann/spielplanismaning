@@ -1,15 +1,15 @@
-<td class="text-center">{{vm.spiel.nummer}}</td>
-<td class="text-center" data-ng-click="vm.gotoDate(vm.spiel.datum); $event.stopPropagation();">{{vm.spiel.datum}}</td>
-<td class="text-center">{{vm.spiel.uhrzeit}}</td>
-<td data-ng-click="vm.gotoPlatz(vm.spiel.platz); $event.stopPropagation();" class="text-center">{{vm.spiel.platz}}</td>
+<td class="text-center valign">{{vm.spiel.nummer}}</td>
+<td class="text-center valign" data-ng-click="vm.gotoDate(vm.spiel.datum); $event.stopPropagation();">{{vm.spiel.datum}}</td>
+<td class="text-center valign">{{vm.spiel.uhrzeit}}</td>
+<td data-ng-click="vm.gotoPlatz(vm.spiel.platz); $event.stopPropagation();" class="text-center valign">{{vm.spiel.platz}}</td>
 <td data-ng-if="vm.showJugend" data-ng-click="vm.gotoJugend(vm.spiel.jugend, $event);" class="valign">
     <spi-jugend-label data-jugend="vm.spiel.jugend" class="hidden-print"></spi-jugend-label>
     <span class="visible-print-block">{{vm.spiel.jugend.name}}</span>
 </td>
-<td data-ng-if="vm.showGruppe" data-ng-click="vm.gotoGruppe(vm.spiel.gruppe, $event);">{{vm.displayGruppe()}}</td>
-<td data-ng-click="vm.gotoTeam(vm.spiel.teamA, $event);">{{vm.displayTeamA()}}</td>
-<td data-ng-click="vm.gotoTeam(vm.spiel.teamB, $event);">{{vm.displayTeamB()}}</td>
-<td class="text-center">
+<td data-ng-if="vm.showGruppe" data-ng-click="vm.gotoGruppe(vm.spiel.gruppe, $event);" class="valign">{{vm.displayGruppe()}}</td>
+<td data-ng-click="vm.gotoTeam(vm.spiel.teamA, $event);" class="valign">{{vm.displayTeamA()}}</td>
+<td data-ng-click="vm.gotoTeam(vm.spiel.teamB, $event);" class="valign">{{vm.displayTeamB()}}</td>
+<td class="text-center valign">
     <div data-ng-if="vm.spiel.jugend">
         <div data-ng-if="vm.isEditing && vm.canEdit">
             <input type="number" min="0" data-ng-model="vm.spiel.toreA" class="spielplannumberinput"
