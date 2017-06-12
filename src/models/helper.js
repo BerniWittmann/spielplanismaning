@@ -157,7 +157,7 @@ function beachEventQueryMiddleware() {
         logger.error('No beachEventID given in Schema in ' + this.op + ' hook: ' + this.model.modelName);
         return;
     }
-    const query = this.getQuery();
+    const query = this && typeof this.getQuery === 'function' ? this.getQuery() : {};
     if (!query.slug || typeof query.slug === 'string') {
         this.where({veranstaltung: mongoose.Types.ObjectId(beachEventID)});
     }
