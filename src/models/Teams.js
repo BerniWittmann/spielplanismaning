@@ -122,7 +122,7 @@ TeamSchema.methods.fill = function(callback) {
                         body = JSON.parse(body);
 
                         if (status.statusCode < 400 && body && body._id) {
-                            _.assign(body, {'expires': moment().add(3, 'h').toISOString()});
+                            _.assign(body, {'expires': moment().add(1, 'h').toISOString()});
                             team.anmeldungsObjectString = JSON.stringify(body);
                             return clsSession.run(function () {
                                 clsSession.set('beachEventID', beachEventID);

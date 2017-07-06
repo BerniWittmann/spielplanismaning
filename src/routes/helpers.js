@@ -1056,8 +1056,11 @@ function reloadAnmeldeObjects(cb) {
                     body = JSON.parse(body);
 
                     if (status.statusCode < 400 && body && body._id) {
-                        _.assign(body, {'expires': moment().add(1, 'd').toISOString()});
+                        _.assign(body, {'expires': moment().add(1, 'h').toISOString()});
                         team.anmeldungsObjectString = JSON.stringify(body);
+                        if (body.displayName && body.displayName !== team.name) {
+                            team.name = body.displayName;
+                        }
                         return clsSession.run(function () {
                             clsSession.set('beachEventID', beachEventID);
                             return team.save(function (err) {
