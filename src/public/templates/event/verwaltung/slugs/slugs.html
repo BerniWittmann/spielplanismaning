@@ -1,6 +1,11 @@
 <div class="row">
     <div class="col-md-12 page-header">
         <h3>URL - Slugs</h3>
+        <div class="pull-right hidden-print" data-ng-if="vm.canEdit">
+            <button data-ng-if="!vm.isEditing" data-ng-click="vm.toggleEdit()" type="button" class="btn btn-primary btn-md"><i class="fa fa-pencil"></i> Slugs bearbeiten</i></button>
+            <button data-ng-if="vm.isEditing" data-ng-click="vm.abortEdit()" type="button" class="btn btn-danger btn-md"><i class="fa fa-times"></i> Abbrechen</i></button>
+            <button data-ng-if="vm.isEditing" data-ng-click="vm.save()" type="button" class="btn btn-success btn-md"><i class="fa fa-check"></i> Slugs speichern</i></button>
+        </div>
     </div>
 </div>
 
@@ -15,8 +20,10 @@
                 <td data-title="'Name'" data-sortable="'name'" class="text-center" data-filter="{name: 'text'}">
                     <spi-jugend-label jugend="jugend"></spi-jugend-label>
                 </td>
-                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenJugenden[$index]" data-tooltip-placement="bottom" class="cursor-copy" data-clipboard data-text="jugend.slug"
-                    data-sortable="'slug'" data-filter="{slug: 'text'}">{{jugend.slug}}
+                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}">
+                    <span data-ng-if="!vm.isEditing" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenJugenden[$index]" data-tooltip-placement="bottom" class="cursor-copy" data-clipboard data-text="jugend.slug">{{jugend.slug}}</span>
+                    <input data-ng-if="vm.isEditing" type="text" data-ng-model="jugend.slug">
                 </td>
             </tr>
         </table>
@@ -36,8 +43,10 @@
                 <td data-title="'Jugend'" data-sortable="'jugendName'" class="text-center" data-filter="{jugendName: 'text'}">
                     <spi-jugend-label jugend="gruppe.jugend"></spi-jugend-label>
                 </td>
-                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();" class="cursor-copy" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenGruppen[$index]" data-tooltip-placement="bottom" data-clipboard data-text="gruppe.slug"
-                    data-sortable="'slug'" data-filter="{slug: 'text'}">{{gruppe.slug}}
+                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}">
+                    <span data-ng-if="!vm.isEditing" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenGruppen[$index]" data-tooltip-placement="bottom" class="cursor-copy" data-clipboard data-text="gruppe.slug">{{gruppe.slug}}</span>
+                    <input data-ng-if="vm.isEditing" type="text" data-ng-model="gruppe.slug">
                 </td>
             </tr>
         </table>
@@ -63,8 +72,10 @@
                 <td data-title="'Zwischengruppe'" data-sortable="'zwGruppenName'" class="text-center" data-filter="{zwGruppenName: 'text'}">
                     {{team.zwGruppenName}}
                 </td>
-                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();" class="cursor-copy" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenTeams[$index]" data-tooltip-placement="bottom" data-clipboard data-text="team.slug"
-                    data-sortable="'slug'" data-filter="{slug: 'text'}" >{{team.slug}}
+                <td data-title="'Slug'" data-ng-click="$event.stopPropagation();"
+                    data-sortable="'slug'" data-filter="{slug: 'text'}">
+                    <span data-ng-if="!vm.isEditing" data-uib-tooltip="{{vm.tooltipText}}" data-on-copied="vm.copied()" data-tooltip-is-open="vm.tooltipOpenTeams[$index]" data-tooltip-placement="bottom" class="cursor-copy" data-clipboard data-text="team.slug">{{team.slug}}</span>
+                    <input data-ng-if="vm.isEditing" type="text" data-ng-model="team.slug">
                 </td>
             </tr>
         </table>

@@ -19,6 +19,9 @@
                 veranstaltungen: {
                     base: function () {
                         return ENDPOINT_BASE + '/veranstaltungen';
+                    },
+                    slugs: function () {
+                        return ENDPOINT_BASE + '/veranstaltungen/slugs';
                     }
                 },
                 users: {

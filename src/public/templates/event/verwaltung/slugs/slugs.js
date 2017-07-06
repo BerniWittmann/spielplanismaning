@@ -3,7 +3,7 @@
 
     angular
         .module('spi.templates.verwaltung.slugs.ui', [
-            'ui.router', 'ngTable', 'spi.jugend', 'spi.team', 'spi.gruppe', 'angular-clipboard'
+            'ui.router', 'ngTable', 'spi.jugend', 'spi.team', 'spi.gruppe', 'angular-clipboard', 'spi.auth', 'spi.veranstaltungen'
         ])
         .config(states)
         .controller('SlugsContoller', SlugsContoller);
@@ -34,7 +34,7 @@
 
     }
 
-    function SlugsContoller(jugenden, gruppen, teams, NgTableParams, $state, $scope) {
+    function SlugsContoller(jugenden, gruppen, teams, NgTableParams, $state, $scope, auth, veranstaltungen) {
         const vm = this;
         vm.loading = true;
         const originalTooltipText = 'Klick zum Kopieren';
@@ -69,8 +69,52 @@
             tooltipText: originalTooltipText,
             copied: function () {
                 vm.tooltipText = 'Kopiert';
-            }
+            },
+            abortEdit: abortEdit,
+            isEditing: false,
+            canEdit: auth.isAdmin(),
+            toggleEdit: toggleEdit,
+            save: save
         });
+
+        function toggleEdit() {
+            if (vm.canEdit) {
+                vm.isEditing = !vm.isEditing;
+            }
+        }
+
+        function abortEdit() {
+            $state.reload();
+        }
+
+        function save() {
+            const editedSlugs = [];
+            _.forEach(vm.teams, function (team) {
+               editedSlugs.push({
+                   type: 'team',
+                   id: team._id,
+                   slug: team.slug
+               });
+            });
+            _.forEach(vm.gruppen, function (gruppe) {
+                editedSlugs.push({
+                    type: 'gruppe',
+                    id: gruppe._id,
+                    slug: gruppe.slug
+                });
+            });
+            _.forEach(vm.jugenden, function (jugend) {
+                editedSlugs.push({
+                    type: 'jugend',
+                    id: jugend._id,
+                    slug: jugend.slug
+                });
+            });
+
+            veranstaltungen.updateSlugs(editedSlugs).then(function () {
+                $state.reload();
+            });
+        }
 
         _.extend(vm, {
             tableParamsJugenden: tableParams(vm.jugenden),

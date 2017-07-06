@@ -42,6 +42,10 @@
                 });
             };
 
+            veranstaltungen.updateSlugs = function (data) {
+                return routes.requestPUT(routes.urls.veranstaltungen.slugs(), data);
+            };
+
             veranstaltungen.setCurrentEvent = function (event) {
                 if ($rootScope.ravenEnabled) {
                     Raven.setExtraContext({currentEvent: event});
