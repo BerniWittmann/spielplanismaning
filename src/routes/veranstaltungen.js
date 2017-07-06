@@ -78,5 +78,66 @@ module.exports = function () {
         });
     });
 
+    router.put('/slugs', function (req, res) {
+        const beachEventID = cls.getBeachEventID();
+        const clsSession = cls.getNamespace();
+        return clsSession.run(function () {
+            clsSession.set('beachEventID', beachEventID);
+            const notSavedSlugs = [];
+            return async.eachSeries(req.body, function (entity, asyncdone) {
+                return clsSession.run(function () {
+                    clsSession.set('beachEventID', beachEventID);
+                    if (!entity.type || !entity.id || !entity.slug) return asyncdone();
+
+                    let query;
+
+                    switch (entity.type) {
+                        case 'jugend':
+                            query = Jugend;
+                            break;
+                        case 'gruppe':
+                            query = Gruppe;
+                            break;
+                        case 'team':
+                            query = Team;
+                            break;
+                    }
+
+                    if (!query) return asyncdone();
+
+                    return query.findOne({"_id": mongoose.Types.ObjectId(entity.id)}, function (err, oldEntity) {
+                        if (err) return asyncdone(err);
+
+                        return clsSession.run(function () {
+                            clsSession.set('beachEventID', beachEventID);
+
+                            if (oldEntity.slug === entity.slug) return asyncdone();
+
+                            return query.find({"slug": entity.slug}, function (err, slugEntities) {
+                                return clsSession.run(function () {
+                                    clsSession.set('beachEventID', beachEventID);
+
+                                    if (err) return asyncdone();
+                                    if (slugEntities && slugEntities.length > 0) {
+                                        notSavedSlugs.push(entity.slug);
+                                        return asyncdone();
+                                    }
+
+                                    oldEntity.slug = entity.slug;
+                                    oldEntity.save(asyncdone);
+                                });
+                            });
+                        });
+                    });
+                });
+            }, function (err) {
+                if (err) return messages.Error(res, err);
+
+                if (notSavedSlugs.length > 0) return messages.WarningNotAllSlugsSaved(res, notSavedSlugs);
+                return messages.Success(res);
+            });
+        });
+    });
+
     return router;
 };

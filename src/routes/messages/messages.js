@@ -112,6 +112,9 @@ module.exports = function () {
         },
         ErrorSpielplanDisabled: function (res) {
             send(require('./ErrorSpielplanDisabled.js'), res);
+        },
+        WarningNotAllSlugsSaved: function (res, slugs) {
+            send(require('./WarningNotAllSlugsSaved.js')(slugs), res);
         }
     };
 };

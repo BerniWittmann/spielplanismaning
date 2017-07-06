@@ -154,6 +154,8 @@ function beachEventQueryMiddleware() {
     const beachEventID = cls.getBeachEventID();
     if (!beachEventID) {
         if (_.includes(JSON.stringify(this.getQuery()), 'veranstaltung')) return;
+        if (_.includes(JSON.stringify(this.getQuery()), '_id')) return;
+        if (_.includes(JSON.stringify(this.getQuery()), 'slug')) return;
         logger.error('No beachEventID given in Schema in ' + this.op + ' hook: ' + this.model.modelName);
         return;
     }
