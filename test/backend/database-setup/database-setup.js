@@ -7,6 +7,7 @@ module.exports = function (MONGO_DB_URI) {
     const cls = require('../../../src/config/cls.js');
 
     function connect(cb) {
+        mockgoose.helper.setDbVersion('3.5.7');
         return mockgoose.prepareStorage().then(function() {
             return mongoose.connect(MONGO_DB_URI, function (err) {
                 if (err) return cb(err);

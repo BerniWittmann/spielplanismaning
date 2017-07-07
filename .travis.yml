@@ -6,7 +6,6 @@ services:
 before_script:
 - bower install
 - mongo --version
-- mongorestore --db spielplan-test --drop test/backend/database-setup/data/spielplan
 script: gulp test:travis
 after_success:
   - npm install -g codeclimate-test-reporter
