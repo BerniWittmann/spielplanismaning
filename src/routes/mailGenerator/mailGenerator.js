@@ -40,7 +40,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                 const isComplexMode = process.env.SPIEL_MODE === 'complex';
                 const tore = {
                     toreA: isComplexMode ? spiel.punkteA : spiel.toreA,
-                    toreB: isComplexMode ? spiel.punkteB : spiel.toreA
+                    toreB: isComplexMode ? spiel.punkteB : spiel.toreB
                 };
                 const data = {
                     teamname: team.name,
