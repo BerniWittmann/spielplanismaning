@@ -7,8 +7,15 @@
             <button data-ng-if="vm.isEditing" data-ng-click="vm.saveOrder()" type="button" class="btn btn-success btn-md"><i class="fa fa-check"></i> Spielplan speichern</i></button>
         </div>
         <div class="pull-right text-right visible-print">
-            <h4>Stand: {{vm.currentTime}} Uhr <span style="display: inline-block; width: 20px;"></span> Aktueller Spielplan unter {{vm.currentUrl}}</h4>
+            <h4>Stand: {{vm.currentTime}} Uhr <span style="display: inline-block; width: 20px;"></span></h4>
         </div>
+    </div>
+</div>
+
+<div class="row visible-print">
+    <div class="additional-info-spielplan">
+        <span>Aktueller Spielplan unter {{vm.currentUrl}}</span>
+        <img src="/assets/img/qr.png" class="pull-right qr-code">
     </div>
 </div>
 

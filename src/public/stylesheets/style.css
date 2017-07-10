@@ -495,3 +495,21 @@ spi-panel-title spi-jugend-label {
 .cursor-copy {
     cursor: context-menu;
 }
+
+.additional-info-spielplan {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.qr-code {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+}
