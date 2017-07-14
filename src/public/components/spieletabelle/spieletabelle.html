@@ -28,7 +28,12 @@
                 data-ng-class="{'highlightTeamName': spiel.teamB && spiel.teamB._id === vm.highlightedTeam._id}">{{vm.displayTeamB(spiel)}}
             </td>
             <td>
-                <div data-ng-if="spiel.jugend && spiel.beendet">{{vm.getErgebnisDisplay(spiel)}}</div>
+                <div data-ng-if="spiel.jugend && spiel.beendet">
+                    <span class="ergebnis">
+                        <span class="ergebnis-points">{{vm.getErgebnisDisplayPoints(spiel)}}</span>
+                        <span class="ergebnis-tore">{{vm.getErgebnisDisplayTore(spiel)}}</span>
+                    </span>
+                </div>
             </td>
         </tr>
         </tbody>

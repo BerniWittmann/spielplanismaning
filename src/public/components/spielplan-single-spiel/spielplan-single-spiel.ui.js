@@ -124,7 +124,8 @@
                 }, undefined)
             },
             spielIsNotFilled: spielIsNotFilled(),
-            ergebnisDisplay: '   :   ',
+            ergebnisDisplayPoints: '   :   ',
+            ergebnisDisplayTore: undefined,
             removeSpiel: function () {
                 $scope.$emit('removeSpiel', vm.spiel._id);
             },
@@ -135,14 +136,13 @@
 
         function calcErgebnisDisplay() {
             if (!vm.spiel.beendet) {
-                vm.ergebnisDisplay = '   :   ';
+                vm.ergebnisDisplayPoints = '   :   ';
+                vm.ergebnisDisplayTore = undefined;
                 return;
             }
-            if (vm.isComplexMode) {
-                vm.ergebnisDisplay = vm.spiel.punkteA + ' : ' + vm.spiel.punkteB
-            } else {
-                vm.ergebnisDisplay = vm.spiel.toreA + ' : ' + vm.spiel.toreB
-            }
+
+            vm.ergebnisDisplayPoints = vm.spiel.punkteA + ' : ' + vm.spiel.punkteB;
+            vm.ergebnisDisplayTore = '(' + vm.spiel.toreA + ' : ' + vm.spiel.toreB + ')';
         }
 
         function isSpielplanEnabled() {

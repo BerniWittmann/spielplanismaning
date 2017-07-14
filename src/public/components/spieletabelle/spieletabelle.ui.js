@@ -65,11 +65,11 @@
             displayTeamB: function(game) {
                 return spiel.getTeamDisplay(game, 'B');
             },
-            getErgebnisDisplay: function (game) {
-                if (vm.isComplexMode) {
-                    return game.punkteA + ' : ' + game.punkteB;
-                }
-                return game.toreA + ' : ' + game.toreB;
+            getErgebnisDisplayPoints: function (game) {
+                return game.punkteA + ' : ' + game.punkteB;
+            },
+            getErgebnisDisplayTore: function (game) {
+                return '(' + game.toreA + ' : ' + game.toreB + ')';
             },
             isComplexMode: $rootScope.isComplexMode
         });

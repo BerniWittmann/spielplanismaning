@@ -31,7 +31,10 @@
 			</span>
         </div>
         <div data-ng-if="!vm.isEditing">
-            <span>{{vm.ergebnisDisplay}}</span>
+            <span class="ergebnis">
+                <span class="ergebnis-points">{{vm.ergebnisDisplayPoints}}</span>
+                <span class="ergebnis-tore">{{vm.ergebnisDisplayTore}}</span>
+            </span>
 			<span class="pull-right" style="padding-left:33px;" data-ng-if="vm.canEdit && !vm.spielplanIsEdited" data-ng-hide="vm.spielIsNotFilled">
 			<span class="hidden-print" data-ng-click="vm.edit(); $event.stopPropagation();"
                   data-uib-tooltip="Ergebnis bearbeiten" data-tooltip-placement="top-right"><i

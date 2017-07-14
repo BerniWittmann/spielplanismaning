@@ -513,3 +513,30 @@ spi-panel-title spi-jugend-label {
     height: 50px;
     margin-left: 10px;
 }
+
+.ergebnis {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: column;
+
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+
+.ergebnis .ergebnis-points {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.ergebnis .ergebnis-tore {
+    font-size: 11px;
+}
