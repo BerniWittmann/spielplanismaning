@@ -9,6 +9,7 @@ const VeranstaltungenSchema = new Schema({
     name: String,
     bildUrl: String,
     spielModus: String,
+    printModus: String,
     printMannschaftslisten: Boolean,
     spielplanEnabled: Boolean
 });

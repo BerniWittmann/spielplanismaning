@@ -14,6 +14,7 @@
                 <th class="text-center">Bild</th>
                 <th class="text-center">Name</th>
                 <th class="text-center">Spiel-Modus</th>
+                <th class="text-center">Print-Modus</th>
                 <th class="text-center">Mannschaftsliste Druck</th>
                 <th class="text-center">Spielplan - Verwaltung</th>
                 <th></th>
@@ -24,6 +25,7 @@
                 <td class="valign"><img data-ng-if="veranstaltung.bildUrl" src="{{veranstaltung.bildUrl}}" class="veranstaltung-image-table "></td>
                 <td class="valign">{{veranstaltung.name}}</td>
                 <td class="valign">{{veranstaltung.spielModus === 'complex' ? '2 Halbzeiten + Penalty': '1 Halbzeit'}}</td>
+                <td class="valign">{{veranstaltung.printModus === 'complex' ? '2 Halbzeiten + Penalty': '1 Halbzeit'}}</td>
                 <td class="valign"><i class="fa fa-lg {{veranstaltung.printMannschaftslisten ? 'fa-check': 'fa-times'}}"></i></td>
                 <td class="valign"><i class="fa fa-lg {{veranstaltung.spielplanEnabled ? 'fa-check': 'fa-times'}}"></i></td>
                 <td class="valign">
@@ -56,7 +58,8 @@
                     <p data-ng-message="url">URL ist ungültig</p>
                 </span>
             </div>
-            <div class="form-group" data-ng-class="{ 'has-error': form.name.$touched && form.name.$invalid }">
+            <div class="form-group" data-ng-class="{ 'has-error': form.spielModus.$touched && form.spielModus.$invalid }">
+                <label>Spiel-Modus für die Ergebnis Eingabe</label>
                 <select class="form-control" data-ng-model="vm.veranstaltung.spielModus" name="spielModus" required>
                     <option value="" selected disabled>Bitte wählen</option>
                     <option value="complex">2 Halbzeiten + Penalty</option>
@@ -66,8 +69,20 @@
                     <p data-ng-message="required">Spiel-Modus ist ein Pflichtfeld</p>
                 </span>
             </div>
+            <div class="form-group" data-ng-class="{ 'has-error': form.printModus.$touched && form.printModus.$invalid }">
+                <label>Druck-Modus für den Spiel-Ausdruck</label>
+                <select class="form-control" data-ng-model="vm.veranstaltung.printModus" name="printModus" required>
+                    <option value="" selected disabled>Bitte wählen</option>
+                    <option value="complex">2 Halbzeiten + Penalty</option>
+                    <option value="normal">1 Halbzeit</option>
+                </select>
+                <span class="help-block" data-ng-messages="form.printModus.$error" data-ng-if="form.printModus.$touched">
+                    <p data-ng-message="required">Print-Modus ist ein Pflichtfeld</p>
+                </span>
+            </div>
             <div class="form-group" data-ng-class="{ 'has-error': form.printMannschaftslisten.$touched && form.printMannschaftslisten.$invalid }">
-                <select class="form-control" data-ng-model="vm.veranstaltung.printMannschaftslisten" name="printMannschaftslisten" required>
+                <label for="printMannschaftslisten">Mannschaftslisten drucken?</label>
+                <select class="form-control" data-ng-model="vm.veranstaltung.printMannschaftslisten" id="printMannschaftslisten" name="printMannschaftslisten" required>
                     <option value="" selected disabled>Bitte wählen</option>
                     <option value="true">Mannschaftslisten drucken</option>
                     <option value="false">Mannschaftslisten nicht drucken</option>

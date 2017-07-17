@@ -12,7 +12,8 @@
                 plaetze: undefined,
                 spielmodus: undefined,
                 mannschaftslisten: undefined,
-                spielplanEnabled: undefined
+                spielplanEnabled: undefined,
+                printmodus: undefined
             };
 
             function parseToInt(str) {
@@ -33,6 +34,9 @@
                     if (name === 'spielmodus') {
                         $rootScope.isComplexMode = config.spielmodus === 'complex';
                     }
+                    if (name === 'printmodus') {
+                        $rootScope.isPrintComplexMode = config.printmodus === 'complex';
+                    }
                     if (name === 'spielplanEnabled') {
                         $rootScope.spielplanEnabled = !!config.spielplanEnabled;
                     }
@@ -47,6 +51,7 @@
                     config.lockdown = _.isUndefined(data.lockdown) ? config.lockdown : data.lockdown;
                     config.plaetze = parseInt(data.plaetze, 10) || config.plaetze;
                     config.spielmodus = data.spielmodus || config.spielmodus;
+                    config.printmodus = data.printmodus || config.printmodus;
                     config.mannschaftslisten = data.mannschaftslisten || config.mannschaftslisten;
                     $rootScope.isComplexMode = config.spielmodus === 'complex';
                     config.spielplanEnabled = !_.isUndefined(data.spielplanEnabled) ? data.spielplanEnabled : !!config.spielplanEnabled;
@@ -75,6 +80,10 @@
                 return getConfigParam('spielmodus')
             }
 
+            function getPrintmodus() {
+                return getConfigParam('printmodus')
+            }
+
             function getMannschaftslisten() {
                 return getConfigParam('mannschaftslisten')
             }
@@ -89,6 +98,7 @@
                 getLockdown: getLockdown,
                 getPlaetze: getPlaetze,
                 getSpielmodus: getSpielmodus,
+                getPrintmodus: getPrintmodus,
                 getMannschaftslisten: getMannschaftslisten,
                 getSpielplanEnabled: getSpielplanEnabled
             };

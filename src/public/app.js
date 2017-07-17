@@ -91,6 +91,8 @@
                 app.requires.push('ngRaven');
             }
             $rootScope.isComplexMode = data.spielmodus === 'complex';
+            console.log(data);
+            $rootScope.isPrintComplexMode = data.printmodus === 'complex';
         });
         $rootScope.onload = function () {
             const page = document.getElementById('page');

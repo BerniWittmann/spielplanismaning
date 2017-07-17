@@ -1087,7 +1087,8 @@ function getVeranstaltungData(cb) {
     const result = {
         SPIEL_MODE: undefined,
         MANNSCHAFTSLISTEN_PRINT: undefined,
-        SPIELPLAN_ENABLED: undefined
+        SPIELPLAN_ENABLED: undefined,
+        PRINT_MODE: undefined
     };
     const beachEventID = cls.getBeachEventID();
     if (!beachEventID) {
@@ -1097,8 +1098,9 @@ function getVeranstaltungData(cb) {
     return Veranstaltung.findById(beachEventID, function (err, event) {
         if (err) return cb(err);
         result.SPIEL_MODE = event.spielModus;
+        result.PRINT_MODE = event.printModus;
         result.MANNSCHAFTSLISTEN_PRINT = event.printMannschaftslisten;
-        result.SPIELPLAN_ENABLED = event.spielplanEnabled
+        result.SPIELPLAN_ENABLED = event.spielplanEnabled;
         return cb(null, result);
     });
 }

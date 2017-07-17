@@ -60,7 +60,7 @@
             displayTeamB: function (game) {
                 return spiel.getTeamDisplay(game, 'B');
             },
-            isComplexMode: $rootScope.isComplexMode,
+            isComplexMode: $rootScope.isPrintComplexMode,
             mannschaftslistenEnabled: mannschaftslisten.toString() === 'true',
             getSpielerArray: function (team) {
                 if (!team || !team.anmeldungsObject || !team.anmeldungsObject.spieler) {

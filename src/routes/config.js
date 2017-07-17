@@ -33,6 +33,7 @@ module.exports = function (env) {
                 lockdown: env.LOCKDOWNMODE === 'true',
                 plaetze: env.PLAETZE,
                 spielmodus: data.SPIEL_MODE,
+                printmodus: data.PRINT_MODE,
                 mannschaftslisten: data.MANNSCHAFTSLISTEN_PRINT,
                 spielplanEnabled: data.SPIELPLAN_ENABLED
             };
@@ -155,6 +156,14 @@ module.exports = function (env) {
             if (err) return messages.Error(res, err);
             logger.verbose('Spielmodus %s', data.SPIEL_MODE);
             return res.json(data.SPIEL_MODE);
+        });
+    });
+
+    router.get('/printmodus', function (req, res) {
+        return helpers.getVeranstaltungData(function (err, data) {
+            if (err) return messages.Error(res, err);
+            logger.verbose('PrintModus %s', data.PRINT_MODE);
+            return res.json(data.PRINT_MODE);
         });
     });
 

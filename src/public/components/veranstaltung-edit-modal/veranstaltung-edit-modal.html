@@ -21,6 +21,7 @@
                 </span>
                 </div>
                 <div class="form-group" data-ng-class="{ 'has-error': form.name.$touched && form.name.$invalid }">
+                    <label>Spiel-Modus für die Ergebnis Eingabe</label>
                     <select class="form-control" data-ng-model="vm.veranstaltung.spielModus" name="spielModus" required>
                         <option value="" selected disabled>Bitte wählen</option>
                         <option value="complex">2 Halbzeiten + Penalty</option>
@@ -28,6 +29,17 @@
                     </select>
                     <span class="help-block" data-ng-messages="form.spielModus.$error" data-ng-if="form.spielModus.$touched">
                     <p data-ng-message="required">Spiel-Modus ist ein Pflichtfeld</p>
+                </span>
+                </div>
+                <div class="form-group" data-ng-class="{ 'has-error': form.printModus.$touched && form.printModus.$invalid }">
+                    <label>Druck-Modus für den Spiel-Ausdruck</label>
+                    <select class="form-control" data-ng-model="vm.veranstaltung.printModus" name="printModus" required>
+                        <option value="" selected disabled>Bitte wählen</option>
+                        <option value="complex">2 Halbzeiten + Penalty</option>
+                        <option value="normal">1 Halbzeit</option>
+                    </select>
+                    <span class="help-block" data-ng-messages="form.printModus.$error" data-ng-if="form.printModus.$touched">
+                    <p data-ng-message="required">Druck-Modus ist ein Pflichtfeld</p>
                 </span>
                 </div>
                 <div class="form-group" data-ng-class="{ 'has-error': form.printMannschaftslisten.$touched && form.printMannschaftslisten.$invalid }">

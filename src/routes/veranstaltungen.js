@@ -69,7 +69,7 @@ module.exports = function () {
 
             logger.verbose('Updating Veranstaltung', req.body);
 
-            veranstaltung = helpers.updateDocByKeys(veranstaltung, ['name', 'bildUrl', 'spielModus', 'printMannschaftslisten', 'spielplanEnabled'], req.body);
+            veranstaltung = helpers.updateDocByKeys(veranstaltung, ['name', 'bildUrl', 'spielModus', 'printModus', 'printMannschaftslisten', 'spielplanEnabled'], req.body);
 
             logger.silly('Save', veranstaltung);
             veranstaltung.save(function (err, veranstaltung) {
