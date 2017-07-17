@@ -3,7 +3,8 @@
         <h3>Spielplan</h3>
     </div>
 </div>
-<p class="hidden-print">Diese Seite dient dazu, alle Spiele für die Kampfgerichte auszudrucken. Am besten Safari verwenden, um Fehler im Layout zu vermeiden.</p>
+<p class="hidden-print">Diese Seite dient dazu, alle Spiele für die Kampfgerichte auszudrucken. Am besten Google Chrome
+    verwenden, um Fehler im Layout zu vermeiden. Zum Drucken nutzen Sie den Standard Browser-Druck-Dialog oder drücken Sie <kbd><kbd>Strg</kbd> + <kbd>P</kbd></kbd></p>
 <div class="row hidden-print">
     <div class="col-md-4 col-md-offset-4">
         <select class="hidden-print form-control" data-ng-model="vm.mode">
@@ -16,7 +17,8 @@
 <div class="row hidden-print">
     <div class="col-md-4 col-md-offset-4">
         <br>
-        <p class="text-center">Von <input class="spiel-nummer-input" placeholder="#" data-ng-model="vm.minNummer"> bis <input class="spiel-nummer-input" placeholder="#" data-ng-model="vm.maxNummer"></p>
+        <p class="text-center">Von <input class="spiel-nummer-input" placeholder="#" data-ng-model="vm.minNummer"> bis
+            <input class="spiel-nummer-input" placeholder="#" data-ng-model="vm.maxNummer"></p>
     </div>
 </div>
 <spi-loader loading="vm.loading"></spi-loader>
@@ -24,34 +26,35 @@
     <div class="spiel-print" data-ng-repeat="spiel in vm.spiele track by spiel._id">
         <div class="row">
             <div class="col-xs-12">
-                <div class="row text-center">
-                    <div class="col-xs-12">
-                        <h3 class="spiel-time">{{spiel.uhrzeit}} Uhr</h3>
-                        <h6>{{spiel.datum}}</h6>
-                        <h5>Platz {{spiel.platz}}</h5>
-                        <h6>Spiel Nummer: {{spiel.nummer}}</h6>
-                    </div>
-                </div>
-                <div class="row text-center">
-                    <div class="col-xs-12">
-                        <h4>
-                            <spi-jugend-label jugend="spiel.jugend"></spi-jugend-label>
-                        </h4>
-                        <h6 class="spiel-gruppe" data-ng-click="vm.gotoGruppe(spiel.gruppe)">{{vm.displayGruppe(spiel)}}</h6>
-                    </div>
-                </div>
-
-                <div class="row text-center">
-                    <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-10">
                         <div class="row">
-                            <div class="col-xs-5">
-                                <h5>Heim</h5>
-                            </div>
-
-                            <div class="col-xs-5 col-xs-offset-2">
-                                <h5>Gast</h5>
+                            <div class="col-xs-12">
+                                <h4>{{spiel.jugend.name}}</h4>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <h5>Feld: {{spiel.platz}}</h5>
+                            </div>
+                            <div class="col-xs-3">
+                                <h5>Spiel-Nr.: {{spiel.nummer}}</h5>
+                            </div>
+                            <div class="col-xs-3">
+                                <h5>{{spiel.datum}}</h5>
+                            </div>
+                            <div class="col-xs-3">
+                                <h5>{{spiel.uhrzeit}} Uhr</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 visible-print">
+                        <img src="/assets/img/dbt_logo.png">
+                    </div>
+                </div>
+
+                <div class="row text-center">
+                    <div class="col-xs-12">
                         <div class="row">
                             <div class="col-xs-5">
                                 <h3 class="spiel-teamA" data-ng-click="vm.gotoTeam(spiel.teamA)">
@@ -89,7 +92,7 @@
                         <th>Vorname</th>
                         <th>Nachname</th>
                         <th>Geburtsdatum</th>
-                        <th class="number-element text-center"> # </th>
+                        <th class="number-element text-center"> #</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -107,7 +110,7 @@
 
         <div class="row visible-print-block">
             <br>
-            <p class="lead text-center">Ergebnis: </p>
+            <p class="lead text-center" data-ng-if="!vm.isComplexMode">Ergebnis: </p>
         </div>
 
         <div class="row visible-print-block" data-ng-if="!vm.isComplexMode">
@@ -154,32 +157,79 @@
 
         <div class="row visible-print-block" data-ng-if="vm.isComplexMode">
             <div class="col-xs-6" data-ng-repeat="n in [1,2]">
-                <table class="spiel-druck-halbzeiten-table">
-                    <tbody>
-                        <tr>
-                            <td class="spiel-druck-halbzeiten-table-title"><table><tr><td>1. Halbzeit</td><td class="spiel-druck-halbzeiten-table-title-punkte-label">Punkte: </td></tr></table><td class="spiel-druck-halbzeiten-table-punkte"></td>
-                        </tr>
-                        <tr>
-                            <td class="spiel-druck-halbzeiten-table-placeholder" colspan="2"></td>
-                        </tr>
-                        <tr>
-                            <td class="spiel-druck-halbzeiten-table-title"><table><tr><td>2. Halbzeit</td><td class="spiel-druck-halbzeiten-table-title-punkte-label">Punkte: </td></tr></table></td><td class="spiel-druck-halbzeiten-table-punkte"></td>
-                        </tr>
-                        <tr>
-                            <td class="spiel-druck-halbzeiten-table-placeholder" colspan="2"></td>
-                        </tr>
-                        <tr>
-                            <td class="spiel-druck-halbzeiten-table-title"><table><tr><td>Penalty</td><td class="spiel-druck-halbzeiten-table-title-punkte-label">Punkte: </td></tr></table></td><td class="spiel-druck-halbzeiten-table-punkte"></td>
-                        </tr>
-                        <tr>
-                            <td class="spiel-druck-halbzeiten-table-placeholder" colspan="2"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="row" data-ng-repeat="s in ['Satz 1', 'Satz 2', 'Shootout']">
+                    <h4 class="spiel-druck-halbzeiten-title">{{s}}</h4>
+                    <div class="col-xs-9">
+                        <table class="spiel-druck-halbzeiten-table">
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                            </tr>
+                            <tr data-ng-if="s !== 'Shootout'">
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                            </tr>
+                            <tr data-ng-if="s !== 'Shootout'">
+                                <td>31</td>
+                                <td>32</td>
+                                <td>33</td>
+                                <td>34</td>
+                                <td>35</td>
+                                <td>36</td>
+                                <td>37</td>
+                                <td>38</td>
+                                <td>39</td>
+                                <td>40</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="small-box"></div>
+                                <p class="small-box-caption">Pkt.</p>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="small-box"></div>
+                                <p class="small-box-caption">Satz</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row visible-print-block">
+        <div class="row visible-print-block" data-ng-if="!vm.isComplexMode">
             <div class="col-xs-12">
                 <hr class="alle-spiele-divider">
                 <div class="row">
@@ -187,9 +237,9 @@
                         <h3 style="height:50px;">
                             <table class="ergebnis-table">
                                 <tr>
-                                    <td>Ergebnis: </td>
+                                    <td>Ergebnis:</td>
                                     <td class="box"></td>
-                                    <td> : </td>
+                                    <td> :</td>
                                     <td class="box"></td>
                                 </tr>
                             </table>
@@ -199,6 +249,53 @@
                         <h5>Unterschrift Kampfgericht: <br><br><br>______________________________</h5>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row visible-print-block" data-ng-if="vm.isComplexMode">
+            <div class="col-xs-6">
+                <table>
+                    <tr>
+                        <td>Sieger:</td>
+                        <td class="underline-td"></td>
+                    </tr>
+                    <tr>
+                        <td>Ergebnis:</td>
+                        <td class="underline-td"></td>
+                    </tr>
+                    <tr>
+                        <td>Kampfgericht:</td>
+                        <td class="underline-td"></td>
+                    </tr>
+                    <tr>
+                        <td>Schiedsrichter:</td>
+                        <td class="underline-td"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-xs-6">
+                <p>Besondere Ereignisse:</p>
+                <p class="underline-td"></p>
+                <p class="underline-td"></p>
+            </div>
+        </div>
+        <br>
+        <div class="row visible-print" data-ng-if="vm.isComplexMode">
+            <div class="col-xs-6">
+                <table>
+                    <tr>
+                        <td>MV:</td>
+                        <td class="underline-td"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-xs-6">
+                <table>
+                    <tr>
+                        <td>MV:</td>
+                        <td class="underline-td"></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

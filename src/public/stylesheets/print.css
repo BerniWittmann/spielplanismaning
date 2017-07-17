@@ -28,6 +28,8 @@
     .spiel-print {
         page-break-after: always;
         page-break-inside: avoid;
+        margin-left: -25px;
+        margin-right: -25px;
     }
 
     .platz3 > td {
@@ -59,31 +61,38 @@
         font-size: 16px;
     }
 
+    .spiel-druck-halbzeiten-title {
+        padding-left: 20px;
+    }
+
     .spiel-druck-halbzeiten-table, .spiel-druck-halbzeiten-table tr, .spiel-druck-halbzeiten-table td {
         border: 1px solid #333;
         width: 100%;
         border-collapse: collapse;
     }
 
-    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-punkte {
-        min-width: 50px;
-    }
-    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-placeholder {
-        height: 70px;
-    }
-    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title {
-        padding: 5px 5px 5px 20px;
-    }
-    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title table, .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title tr, .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title td{
-        border: none;
+    .spiel-druck-halbzeiten-table td {
+        width: 25px;
+        height: 20px;
+        text-align: center;
+        vertical-align: middle;
     }
 
-    .spiel-druck-halbzeiten-table .spiel-druck-halbzeiten-table-title-punkte-label {
-        font-size: small;
-        font-style: italic;
+    .small-box {
+        width: 35px;
+        height: 35px;
+        border: 1px solid #333;
     }
 
+    .small-box-caption, .small-box {
+        margin-left: -15px;
+    }
 
+    .underline-td {
+        border-bottom: 1px solid #333;
+        width: 100%;
+        height: 28px;
+    }
     .spieler-table {
         width: 100%;
         border-collapse: collapse;

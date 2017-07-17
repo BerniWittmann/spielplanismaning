@@ -90,7 +90,7 @@
                 }
 
                 return spiel.teamA || spiel.teamB || spiel.fromA || spiel.fromB;
-            }), ['platz', 'nummer'], ['asc', 'desc'])
+            }), ['platz', 'nummer'], ['asc', 'asc'])
         }
 
         function fillUpSpieler(spieler) {
