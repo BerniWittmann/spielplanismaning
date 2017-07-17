@@ -17,6 +17,7 @@
             lockdown: true,
             plaetze: '3',
             spielmodus: 'normal',
+            printmodus: 'normal',
             mannschaftslisten: 'true',
             spielplanEnabled: true
         };

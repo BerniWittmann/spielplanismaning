@@ -109,7 +109,7 @@ function prepareSpiel(spiel, index, store, cb) {
 
             if (spiel.punkteA || spiel.punkteB || spiel.toreA || spiel.toreB) {
                 if (!spiel.teamA || !spiel.teamB) {
-                    return cb(validationErrors.teamsNotFilled(index));
+                    //return cb(validationErrors.teamsNotFilled(index));
                 }
 
                 spiel.beendet = true;

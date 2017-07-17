@@ -163,43 +163,7 @@
 
         it('es werden die Spiele angezeigt', function () {
             render();
-            var result = element.find('.spiel-time');
-            expect(result).to.have.lengthOf(3);
-            expect(angular.element(result[0]).text()).to.contain('09:20 Uhr');
-            expect(angular.element(result[1]).text()).to.contain('09:10 Uhr');
-            expect(angular.element(result[2]).text()).to.contain('09:00 Uhr');
             expect(ctrl.spiele).to.have.lengthOf(3);
         });
-
-        it('Beim Klick auf die Gruppe wird man zur Gruppe navigiert', function () {
-            render();
-            var result = angular.element(element.find('.spiel-gruppe')[0]);
-            var spy = chai.spy.on(mockState, 'go');
-
-            result.triggerHandler('click');
-
-            expect(spy).to.have.been.called.with({gruppeid: 'g1'});
-        });
-
-        it('Beim Klick auf die Team A wird man zum Team A navigiert', function () {
-            render();
-            var result = angular.element(element.find('.spiel-teamA')[0]);
-            var spy = chai.spy.on(mockState, 'go');
-
-            result.triggerHandler('click');
-
-            expect(spy).to.have.been.called.with({teamid: 't3'});
-        });
-
-        it('Beim Klick auf die Team B wird man zu Team B navigiert', function () {
-            render();
-            var result = angular.element(element.find('.spiel-teamB')[0]);
-            var spy = chai.spy.on(mockState, 'go');
-
-            result.triggerHandler('click');
-
-            expect(spy).to.have.been.called.with({teamid: 't1'});
-        });
-
     });
 }());
