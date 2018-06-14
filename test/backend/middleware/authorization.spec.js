@@ -203,7 +203,7 @@ describe('API Authorization', function () {
         });
 
         it('wenn der Nutzer eine passende Rolle hat, soll der Request ausgeführt werden', function (done) {
-            return mongoose.model('User').insertMany([{username: userNameToBeDeleted}], function (err) {
+            mongoose.model('User').insertMany([{username: userNameToBeDeleted}], function (err) {
                 if (err) return done(err);
 
                 request(server)
@@ -212,14 +212,11 @@ describe('API Authorization', function () {
                     .set('Authorization', server.adminToken())
                     .expect(200)
                     .end(function (err, response) {
-                        if (err) {
-                          done(err);
-                          return;
-                        }
+                        if (err) return done(err);
                         expect(response).not.to.be.undefined;
                         expect(response.statusCode).to.equal(200);
                         expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
-                        done();
+                        return done();
                     });
             });
         });
