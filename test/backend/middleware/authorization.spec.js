@@ -212,11 +212,14 @@ describe('API Authorization', function () {
                     .set('Authorization', server.adminToken())
                     .expect(200)
                     .end(function (err, response) {
-                        if (err) return done(err);
+                        if (err) {
+                          done(err);
+                          return;
+                        }
                         expect(response).not.to.be.undefined;
                         expect(response.statusCode).to.equal(200);
                         expect(response.body.MESSAGEKEY).to.be.equal('SUCCESS_DELETE_MESSAGE');
-                        return done();
+                        done();
                     });
             });
         });
