@@ -63,14 +63,17 @@
             isComplexMode: $rootScope.isPrintComplexMode,
             mannschaftslistenEnabled: mannschaftslisten.toString() === 'true',
             getSpielerArray: function (team) {
-                if (!team || !team.anmeldungsObject || !team.anmeldungsObject.spieler) {
+                if (!team || !team.anmeldungsObject || !team.anmeldungsObject.players) {
                     return new Array(14);
                 }
 
-                return fillUpSpieler(team.anmeldungsObject.spieler);
+                return fillUpSpieler(team.anmeldungsObject.players);
             },
             minNummer: undefined,
-            maxNummer: undefined
+            maxNummer: undefined,
+            getPlayerBirthDate: function (date) {
+                return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY');
+            }
         });
 
         function getSpiele(games) {
@@ -95,10 +98,10 @@
 
         function fillUpSpieler(spieler) {
             if (spieler.length >= 14) {
-                return _.sortBy(spieler.slice(0, 14), 'nummer');
+                return _.sortBy(spieler.slice(0, 14), 'number');
             }
             const length = Math.max(14 - spieler.length, 0);
-            return _.sortBy(spieler.concat(new Array(length)), 'nummer');
+            return _.sortBy(spieler.concat(new Array(length)), 'number');
         }
 
         $scope.$watchGroup(['vm.mode', 'vm.minNummer', 'vm.maxNummer'], function () {

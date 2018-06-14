@@ -98,10 +98,10 @@
                     <tbody>
                     <tr data-ng-repeat="spieler in vm.getSpielerArray(team) track by spiel._id+letter+$index">
                         <td class="text-center">{{$index + 1}}</td>
-                        <td><span data-ng-if="spieler">{{spieler.vorname}}</span></td>
-                        <td><span data-ng-if="spieler">{{spieler.nachname}}</span></td>
-                        <td><span data-ng-if="spieler">{{spieler.geburtsdatum}}</span></td>
-                        <td class="text-center"><span data-ng-if="spieler">{{spieler.trikotnummer}}</span></td>
+                        <td><span data-ng-if="spieler">{{spieler.first_name}}</span></td>
+                        <td><span data-ng-if="spieler">{{spieler.last_name}}</span></td>
+                        <td><span data-ng-if="spieler">{{vm.getPlayerBirthDate(spieler.birth_date)}}</span></td>
+                        <td class="text-center"><span data-ng-if="spieler">{{spieler.number}}</span></td>
                     </tr>
                     </tbody>
                 </table>

@@ -1047,7 +1047,12 @@ function reloadAnmeldeObjects(cb) {
             if (err) return cb(err);
 
             return async.each(teams, function (team, next) {
-                return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId, function (err, status, body) {
+                return request({
+                  url: process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId + '/',
+                  headers :{
+                    'Authorization': 'Token ' + process.env.BEACHANMELDUNG_ACCESS_TOKEN
+                  }
+                }, function (err, status, body) {
                     if (err) {
                         logger.warn('Error when retrieving Team from Anmeldung', err);
                         return next();
@@ -1055,11 +1060,12 @@ function reloadAnmeldeObjects(cb) {
 
                     body = JSON.parse(body);
 
-                    if (status.statusCode < 400 && body && body._id) {
+                    if (status.statusCode < 400 && body && body.id) {
                         _.assign(body, {'expires': moment().add(1, 'h').toISOString()});
                         team.anmeldungsObjectString = JSON.stringify(body);
-                        if (body.displayName && body.displayName !== team.name) {
-                            team.name = body.displayName;
+                        const displayName = body.complete_name;
+                         if (displayName && displayName !== team.name) {
+                            team.name = displayName;
                         }
                         return clsSession.run(function () {
                             clsSession.set('beachEventID', beachEventID);

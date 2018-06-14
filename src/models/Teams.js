@@ -113,7 +113,7 @@ TeamSchema.methods.fill = function(callback) {
                 logger.verbose('Getting new AnmeldungsObject from Anmeldung for Team %s', team._id);
                 return clsSession.run(function () {
                     clsSession.set('beachEventID', beachEventID);
-                    return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId, function (err, status, body) {
+                    return request(process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId + '/', function (err, status, body) {
                         if (err) {
                             logger.warn('Error when retrieving Team from Anmeldung', err);
                             return callback(null, team);

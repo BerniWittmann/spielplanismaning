@@ -44,8 +44,8 @@
             unusedTeams: importedJugend && importedJugend.teams ? importedJugend.teams.map(function (team) {
                 if (!team) return;
                 return {
-                    name: team.displayName,
-                    anmeldungsId: team._id
+                    name: team.complete_name,
+                    anmeldungsId: team.id
                 }
             }) : [],
             save: save,
