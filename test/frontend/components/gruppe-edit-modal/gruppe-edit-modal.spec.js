@@ -54,7 +54,7 @@
 
     var mockAnmeldung = {
         get: function (id) {
-            return {_id: 1, displayName: 'test'};
+            return {id: 1, complete_name: 'test'};
         }
     };
 
@@ -94,7 +94,7 @@
                 TeamEditierenDialog: TeamEditierenDialog,
                 BestaetigenDialog: BestaetigenDialog,
                 teamPromise: mockTeams,
-                aanmeldung: mockAnmeldung,
+                anmeldung: mockAnmeldung,
                 $scope: mockScope
             });
 

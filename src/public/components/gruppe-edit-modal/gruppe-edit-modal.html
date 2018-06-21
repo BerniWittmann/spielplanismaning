@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group" data-ng-class="{ 'has-error': teamForm.anmeldungsId.$touched && teamForm.anmeldungsId.$invalid }">
                     <input type="text" class="form-control" placeholder="ID Anmeldung" data-ng-model="vm.team.anmeldungsId"
-                           data-ng-minlength="24" data-ng-maxlength="24" name="anmeldungsId" ng-model-options="{ debounce: 300 }" data-ng-pattern="vm.objectIdPattern">
+                           data-ng-minlength="0" data-ng-maxlength="24" name="anmeldungsId" ng-model-options="{ debounce: 300 }" data-ng-pattern="vm.objectIdPattern">
                     <span class="help-block" data-ng-messages="teamForm.anmeldungsId.$error"
                           data-ng-if="teamForm.anmeldungsId.$touched">
                         <p data-ng-message="minlength">Die ID ist zu kurz</p>

@@ -16,7 +16,7 @@
             }
 
             anmeldung.get = function (id) {
-                return routes.requestGETID(routes.urls.anmeldung.teams(), id);
+                return routes.requestGET(routes.urls.anmeldung.teams() + id + '/');
             };
 
             anmeldung.getUrl = function (id) {

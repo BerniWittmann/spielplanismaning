@@ -48,7 +48,7 @@
             deleteTeam: deleteTeam,
             editTeam: editTeam,
             askDeleteTeam: askDeleteTeam,
-            objectIdPattern: /^[a-f\d]{24}$/
+            objectIdPattern: /^[a-f\d]+$/
         });
 
         vm.loading = false;
@@ -110,8 +110,8 @@
         $scope.$watch('vm.team.anmeldungsId', function () {
             if (vm.team.anmeldungsId) {
                 anmeldung.get(vm.team.anmeldungsId).then(function (res) {
-                    if (res._id && res.displayName) {
-                        vm.team.name = res.displayName;
+                    if (res.id && res.complete_name) {
+                        vm.team.name = res.complete_name;
                     }
                 });
             }

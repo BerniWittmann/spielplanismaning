@@ -17,7 +17,7 @@
                 </div>
                 <div class="form-group" data-ng-class="{ 'has-error': teamForm.anmeldungsId.$touched && teamForm.anmeldungsId.$invalid }">
                     <input type="text" class="form-control" placeholder="ID Anmeldung" data-ng-model="vm.anmeldungsId"
-                           data-ng-minlength="3" name="anmeldungsId">
+                           data-ng-minlength="0" name="anmeldungsId">
                     <span class="help-block" data-ng-messages="teamForm.anmeldungsId.$error"
                           data-ng-if="teamForm.anmeldungsId.$touched">
                         <p data-ng-message="minlength">Die ID ist zu kurz</p>
