@@ -446,6 +446,7 @@ module.exports = function (sendgrid, env, url, disableMails) {
                         return clsSession.run(function () {
                             clsSession.set('beachEventID', beachEventID);
                             const spiel = new Spiel();
+                            spiel.veranstaltung = beachEventID;
                             return spiel.save(function (err, spiel) {
                                 if (err) return asyncdone(err);
 
