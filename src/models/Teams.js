@@ -134,13 +134,18 @@ TeamSchema.methods.fill = function(callback) {
                             return callback(null, team);
                         }
 
+                        if (status.statusCode >= 400) {
+                            logger.info('Could not retrieve Team from Anmeldung', team);
+                          return callback(null, team);
+                        }
+
                         const body_before = body;
 
                         try {
                             body = JSON.parse(body_before);
                         } catch(e) {
                             logger.warn(e);
-                            logger.warn('Error parsing body for team: ', team);
+                            logger.warn('Error parsing body for team ' + team._id + ' with url: ' + (process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId + '/'));
                             body = undefined;
                         }
 
