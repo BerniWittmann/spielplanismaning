@@ -125,7 +125,7 @@ TeamSchema.methods.fill = function(callback) {
             }
 
             const disableAnmeldungRetrieval = (process.env.BEACHANMELDUNG_RETRIEVAL_DISABLE === 'true') || false;
-            if (team.anmeldungsId && getAnmeldungsObjectAgain && disableAnmeldungRetrieval) {
+            if (team.anmeldungsId && getAnmeldungsObjectAgain && !disableAnmeldungRetrieval) {
                 logger.verbose('Getting new AnmeldungsObject from Anmeldung for Team %s', team._id);
                 return clsSession.run(function () {
                     clsSession.set('beachEventID', beachEventID);
@@ -136,7 +136,7 @@ TeamSchema.methods.fill = function(callback) {
                         }
 
                         if (status.statusCode >= 400) {
-                            logger.info('Could not retrieve Team from Anmeldung', team);
+                            logger.info('Could not retrieve Team from Anmeldung');
                           return callback(null, team);
                         }
 
@@ -145,7 +145,6 @@ TeamSchema.methods.fill = function(callback) {
                         try {
                             body = JSON.parse(body_before);
                         } catch(e) {
-                            logger.warn(e);
                             logger.warn('Error parsing body for team ' + team._id + ' with url: ' + (process.env.BEACHENMELDUNG_TEAM_URL + team.anmeldungsId + '/'));
                             body = undefined;
                         }
