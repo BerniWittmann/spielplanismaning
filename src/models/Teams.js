@@ -124,7 +124,8 @@ TeamSchema.methods.fill = function(callback) {
                 }
             }
 
-            if (team.anmeldungsId && getAnmeldungsObjectAgain) {
+            const disableAnmeldungRetrieval = (process.env.BEACHANMELDUNG_RETRIEVAL_DISABLE === 'true') || false;
+            if (team.anmeldungsId && getAnmeldungsObjectAgain && disableAnmeldungRetrieval) {
                 logger.verbose('Getting new AnmeldungsObject from Anmeldung for Team %s', team._id);
                 return clsSession.run(function () {
                     clsSession.set('beachEventID', beachEventID);
