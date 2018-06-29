@@ -54,7 +54,14 @@ TeamSchema.virtual('anmeldungsObject').get(function () {
     if (!this.anmeldungsObjectString || this.anmeldungsObjectString.length === 0) {
         return {};
     }
-    return JSON.parse(this.anmeldungsObjectString);
+    let result = {};
+    try {
+      result = JSON.parse(this.anmeldungsObjectString);
+    } catch(e) {
+        logger.warn(e);
+        logger.warn('Error parsing anmeldung', this.anmeldungsObjectString);
+    }
+    return result;
 });
 
 TeamSchema.methods.changeName = function (name, cb) {
@@ -100,7 +107,15 @@ TeamSchema.methods.fill = function(callback) {
             team.set('ergebnisse', results);
 
             let getAnmeldungsObjectAgain = false;
-            const anmeldungsObject = team.anmeldungsObjectString ? JSON.parse(team.anmeldungsObjectString) : undefined;
+            let anmeldungsObject;
+            if (team.anmeldungsObjectString) {
+              try {
+                anmeldungsObject = JSON.parse(team.anmeldungsObjectString);
+              } catch(e) {
+                logger.warn(e);
+                logger.warn('Error parsing anmeldung', team.anmeldungsObjectString);
+              }
+            }
             if (!anmeldungsObject || _.isEmpty(anmeldungsObject)) {
                 getAnmeldungsObjectAgain = true;
             } else {
@@ -119,7 +134,15 @@ TeamSchema.methods.fill = function(callback) {
                             return callback(null, team);
                         }
 
-                        body = JSON.parse(body);
+                        const body_before = body;
+
+                        try {
+                            body = JSON.parse(body_before);
+                        } catch(e) {
+                            logger.warn(e);
+                            logger.warn('Error parsing body', body_before);
+                            body = undefined;
+                        }
 
                         if (status.statusCode < 400 && body && body._id) {
                             _.assign(body, {'expires': moment().add(1, 'h').toISOString()});
