@@ -140,7 +140,7 @@ TeamSchema.methods.fill = function(callback) {
                             body = JSON.parse(body_before);
                         } catch(e) {
                             logger.warn(e);
-                            logger.warn('Error parsing body', body_before);
+                            logger.warn('Error parsing body for team: ', team);
                             body = undefined;
                         }
 
